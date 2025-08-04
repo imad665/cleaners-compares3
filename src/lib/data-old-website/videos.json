@@ -1,0 +1,422 @@
+[
+    {
+        "category": "Dry Cleaning Machines",
+        "data": [
+            {
+                "title": "Bowe Machines",
+                "img": "https://img.youtube.com/vi/tIIapW3Jj_c/mqdefault.jpg",
+                "desc": "Bowe Dry Cleaning Machines, German Technology."
+            },
+            {
+                "title": "Bowe Induline 1",
+                "img": "https://img.youtube.com/vi/2zQeUOPVeZ8/mqdefault.jpg",
+                "desc": "Bowe Induline Dry Cleaning Machines"
+            },
+            {
+                "title": "Bowe Induline 2",
+                "img": "https://img.youtube.com/vi/Cz5Ahh1t6Ac/mqdefault.jpg",
+                "desc": "Bowe Dry Cleaning Machine. Made in Germany."
+            },
+            {
+                "title": "Bowe Induline 3",
+                "img": "https://img.youtube.com/vi/uBIDn2rFkpU/mqdefault.jpg",
+                "desc": "Bowe Dry Cleaning machines. Made in Germany."
+            },
+            {
+                "title": "Early Bowe Dry Cleaning System",
+                "img": "https://img.youtube.com/vi/Quk7MYc1Bcw/mqdefault.jpg",
+                "desc": "Early Bowe Dry Cleaning System in Germany."
+            },
+            {
+                "title": "Bowe 1968 Fair",
+                "img": "https://img.youtube.com/vi/fdmWxPIRZnQ/mqdefault.jpg",
+                "desc": "Bowe Dry Cleaning system 1968 Fair."
+            },
+            {
+                "title": "Union Dry Cleaning Machine",
+                "img": "https://img.youtube.com/vi/E5XDICMukbM/mqdefault.jpg",
+                "desc": "Extra features, Union Dry Cleaning Machine."
+            },
+            {
+                "title": "FIRBIMATIC, UNION, AND REALSTAR DRYCLEANING MACHINES-FMB GROUP",
+                "img": "https://img.youtube.com/vi/sVsg_f-lvIE/mqdefault.jpg",
+                "desc": "Dry Cleaning Machine Group, Union, Realstar, Firbimatic"
+            },
+            {
+                "title": "Firbimatic Dry Cleaning Machines",
+                "img": "https://img.youtube.com/vi/OuKkCTCkxU0/mqdefault.jpg",
+                "desc": "Firbimatic Dry Cleaning Machines."
+            },
+            {
+                "title": "Renzacci Dry Cleaning Systems",
+                "img": "https://img.youtube.com/vi/3tk2uQvZ9XU/mqdefault.jpg",
+                "desc": "Renzacci Dry Cleaning Systems"
+            }
+        ]
+    },
+    {
+        "category": "Laundry Machines",
+        "data": [
+            {
+                "title": "Ipso Washers",
+                "img": "https://img.youtube.com/vi/3PGzFtDF-tQ/mqdefault.jpg",
+                "desc": "Ipso Washers all sizes."
+            },
+            {
+                "title": "Ipso Smart wave washer",
+                "img": "https://img.youtube.com/vi/rte0oO-10QU/mqdefault.jpg",
+                "desc": "Ipso Smart wave washer"
+            },
+            {
+                "title": "Ipso Washers 2",
+                "img": "https://img.youtube.com/vi/xCiIIotPNLQ/mqdefault.jpg",
+                "desc": "Ipso Washers 2 (french)"
+            },
+            {
+                "title": "Ipso Washer, Bearing Replacement",
+                "img": "https://img.youtube.com/vi/u0GosDW6L00/mqdefault.jpg",
+                "desc": "Ipso Washer, Bearing Replacement."
+            },
+            {
+                "title": "Electrolux Washers",
+                "img": "https://img.youtube.com/vi/qjz2wi3OwAw/mqdefault.jpg",
+                "desc": "Electrolux Washers"
+            },
+            {
+                "title": "Electrolux Factory Sweden",
+                "img": "https://img.youtube.com/vi/JCmGNSoYL-Y/mqdefault.jpg",
+                "desc": "Electrolux Factory Sweden"
+            },
+            {
+                "title": "Electrolux Washers Drain Valve",
+                "img": "https://img.youtube.com/vi/FWBeYgeKlwo/mqdefault.jpg",
+                "desc": "Electrolux Washers Drain Valve"
+            },
+            {
+                "title": "Electrolux Washers Laundromat",
+                "img": "https://img.youtube.com/vi/pWoK4u-4Cpo/mqdefault.jpg",
+                "desc": "Grow your laundromat business with Electrolux commercial washing machines"
+            },
+            {
+                "title": "Alliance Laundry System",
+                "img": "https://img.youtube.com/vi/ZnQ1MVUtxEM/mqdefault.jpg",
+                "desc": "Extreme Testing of Commercial Washers and Dryers"
+            },
+            {
+                "title": "Primus Hygienic Barrier Concept Washers",
+                "img": "https://img.youtube.com/vi/ny1zghWMsQ0/mqdefault.jpg",
+                "desc": "Primus Hygienic Barrier Concept Washers"
+            },
+            {
+                "title": "Miele Professional Laundry Care Technology",
+                "img": "https://img.youtube.com/vi/mW-BwcmcqN8/mqdefault.jpg",
+                "desc": "Miele Professional Laundry Care Technology"
+            },
+            {
+                "title": "Girbau Easy Load Commercial Washer",
+                "img": "https://img.youtube.com/vi/SXTqrtqegEA/mqdefault.jpg",
+                "desc": "Girbau Easy Load Commercial Washer"
+            },
+            {
+                "title": "Electrolux Commercial Washer and Dryer",
+                "img": "https://img.youtube.com/vi/CfpTJXaUwH0/mqdefault.jpg",
+                "desc": "Electrolux Commercial Washer and Dryer"
+            },
+            {
+                "title": "Electrolux Commercial Washer and Dryer",
+                "img": "https://img.youtube.com/vi/CfpTJXaUwH0/mqdefault.jpg",
+                "desc": "Electrolux Commercial Washer and Dryer"
+            }
+        ]
+    },
+    {
+        "category": "Laundry Dryers",
+        "data": [
+            {
+                "title": "Electrolux Commercial Dryers",
+                "img": "https://img.youtube.com/vi/QgdWaJw1hiI/mqdefault.jpg",
+                "desc": "Electrolux Commercial Dryers"
+            },
+            {
+                "title": "ADC Dryers",
+                "img": "https://img.youtube.com/vi/NpL5_nEfKHY/mqdefault.jpg",
+                "desc": "ADC SL3131 and SL75 Dryers"
+            },
+            {
+                "title": "Primus EVO4 drying technology / Dryers",
+                "img": "https://img.youtube.com/vi/xai2Nw6MSFs/mqdefault.jpg",
+                "desc": "Primus EVO4 drying technology / Dryers"
+            }
+        ]
+    },
+    {
+        "category": "Guide Videos",
+        "data": [
+            {
+                "title": "Launderette / Laundromat",
+                "img": "https://img.youtube.com/vi/ZnL6-J1qn7Y/mqdefault.jpg",
+                "desc": "Poorly Run Launderette / Laundromat"
+            },
+            {
+                "title": "Successful Launderette / Laundromat",
+                "img": "https://img.youtube.com/vi/xlc2f2vnKps/mqdefault.jpg",
+                "desc": "Characteristics of a Successful Laundromat Business"
+            },
+            {
+                "title": "Required Utilities for Launderettes / Laundromats",
+                "img": "https://img.youtube.com/vi/Zsv4A2oAcjA/mqdefault.jpg",
+                "desc": "Required Utilities for Laundromats"
+            },
+            {
+                "title": "The Pros & Cons of Owning Launderettes / Laundromats",
+                "img": "https://img.youtube.com/vi/QBrF9HiSPd8/mqdefault.jpg",
+                "desc": "The Pros & Cons of Owning Launderettes / Laundromats"
+            },
+            {
+                "title": "Launderette in Japan",
+                "img": "https://img.youtube.com/vi/dXqP2KCx8qk/mqdefault.jpg",
+                "desc": "Launderette in Japan"
+            },
+            {
+                "title": "Stop Diseases with Electrolux Good Laundry Practice",
+                "img": "https://img.youtube.com/vi/xIJ-TQaimT4/mqdefault.jpg",
+                "desc": "Stop Diseases with Electrolux Good Laundry Practice"
+            },
+            {
+                "title": "Real Tour of Firbimatic",
+                "img": "https://img.youtube.com/vi/OuKkCTCkxU0/mqdefault.jpg",
+                "desc": "Real Tour of Firbimatic"
+            },
+            {
+                "title": "Laundry: Top Ten Things to Keep in Mind",
+                "img": "https://img.youtube.com/vi/w-2UFj4Fe_U/mqdefault.jpg",
+                "desc": "COMTEX is a not-for-profit Shared Services Corporation governed by its own Board of Directors and managed by an on-site Chief Operating Officer. COMTEX was established to provide high quality, cost effective laundry and linen service functions. In cooperation, and with the support of the City of Columbus, this bold joint venture brings two superior healthcare providers together to establish a state-of-the-art processing plant and service provider within the City limits of Columbus."
+            },
+            {
+                "title": "Professional Wet Cleaning Demonstration",
+                "img": "https://img.youtube.com/vi/i2z_ySLcMHk/mqdefault.jpg",
+                "desc": "This video highlights the main aspects and benefits of wet cleaning. It was filmed at a Professional Wet Cleaning Demonstration workshop in California."
+            },
+            {
+                "title": "Wet Cleaning vs Dry Cleaning Wedding Gowns",
+                "img": "https://img.youtube.com/vi/HPNxF-7mM0c/mqdefault.jpg",
+                "desc": "Learn whether wet cleaning or dry cleaning is better for wedding gowns."
+            },
+            {
+                "title": "How to use the Industrial Steam Iron safely",
+                "img": "https://img.youtube.com/vi/ZqXLy93MlFs/mqdefault.jpg",
+                "desc": "Learn how to use the Industrial Steam Iron safely."
+            },
+            {
+                "title": "Steam Iron With Boiler & Vacuum Suction Commercial Ironing Board",
+                "img": "https://img.youtube.com/vi/Zw8pLk51YZI/mqdefault.jpg",
+                "desc": "Descriptive tutorial on our steam iron with boiler & vacuum suction. This item is great for commercial laundry or dry cleaning businesses."
+            }
+        ]
+    },
+    {
+        "category": "Wet Cleaning Systems",
+        "data": [
+            {
+                "title": "Miele Wet Cleaning System",
+                "img": "https://img.youtube.com/vi/8NW4Hec-WP8/mqdefault.jpg",
+                "desc": "Miele WetCare System: The Alternative to Drycleaning | Miele Professional"
+            },
+            {
+                "title": "Electrolux Lagoon® Wet-cleaning excellence",
+                "img": "https://img.youtube.com/vi/52qeI-bOIK0/mqdefault.jpg",
+                "desc": "Electrolux - Lagoon® Wet-cleaning excellence"
+            },
+            {
+                "title": "Wet Cleaning Option",
+                "img": "https://img.youtube.com/vi/JTxtzvpgnQ0/mqdefault.jpg",
+                "desc": "Wet Cleaning Option"
+            },
+            {
+                "title": "Electrolux Laundry Hacks: How To Wet-clean A Suit",
+                "img": "https://img.youtube.com/vi/af5bFQEdRwo/mqdefault.jpg",
+                "desc": "Electrolux Laundry Hacks: How To Wet-clean A Suit"
+            },
+            {
+                "title": "Titus Commercial Laundry wet clean machine",
+                "img": "https://img.youtube.com/vi/7YHyogRtt-0/mqdefault.jpg",
+                "desc": "Titus Commercial Laundry wet clean machine"
+            }
+        ]
+    },
+    {
+        "category": "Company Profile Videos",
+        "data": [
+            {
+                "title": "Electrolux Professional Laundry — Factory Tour (Ljungby, Sweden)",
+                "img": "https://img.youtube.com/vi/JCmGNSoYL-Y/mqdefault.jpg",
+                "desc": "Electrolux Professional Laundry — Factory Tour (Ljungby, Sweden)"
+            },
+            {
+                "title": "Boewe Machines, Made in Germany",
+                "img": "https://img.youtube.com/vi/tIIapW3Jj_c/mqdefault.jpg",
+                "desc": "Boewe Machines, Made in Germany"
+            },
+            {
+                "title": "Unisec Dry Cleaning Machine - Unisec USA",
+                "img": "https://img.youtube.com/vi/yb3Q86Ow_sE/mqdefault.jpg",
+                "desc": "Unisec Dry Cleaning Machine - Unisec USA"
+            },
+            {
+                "title": "FIRBIMATIC, UNION, AND REALSTAR DRYCLEANING MACHINES-FMB GROUP",
+                "img": "https://img.youtube.com/vi/sVsg_f-lvIE/mqdefault.jpg",
+                "desc": "FIRBIMATIC, UNION, AND REALSTAR DRYCLEANING MACHINES-FMB GROUP"
+            },
+            {
+                "title": "Our Company | Miele",
+                "img": "https://img.youtube.com/vi/lNEKGwhwyC8/mqdefault.jpg",
+                "desc": "Our Company | Miele"
+            },
+            {
+                "title": "Renzacci Machines",
+                "img": "https://img.youtube.com/vi/TGl1HpIqRMk/mqdefault.jpg",
+                "desc": "A pristine beautifully finished garment speaks volumes about your business. Choosing the right finishing equipment is crucial, not only to ensure your customer is happy and your reputation is well respected, but also to ensure your business runs in the most efficient manner to maximise your full potential."
+            }
+        ]
+    },
+    {
+        "category": "Flat Work Ironers",
+        "data": [
+            {
+                "title": "Rotary Ironer Training Video | Miele Professional Ironers",
+                "img": "https://img.youtube.com/vi/Jjzvo1vK3H4/mqdefault.jpg",
+                "desc": "Rotary Ironer Training Video | Miele Professional Ironers"
+            },
+            {
+                "title": "Electrolux FFS Ironer",
+                "img": "https://img.youtube.com/vi/8DFBuubo9ic/mqdefault.jpg",
+                "desc": "Electrolux FFS Ironer"
+            },
+            {
+                "title": "IC44832 Ironer Operation Video",
+                "img": "https://img.youtube.com/vi/iUD3lyn9bVk/mqdefault.jpg",
+                "desc": "IC44832 Ironer Operation Video"
+            },
+            {
+                "title": "Primus IFF ironer with feeding, folding and stacking",
+                "img": "https://img.youtube.com/vi/GXBebZx_H0Y/mqdefault.jpg",
+                "desc": "Primus IFF ironer with feeding, folding and stacking"
+            },
+            {
+                "title": "LACO Machinery - COMFORT Evolution",
+                "img": "https://img.youtube.com/vi/liVic0nzYVw/mqdefault.jpg",
+                "desc": "LACO Machinery - COMFORT Evolution"
+            },
+            {
+                "title": "IF Series Compact Combination Feeder, Ironer, Folder, and Stacker",
+                "img": "https://img.youtube.com/vi/DSjKhCnPRDU/mqdefault.jpg",
+                "desc": "The IF Series from B&C Technologies. Feeder, Ironer, Folder, and Stacker all in about 108 square feet."
+            },
+            {
+                "title": "Image Laundry Systems Ironing line",
+                "img": "https://img.youtube.com/vi/uySs5KnEoPU/mqdefault.jpg",
+                "desc": "Amflex sheet feeder combined with the IM 2 roll 1200 ironer and a Amfold sheet folder"
+            },
+            {
+                "title": "The Jenroll Hybrid from JENSEN sets new standards within ironing performance.",
+                "img": "https://img.youtube.com/vi/vISC24EZjI0/mqdefault.jpg",
+                "desc": "The Jenroll Hybrid is a true two-in-one machine. By combining a conventional deep chest section with a calendar section comprising 3 steam heated cylinders, it is now possible to iron flatwork at very high speeds, while maintaining a superior finishing quality without leaving tape marks in the linen. In addition, the Jenroll Hybrid reduces the wear and shrinkage of the linen thanks to frictionless transport through the calendar section, gently applying heat to both sides of the linen by use of medium steam pressure."
+            }
+        ]
+    },
+    {
+        "category": "Packaging / Folding",
+        "data": [
+            {
+                "title": "Speedy-T | T-SHIRT Folding and Packaging Machine",
+                "img": "https://img.youtube.com/vi/gGlLr4Ftdfc/mqdefault.jpg",
+                "desc": "Speedy-T | T-SHIRT Folding and Packaging Machine"
+            },
+            {
+                "title": "Clothes Automatic folding & bagging & sealing",
+                "img": "https://img.youtube.com/vi/oKgHEz05lqw/mqdefault.jpg",
+                "desc": "Clothes Automatic folding & bagging & sealing"
+            },
+            {
+                "title": "Automatic garments folding machine \"STP1000\" (clothes folding)",
+                "img": "https://img.youtube.com/vi/Pw49lTNsQrw/mqdefault.jpg",
+                "desc": "Automatic garments folding machine \"STP1000\" (clothes folding)"
+            },
+            {
+                "title": "AUTOMATIC T-SHIRT / T SHIRT FOLDING MACHINE",
+                "img": "https://img.youtube.com/vi/nq3-P88ogdA/mqdefault.jpg",
+                "desc": "AUTOMATIC T-SHIRT / T SHIRT FOLDING MACHINE"
+            },
+            {
+                "title": "YAC 200 Bundles Garment Bagging Machine for Laundry factory",
+                "img": "https://img.youtube.com/vi/evmzHx1U5zo/mqdefault.jpg",
+                "desc": "YAC 200 Bundles Garment Bagging Machine for Laundry factory"
+            },
+            {
+                "title": "Packaging Machines For Laundry And Textile / Çamasirhane ve Tekstil Için Shrink Ambalaj Makinesi",
+                "img": "https://img.youtube.com/vi/cVF8j-_A9h4/mqdefault.jpg",
+                "desc": "Packaging Machines For Laundry And Textile / Çamasirhane ve Tekstil Için Shrink Ambalaj Makinesi"
+            },
+            {
+                "title": "Laundry L-Sealer - Shrinkwrap Machinery Co Ltd",
+                "img": "https://img.youtube.com/vi/V_bbjBu15a4/mqdefault.jpg",
+                "desc": "Laundry L-Sealer - Shrinkwrap Machinery Co Ltd"
+            },
+            {
+                "title": "Heat Seal Laundry Wrapper 10436LW Wrapping Linens",
+                "img": "https://img.youtube.com/vi/wrl-11fJbeE/mqdefault.jpg",
+                "desc": "Heat Seal Laundry Wrapper 10436LW Wrapping Linens"
+            },
+            {
+                "title": "ITRA BVM BM8030LG automatic Laundry packing with sleeve sealing",
+                "img": "https://img.youtube.com/vi/Zt00Xkw6L9k/mqdefault.jpg",
+                "desc": "ITRA BVM BM8030LG automatic Laundry packing with sleeve sealing"
+            },
+            {
+                "title": "Semi Automatic L Sealer - Yorkshire Packaging Systems - Laundry/Linen",
+                "img": "https://img.youtube.com/vi/6NZ-WUfKMwc/mqdefault.jpg",
+                "desc": "Semi Automatic L Sealer - Yorkshire Packaging Systems - Laundry/Linen"
+            }
+        ]
+    },
+    {
+        "category": "Shirt Machines",
+        "data": [
+            {
+                "title": "Sankosha Single Buck Shirt Press & Single Collar & Cuff Press (Tensioning Type)",
+                "img": "https://img.youtube.com/vi/I-GoPasbuQ4/mqdefault.jpg",
+                "desc": "Sankosha Single Buck Shirt Press & Single Collar & Cuff Press (Tensioning Type)"
+            },
+            {
+                "title": "YAC Japan, shirt press, shirt factory, shirt ironing, shirt machine, shirt laundry",
+                "img": "https://img.youtube.com/vi/v92t9uVIkms/mqdefault.jpg",
+                "desc": "YAC Japan, shirt press, shirt factory, shirt ironing, shirt machine, shirt laundry"
+            },
+            {
+                "title": "YAC 70 Shirts /H garment Iron press machine for laundry dry cleaning factory",
+                "img": "https://img.youtube.com/vi/pvgRIzcn4Nk/mqdefault.jpg",
+                "desc": "YAC 70 Shirts /H garment Iron press machine for laundry dry cleaning factory"
+            },
+            {
+                "title": "PONY ANGEL SHIRT FINISHING",
+                "img": "https://img.youtube.com/vi/4wj5e83c0MQ/mqdefault.jpg",
+                "desc": "PONY ANGEL SHIRT FINISHING"
+            },
+            {
+                "title": "VEIT 8326 Shirt Finisher english",
+                "img": "https://img.youtube.com/vi/wKZTauKBXY0/mqdefault.jpg",
+                "desc": "VEIT 8326 Shirt Finisher english"
+            }
+        ]
+    },
+    {
+        "category": "Laundry Installations",
+        "data": [
+            {
+                "title": "Stunning new Jensen facility",
+                "img": "https://img.youtube.com/vi/zlRRNeiCVb8/mqdefault.jpg",
+                "desc": "A multi-generational family owned and operated uniform and linen supplier in the Boston, Massachusetts area, Crown Uniform & Linen Service, has reached the completion of a new ground-up 100,000+ sq. ft. facility. This facility is nothing short of stunning - no details were left unturned. They partnered with JENSEN to assist in the plant design, and to supply several technologies; automated soil sort system, automated soil-side and clean-side rail system, complete batch washing and drying system, vacuum transport system, and complete garment transport and sortation system"
+            }
+        ]
+    }
+]
