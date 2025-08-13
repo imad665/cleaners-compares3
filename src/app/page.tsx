@@ -19,8 +19,7 @@ import { getCategoriesHome } from "@/lib/products/homeCategories";
 import { Button } from "@/components/ui/button";
 import { getAllHomeProducts, getRecentOrdersCount } from "@/lib/products/homeProducts";
 import { FormProvider } from "react-hook-form";
-import AddressSearch from "@/components/address-search";
-
+ 
 
 export default async function Home() {
   //await prisma.sellerProfile.deleteMany();
@@ -43,7 +42,7 @@ export default async function Home() {
   return (
     <div>
       <Header recentOrderCount={recentOrderCount} />
-      <AddressSearch/>
+      
       <main className="">
         <MainImage />
         {/* <ShopByCategory /> */}
