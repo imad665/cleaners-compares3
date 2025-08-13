@@ -155,7 +155,7 @@ export default function WantedItemAndBusiness(
 
   return (
     <div className="bg-gray-50">
-      <div className="max-w-5xl mx-auto mt-8 p-4">
+      <div className="container mx-auto mt-0 p-4">
         <Tabs defaultValue="wanted" className="w-full" onValueChange={setSelectedTab}>
           <div className="flex justify-between flex-wrap items-center mb-4">
             <TabsList className="grid grid-cols-2 gap-2">

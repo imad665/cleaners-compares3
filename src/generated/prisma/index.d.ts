@@ -17882,6 +17882,7 @@ export namespace Prisma {
     orderId: string | null
     senderUserId: string | null
     receiverUserId: string | null
+    isReceiverRead: boolean | null
     createdAt: Date | null
     userId: string | null
   }
@@ -17893,6 +17894,7 @@ export namespace Prisma {
     orderId: string | null
     senderUserId: string | null
     receiverUserId: string | null
+    isReceiverRead: boolean | null
     createdAt: Date | null
     userId: string | null
   }
@@ -17904,6 +17906,7 @@ export namespace Prisma {
     orderId: number
     senderUserId: number
     receiverUserId: number
+    isReceiverRead: number
     createdAt: number
     userId: number
     _all: number
@@ -17917,6 +17920,7 @@ export namespace Prisma {
     orderId?: true
     senderUserId?: true
     receiverUserId?: true
+    isReceiverRead?: true
     createdAt?: true
     userId?: true
   }
@@ -17928,6 +17932,7 @@ export namespace Prisma {
     orderId?: true
     senderUserId?: true
     receiverUserId?: true
+    isReceiverRead?: true
     createdAt?: true
     userId?: true
   }
@@ -17939,6 +17944,7 @@ export namespace Prisma {
     orderId?: true
     senderUserId?: true
     receiverUserId?: true
+    isReceiverRead?: true
     createdAt?: true
     userId?: true
     _all?: true
@@ -18023,6 +18029,7 @@ export namespace Prisma {
     orderId: string
     senderUserId: string
     receiverUserId: string
+    isReceiverRead: boolean
     createdAt: Date
     userId: string | null
     _count: MessageCountAggregateOutputType | null
@@ -18051,6 +18058,7 @@ export namespace Prisma {
     orderId?: boolean
     senderUserId?: boolean
     receiverUserId?: boolean
+    isReceiverRead?: boolean
     createdAt?: boolean
     userId?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
@@ -18066,6 +18074,7 @@ export namespace Prisma {
     orderId?: boolean
     senderUserId?: boolean
     receiverUserId?: boolean
+    isReceiverRead?: boolean
     createdAt?: boolean
     userId?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
@@ -18081,6 +18090,7 @@ export namespace Prisma {
     orderId?: boolean
     senderUserId?: boolean
     receiverUserId?: boolean
+    isReceiverRead?: boolean
     createdAt?: boolean
     userId?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
@@ -18096,11 +18106,12 @@ export namespace Prisma {
     orderId?: boolean
     senderUserId?: boolean
     receiverUserId?: boolean
+    isReceiverRead?: boolean
     createdAt?: boolean
     userId?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "sender" | "orderId" | "senderUserId" | "receiverUserId" | "createdAt" | "userId", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "sender" | "orderId" | "senderUserId" | "receiverUserId" | "isReceiverRead" | "createdAt" | "userId", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
     senderUser?: boolean | UserDefaultArgs<ExtArgs>
@@ -18135,6 +18146,7 @@ export namespace Prisma {
       orderId: string
       senderUserId: string
       receiverUserId: string
+      isReceiverRead: boolean
       createdAt: Date
       userId: string | null
     }, ExtArgs["result"]["message"]>
@@ -18570,6 +18582,7 @@ export namespace Prisma {
     readonly orderId: FieldRef<"Message", 'String'>
     readonly senderUserId: FieldRef<"Message", 'String'>
     readonly receiverUserId: FieldRef<"Message", 'String'>
+    readonly isReceiverRead: FieldRef<"Message", 'Boolean'>
     readonly createdAt: FieldRef<"Message", 'DateTime'>
     readonly userId: FieldRef<"Message", 'String'>
   }
@@ -28221,6 +28234,7 @@ export namespace Prisma {
     orderId: 'orderId',
     senderUserId: 'senderUserId',
     receiverUserId: 'receiverUserId',
+    isReceiverRead: 'isReceiverRead',
     createdAt: 'createdAt',
     userId: 'userId'
   };
@@ -29789,6 +29803,7 @@ export namespace Prisma {
     orderId?: StringFilter<"Message"> | string
     senderUserId?: StringFilter<"Message"> | string
     receiverUserId?: StringFilter<"Message"> | string
+    isReceiverRead?: BoolFilter<"Message"> | boolean
     createdAt?: DateTimeFilter<"Message"> | Date | string
     userId?: StringNullableFilter<"Message"> | string | null
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
@@ -29804,6 +29819,7 @@ export namespace Prisma {
     orderId?: SortOrder
     senderUserId?: SortOrder
     receiverUserId?: SortOrder
+    isReceiverRead?: SortOrder
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     order?: OrderOrderByWithRelationInput
@@ -29822,6 +29838,7 @@ export namespace Prisma {
     orderId?: StringFilter<"Message"> | string
     senderUserId?: StringFilter<"Message"> | string
     receiverUserId?: StringFilter<"Message"> | string
+    isReceiverRead?: BoolFilter<"Message"> | boolean
     createdAt?: DateTimeFilter<"Message"> | Date | string
     userId?: StringNullableFilter<"Message"> | string | null
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
@@ -29837,6 +29854,7 @@ export namespace Prisma {
     orderId?: SortOrder
     senderUserId?: SortOrder
     receiverUserId?: SortOrder
+    isReceiverRead?: SortOrder
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     _count?: MessageCountOrderByAggregateInput
@@ -29854,6 +29872,7 @@ export namespace Prisma {
     orderId?: StringWithAggregatesFilter<"Message"> | string
     senderUserId?: StringWithAggregatesFilter<"Message"> | string
     receiverUserId?: StringWithAggregatesFilter<"Message"> | string
+    isReceiverRead?: BoolWithAggregatesFilter<"Message"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
     userId?: StringNullableWithAggregatesFilter<"Message"> | string | null
   }
@@ -31813,6 +31832,7 @@ export namespace Prisma {
     id?: string
     content: string
     sender: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     order: OrderCreateNestedOneWithoutMessageInput
     senderUser: UserCreateNestedOneWithoutMessageSentInput
@@ -31827,6 +31847,7 @@ export namespace Prisma {
     orderId: string
     senderUserId: string
     receiverUserId: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     userId?: string | null
   }
@@ -31835,6 +31856,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     sender?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     order?: OrderUpdateOneRequiredWithoutMessageNestedInput
     senderUser?: UserUpdateOneRequiredWithoutMessageSentNestedInput
@@ -31849,6 +31871,7 @@ export namespace Prisma {
     orderId?: StringFieldUpdateOperationsInput | string
     senderUserId?: StringFieldUpdateOperationsInput | string
     receiverUserId?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -31860,6 +31883,7 @@ export namespace Prisma {
     orderId: string
     senderUserId: string
     receiverUserId: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     userId?: string | null
   }
@@ -31868,6 +31892,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     sender?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -31878,6 +31903,7 @@ export namespace Prisma {
     orderId?: StringFieldUpdateOperationsInput | string
     senderUserId?: StringFieldUpdateOperationsInput | string
     receiverUserId?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -33753,6 +33779,7 @@ export namespace Prisma {
     orderId?: SortOrder
     senderUserId?: SortOrder
     receiverUserId?: SortOrder
+    isReceiverRead?: SortOrder
     createdAt?: SortOrder
     userId?: SortOrder
   }
@@ -33764,6 +33791,7 @@ export namespace Prisma {
     orderId?: SortOrder
     senderUserId?: SortOrder
     receiverUserId?: SortOrder
+    isReceiverRead?: SortOrder
     createdAt?: SortOrder
     userId?: SortOrder
   }
@@ -33775,6 +33803,7 @@ export namespace Prisma {
     orderId?: SortOrder
     senderUserId?: SortOrder
     receiverUserId?: SortOrder
+    isReceiverRead?: SortOrder
     createdAt?: SortOrder
     userId?: SortOrder
   }
@@ -36950,6 +36979,7 @@ export namespace Prisma {
     id?: string
     content: string
     sender: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     order: OrderCreateNestedOneWithoutMessageInput
     senderUser: UserCreateNestedOneWithoutMessageSentInput
@@ -36963,6 +36993,7 @@ export namespace Prisma {
     orderId: string
     senderUserId: string
     receiverUserId: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
   }
 
@@ -36980,6 +37011,7 @@ export namespace Prisma {
     id?: string
     content: string
     sender: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     order: OrderCreateNestedOneWithoutMessageInput
     receiverUser: UserCreateNestedOneWithoutMessageReceivedInput
@@ -36992,6 +37024,7 @@ export namespace Prisma {
     sender: string
     orderId: string
     receiverUserId: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     userId?: string | null
   }
@@ -37010,6 +37043,7 @@ export namespace Prisma {
     id?: string
     content: string
     sender: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     order: OrderCreateNestedOneWithoutMessageInput
     senderUser: UserCreateNestedOneWithoutMessageSentInput
@@ -37022,6 +37056,7 @@ export namespace Prisma {
     sender: string
     orderId: string
     senderUserId: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     userId?: string | null
   }
@@ -37541,6 +37576,7 @@ export namespace Prisma {
     orderId?: StringFilter<"Message"> | string
     senderUserId?: StringFilter<"Message"> | string
     receiverUserId?: StringFilter<"Message"> | string
+    isReceiverRead?: BoolFilter<"Message"> | boolean
     createdAt?: DateTimeFilter<"Message"> | Date | string
     userId?: StringNullableFilter<"Message"> | string | null
   }
@@ -39490,6 +39526,7 @@ export namespace Prisma {
     id?: string
     content: string
     sender: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     senderUser: UserCreateNestedOneWithoutMessageSentInput
     receiverUser: UserCreateNestedOneWithoutMessageReceivedInput
@@ -39502,6 +39539,7 @@ export namespace Prisma {
     sender: string
     senderUserId: string
     receiverUserId: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     userId?: string | null
   }
@@ -42101,6 +42139,7 @@ export namespace Prisma {
     orderId: string
     senderUserId: string
     receiverUserId: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
   }
 
@@ -42110,6 +42149,7 @@ export namespace Prisma {
     sender: string
     orderId: string
     receiverUserId: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     userId?: string | null
   }
@@ -42120,6 +42160,7 @@ export namespace Prisma {
     sender: string
     orderId: string
     senderUserId: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     userId?: string | null
   }
@@ -42772,6 +42813,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     sender?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     order?: OrderUpdateOneRequiredWithoutMessageNestedInput
     senderUser?: UserUpdateOneRequiredWithoutMessageSentNestedInput
@@ -42785,6 +42827,7 @@ export namespace Prisma {
     orderId?: StringFieldUpdateOperationsInput | string
     senderUserId?: StringFieldUpdateOperationsInput | string
     receiverUserId?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -42795,6 +42838,7 @@ export namespace Prisma {
     orderId?: StringFieldUpdateOperationsInput | string
     senderUserId?: StringFieldUpdateOperationsInput | string
     receiverUserId?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -42802,6 +42846,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     sender?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     order?: OrderUpdateOneRequiredWithoutMessageNestedInput
     receiverUser?: UserUpdateOneRequiredWithoutMessageReceivedNestedInput
@@ -42814,6 +42859,7 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     orderId?: StringFieldUpdateOperationsInput | string
     receiverUserId?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -42824,6 +42870,7 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     orderId?: StringFieldUpdateOperationsInput | string
     receiverUserId?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -42832,6 +42879,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     sender?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     order?: OrderUpdateOneRequiredWithoutMessageNestedInput
     senderUser?: UserUpdateOneRequiredWithoutMessageSentNestedInput
@@ -42844,6 +42892,7 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     orderId?: StringFieldUpdateOperationsInput | string
     senderUserId?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -42854,6 +42903,7 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     orderId?: StringFieldUpdateOperationsInput | string
     senderUserId?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -43136,6 +43186,7 @@ export namespace Prisma {
     sender: string
     senderUserId: string
     receiverUserId: string
+    isReceiverRead?: boolean
     createdAt?: Date | string
     userId?: string | null
   }
@@ -43234,6 +43285,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     sender?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     senderUser?: UserUpdateOneRequiredWithoutMessageSentNestedInput
     receiverUser?: UserUpdateOneRequiredWithoutMessageReceivedNestedInput
@@ -43246,6 +43298,7 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     senderUserId?: StringFieldUpdateOperationsInput | string
     receiverUserId?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -43256,6 +43309,7 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     senderUserId?: StringFieldUpdateOperationsInput | string
     receiverUserId?: StringFieldUpdateOperationsInput | string
+    isReceiverRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
   }

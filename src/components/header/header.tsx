@@ -17,6 +17,7 @@ import { SignupModal } from '../auth/signup'
 import { SignInModal } from '../auth/signin'
 import { ContactDialog } from '../home_page/contact'
 import NotificationBadge from './notificationIcon'
+import { NotificationDropdown } from './notificationButton2'
 
 // Temporary state values — replace with auth/cart logic
 
@@ -217,7 +218,7 @@ interface Props {
     user: UserType;
     cart: { quantity: number, productId: string }[];
     setOpenDialog: (open: boolean) => void;
-    recentOrderCount:any;
+    recentOrderCount: any;
 }
 
 export function SignInUpModal(
@@ -251,7 +252,7 @@ export function SignInUpModal(
     )
 }
 
-function NavDesktop({ user, cart, setOpenDialog,recentOrderCount }: Props) {
+function NavDesktop({ user, cart, setOpenDialog, recentOrderCount }: Props) {
     const cartCount = cart.reduce((sum, prev) => sum + prev.quantity, 0);
     const [openSignUp, setOpenSignUp] = useState(false);
     const [openSignIn, setOpenSignIn] = useState(false);
@@ -269,12 +270,15 @@ function NavDesktop({ user, cart, setOpenDialog,recentOrderCount }: Props) {
                         Become a Seller
                     </Button>
                 }
-                {user &&
+                {/* {user &&
                     <ContactDialog />
+                } */}
+                {user &&
+                    <NotificationDropdown />
                 }
                 {/* recentOrderCount={recentOrderCount} {user && <ButtonSignOut />} */}
                 {/* User */}
-                
+
                 {user ? (
                     <UserDropdownMenu user={user} recentOrderCount={recentOrderCount} />
                 ) : (
@@ -331,7 +335,7 @@ interface Props {
     setOpenDialog: (open: boolean) => void;
 }
 
-export function NavMobile({ user, cart, setOpenDialog,recentOrderCount }: Props) {
+export function NavMobile({ user, cart, setOpenDialog, recentOrderCount }: Props) {
     const [open, setOpen] = useState(false);
     const cartCount = cart.reduce((sum, prev) => sum + prev.quantity, 0);
     const [openSignUp, setOpenSignUp] = useState(false);
@@ -346,18 +350,21 @@ export function NavMobile({ user, cart, setOpenDialog,recentOrderCount }: Props)
             {/* User Icon */}
             {user && <UserDropdownMenu user={user} recentOrderCount={recentOrderCount} />}
 
-            <Link
+            {/* <Link
                 href="/shopCart"
-                className="relative group"
+                className="relative group hidden"
                 onClick={handleLinkClick}
             >
-                <ShoppingCart className="w-6 h-6 text-gray-700 group-hover:text-blue-600 transition" />
+                <ShoppingCart className="w-6 h-6 text-gray-700 hidden group-hover:text-blue-600 transition" />
                 {cartCount > 0 && (
                     <span className="absolute -top-1.5 -right-2 bg-blue-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
                         {cartCount}
                     </span>
                 )}
-            </Link>
+            </Link> */}
+            {user &&
+                <NotificationDropdown />
+            }
 
             {/* Mobile Menu */}
             <Sheet open={open} onOpenChange={setOpen}>
@@ -440,7 +447,7 @@ export function NavMobile({ user, cart, setOpenDialog,recentOrderCount }: Props)
     );
 }
 
-export function Header({ className = '' ,recentOrderCount}: { className?: string ,recentOrderCount?:any}) {
+export function Header({ className = '', recentOrderCount }: { className?: string, recentOrderCount?: any }) {
     const { cart, user } = useHomeContext();
     //console.log(cart, ';;;;;;;;;;;;;;;;;;');
     const [openDialog, setOpenDialog] = useState(false);

@@ -31,7 +31,7 @@ export const getDealCountdown = (dealEndDate: any) => {
     const end = new Date(dealEndDate);
     const diffMs = end - now;
 
-    if (diffMs <= 0) return "Expired";
+    if (diffMs <= 0) return null;
 
     const totalMinutes = Math.floor(diffMs / 1000 / 60);
     const days = Math.floor(totalMinutes / (60 * 24));
@@ -111,7 +111,7 @@ export async function getFeaturedProducts({ page = 1, pageSize = 10, isFeatured 
 
         }
 
-        const [products, total] = await Promise.all([
+        let [products, total] = await Promise.all([
             getFeaturedProductsChunk(where, skip, pageSize),
             prisma.product.count({
                 where: {
@@ -128,26 +128,42 @@ export async function getFeaturedProducts({ page = 1, pageSize = 10, isFeatured 
 
         //console.log(products, '[[[[[[[[[[[[[');
 
-        const editProducts = products.map((p) => (
-            {
+        let editProducts = products.map((p) => {
+            const dealCountdown = getDealCountdown(p.dealEndDate);
+            let isDealActive = dealCountdown != null;
+            if (dealCountdown === null) {
+                prisma.product.update({
+                    where: { id: p.id },
+                    data: {
+                        isDealActive: false,
+                    }
+                })
+
+            }
+            return {
                 productId: p.id,
                 href: `/products/${p.category?.parent?.slug}/${p.category?.slug}/${p.slug}`,
                 stars: p.ratings.reduce((sum, item) => (sum + item.stars), 0) / p.ratings.length,
                 starsCount: p.ratings.length,
                 units: p.units,
-                unitPrice: ((!p.isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1)),
-                priceExcVat: !p.isDealActive ? p.price : p.discountPrice,
+                unitPrice: ((!isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1)),
+                priceExcVat: !isDealActive ? p.price : p.discountPrice,
                 price: p.price,
                 dealEndDate: p.dealEndDate,
-                dealCountdown: p.isDealActive ? getDealCountdown(p.dealEndDate) : null,
+                dealCountdown: isDealActive ? getDealCountdown(p.dealEndDate) : null,
                 image: p.imagesUrl[0],
                 stock: p.stock,
                 title: p.title,
                 isOldProduct: new Date(p.createdAt) < new Date('2025-07-18')
             }
-        ))
+        })
 
         if (products.length > 0) {
+            if (products.length < 5 && isFeatured) {
+                const placeholders = await getFeaturedProducts({ page, pageSize: 10, isFeatured: false, isRandom: false })
+                editProducts = editProducts.concat(placeholders.editProducts)
+                total = placeholders.total;
+            }
             return {
                 editProducts,
                 total,
@@ -253,7 +269,7 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
     }
     const take = pageSize;
 
-    const [products, total] = await Promise.all([
+    let [products, total] = await Promise.all([
         prisma.product.findMany({
             where: {
                 isDealActive: true,
@@ -319,27 +335,61 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
         productId:'7777',
         slug:'/'`
 
-    const editProducts = products.map((p) => (
-        {
+    let editProducts = products.map((p) => {
+        const dealCountdown = getDealCountdown(p.dealEndDate);
+        let isDealActive = dealCountdown != null;
+        if (dealCountdown === null) {
+            prisma.product.update({
+                where: { id: p.id },
+                data: {
+                    isDealActive: false,
+                }
+            })
+
+        }
+        return {
             productId: p.id,
             href: `/products/${p.category?.parent?.slug}/${p.category?.slug}/${p.slug}`,
             stars: p.ratings?.reduce((sum, item) => (sum + item.stars), 0) / p.ratings.length,
             starsCount: p.ratings?.length,
             units: p.units,
             unitPrice: ((!p.isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1)),
-            priceExcVat: p.price,
+            priceExcVat: !isDealActive ? p.price : p.discountPrice,
             discountPrice: p.discountPrice,
+            price: p.price,
             image: p.imagesUrl[0],
             title: p.title,
             endDeal: getDealCountdown(p.dealEndDate),
+            dealEndDate:getDealCountdown(p.dealEndDate),
+            dealCountdown: isDealActive ? getDealCountdown(p.dealEndDate) : null,
             stock: p.stock,
             discountPercentage: p.discountPercentage,
             isOldProduct: new Date(p.createdAt) < new Date('2025-07-18')
         }
-    ))
+    }
+    )
+    /* productId: p.id,
+    href: `/products/${p.category?.parent?.slug}/${p.category?.slug}/${p.slug}`,
+    stars: p.ratings.reduce((sum, item) => (sum + item.stars), 0) / p.ratings.length,
+    starsCount: p.ratings.length,
+    units: p.units,
+    unitPrice: ((!isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1)),
+    priceExcVat: !isDealActive ? p.price : p.discountPrice,
+    price: p.price,
+    dealEndDate: p.dealEndDate,
+    dealCountdown: isDealActive ? getDealCountdown(p.dealEndDate) : null,
+    image: p.imagesUrl[0],
+    stock: p.stock,
+    title: p.title,
+    isOldProduct: new Date(p.createdAt) < new Date('2025-07-18') */
     //console.log(editProducts, 'ooooooooo');
 
     if (products.length > 0) {
+        if (products.length < 5) {
+            const placeholders = await mockDeals();
+            editProducts = editProducts.concat(placeholders)
+            total = 20
+        }
         return {
             editProducts,
             total,
@@ -442,24 +492,37 @@ export async function getPartsAndAccessoirsProducts({ page = 1, pageSize = 10, i
             }
         })
     ])
-    const editProducts = products.map((p) => (
-        {
+    const editProducts = products.map((p) => {
+        const dealCountdown = getDealCountdown(p.dealEndDate);
+        let isDealActive = dealCountdown != null;
+        if (dealCountdown === null) {
+            prisma.product.update({
+                where: { id: p.id },
+                data: {
+                    isDealActive: false,
+                }
+            })
+
+        }
+
+        return {
             productId: p.id,
             href: `/products/${p.category?.parent?.slug}/${p.category?.slug}/${p.slug}`,
             stars: p.ratings.reduce((sum, item) => (sum + item.stars), 0) / p.ratings.length,
             starsCount: p.ratings.length,
             units: p.units,
-            unitPrice: (!p.isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1),
-            priceExcVat: !p.isDealActive ? p.price : p.discountPrice,
+            unitPrice: (!isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1),
+            priceExcVat: !isDealActive ? p.price : p.discountPrice,
             price: p.price,
             dealEndDate: p.dealEndDate,
-            dealCountdown: p.isDealActive ? getDealCountdown(p.dealEndDate) : null,
+            dealCountdown: isDealActive ? dealCountdown : null,
             image: p.imagesUrl[0],
             title: p.title,
             stock: p.stock,
             isOldProduct: new Date(p.createdAt) < new Date('2025-07-18')
         }
-    ))
+    }
+    )
 
     if (products.length > 0) {
         return {
@@ -662,6 +725,9 @@ export async function getFooterData() {
 }
 
 export async function getAllHomeProducts() {
+
+
+
     const [
         featuredProducts,
         dealsProducts,
@@ -711,10 +777,21 @@ export async function getRecentOrdersCount() {
 
     try {
         // Count of unread orders where user is the seller
-        const unreadSellerOrders = await prisma.orderItem.count({
+        /* const unreadSellerOrders = await prisma.orderItem.count({
             where: {
                 sellerId: session.user.id,
                 isReadSeller: false
+            },
+        }); */
+        const unreadSellerOrders = await prisma.order.count({
+            where: {
+                orderItems: {
+                    some: {
+                        sellerId: session.user.id,
+                        isReadSeller: false
+                    }
+                }
+
             },
         });
 

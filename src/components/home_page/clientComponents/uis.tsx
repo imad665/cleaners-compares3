@@ -44,7 +44,7 @@ export function AddCartButton({ productId, className = '', stock = -1, isOldProd
         <div className="flex items-center gap-2">
           <span
             
-            className='flex items-center cursor-pointer  text-black rounded-2xl hover:bg-yellow-500/50 w-fit text-xs'
+            className='flex items-center    text-black rounded-2xl   w-fit text-xs'
           >
             <CheckCircle className="w-4 h-4 mr-2" />
             

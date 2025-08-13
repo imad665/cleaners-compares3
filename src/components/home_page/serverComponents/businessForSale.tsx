@@ -36,7 +36,7 @@ export default function BusinessForSale({
   const { user } = useHomeContext();
 
   return (
-    <Card className={`max-w-sm mx-auto mt-6 overflow-hidden rounded-2xl shadow-lg border border-gray-200 bg-white ${className}`}>
+    <Card className={` md:!min-w-[300px] mx-auto mt-6 overflow-hidden rounded-2xl shadow-lg border border-gray-200 bg-white ${className}`}>
       {/* Image */}
       <div className="relative w-full">
         <Image

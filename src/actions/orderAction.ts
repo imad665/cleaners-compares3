@@ -200,6 +200,8 @@ export async function updateOrderItemStatus(
 
 import { Resend } from 'resend';
 import Stripe from "stripe";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -207,6 +209,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 export async function shipOrderItem(orderItemId: string) {
   try {
     // 1. Update order item status to SHIPPED
+   
+    //console.log(session,';;;;;;;;;');
+    
+     
     const ord = await prisma.orderItem.findUnique({
       where: {
         id: orderItemId
@@ -215,7 +221,7 @@ export async function shipOrderItem(orderItemId: string) {
         sellerId: true,
       }
     })
-    if (!ord) return {success:false,error:'order not found for :'+orderItemId};
+    if (!ord) return {success:false ,error:'order not found for :'+orderItemId};
 
     const updatedItem = await prisma.orderItem.update({
       where: { id: orderItemId },
@@ -354,6 +360,7 @@ export async function shipOrderItem(orderItemId: string) {
 
     return {
       success: true,
+      sellerId:ord.sellerId || '',
       message: 'Item marked as shipped and buyer notified'
     };
   } catch (error) {

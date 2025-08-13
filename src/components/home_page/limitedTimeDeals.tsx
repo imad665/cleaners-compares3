@@ -3,7 +3,7 @@
 import Link from "next/link"
 
 /* import Slider from 'react-slick' */
-import { ItemLimitedTimeDeals } from "./serverComponents/uis"
+import { ItemFeaturedProduct, ItemLimitedTimeDeals } from "./serverComponents/uis"
 import MyCarousel from "./clientComponents/myCarousel";
 
 /* import { useHomeProductContext } from "@/providers/homeProductsProvider" */
@@ -22,7 +22,8 @@ export function LimitedTimeDeals({ initDealsProducts }: { initDealsProducts: any
                 <MyCarousel >
                     {dealsProducts?.map((slide, i) => (
                         <div key={i} className="px-2">
-                            <ItemLimitedTimeDeals {...slide} />
+                            {/* <ItemLimitedTimeDeals {...slide} /> */}
+                            <ItemFeaturedProduct  {...slide} />
                         </div>
                     ))}
                 </MyCarousel>

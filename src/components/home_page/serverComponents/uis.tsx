@@ -72,6 +72,7 @@ export type ItemProps = {
     stock?: number,
     className?: string,
     isOldProduct: boolean,
+    discountPercentage:number
 }
 
 export function ItemFeaturedProduct({
@@ -88,7 +89,8 @@ export function ItemFeaturedProduct({
     dealCountdown,
     stock,
     className,
-    isOldProduct
+    isOldProduct,
+    discountPercentage,
 }: ItemProps) {
     const isUnits = units > 0;
     //console.log(isOldProduct+';;;;;==================;;;;;;')
@@ -102,6 +104,7 @@ export function ItemFeaturedProduct({
 
                 </Link>
                 <Link href={href} className='font-medium px-4 text-sm mb-1 line-clamp-1 hover:text-red-400' >{title}</Link>
+                {discountPercentage && <p className="absolute px-6 py-1   rounded-tr-md font-bold bg-red-400 text-white right-0 top-0">{discountPercentage}% OFF</p>}
                 <div className='flex px-4 gap-1 items-center'>
                     <StarsUi stars={stars || 0} />
                     <span className='text-xs text-gray-500 ml-1'>({starsCount})</span>

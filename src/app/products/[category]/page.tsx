@@ -130,7 +130,7 @@ export default async function ProductPageInfo(
 
     const subcategories = categoryObj.subCategories;
     const subcategoriesUsed = categoryObj.subCategoriesUsed;
-    const tt = subcategories?.length === 3?"grid-cols-3":'grid-cols-4'
+    const tt = subcategories?.length === 3?"[@media(min-width:1298px)]:grid-cols-3":'[@media(min-width:1298px)]:grid-cols-4'
     const [
             featuredProducts,
             footerData,
@@ -157,7 +157,7 @@ export default async function ProductPageInfo(
                             name={undefined} />
 
                         {!isMachineOrParts &&
-                            <div className=' w-fit m-auto'>
+                            <div className=' container w-fit m-auto'>
                                 <div className='mt-12'>
                                     <h2 className='text-2xl font-bold'>
                                         Select a category
@@ -177,9 +177,9 @@ export default async function ProductPageInfo(
 
                         {isMachineOrParts && <div className='flex flex-col gap-12 mt-12'>
                             {/* NEW IF MACHINES OR PARTS */}
-                            <div  className='  m-auto'>
+                            <div  className=' container  m-auto'>
                                 <h2 className='text-2xl font-bold' id='new'>New {categoryObj.name}</h2>
-                                <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 [@media(min-width:1298px)]:grid-cols-${isParts?'3':'4'}`}>
+                                <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${tt}`}>
                                     {subcategories?.map((sub, i) => (
                                         <CategoryCard key={i} className='!grow !min-w-[90vw] md:!min-w-[45vw] lg:!min-w-[100px]' item={sub} />
                                     ))}
@@ -191,9 +191,9 @@ export default async function ProductPageInfo(
 
                             {/* USED IF MACHINES OR PARTS */}
                             {subcategoriesUsed &&
-                                <div  className=' m-auto' >
+                                <div  className=' container m-auto' >
                                     <h2 className='text-2xl font-bold' id='used'>Used {categoryObj.name}</h2>
-                                    <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 [@media(min-width:1298px)]:grid-cols-${isParts?'3':'4'}`}>
+                                    <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${tt}`}>
                                         {subcategoriesUsed.map((subc, i) => (
                                             <CategoryCard className='!grow !min-w-[90vw] md:!min-w-[45vw] lg:!min-w-[100px]' key={i} item={subc} />
                                         ))}

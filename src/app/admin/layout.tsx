@@ -1,5 +1,6 @@
 import { HeaderAdmin, SideBarDesktop  } from "@/components/adminDashboard/menu/menu"
 import { authOptions } from "@/lib/auth";
+import deleteUserTested from "@/lib/update-db";
 import { getServerSession } from "next-auth";
  
 
@@ -14,6 +15,7 @@ export default async function Layout(
     //await prisma.category.deleteMany();
     const session = await getServerSession(authOptions);
     const user = session?.user;
+    //await deleteUserTested()
     //console.log(user,'ooooooooooooooo')
     return (
         <div className="flex w-full h-[100vh] overflow-hidden">

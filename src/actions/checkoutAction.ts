@@ -289,6 +289,9 @@ export async function updateSellerPaymentStatus(
 export async function captureSellerPayment(orderId: string, sellerId: string) {
   try {
     // 1. Get the payment intent for this seller
+
+    
+
     const orderPayment = await prisma.orderPayment.findFirst({
       where: {
         orderId,

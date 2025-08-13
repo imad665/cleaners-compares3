@@ -65,7 +65,7 @@ export function MainImage() {
           <p className="text-base sm:text-lg text-gray-700">
             Search from thousands of new and used machines to everyday sundries for the laundry and dry cleaning industry.
           </p>
-          <ProductSearchBar isShowBrowser />
+          <ProductSearchBar isShowBrowser isShowSearch={false} />
         </div>
 
         {/* Image Section */}

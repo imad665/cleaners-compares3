@@ -6,6 +6,7 @@ import { ConfirmDeliveryButton } from './confirmDeliveryButton';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 interface PurchaseItem {
   orderId: string;
@@ -119,7 +120,7 @@ export function SellerPurchaseCard({
       item.status = 'DELIVERED';
     });
   };
-  const [isConfirm,setIsconfirm]=useState(false);
+  const [isConfirm, setIsconfirm] = useState(false);
   return (
     <div className="border mt-2 rounded-lg overflow-hidden shadow-sm mb-6">
       {/* Seller Header */}
@@ -175,12 +176,13 @@ export function SellerPurchaseCard({
                     Paid
                   </Badge>
                 )}
+                {/* ConfirmDeliveryButton */}
                 {order.canConfirmDelivery && (
-                  <ConfirmDeliveryButton 
-                    orderId={order.orderId} 
-                    sellerId={seller.id} 
-                    onSuccess={() => handleConfirmDelivery(order.orderId)}
-                  />
+
+                  <Button
+                    onClick={() => handleConfirmDelivery(order.orderId)}
+                  >Confirm Delivery
+                  </Button>
                 )}
               </div>
             </div>

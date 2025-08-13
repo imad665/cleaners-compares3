@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { Loader2, Package, Clock, CheckCircle, AlertCircle, MessageCircle, TrendingUp, DollarSign, ShoppingCart, XCircle, Truck } from 'lucide-react';
 import { cancelOrderItem, shipOrderItem } from '@/actions/orderAction';
 import DashboardCard from '@/components/adminDashboard/shared/Card';
+import { captureSellerPayment } from '@/actions/checkoutAction';
 
 type OrderItem = {
   id: string;
@@ -132,6 +133,7 @@ export default function SellerOrdersPage() {
         setOrders(orders.map(item =>
           item.order.id === orderId ? { ...item, status: 'SHIPPED' } : item
         ));
+        const sellerId = result.sellerId;
 
         // Update the grouped orders state
         setGroupedOrders(prev => {
@@ -144,8 +146,11 @@ export default function SellerOrdersPage() {
           }
           return updated;
         });
-
         toast.success('Order marked as shipped');
+        const s = await captureSellerPayment(orderId,sellerId)
+        if(!s.success)toast.error(s.error)
+        else toast.success('Payment captured successfully!');
+
       } else {
         toast.error(result.error || 'Failed to ship order');
       }
@@ -341,7 +346,7 @@ export default function SellerOrdersPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          {canShip && !isCancel && (
+                          { !isCancel && (
                             <Button
                               size="sm"
                               onClick={() => handleShipOrder(orderId, orderItems)}

@@ -300,6 +300,7 @@ exports.Prisma.MessageScalarFieldEnum = {
   orderId: 'orderId',
   senderUserId: 'senderUserId',
   receiverUserId: 'receiverUserId',
+  isReceiverRead: 'isReceiverRead',
   createdAt: 'createdAt',
   userId: 'userId'
 };

@@ -2,123 +2,368 @@
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search } from "lucide-react"
+import { Search, X, ChevronRight, ChevronDown } from "lucide-react"
+import { useState, useEffect, useCallback } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { useDebounce } from "@/hooks/useDebounce"
+import { Skeleton } from "../skeletonSearch"
+import { BigButton } from "../home_page/mainImage2"
+import { useHomeContext } from "@/providers/homePageProvider"
+import SellerFormDialog from "../forms/sellerForm"
+import SellerFormDialog2 from "../forms/sellerForm2"
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { BigButton } from "../home_page/mainImage2";
-import { useHomeContext } from "@/providers/homePageProvider";
-import SellerFormDialog from "../forms/sellerForm";
-import SellerFormDialog2 from "../forms/sellerForm2";
+interface SearchResult {
+  id: string
+  title: string
+  image?: string
+  href: string
+  price: number
+  discountPrice?: number
+  isDealActive?: boolean
+  category: {
+    id: string
+    name: string
+    href: string
+    parent?: {
+      id: string
+      name: string
+      href: string
+    }
+  }
+}
 
-export function ProductSearchBar({ isShowBrowser = false }: { isShowBrowser?: boolean }) {
-  const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+interface CategoryResult {
+  id: string
+  name: string
+  href: string
+  parent?: {
+    id: string
+    name: string
+    href: string
+  }
+  isSubcategory: boolean
+  count: number
+}
+
+interface SearchResponse {
+  products: SearchResult[]
+  categories: CategoryResult[]
+  meta?: {
+    page: number
+    limit: number
+    hasMore: boolean
+  }
+}
+
+export function ProductSearchBar({
+  isShowBrowser = false,
+  isShowSearch = true
+}: {
+  isShowBrowser?: boolean
+  isShowSearch?: boolean
+}) {
+  const [query, setQuery] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [buttonLoading, setButtonLoading] = useState(false);
   const [openSellerDialog,setOpenSellerDialog] = useState(false);
   const [openDialog,setOpenDialog] = useState(false);
-  const [buttonLoading,setButtonLoading] = useState(false);
-  const router = useRouter();
+  const {user} = useHomeContext();
+  const [results, setResults] = useState<SearchResponse>({
+    products: [],
+    categories: []
+  })
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const router = useRouter()
+  const debouncedQuery = useDebounce(query, 300)
 
-  // Debounce input query to avoid sending too many requests while typing
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, 500); // Delay the query for 500ms
-
-    return () => clearTimeout(timeoutId); // Cleanup timeout on query change
-  }, [query]);
-
-  // Fetch products based on the debounced query
-  useEffect(() => {
-    if (!debouncedQuery.trim()) {
-      setProducts([]);
-      return;
+  const fetchResults = useCallback(async (searchQuery: string) => {
+    if (!searchQuery.trim()) {
+      setResults({ products: [], categories: [] })
+      setActiveCategory(null)
+      return
     }
-    //console.log(encodeURIComponent(debouncedQuery),'[[[[[[[[');
 
-    setLoading(true);
-    // Fetch products from an API or database
-    fetch(`/api/search?query=${encodeURIComponent(debouncedQuery)}`)
-      .then((res) => res.json())
-      .then((data) => {
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/search?query=${encodeURIComponent(searchQuery)}`)
+      const data = await response.json()
+      setResults(data)
+    } catch (error) {
+      console.error("Search failed:", error)
+      setResults({ products: [], categories: [] })
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
-        setProducts(data.products);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-        setProducts([]);
-      });
-  }, [debouncedQuery]);
-  //console.log(products,'bbbbbbbbbbbbbbbbbbb');
+  useEffect(() => {
+    if (debouncedQuery) {
+      fetchResults(debouncedQuery)
+      setIsDropdownOpen(true)
+    } else {
+      setResults({ products: [], categories: [] })
+      setIsDropdownOpen(false)
+    }
+  }, [debouncedQuery, fetchResults])
 
   const handleSearch = () => {
-    if (!query.trim()) return;
+    if (!query.trim()) return
+    router.push(`/search?q=${encodeURIComponent(query)}${activeCategory ? `&category=${activeCategory}` : ''}`)
+    setIsDropdownOpen(false)
+  }
 
-    router.push(`/search?q=${encodeURIComponent(query)}`);
-  };
-  const {user} = useHomeContext();
-  //console.log(user,';.,,,,,,,,,,,,,');
-  
-  function handleClickBigButton(){
-    if(user){
-      if (user.role.toLocaleLowerCase() === 'seller' || user.role.toLocaleLowerCase()==='admin'){
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') handleSearch()
+  }
+
+  const clearSearch = () => {
+    setQuery("")
+    setResults({ products: [], categories: [] })
+    setIsDropdownOpen(false)
+    setActiveCategory(null)
+  }
+
+  const filteredProducts = activeCategory
+    ? results.products.filter(p =>
+      p.category.id === activeCategory ||
+      (p.category.parent && p.category.parent.id === activeCategory)
+    )
+    : results.products
+
+  const parentCategories = results.categories.filter(c => !c.isSubcategory)
+  const subCategories = results.categories.filter(c => c.isSubcategory)
+  function handleClickBigButton() {
+    if (user) {
+      if (user.role.toLocaleLowerCase() === 'seller' || user.role.toLocaleLowerCase() === 'admin') {
         setButtonLoading(true);
         router.push('/admin/addNewProduct')
-      }else{
+      } else {
         setOpenSellerDialog(true);
       }
-    }else{
+    } else {
       setOpenDialog(true);
     }
   }
 
   return (
-    <div className="w-full relative max-w-3xl mx-auto text-center space-y-4">
-      {/* Search */}
-      <div className="flex items-stretch rounded-md overflow-hidden w-full">
-        <Input
-          type="text"
-          placeholder="Search products..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          /* onKeyDown={(e) => e.key === "Enter" && handleSearch()} */
-          className="flex-1 rounded-none rounded-l-md border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-auto"
-        />
-        <Button
-          onClick={handleSearch}
-          variant="default"
-          className="bg-yellow-400 rounded-l-none hover:bg-yellow-500 px-4 h-auto border text-black shadow-sm"
-        >
-          <span className="hidden md:block m-0 p-0">Search</span>
-          <Search className="h-5 w-5 md:hidden" />
-        </Button>
-      </div>
+    <div className="w-full relative max-w-3xl mx-auto">
+      {isShowSearch && (
+        <div className="relative flex items-center">
+          <div className="relative flex-1">
+            <Input
+              type="text"
+              placeholder="Search products, brands, categories..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onFocus={() => query && setIsDropdownOpen(true)}
+              onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
+              className="pl-10 pr-10 h-12 rounded-lg border-gray-300 focus-visible:ring-2 focus-visible:ring-primary"
+            />
 
-      {/* Loading and Search Results */}
-      {loading && <div className="text-sm text-gray-500">Loading...</div>}
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
 
-      {products.length > 0 && (
-        <div
-          className="absolute border-1 z-10 top-full mt-2 max-h-60 overflow-y-auto bg-white shadow-lg rounded-md w-full"
-          style={{ width: "calc(100% - 2rem)" }} // To ensure the dropdown doesn't extend outside of the container
-        >
-          {products.map((product) => (
-            <Link href={product.href} key={product.id} className="p-3 block hover:bg-gray-100 cursor-pointer">
-              <div className="font-semibold">{product.title}</div>
-              <div className="text-sm text-gray-600">{product.category.name}</div>
-            </Link>
-          ))}
+            {query && (
+              <button
+                onClick={clearSearch}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            )}
+          </div>
+
+          {/* <Button
+            onClick={handleSearch}
+            className="ml-2 h-12 px-6 bg-primary hover:bg-primary-dark text-white rounded-lg"
+          >
+            Search
+          </Button> */}
         </div>
       )}
 
-      {/* OR Browse */}
+
+      {/* Search Results Dropdown */}
+      {isDropdownOpen && (
+        <div className="absolute z-50 mt-2 w-full bg-white shadow-xl rounded-lg border border-gray-200 max-h-[70vh] overflow-hidden flex flex-col">
+          {loading ? (
+            <div className="p-4 space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <Skeleton key={i} className="h-16 w-full rounded" />
+              ))}
+            </div>
+          ) : (
+            <>
+              {/* Category Navigation */}
+              {results.categories.length > 0 && (
+                <div className="border-b">
+                  <div className="px-4 py-3 bg-gray-50 flex justify-between items-center">
+                    <h3 className="text-sm font-medium text-gray-700">Categories</h3>
+                    {/* {activeCategory && (
+                      <button
+                        onClick={() => setActiveCategory(null)}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        Show all
+                      </button>
+                    )} */}
+                  </div>
+
+                  {/* Parent Categories */}
+                  {parentCategories.length > 0 && (
+                    <div className="px-4 py-2 border-b">
+                      <h4 className="text-xs font-semibold text-gray-500 mb-2">Main Categories</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {parentCategories.map((category) => (
+                          <Link
+                            href={category.hrefCateg}
+                            key={category.id}
+                            /* onClick={() => setActiveCategory(category.id)} */
+                            className={`px-3 py-1.5 text-sm rounded-full flex items-center border transition-colors ${activeCategory === category.id
+                              ? 'bg-primary/10 border-primary text-primary'
+                              : 'bg-white border-gray-200 hover:bg-gray-50'
+                              }`}
+                          >
+                            <span className="font-medium">{category.name}</span>
+                            <span className="ml-1.5 px-1.5 py-0.5 text-xs rounded-full bg-gray-100">
+                              {category.count}
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Subcategories */}
+                  {subCategories.length > 0 && (
+                    <div className="px-4 py-2">
+                      <h4 className="text-xs font-semibold text-gray-500 mb-2">Subcategories</h4>
+                      <div className="flex overflow-auto gap-2  pb-3 overflow-y-hidden">
+                        {subCategories.map((category) => (
+                          <Link
+                            href={category.hrefSubCateg}
+                            key={category.id}
+                            /* onClick={() => setActiveCategory(category.id)} */
+                            className={`px-3 min-w-fit py-1.5 text-sm rounded-full flex items-center border transition-colors ${activeCategory === category.id
+                              ? 'bg-primary/10 border-primary text-primary'
+                              : 'bg-white border-gray-200 hover:bg-gray-50'
+                              }`}
+                          >
+                            {category.parent && (
+                              <span className="text-gray-500 mr-1">{category.parent.name} /</span>
+                            )}
+                            <span className="font-medium">{category.name}</span>
+                            <span className="ml-1.5 px-1.5 py-0.5 text-xs rounded-full bg-gray-100">
+                              {category.count}
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Products List */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="px-4 py-3 border-b bg-gray-50 flex justify-between items-center">
+                  <h3 className="text-sm font-medium text-gray-700">
+                    {activeCategory
+                      ? results.categories.find(c => c.id === activeCategory)?.name
+                      : `All Products (${filteredProducts.length})`
+                    }
+                  </h3>
+                  {/* {filteredProducts.length > 3 && (
+                    <button
+                      onClick={handleSearch}
+                      className="text-xs text-primary hover:underline"
+                    >
+                      View all
+                    </button>
+                  )} */}
+                </div>
+
+                {filteredProducts.length > 0 ? (
+                  <ul className="divide-y divide-gray-100">
+                    {filteredProducts.map((product) => (
+                      <li key={product.id}>
+                        <Link
+                          href={product.href}
+                          className="block p-3 hover:bg-gray-50 transition-colors"
+                        /* onClick={() => setIsDropdownOpen(false)} */
+                        >
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-12 w-12 rounded-md bg-gray-100 overflow-hidden mr-3">
+                              {product.image && (
+                                <img
+                                  src={product.image}
+                                  alt={product.title}
+                                  className="h-full w-full object-cover"
+                                />
+                              )}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <h4 className="text-sm font-medium text-gray-900 truncate">
+                                {product.title}
+                              </h4>
+                              <div className="mt-1 flex items-center text-xs text-gray-500">
+                                <span className="truncate">
+                                  in {product.category.parent?.name ? `${product.category.parent.name} / ` : ''}{product.category.name}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="ml-2 text-sm font-semibold text-gray-900 whitespace-nowrap">
+                              {product.discountPrice && product.isDealActive ? (
+                                <>
+                                  <span className="text-red-600">£{product.discountPrice}</span>
+                                  <span className="ml-1 text-xs text-gray-400 line-through">
+                                    £{product.price}
+                                  </span>
+                                </>
+                              ) : (
+                                `£${product.price}`
+                              )}
+                            </div>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="p-8 text-center text-gray-500">
+                    {activeCategory
+                      ? `No products found in this category matching "${query}"`
+                      : `No products found matching "${query}"`
+                    }
+                  </div>
+                )}
+              </div>
+
+              {/* Quick Search Footer */}
+              {/* <div className="border-t bg-gray-50 p-3">
+                <Link
+                  href={{
+                    pathname: '/search',
+                    query: {
+                      q: query,
+                      ...(activeCategory && { category: activeCategory })
+                    }
+                  }}
+                  className="w-full py-2 px-4 bg-white border border-gray-200 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 flex items-center justify-center"
+                >
+                  <span>See all results for "{query}"</span>
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </Link>
+              </div> */}
+            </>
+          )}
+        </div>
+      )}
       {isShowBrowser && (
         <div className="text-sm text-gray-600 ">
-          <div className="flex items-center space-x-2 mt-5 max-w-[100vw] overflow-x-auto">
+          <div className="flex items-center space-x-2 mt-5 max-w-[100vw] overflow-x-auto overflow-y-hidden">
             <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text="SELL ITEMS" />
             <span className="text-gray-400">|</span>
             <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text="SELL MACHINES" />
@@ -140,10 +385,9 @@ export function ProductSearchBar({ isShowBrowser = false }: { isShowBrowser?: bo
             </Link> */}
           </span>
           {openSellerDialog && <SellerFormDialog callback="/admin/addNewProduct" open={openSellerDialog} setOpen={setOpenSellerDialog} />}
-          {openDialog && <SellerFormDialog2 callback="/admin/addNewProduct" text="" open={openDialog} setOpen={setOpenDialog}/>}
+          {openDialog && <SellerFormDialog2 callback="/admin/addNewProduct" text="" open={openDialog} setOpen={setOpenDialog} />}
         </div>
       )}
     </div>
-  );
+  )
 }
-

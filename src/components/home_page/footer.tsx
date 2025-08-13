@@ -2,6 +2,7 @@
 import { ArrowUp } from "lucide-react"
 import Link from "next/link"
 import { Logo } from "../header/header"
+import { ContactDialog } from "./contact"
 
 const data = [
     {
@@ -46,7 +47,9 @@ function Item({ title, data }: ItemDataType) {
             <ul className="space-y-2">
                 {data.map((d, key) => (
                     <li key={`key_${key}`}>
+                        {d.name === 'Contact Us' ? <ContactDialog /> : 
                         <Link href={d.href} target="_blank" className="text-gray-300 hover:text-white text-sm">{d.name}</Link>
+                        }
                     </li>
                 ))}
             </ul>

@@ -29,7 +29,7 @@ const UserManagement = () => {
   // Mock users data
   let [usersData, setUsersData] = useState<User[]>([
     {
-      id: 1,
+      id: '1',
       name: 'John Smith',
       email: 'john.smith@example.com',
       role: 'seller',
@@ -39,7 +39,7 @@ const UserManagement = () => {
       verified: true
     },
     {
-      id: 2,
+      id: '2',
       name: 'Emma Johnson',
       email: 'emma.j@example.com',
       role: 'buyer',
@@ -49,7 +49,7 @@ const UserManagement = () => {
       verified: true
     },
     {
-      id: 3,
+      id: '3',
       name: 'Michael Davis',
       email: 'michael.d@example.com',
       role: 'seller',
@@ -59,7 +59,7 @@ const UserManagement = () => {
       verified: true
     },
     {
-      id: 4,
+      id: '4',
       name: 'Sarah Wilson',
       email: 'sarah.w@example.com',
       role: 'buyer',
@@ -69,7 +69,7 @@ const UserManagement = () => {
       verified: true
     },
     {
-      id: 5,
+      id: '5',
       name: 'David Moore',
       email: 'david.m@example.com',
       role: 'seller',
@@ -79,7 +79,7 @@ const UserManagement = () => {
       verified: true
     },
     {
-      id: 6,
+      id: '6',
       name: 'Jennifer Lee',
       email: 'jennifer.l@example.com',
       role: 'buyer',
@@ -89,7 +89,7 @@ const UserManagement = () => {
       verified: false
     },
     {
-      id: 7,
+      id: '7',
       name: 'Robert Taylor',
       email: 'robert.t@example.com',
       role: 'seller',
@@ -99,7 +99,7 @@ const UserManagement = () => {
       verified: true
     },
     {
-      id: 8,
+      id: '8',
       name: 'Lisa Brown',
       email: 'lisa.b@example.com',
       role: 'seller',
@@ -109,7 +109,7 @@ const UserManagement = () => {
       verified: false
     },
     {
-      id: 9,
+      id: '9',
       name: 'James Wilson',
       email: 'james.w@example.com',
       role: 'buyer',
@@ -119,7 +119,7 @@ const UserManagement = () => {
       verified: true
     },
     {
-      id: 10,
+      id: '10',
       name: 'Patricia Miller',
       email: 'patricia.m@example.com',
       role: 'buyer',
@@ -348,6 +348,9 @@ const UserManagement = () => {
     // Trigger password reset email
   };
 
+  //console.log(filteredUsers);
+  
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -472,7 +475,7 @@ const UserManagement = () => {
           > 
             <Lock size={18} />
           </button> */}
-              {user.status === 'active' ? (
+              {user.status !== 'suspended' ? (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
