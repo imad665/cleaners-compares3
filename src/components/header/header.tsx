@@ -18,6 +18,7 @@ import { SignInModal } from '../auth/signin'
 import { ContactDialog } from '../home_page/contact'
 import NotificationBadge from './notificationIcon'
 import { NotificationDropdown } from './notificationButton2'
+import AutoSellerFormDialog from '../forms/autoSellerForm'
 
 // Temporary state values — replace with auth/cart logic
 
@@ -479,7 +480,7 @@ export function Header({ className = '', recentOrderCount }: { className?: strin
             </div>
             <NavProducts />
             {/* {!user && <ContinueWithGoogleAlert />} */}
-            {openDialog && <SellerFormDialog open={openDialog} setOpen={setOpenDialog} />}
+            {openDialog && <AutoSellerFormDialog open={openDialog} setOpen={setOpenDialog} />}
         </header>
 
     )

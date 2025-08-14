@@ -61,13 +61,13 @@ function getUserMenu(user, cart,sellerStats2) {
       { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
       { label: "My Products", icon: Box, path: "/admin/allProducts" },
       { 
-        label: "Sold Products", 
+        label: "Orders Placed", 
         icon: CheckCircle, 
         path: "/orders",
         badge: sellerStats.soldProducts 
       },
       { 
-        label: "Orders", 
+        label: "Orders Received", 
         icon: ListOrdered, 
         path: "/admin/orders",
         badge: sellerStats.pendingOrders 

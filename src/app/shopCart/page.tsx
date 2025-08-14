@@ -129,7 +129,7 @@ function CheckoutForm({
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Payment failed';
       setError(errorMessage);
-      
+
       if (!failedPayments.length) {
         toast.error(errorMessage);
       }
@@ -141,7 +141,7 @@ function CheckoutForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-     <div className="border rounded-lg p-4">
+      <div className="border rounded-lg p-4">
         <CardElement
           options={{
             style: {
@@ -174,7 +174,7 @@ function CheckoutForm({
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <ExclamationTriangleIcon  className="h-5 w-5 text-yellow-400" />
+              <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400" />
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800">
@@ -232,7 +232,7 @@ function CheckoutForm({
   );
 }
 
-function ShippingForm({
+/* function ShippingForm({
   onSubmit,
   initialValues
 }: {
@@ -336,7 +336,179 @@ function ShippingForm({
       </Button>
     </form>
   );
+} */
+
+
+
+
+function ShippingForm({
+  onSubmit,
+  initialValues,
+}: {
+  onSubmit: (values: {
+    address: string;
+    city: string;
+    country: string;
+    postalCode: string;
+    phone: string;
+  }) => void;
+  initialValues?: {
+    address: string;
+    city: string;
+    country: string;
+    postalCode: string;
+    phone: string;
+  };
+}) {
+  const [formData, setFormData] = useState({
+    address: initialValues?.address || "",
+    city: initialValues?.city || "",
+    country: initialValues?.country || "",
+    postalCode: initialValues?.postalCode || "",
+    phone: initialValues?.phone || "",
+  });
+
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [isSuggestions, setIsSuggestions] = useState(false)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "postalCode") {
+      searchAddresses(value);
+    }
+  };
+
+  const searchAddresses = async (postalCode: string) => {
+    if (postalCode.length < 2) {
+      //setSuggestions([]);
+      setIsSuggestions(false)
+      return;
+    }
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+        postalCode
+      )}&addressdetails=1&limit=50`
+    );
+    const data = await res.json();
+    setSuggestions(data);
+    setIsSuggestions(data.length != 0)
+  };
+
+  const handleSelect = (place: any) => {
+    const { address } = place;
+    setFormData({
+      address: address.road || place.display_name, // street address
+      city: address.city || address.town || address.village || "",
+      country: address.country || "United Kingdom",
+      postalCode: formData.postalCode,
+      phone: formData.phone,
+    });
+    //setSuggestions([]);
+    setIsSuggestions(false)
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 relative">
+      <div>
+        <Label htmlFor="postalCode">Postal Code</Label>
+        <Input
+          id="postalCode"
+          name="postalCode"
+          value={formData.postalCode}
+          onChange={handleChange}
+          onFocus={(e) => setIsSuggestions(suggestions.length != 0)}
+          onBlur={(e) => {
+            setTimeout(() => {
+              setIsSuggestions(false)
+            }, 500)
+          }}
+          placeholder="Enter UK postcode"
+          required
+        />
+        {isSuggestions && (
+          <ul className="absolute z-50 bg-white border border-gray-300 w-full max-h-40 overflow-y-auto mt-1 rounded">
+            {suggestions.map((place) => (
+              <li
+                key={place.place_id}
+                className="px-2 py-1 cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSelect(place)}
+              >
+                {place.display_name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div>
+        <Label htmlFor="address">Street Address</Label>
+        <Input
+          id="address"
+          name="address"
+          value={formData.address}
+          onChange={(e) =>
+            setFormData((prev) => ({ ...prev, address: e.target.value }))
+          }
+          required
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="city">City</Label>
+          <Input
+            id="city"
+            name="city"
+            value={formData.city}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, city: e.target.value }))
+            }
+            required
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="country">Country</Label>
+          <Input
+            id="country"
+            name="country"
+            value={formData.country}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, country: e.target.value }))
+            }
+            required
+          />
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="phone">Phone Number</Label>
+        <Input
+          id="phone"
+          name="phone"
+          type="tel"
+          value={formData.phone}
+          onChange={(e) =>
+            setFormData((prev) => ({ ...prev, phone: e.target.value }))
+          }
+          required
+        />
+      </div>
+
+      <Button type="submit" className="w-full">
+        Continue to Payment
+      </Button>
+    </form>
+  );
 }
+
 
 function SubTotal({ selectedCart, onCheckoutSuccess }: {
   selectedCart: any[],
@@ -354,7 +526,7 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
   });
   const [openSignUp, setOpenSignUp] = useState(false);
   const [openSignIn, setOpenSignIn] = useState(false);
-  const {user} = useHomeContext();
+  const { user } = useHomeContext();
 
   const handleShippingSubmit = (info: typeof shippingInfo) => {
     setShippingInfo(info);
@@ -426,11 +598,12 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
 }
 
 export default function Page() {
-  const { cart, clearCart,removeProduct } = useHomeContext();
+  const { cart, clearCart, removeProduct } = useHomeContext();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [featuredProducts, setFeaturedProducts] = useState(null);
   const [footerData, setFooterData] = useState(null);
+  const [isCheckoutSuccess, setIscheckoutSuccess] = useState(false);
 
   useEffect(() => {
     if (!cart || cart.length === 0) {
@@ -463,7 +636,7 @@ export default function Page() {
         setLoading(false);
       }
     };
-    if(products.length > 0) return
+    if (products.length > 0) return
     fetchProducts();
   }, [cart]);
 
@@ -472,7 +645,7 @@ export default function Page() {
   //console.log(existedProducts, ';;;;;;;;;;;;', cart);
 
   const selectedCart = cart
-    ?.filter(c => c.quantity != 0 && products.find((p) => p.productId === c.productId ))
+    ?.filter(c => c.quantity != 0 && products.find((p) => p.productId === c.productId))
     .map((c) => ({
       ...c,
       priceExcVat: existedProducts?.find((p) => p.productId === c.productId)?.priceExcVat * c.quantity,
@@ -488,6 +661,7 @@ export default function Page() {
 
   const handleCheckoutSuccess = () => {
     clearCart();
+    setIscheckoutSuccess(true)
     // Optionally redirect to order confirmation page
   };
   return (
@@ -516,16 +690,57 @@ export default function Page() {
                 />
               </>
             ) : (
-              <div className="text-center py-10">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
-                <p className="text-gray-600 mb-6">Looks like you haven't added any items yet</p>
-                <Button
-                  onClick={() => window.location.href = '/'}
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  Continue Shopping
-                </Button>
-              </div>
+              <>
+                {!isCheckoutSuccess ? <div className="text-center py-10">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
+                  <p className="text-gray-600 mb-6">Looks like you haven't added any items yet</p>
+                  <Button
+                    onClick={() => window.location.href = '/'}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    Continue Shopping
+                  </Button>
+                </div> :
+                  <div className="text-center py-12 px-4 max-w-md mx-auto">
+                    <div className="mb-6">
+                      <svg
+                        className="w-20 h-20 text-green-500 mx-auto animate-bounce"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-3">Order Confirmed!</h2>
+                    <p className="text-gray-600 mb-6">
+                      Thank you for your purchase! Your order has been received and is being processed.
+                    </p>
+                     
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <Button
+                        onClick={() => window.location.href = '/'}
+                        className="bg-blue-600 hover:bg-blue-700 flex-1 sm:flex-none"
+                      >
+                        Continue Shopping
+                      </Button>
+                      <Button
+                        onClick={() => window.location.href = '/orders'}
+                        className="bg-white text-blue-600 border border-blue-600 hover:bg-blue-50 flex-1 sm:flex-none"
+                      >
+                        View Orders
+                      </Button>
+                    </div>
+                  </div>
+                }
+              </>
+
             )}
           </>
         )}

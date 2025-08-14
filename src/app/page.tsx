@@ -19,6 +19,7 @@ import { getCategoriesHome } from "@/lib/products/homeCategories";
 import { Button } from "@/components/ui/button";
 import { getAllHomeProducts, getRecentOrdersCount } from "@/lib/products/homeProducts";
 import { FormProvider } from "react-hook-form";
+import AddressSearchUK from "@/components/address-search";
  
 
 export default async function Home() {
@@ -58,7 +59,7 @@ export default async function Home() {
         <EducationalAndVideos initYoutubVideos={youtubeVideos.videos} />
         <BrandingSlider />
       </main>
-
+      {/* <AddressSearchUK/> */}
       <Footer footerData={footerData} />
     </div>
 
