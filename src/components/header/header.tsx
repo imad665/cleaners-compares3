@@ -220,6 +220,7 @@ interface Props {
     cart: { quantity: number, productId: string }[];
     setOpenDialog: (open: boolean) => void;
     recentOrderCount: any;
+    notificationData:any;
 }
 
 export function SignInUpModal(
@@ -253,7 +254,7 @@ export function SignInUpModal(
     )
 }
 
-function NavDesktop({ user, cart, setOpenDialog, recentOrderCount }: Props) {
+function NavDesktop({ user, cart, setOpenDialog, recentOrderCount,notificationData }: Props) {
     const cartCount = cart.reduce((sum, prev) => sum + prev.quantity, 0);
     const [openSignUp, setOpenSignUp] = useState(false);
     const [openSignIn, setOpenSignIn] = useState(false);
@@ -275,7 +276,7 @@ function NavDesktop({ user, cart, setOpenDialog, recentOrderCount }: Props) {
                     <ContactDialog />
                 } */}
                 {user &&
-                    <NotificationDropdown />
+                    <NotificationDropdown notificationData={notificationData} />
                 }
                 {/* recentOrderCount={recentOrderCount} {user && <ButtonSignOut />} */}
                 {/* User */}
@@ -448,7 +449,7 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount }: Props
     );
 }
 
-export function Header({ className = '', recentOrderCount }: { className?: string, recentOrderCount?: any }) {
+export function Header({ className = '', recentOrderCount,notificationData }: { className?: string, recentOrderCount?: any,notificationData?:any }) {
     const { cart, user } = useHomeContext();
     //console.log(cart, ';;;;;;;;;;;;;;;;;;');
     const [openDialog, setOpenDialog] = useState(false);
@@ -465,6 +466,7 @@ export function Header({ className = '', recentOrderCount }: { className?: strin
                     user={user}
                     setOpenDialog={setOpenDialog}
                     recentOrderCount={recentOrderCount}
+                    notificationData={notificationData}
                     cart={cart} />
 
                 {/* Mobile Nav */}

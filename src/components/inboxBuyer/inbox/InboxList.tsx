@@ -46,7 +46,7 @@ const InboxList: React.FC<InboxListProps> = ({
   useEffect(() => {
     if (activeConversationId) {
       const fetchConversationDetails = async () => {
-        setLoading(true);
+        setLoading(!transformedConversations);
         try {
           // Parse orderId and sellerId from the activeConversationId
           const [orderId, queryString] = activeConversationId.split('?');
@@ -62,7 +62,7 @@ const InboxList: React.FC<InboxListProps> = ({
           const response = await fetch(apiUrl);
           if (response.ok) {
             const { data } = await response.json();
-            console.log(data,';;;;;;;;;;;;;;;;;');
+            //console.log(data,';;;;;;;;;;;;;;;;;');
             
             setActiveConversation(data);
           } else {
@@ -116,6 +116,13 @@ const InboxList: React.FC<InboxListProps> = ({
       };
 
       fetchConversationDetails();
+
+      if(!transformedConversations)fetchConversationDetails();
+
+      const intervalId = setInterval(fetchConversationDetails, 8000);
+
+    // Clean up interval on unmount
+    return () => clearInterval(intervalId);
     } else {
       setActiveConversation(null);
     }

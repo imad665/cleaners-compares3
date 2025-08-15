@@ -44,7 +44,7 @@ const SellerInboxList: React.FC<SellerInboxListProps> = ({
   useEffect(() => {
     if (activeConversationId) {
       const fetchConversationDetails = async () => {
-        setLoading(true);
+        setLoading(!activeConversation);
         try {
           // Parse orderId and buyerId from the activeConversationId
           const [orderId, queryString] = activeConversationId.split('?');
@@ -111,7 +111,12 @@ const SellerInboxList: React.FC<SellerInboxListProps> = ({
         }
       };
 
-      fetchConversationDetails();
+      if(!transformedConversations)fetchConversationDetails();
+
+      const intervalId = setInterval(fetchConversationDetails, 8000);
+
+    // Clean up interval on unmount
+    return () => clearInterval(intervalId);
     } else {
       setActiveConversation(null);
     }

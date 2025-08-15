@@ -367,7 +367,7 @@ export default function SellerOrdersPage() {
                             </Button>
                           )}
 
-                          {canCancel && !isCancel && (
+                         {/*  {canCancel && !isCancel && (
                             <Button
                               variant="outline"
                               size="sm"
@@ -384,7 +384,7 @@ export default function SellerOrdersPage() {
                                 </>
                               )}
                             </Button>
-                          )}
+                          )} */}
 
                           {!canShip && !canCancel && (
                             <Button variant="outline" size="sm" disabled>

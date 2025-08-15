@@ -44,13 +44,13 @@ function getUserMenu(user, cart,sellerStats2) {
       { label: "My Businesses for Sale", icon: ShoppingCart, path: "/admin/myBusinessesForSale" },
       { label: "Videos", icon: Video, path: "/admin/myVideos" },
       { 
-        label: "Sold Products", 
+        label: "Orders Placed", 
         icon: CheckCircle, 
         path: "/orders",
         badge: sellerStats.soldProducts 
       },
       { 
-        label: "Orders", 
+        label: "Orders Received", 
         icon: ListOrdered, 
         path: "/admin/orders",
         badge: sellerStats.pendingOrders 
@@ -86,7 +86,7 @@ function getUserMenu(user, cart,sellerStats2) {
         badge: cartCount > 0 ? cartCount : undefined 
       },
       { 
-        label: "Sold Products", 
+        label: "Orders Placed", 
         icon: CheckCircle, 
         path: "/orders",
         badge: sellerStats.soldProducts 

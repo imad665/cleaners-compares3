@@ -13,14 +13,14 @@ type Notification = {
   link: string;
 };
 
-export function NotificationDropdown() {
+export function NotificationDropdown({notificationData}:{notificationData:any}) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
+ 
   // Sample notifications data
-   const notifications: Notification[] = [
-    {
+    const notifications: Notification[] = [
+    /* {
       id: '1',
       type: 'order',
       title: 'New Order Received',
@@ -51,8 +51,10 @@ export function NotificationDropdown() {
       preview: '£245.80 has been deposited to your account',
       time: '3 hours ago',
       link: '/admin/dashboard/payments'
-    }
-  ];
+    } */
+  ].concat(notificationData || []); 
+
+   
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -135,6 +137,9 @@ export function NotificationDropdown() {
                         <p className="text-sm font-medium text-gray-900">
                           {notification.title}
                         </p>
+                        {notification.msgCount && <p className='rounded-full w-5 h-5 text-center text-xs flex items-center justify-center text-white bg-red-500'>
+                          {notification.msgCount}
+                        </p>}
                         <ChevronRight className="h-4 w-4 text-gray-400" />
                       </div>
                       <p className="text-sm text-gray-500 mt-1">
@@ -154,7 +159,7 @@ export function NotificationDropdown() {
             )}
 
             <div className="px-4 py-2 border-t border-gray-100">
-              <button
+              {/* <button
                 onClick={() => {
                   router.push('/admin/dashboard/inbox');
                   setIsOpen(false);
@@ -162,7 +167,7 @@ export function NotificationDropdown() {
                 className="w-full text-center text-sm font-medium text-blue-600 hover:text-blue-800"
               >
                 View all notifications
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

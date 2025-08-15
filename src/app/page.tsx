@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { getAllHomeProducts, getRecentOrdersCount } from "@/lib/products/homeProducts";
 import { FormProvider } from "react-hook-form";
 import AddressSearchUK from "@/components/address-search";
+import { getNotifications } from "@/lib/payement/get-notification-for-icon";
  
 
 export default async function Home() {
@@ -39,10 +40,13 @@ export default async function Home() {
   } = await getAllHomeProducts();
   
   const recentOrderCount = await getRecentOrdersCount();
+  const messages = await getNotifications()
+  console.log(messages,'vvvvvvvvvvvvvv');
+  
   //console.log(dealsProducts, 'mmmmmmmmmmmmmm');
   return (
     <div>
-      <Header recentOrderCount={recentOrderCount} />
+      <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
       
       <main className="">
         <MainImage />
