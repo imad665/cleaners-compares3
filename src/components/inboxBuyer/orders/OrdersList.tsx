@@ -54,6 +54,7 @@ const OrdersList: React.FC<OrdersListProps> = ({
               key={group.seller.id}
               seller={group.seller}
               items={group.items}
+              messageNotRead={group.messageNotRead}
               totalAmount={group.totalAmount}
               onContactSeller={() => onContactSeller(group.seller.id)}
               onViewConversation={() => onViewConversation(group.seller.id)}

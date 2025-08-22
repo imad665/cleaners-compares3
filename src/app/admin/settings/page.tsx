@@ -1,12 +1,13 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { Save, Upload, Globe, CreditCard, Lock, Bell, Mail, Trash2, PercentCircle } from 'lucide-react';
+import { Save, Upload, Globe, CreditCard, Lock, Bell, Mail, Trash2, PercentCircle, EyeOff, Eye, Bot, Key } from 'lucide-react';
 import Button from '@/components/adminDashboard/shared/Button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Logo } from '@/components/header/header';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 
 function PayementPricing({ handleSavePayment, payment, handlePaymentChange, setPayment }) {
@@ -210,7 +211,15 @@ const Settings = () => {
 
   const [logo, setLogo] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>('');
-
+  // API Key state and handlers (new code)
+  const [apiKeys, setApiKeys] = useState({
+    openai: '',
+    gemini: ''
+  });
+  const [showKeys, setShowKeys] = useState({
+    openai: false,
+    gemini: false
+  });
 
   const [password, setPassword] = useState({
     requireStrongPassword: 'on',
@@ -232,7 +241,7 @@ const Settings = () => {
     emailSignature: 'The Cleaners Compare Team',
   });
   const [commission, setCommission] = useState({
-    commissionRate:'',
+    commissionRate: '',
   })
 
   useEffect(() => {
@@ -244,9 +253,11 @@ const Settings = () => {
       const newPayement: { [key: string]: any } = { day_based_pricing: [] };
       const newEmails: { [key: string]: any } = {};
       const newPass: { [key: string]: any } = {};
-      const newCommision:{[key:string]:any}={};
+      const newCommision: { [key: string]: any } = {};
+      const newApiKey: { [key: string]: any } = {};
       //console.log(allstg, 'pppppp');
-
+      //console.log(allstg,'oooooooooooooooooooooooooooooooo');
+      
       for (const [key, value] of Object.entries(general)) {
         newGeneral[key] = allstg[key] !== 'undefined' ? allstg[key] : '';
       }
@@ -273,14 +284,15 @@ const Settings = () => {
       for (const [key, value] of Object.entries(password)) {
         newPass[key] = allstg[key];
       }
-      for(const [key,value] of Object.entries(commission)){
-        newCommision[key] = allstg[key];
+      for (const [key, value] of Object.entries(apiKeys)) {
+        newApiKey[key] = allstg[key];
       }
       //console.log(newCommision,';;;;;;;;;;;;');
-      
+
       setEmail(newEmails);
       setPayment(newPayement);
       setCommission(newCommision)
+      setApiKeys(newApiKey)
       //console.log(allstg, ';;;;;===========;;;;;;');
       setGeneral(newGeneral)
       setPassword(newPass)
@@ -329,14 +341,14 @@ const Settings = () => {
   const handleCommissionChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     //*console.log(name,value,commission,';;;;;;;;;;;');
-    
+
     setCommission({
       ...commission,
       [name]: value,
     })
   }
   //console.log(commission,'++++++++++++++++=========');
-  
+
   const handleSaveCommission = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
@@ -344,7 +356,7 @@ const Settings = () => {
       formData.append(key, value);
     }
     //console.log(formData,'uuuuuuuuuu');
-    
+
     try {
       const res = await fetch('/api/admin/settings', {
         method: 'POST',
@@ -527,6 +539,50 @@ const Settings = () => {
     } catch (error) {
       toast.error('failed to save data!')
     }
+  };
+
+  
+
+  const handleSaveApiKeys = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(apiKeys)) {
+      formData.append(key, value);
+    }
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'POST',
+        /* headers: {
+          'Content-Type': 'application/json',
+        }, */
+        body: formData
+      });
+
+      if (!res.ok) {
+        const { error } = await res.json();
+        toast.error(error);
+        return;
+      }
+
+      const { message } = await res.json();
+      toast.success(message);
+    } catch (error) {
+      toast.error('Failed to save API keys!');
+    }
+  };
+
+  const handleApiKeyChange = (key: string, value: string) => {
+    setApiKeys({
+      ...apiKeys,
+      [key]: value,
+    });
+  };
+
+  const toggleKeyVisibility = (key: string) => {
+    setShowKeys({
+      ...showKeys,
+      [key]: !showKeys[key],
+    });
   };
 
   return (
@@ -868,6 +924,99 @@ const Settings = () => {
           </form>
         </div>
       </div>
+      {/* API Key Settings (new section) */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Key size={20} />
+            API Key Management
+          </CardTitle>
+          <CardDescription>
+            Configure API keys for AI services used in the chatbot
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSaveApiKeys} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="openai-key" className="text-sm font-medium flex items-center gap-2">
+                  <Bot size={16} />
+                  OpenAI API Key
+                </Label>
+                <div className="mt-1 relative">
+                  <Input
+                    type={showKeys.openai ? "text" : "password"}
+                    id="openai-key"
+                    value={apiKeys.openai}
+                    onChange={(e) => handleApiKeyChange('openai', e.target.value)}
+                    placeholder="sk-... (your OpenAI API key)"
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => toggleKeyVisibility('openai')}
+                  >
+                    {showKeys.openai ? (
+                      <EyeOff size={16} className="text-gray-500" />
+                    ) : (
+                      <Eye size={16} className="text-gray-500" />
+                    )}
+                  </Button>
+                </div>
+                <p className="mt-2 text-sm text-gray-500">
+                  Your OpenAI API key for ChatGPT functionality (embeddings) in the chatbot.
+                </p>
+              </div>
+
+              <div>
+                <Label htmlFor="gemini-key" className="text-sm font-medium flex items-center gap-2">
+                  <Bot size={16} />
+                  Google Gemini API Key
+                </Label>
+                <div className="mt-1 relative">
+                  <Input
+                    type={showKeys.gemini ? "text" : "password"}
+                    id="gemini-key"
+                    value={apiKeys.gemini}
+                    onChange={(e) => handleApiKeyChange('gemini', e.target.value)}
+                    placeholder="AIza... (your Gemini API key)"
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => toggleKeyVisibility('gemini')}
+                  >
+                    {showKeys.gemini ? (
+                      <EyeOff size={16} className="text-gray-500" />
+                    ) : (
+                      <Eye size={16} className="text-gray-500" />
+                    )}
+                  </Button>
+                </div>
+                <p className="mt-2 text-sm text-gray-500">
+                  Your Google Gemini API key for alternative AI responses in the chatbot.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <Save size={16} className="mr-2" />
+                Save API Keys
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
 
       {/* Payment Settings */}
       {/*  <PayementPricing

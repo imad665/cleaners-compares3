@@ -21,6 +21,9 @@ export async function POST(req: Request) {
     try {
         const formData = await req.formData();
         const keysDays = []
+
+
+         
         for (const [key, value] of formData.entries()) {
             console.log(`Key: ${key}, Value: ${value}`);
             if (key.includes('days_')) keysDays.push(key);

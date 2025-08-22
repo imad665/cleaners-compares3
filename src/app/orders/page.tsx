@@ -25,7 +25,7 @@ function App() {
 
       const {data} = await res.json();
       setOrders(data || []);
-      //console.log(data,';;-----------------+++++++++')
+     //console.log(data,';;-----------------+++++++++')
       
       // Flatten all conversations from all sellers into a single array
       const conversations = (data || []).flatMap((group: any) =>
@@ -36,6 +36,8 @@ function App() {
         }))
       );
       setAllConversations(conversations);
+      //console.log(conversations,'MMMMMMMMMM???????????????');
+      
       setLoading(false);
     }
     fetchPurshase()

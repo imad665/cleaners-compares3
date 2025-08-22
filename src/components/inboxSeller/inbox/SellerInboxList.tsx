@@ -36,7 +36,8 @@ const SellerInboxList: React.FC<SellerInboxListProps> = ({
       sellerRating: 4.5, // Default rating
       lastUpdated: conv.createdAt,
       messages: [], // Will be loaded when conversation is opened
-      unreadCount: conv.sellerRead ? 0 : 1
+      unreadCount: conv.sellerRead ? 0 : 1,
+      unreadMessageCount:conv.unreadMessageCount
     }));
   }, [propConversations]);
 

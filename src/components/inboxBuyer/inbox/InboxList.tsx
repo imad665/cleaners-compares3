@@ -20,7 +20,7 @@ const InboxList: React.FC<InboxListProps> = ({
   const [localActiveConversationId, setLocalActiveConversationId] = useState<string | null>(null);
   const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
   const [loading, setLoading] = useState(false);
-
+  
   // Use props if provided, otherwise use local state
   const activeConversationId = propActiveConversationId !== undefined ? propActiveConversationId : localActiveConversationId;
   const setActiveConversationId = propSetActiveConversationId || setLocalActiveConversationId;
@@ -56,7 +56,7 @@ const InboxList: React.FC<InboxListProps> = ({
           // Build the API URL with both orderId and sellerId
           let apiUrl = `/api/messages?orderId=${orderId}`;
           if (sellerId) {
-            apiUrl += `&sellerId=${sellerId}`;
+            apiUrl += `&sellerId=${sellerId}&isForBuyer=true`;
           }
           
           const response = await fetch(apiUrl);

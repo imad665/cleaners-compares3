@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
         const orderId = searchParams.get('orderId');
         const sellerId = searchParams.get('sellerId');
         const buyerId = searchParams.get('buyerId');
+        const isForBuyer = searchParams.get("isForBuyer");
 
         if (!orderId) {
             return NextResponse.json({ success: false, message: 'Order ID is required' }, { status: 400 });
@@ -23,7 +24,7 @@ export async function GET(req: NextRequest) {
 
         let order;
         let userRole: 'buyer' | 'seller' = 'buyer';
-        
+
         // First try to find as buyer
         order = await prisma.order.findFirst({
             where: {
@@ -111,7 +112,7 @@ export async function GET(req: NextRequest) {
                     }
                 }
             });
-            
+
             if (order) {
                 userRole = 'seller';
             }
@@ -171,6 +172,28 @@ export async function GET(req: NextRequest) {
             }
         });
 
+        //console.log(messages, isForBuyer, 'i;;;;;;;;;;;;;;;;;;;;;;;mmmmmmmmmmmmm');
+        if (isForBuyer) {
+            await prisma.message.updateMany({
+                where: {
+                    sender: "SELLER",
+                    isReceiverRead: false
+                },
+                data:{
+                    isReceiverRead:true
+                }
+            })
+        }else{
+            await prisma.message.updateMany({
+                where:{
+                    sender:"BUYER",
+                    isReceiverRead:false,
+                },
+                data:{
+                    isReceiverRead:true,
+                }
+            })
+        }
         // Transform messages to match the expected format
         const transformedMessages = messages.map(message => ({
             id: message.id,
@@ -184,7 +207,7 @@ export async function GET(req: NextRequest) {
 
         // Prepare conversation data based on user role
         let conversationData;
-        
+
         if (userRole === 'seller') {
             // For seller view, show buyer information
             const firstOrderItem = order.orderItems[0];
@@ -207,7 +230,7 @@ export async function GET(req: NextRequest) {
             // For buyer view, show seller information
             let seller;
             let productInfo;
-            
+
             if (sellerId) {
                 const sellerOrderItem = order.orderItems.find(item => item.seller.id === sellerId);
                 seller = sellerOrderItem?.seller;
@@ -291,7 +314,7 @@ export async function POST(req: NextRequest) {
                     }
                 }
             });
-            
+
             if (order) {
                 userRole = 'seller';
             }

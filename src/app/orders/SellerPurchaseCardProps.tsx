@@ -42,9 +42,11 @@ interface SellerPurchaseCardProps {
     name: string;
     email: string;
     businessName: string;
+    
   };
   items: PurchaseItem[];
   totalAmount: number;
+  messageNotRead:number;
   onContactSeller?: () => void;
   onViewConversation?: () => void;
 }
@@ -64,6 +66,7 @@ export function SellerPurchaseCard({
   seller,
   items,
   totalAmount,
+  messageNotRead,
   onContactSeller,
   onViewConversation,
 }: SellerPurchaseCardProps) {
@@ -145,10 +148,10 @@ export function SellerPurchaseCard({
             )}
             {onViewConversation && (
               <button
-                className="mt-1 px-3 py-1 text-sm rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+                className="mt-1 px-3 py-1 text-sm flex gap-2 items-center rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
                 onClick={onViewConversation}
               >
-                View Conversation
+                View Conversation {messageNotRead>0 && <span className='rounded-full p-1 bg-red-600 w-5 h-5 flex items-center justify-center text-white '>{messageNotRead}</span>}
               </button>
             )}
           </div>
@@ -177,13 +180,13 @@ export function SellerPurchaseCard({
                   </Badge>
                 )}
                 {/* ConfirmDeliveryButton */}
-                {order.canConfirmDelivery && (
+                {/* {order.canConfirmDelivery && (
 
                   <Button
                     onClick={() => handleConfirmDelivery(order.orderId)}
                   >Confirm Delivery
                   </Button>
-                )}
+                )} */}
               </div>
             </div>
 

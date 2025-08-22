@@ -102,41 +102,53 @@ export default function ChatWidget() {
 
     return (
         <>
-            {/* Floating Chat Button - Responsive positioning */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className={`
-                    fixed bottom-4 right-4 
-                    sm:bottom-6 sm:right-6 
-                    flex items-center justify-center 
-                    w-12 h-12 sm:w-14 sm:h-14 
-                    rounded-full shadow-lg transition-all duration-300 z-50 
-                    ${isOpen ? 'bg-red-500 hover:bg-red-600' : 'bg-indigo-600 hover:bg-indigo-700'} 
-                    text-white
-                `}
-                aria-label={isOpen ? "Close chat" : "Open chat"}
-            >
-                {isOpen ? (
-                    <X className="h-5 w-5 sm:h-6 sm:w-6" />
-                ) : (
-                    <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />
+            {/* Floating Chat Button with Wave Effect */}
+            <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
+                {/* Wave effect - only shown when chat is closed */}
+                {!isOpen && (
+                    <div className="absolute inset-0 -m-3">
+                        <div className="absolute inset-0 rounded-full bg-indigo-400/40 animate-ping-slow"></div>
+                        <div className="absolute inset-0 rounded-full bg-indigo-400/30 animate-ping-slower"></div>
+                    </div>
                 )}
-            </button>
+                
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className={`
+                        flex items-center justify-center 
+                        w-12 h-12 sm:w-14 sm:h-14 
+                        rounded-full shadow-lg transition-all duration-300 relative
+                        ${isOpen 
+                            ? 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700' 
+                            : 'bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
+                        } 
+                        text-white transform hover:scale-105
+                    `}
+                    aria-label={isOpen ? "Close chat" : "Open chat"}
+                >
+                    {isOpen ? (
+                        <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                    ) : (
+                        <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />
+                    )}
+                </button>
+            </div>
 
-
+            {/* WhatsApp Button */}
             {isOpen && (
                 <Link
                     href={whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="
-        fixed bottom-4 right-20 
-        sm:bottom-6 sm:right-24 
-        flex items-center justify-center 
-        w-12 h-12 sm:w-14 sm:h-14 
-        rounded-full shadow-lg  bg-green-50 hover:bg-green-100 
-        text-white transition-all duration-300 z-50
-      "
+                        fixed bottom-4 right-20 
+                        sm:bottom-6 sm:right-24 
+                        flex items-center justify-center 
+                        w-12 h-12 sm:w-14 sm:h-14 
+                        rounded-full shadow-lg bg-green-50 hover:bg-green-100 
+                        text-white transition-all duration-300 z-50
+                        transform hover:scale-105
+                    "
                     aria-label="Contact us on WhatsApp"
                 >
                     <Image
@@ -156,6 +168,7 @@ export default function ChatWidget() {
                     sm:right-6 sm:left-auto 
                     w-auto max-w-full 
                     sm:max-w-md 
+                    min-w-[430px]
                     bg-white rounded-t-2xl rounded-bl-2xl shadow-xl 
                     overflow-hidden z-40 flex flex-col
                     border border-gray-200
@@ -271,6 +284,36 @@ export default function ChatWidget() {
                     </div>
                 </div>
             )}
+            
+            {/* Add custom animation styles */}
+            <style jsx>{`
+                @keyframes ping-slow {
+                    0%, 100% {
+                        transform: scale(1);
+                        opacity: 0.7;
+                    }
+                    50% {
+                        transform: scale(1.5);
+                        opacity: 0;
+                    }
+                }
+                @keyframes ping-slower {
+                    0%, 100% {
+                        transform: scale(1);
+                        opacity: 0.5;
+                    }
+                    50% {
+                        transform: scale(1.8);
+                        opacity: 0;
+                    }
+                }
+                .animate-ping-slow {
+                    animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+                }
+                .animate-ping-slower {
+                    animation: ping-slower 4s cubic-bezier(0, 0, 0.2, 1) infinite;
+                }
+            `}</style>
         </>
     );
 }

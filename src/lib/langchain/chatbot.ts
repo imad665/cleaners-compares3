@@ -3,61 +3,62 @@
 
 import { ChatOpenAI } from "@langchain/openai";
 import { OpenAIEmbeddings } from "@langchain/openai";
-import { createClient } from "@supabase/supabase-js";
-import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
+import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
+import { Pool } from "pg";
 
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { createRetrievalChain } from "langchain/chains/retrieval";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { DocumentInterface } from "@langchain/core/documents";
 
 export const askStoreBot = async (userQuestion: string): Promise<string> => {
+    // 1. Connect to Neon (Postgres)
+    const pool = new Pool({
+        connectionString: process.env.DATABASE_URL, // Neon connection string
+        ssl: true, // Neon requires SSL
+    });
 
-    const supabaseClient = createClient(
-        process.env.SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-
+    // 2. Embeddings
     const embeddings = new OpenAIEmbeddings({
         model: "text-embedding-3-small",
     });
 
-    const vectorStore = await SupabaseVectorStore.fromExistingIndex(
-        embeddings,
-        {
-            client: supabaseClient,
-            tableName: "documents",
-            queryName: "match_documents", // make sure this exists
-        }
-    );
-
-    const retriever = vectorStore.asRetriever({
-        filter: { doc_type: "product" },
-        k: 4,
+    // 3. VectorStore from Neon
+    const vectorStore = await PGVectorStore.initialize(embeddings, {
+        pool,
+        tableName: "documents", // the table you created in Neon
+        columns: {
+            idColumnName: "id",
+            vectorColumnName: "embedding",
+            contentColumnName: "text",     // must match your table column
+            metadataColumnName: "metadata" // must match your table column
+        },
     });
 
+    // 4. Retriever
+    const retriever = vectorStore.asRetriever({
+        k: 4,
+        filter: (doc) => doc.metadata?.doc_type === "product", // filter inside LangChain
+    });
 
-
-
+    // 5. LLM
     const model = new ChatOpenAI({
         model: "gpt-4o-mini",
         temperature: 0.2,
     });
 
+    // 6. Prompt
     const prompt = ChatPromptTemplate.fromTemplate(`
-        You are a helpful assistant for an online store.
+    You are a helpful assistant for an online store.
 
-        Use the following product details to answer the question:
+    Use the following product details to answer the question:
 
-        {context}
+    {context}
 
-        Question:
-        {input}
-        `);
+    Question:
+    {input}
+  `);
 
-    
-
-
+    // 7. Chains
     const combineDocsChain = await createStuffDocumentsChain({
         llm: model,
         prompt,
@@ -68,9 +69,7 @@ export const askStoreBot = async (userQuestion: string): Promise<string> => {
         combineDocsChain,
     });
 
-    console.log(retriever, '⚠️');
-    return 'hie'
-
+    // 8. Run
     const result = await retrievalChain.invoke({
         input: userQuestion,
     });

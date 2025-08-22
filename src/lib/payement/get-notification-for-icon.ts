@@ -20,7 +20,7 @@ export async function getNotifications(): Promise<Notification[] | null> {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) return null;
     const userId = session.user.id;
-
+    const role = session.user.role;
     // ------------------ MESSAGES ------------------
     const messages = await prisma.message.findMany({
         where: {
@@ -33,13 +33,16 @@ export async function getNotifications(): Promise<Notification[] | null> {
             order: {
                 select: {
                     id: true,
-                    orderPayments: { select: { amount: true } }
+                    
+                    orderPayments: { select: { amount: true,id:true } }
                 }
-            }
+            },
+             
         }
     });
 
     // Aggregate messages by orderId
+    //console.log(messages,'yyyyyyyyyyyyyyyyyy')
     const aggregatedMessages = Object.values(
         messages.reduce((acc, msg) => {
             if (!acc[msg.orderId]) acc[msg.orderId] = { id: msg.orderId, messages: [], latestMessage: msg };
@@ -48,17 +51,20 @@ export async function getNotifications(): Promise<Notification[] | null> {
             return acc;
         }, {})
     );
-
+     
     const messageNotifications = aggregatedMessages.map((group, index) => {
         const latest = group.latestMessage;
+        console.log(latest,';;;;;;;;;;;;;;;');
+        const isSenderSeller = latest.sender !='BUYER';
         return {
             id: String(index + 1),
             type: 'message',
             title: 'New Product Inquiry',
             preview: latest.content,
             time: formatDistanceToNow(new Date(latest.createdAt), { addSuffix: true }),
-            link: `/admin/dashboard/messages/${group.id}`,
-            msgCount: group.messages.length
+            link: !isSenderSeller?`/admin/myMessages/seller`/* ${group.id} */:`/orders`,/*  */
+            msgCount: group.messages.length,
+            
         };
     });
 

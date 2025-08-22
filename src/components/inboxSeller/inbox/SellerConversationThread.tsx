@@ -19,13 +19,23 @@ const SellerConversationThread: React.FC<SellerConversationThreadProps> = ({
   const {user} = useHomeContext();
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
-  const [messages, setMessages] = useState(conversation.messages);
+  const [messages, setMessages] = useState([]);
 
   // Update messages when conversation changes
   useEffect(() => {
+    /* if(messages.length === 0){
+      const updateMessages = async ()=>{
+        const response = await fetch(`/api/messages/sellerRead?sellerId=${conversation.sellerId}&orderId=${conversation.orderId}`);
+        
+      }
+      updateMessages()
+    } */
+    
     setMessages(conversation.messages);
-  }, [conversation.messages]);
 
+  }, [conversation.messages]);
+  //console.log(conversation,';;;;;;;;;;;;;;;;;;;;;;;;;;;;;');
+  
   const formatTime = (dateString: string) => {
     return new Date(dateString).toLocaleTimeString(undefined, { 
       hour: '2-digit', 
@@ -104,7 +114,7 @@ const SellerConversationThread: React.FC<SellerConversationThreadProps> = ({
       
       {/* Messages */}
       <div className="flex-1 p-4 space-y-4 overflow-y-auto bg-gray-50">
-        {loading ? (
+        {(loading && conversation.messages.length===0)  ? (
           <div className="flex justify-center items-center h-32">
             <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
             <span className="ml-2 text-gray-500">Loading messages...</span>

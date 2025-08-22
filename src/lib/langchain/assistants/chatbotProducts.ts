@@ -1,16 +1,19 @@
-'use server'
-import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { createClient } from "@supabase/supabase-js";
- 
-import { AIMessageChunk } from "@langchain/core/messages";
-import { ReadableStream } from "web-streams-polyfill/ponyfill";
-import { StringOutputParser } from "@langchain/core/output_parsers";
-import { prisma } from "@/lib/prisma";
+"use server";
 
-export const askProductBotStream = async (userQuestion: string,productIds:any,docs:any): Promise<ReadableStream> => {
-   
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";  // ✅ Gemini wrapper
+import { StringOutputParser } from "@langchain/core/output_parsers";
+import { ReadableStream } from "web-streams-polyfill/ponyfill";
+import { prisma } from "@/lib/prisma";
+import { ChatOpenAI } from "@langchain/openai";
+
+export const askProductBotStream = async (
+    userQuestion: string,
+    productIds: any,
+    docs: any,
+    geminiApiKey: string,
+    openaikey: string
+): Promise<ReadableStream> => {
     const productDetails = await prisma.product.findMany({
         where: { id: { in: productIds } },
         select: {
@@ -25,9 +28,9 @@ export const askProductBotStream = async (userQuestion: string,productIds:any,do
         },
     });
 
-    const enrichedDocs = docs.map((doc:any) => {
+    const enrichedDocs = docs.map((doc: any) => {
         const { title, ref_id } = doc.metadata || {};
-        const product = productDetails.find(p => p.id === ref_id);
+        const product = productDetails.find((p) => p.id === ref_id);
 
         return `
 **Product:** ${title ?? "N/A"}  
@@ -37,7 +40,7 @@ export const askProductBotStream = async (userQuestion: string,productIds:any,do
 - **Stock:** ${product?.stock ?? "N/A"}  
 - **Deal Active:** ${product?.isDealActive ? "✅ Yes" : "❌ No"}  
 - **Description:** ${doc.pageContent}
-        `.trim();
+    `.trim();
     });
 
     const context = enrichedDocs.join("\n\n");
@@ -58,13 +61,25 @@ If no matching product is found, respond with:
 
 **Customer:** {input}  
 **Assistant:**
-    `);
+  `);
 
-    const model = new ChatOpenAI({
-        modelName: "gpt-4o-mini", // or "gpt-4o"
-        temperature: 0.2,
-        streaming: true,
-    });
+    // ✅ Swap ChatOpenAI → ChatGoogleGenerativeAI
+    let model = null;
+    if (geminiApiKey) {
+        model = new ChatGoogleGenerativeAI({
+            model: "gemini-2.0-flash", // or gemini-1.5-pro
+            temperature: 0.2,
+            streaming: true,
+            apiKey: geminiApiKey, // ✅ dynamic key
+        });
+    } else {
+        model = new ChatOpenAI({
+            modelName: "gpt-4o-mini", // Recommended over gpt-4o-mini
+            temperature: 0.3,
+            streaming: true,
+            apiKey: openaikey
+        });
+    }
 
     const outputParser = new StringOutputParser();
 
@@ -73,7 +88,7 @@ If no matching product is found, respond with:
     const stream = new ReadableStream({
         async start(controller) {
             const encoder = new TextEncoder();
-            
+
             try {
                 const stream = await chain.stream({
                     context,

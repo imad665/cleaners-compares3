@@ -17,12 +17,13 @@ import { hash, hashSync } from "bcryptjs";
 import ChatPage from "@/components/chatbot/main";
 import { embedMessagesToSupabase } from "@/lib/langchain/embeding/embed_messages";
 import { embedEngineersToSupabase } from "@/lib/langchain/embeding/embed_enginner";
-import { embedProductsToSupabase } from "@/lib/langchain/embeding/embed-products";
+ 
 import { getRecentOrdersCount } from "@/lib/products/homeProducts";
 import { clearOrders, updatePasswordUsers } from "@/lib/clearTestData";
 import { Button } from "@/components/ui/button";
 import { sendTestMessage } from "@/lib/payement/sendTestMessage";
 import { categories } from "@/components/video_ui/data/videos";
+import { embedProductsToNeon } from "@/lib/langchain/embeding/embed-products";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -201,7 +202,7 @@ export default async function RootLayout({
       name:'amir'
     }
   })  */
-  //await embedProductsToSupabase();
+   //await embedProductsToNeon();
   //await embedMessagesToSupabase() 
   //await embedEngineersToSupabase() 
   //const sellers = await prisma.sellerProfile.findMany();
@@ -209,7 +210,7 @@ export default async function RootLayout({
 
   //await updatePasswordUsers();
   //await clearOrders();
-
+   
   return (
     <html lang="en" className="scroll-smooth">
       <body
@@ -218,7 +219,7 @@ export default async function RootLayout({
         {/* <HomeProductsProvider> */}
         <HomeProvider user={session?.user}>
           {children}
-          {/* <ChatPage className='fixed bottom-2 right-2'/> */}
+          <ChatPage className='fixed bottom-2 right-2'/>
           {/* <InitData/> */}
 
         </HomeProvider>

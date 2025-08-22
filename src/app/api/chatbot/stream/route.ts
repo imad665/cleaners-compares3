@@ -1,4 +1,5 @@
 import { askRouterBotStream } from "@/lib/langchain/assistants/router";
+import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -12,7 +13,13 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const innerStream = await askRouterBotStream(question);
+        const settings = await prisma.adminSetting.findMany({where:{key:{in:['openai','gemini']}}}) 
+        //console.log(settings,'ooooooooooooooooooooooooooooo');
+        const apikey = settings.find((s)=>s.key==='openai')?.value || '' 
+        const geminiApiKey = settings.find((s)=>s.key === 'gemini')?.value || '';
+
+        
+        const innerStream = await askRouterBotStream(question,apikey,geminiApiKey);
 
         if (!innerStream) {
             return new Response("Sorry, no matching documents found.", {

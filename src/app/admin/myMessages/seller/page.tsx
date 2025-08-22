@@ -122,6 +122,7 @@ const SellerMessagesPage: React.FC = () => {
             subject: `Order ${orderId.slice(-8)}`,
             message: `Order for ${orderItems.length} item(s)`,
             buyerId: sale.buyer.id,
+            unreadMessageCount:sale.buyer.unreadMessageCount,
             sellerId:  user?.id || '',
             productId: firstItem.product.id,
             createdAt: firstItem.orderDate,

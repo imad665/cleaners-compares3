@@ -1,117 +1,71 @@
 "use server";
 
- 
 import { OpenAIEmbeddings } from "@langchain/openai";
-import { createClient } from "@supabase/supabase-js";
-import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
+import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
+import { Pool } from "pg";
 import { prisma } from "@/lib/prisma";
 
-export const embedProductsToSupabase = async () => {
-    // 1. Initialize Supabase client
-    const supabaseClient = createClient(
-        process.env.SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+export const embedProductsToNeon = async () => {
+  // 1. Init PG pool (Neon connection)
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL, // Neon DB URL
+  });
 
+  // 2. Fetch existing embeddings (get metadata.ref_id)
+  const res = await pool.query(
+    `SELECT metadata->>'ref_id' as ref_id FROM documents WHERE metadata->>'doc_type' = $1`,
+    ["product"]
+  );
 
-    // 2. Get all existing product_ids from embeddings table (from metadata.ref_id)
-    const docType = "product"; // or "faq", etc.
-    /* const { data: existingEmbeds, error } = await supabaseClient.rpc("get_documents_metadata_by_type", {
-        doc_type_param: docType,
-    }); */
-    const { data: existingEmbeds, error } = await supabaseClient
-        .from("documents")
-        .select("metadata")
-        .contains("metadata", { doc_type: docType })
-    //.filter("metadata->doc_type", "eq", docType);
-    //.eq("metadata->>doc_type", "product"); // ✅ filter on metadata JSON field
+  const existingProductIds = new Set(res.rows.map((r) => r.ref_id));
 
-    if (error) {
-        console.error("❌ Error fetching existing embeddings:", error.message);
-        return;
-    }
-    console.log(existingEmbeds.length, '⚠️⚠️⚠️⚠️');
-    const existingProductIds = new Set(
-        (existingEmbeds ?? [])
-            .map((row) => row.metadata?.ref_id)
-            .filter((id): id is string => !!id)
-    );
+  // 3. Fetch products from Prisma
+  const products = await prisma.product.findMany({
+    where: { title: { not: "" } },
+    select: { id: true, title: true, description: true },
+    orderBy: { title: "asc" },
+    take:5,
+  });
+  /* console.log(products,existingProductIds,'iiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
 
+  return products; */
+  
+  const newProducts = products.filter(
+    (p) => !existingProductIds.has(p.id)
+  );
 
-    // 3. Fetch all ACTIVE products
-    const products = await prisma.product.findMany({
-        where: {
-            title: {
-                not: "", // Only products with non-empty titles
-                  
-            },
-           /*  category:{
-                name:{
-                    in:['Laundry','Dry Cleaning','Finishing'],
-                    mode:'insensitive'
-                },
-                parent:{
-                    name:{
-                        equals:'machines',
-                        mode:'insensitive'
-                    }
-                    
-                }
-            } */
-        },
-        select: { 
-            id: true,
-            title: true,
-            description: true,
-             
-        },
-        orderBy: {
-            title: "asc"
-        },
-        //take: 400
-    });
+  if (newProducts.length === 0) {
+    console.log("⚠️ All active products already embedded.");
+    return;
+  }
 
-    // 4. Filter only new products not already embedded
-    const newProducts = products.filter(
-        (p) => !existingProductIds.has(p.id)
-    ); 
+  // 4. Prepare texts + metadata
+  const texts = newProducts.map((p) => `${p.title}: ${p.description}`);
+  const metadata = newProducts.map((p) => ({
+    doc_type: "product",
+    ref_id: p.id,
+    title: p.title,
+  }));
+  /* console.log(texts,metadata,'sssssssssssssssssssssssss');
 
-    if (newProducts.length === 0) {
-        console.log("⚠️ All active products are already embedded.");
-        return;
-    }
- 
-    // 5. Prepare content and metadata
-    const texts = newProducts.map((p) => `${p.title}: ${p.description}`);
-    const metadata = newProducts.map((p) => ({
-        doc_type: "product",
-        ref_id: p.id,
-        title: p.title,
-         
-    }));
+  return products; */
+  // 5. Init embedding model
+  const embeddings = new OpenAIEmbeddings({
+    model: "text-embedding-3-small",
+  }); 
 
-    // 6. Initialize embedding model
-    const embeddings = new OpenAIEmbeddings({
-        model: "text-embedding-3-small",
-    });
-    console.log('⚠️⚠️⚠️⚠️');
-    //return
-    // 7. Store new embeddings
-    const batchSize = 100;
-    for (let i = 0; i < texts.length; i += batchSize) {
-        const batchTexts = texts.slice(i, i + batchSize);
-        const batchMetadata = metadata.slice(i, i + batchSize);
+  // 6. Store in Neon via LangChain PGVectorStore
+  const store = await PGVectorStore.initialize(embeddings, {
+    pool,
+    tableName: "documents",
+  }); 
 
-        await SupabaseVectorStore.fromTexts(
-            batchTexts,
-            batchMetadata,
-            embeddings,
-            {
-                client: supabaseClient,
-                tableName: "documents",
-                queryName: "match_documents",
-            }
-        );  
-    }
-    console.log(`✅ ${newProducts.length} new products embedded successfully.`);
+  await store.addDocuments(
+    texts.map((text, i) => ({
+      pageContent: text, 
+      metadata: metadata[i],
+    }))
+  );
+
+  console.log(`✅ ${newProducts.length} new products embedded successfully.`);
 };

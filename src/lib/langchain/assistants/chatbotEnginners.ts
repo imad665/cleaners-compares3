@@ -7,8 +7,9 @@ import { AIMessageChunk } from "@langchain/core/messages";
 import { ReadableStream } from "web-streams-polyfill/ponyfill";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { prisma } from "@/lib/prisma";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
-export const askEnginnerBotStream = async (userQuestion: string, docs: any, category: 'DRY_CLEANING' | 'FINISHING' | 'LAUNDRY'): Promise<ReadableStream> => {
+export const askEnginnerBotStream = async (userQuestion: string, docs: any, category: 'DRY_CLEANING' | 'FINISHING' | 'LAUNDRY', geminiApiKey: string, openaikey: string): Promise<ReadableStream> => {
 
     const enginnerDetails = await prisma.service.findMany({
         where: { category },
@@ -94,11 +95,24 @@ List the closest engineers based on area or specialty.
 `);
 
 
-    const model = new ChatOpenAI({
-        modelName: "gpt-4o-mini", // Recommended over gpt-4o-mini
-        temperature: 0.3,
-        streaming: true,
-    });
+    // ✅ Swap ChatOpenAI → ChatGoogleGenerativeAI
+    let model = null;
+    if (geminiApiKey) {
+        model = new ChatGoogleGenerativeAI({
+            model: "gemini-2.0-flash", // or gemini-1.5-pro
+            temperature: 0.2,
+            streaming: true,
+            apiKey: geminiApiKey, // ✅ dynamic key
+        });
+    } else {
+        model = new ChatOpenAI({
+            modelName: "gpt-4o-mini", // Recommended over gpt-4o-mini
+            temperature: 0.3,
+            streaming: true,
+            apiKey: openaikey
+        });
+    }
+
 
     const outputParser = new StringOutputParser();
     const chain = prompt.pipe(model).pipe(outputParser);

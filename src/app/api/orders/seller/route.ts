@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { equal } from "assert";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -69,7 +70,15 @@ export async function GET(req: NextRequest) {
                             status: true,
                             amount: true
                         }
-                    }
+                    },
+                    Message: true/* {
+                        where:{
+                            sender:"BUYER",
+                            isReceiverRead:false,
+                        },
+                         
+                    }, */
+
                 },
                 orderBy: {
                     createdAt: 'desc'
@@ -79,43 +88,47 @@ export async function GET(req: NextRequest) {
 
 
 
-
-
         // Transform the data to group by buyer
         const salesByBuyer = orders.reduce((acc, order) => {
             const buyerId = order.userId;
+            //console.log(order, 'nnnnnnnnnnnnnnnnnnnnnnnnn cmed3frib0006crr9th1e9oiu');
+            const messagesLength = order.Message.length;
+            if (messagesLength > 0) {
+                if (!acc[buyerId]) {
+                    acc[buyerId] = {
+                        buyer: {
+                            id: order.user.id,
+                            name: order.user.name,
+                            email: order.user.email,
+                            image: order.user.image,
+                            unreadMessageCount: order.Message.filter((m) => m.senderUserId === buyerId && m.sender === 'BUYER' && !m.isReceiverRead).length
+                        },
+                        items: [],
+                        totalAmount: 0,
+                        conversations: [] // will be filled later
+                    };
+                }
 
-            if (!acc[buyerId]) {
-                acc[buyerId] = {
-                    buyer: {
-                        id: order.user.id,
-                        name: order.user.name,
-                        email: order.user.email,
-                        image: order.user.image
-                    },
-                    items: [],
-                    totalAmount: 0,
-                    conversations: [] // will be filled later
-                };
+                order.orderItems.forEach(item => {
+                    acc[buyerId].items.push({
+                        orderId: order.id,
+                        product: item.product,
+                        quantity: item.quantity,
+                        unitPrice: item.unitPrice,
+                        status: item.status,
+                        paymentIntentId: item.paymentIntentId,
+                        orderDate: order.createdAt,
+                        orderStatus: order.status
+                    });
+
+                    acc[buyerId].totalAmount += item.unitPrice /* * item.quantity */;
+                });
             }
 
-            order.orderItems.forEach(item => {
-                acc[buyerId].items.push({
-                    orderId: order.id,
-                    product: item.product,
-                    quantity: item.quantity,
-                    unitPrice: item.unitPrice,
-                    status: item.status,
-                    paymentIntentId: item.paymentIntentId,
-                    orderDate: order.createdAt,
-                    orderStatus: order.status
-                });
-
-                acc[buyerId].totalAmount += item.unitPrice /* * item.quantity */;
-            });
 
             return acc;
         }, {} as Record<string, any>);
+        console.log(salesByBuyer);
 
         // Fetch conversations (Inquiry) for each buyer
         const buyerIds = Object.keys(salesByBuyer);

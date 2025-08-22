@@ -66,7 +66,17 @@ export async function GET(req: NextRequest) {
                             status: true,
                             amount: true
                         }
-                    }
+                    },
+                    Message: {
+
+                        where: {
+                            sender: "SELLER",
+                            isReceiverRead: false
+                        },
+                         
+                    },
+
+
                 },
                 orderBy: {
                     createdAt: 'desc'
@@ -74,10 +84,13 @@ export async function GET(req: NextRequest) {
             })
         ])
         // Transform the data to group by seller
+
+
+
         const purchasesBySeller = orders.reduce((acc, order) => {
             order.orderItems.forEach(item => {
                 const sellerId = item.sellerId;
-
+                
                 if (!acc[sellerId]) {
                     acc[sellerId] = {
                         seller: {
@@ -87,6 +100,7 @@ export async function GET(req: NextRequest) {
                             businessName: item.seller.sellerProfile?.businessName || ''
                         },
                         items: [],
+                        messageNotRead:order.Message.length,
                         totalAmount: 0,
                         conversations: [] // will be filled later
                     };
