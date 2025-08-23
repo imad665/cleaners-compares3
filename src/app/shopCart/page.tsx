@@ -630,6 +630,7 @@ export default function Page() {
         setFeaturedProducts(featuredProducts);
         setFooterData(footerData);
         setProducts(products2);
+        /* if(products2.length === 0) clearCart(); */
       } catch (error) {
         toast.error(error instanceof Error ? error.message : 'Network error');
       } finally {
@@ -651,13 +652,13 @@ export default function Page() {
       priceExcVat: existedProducts?.find((p) => p.productId === c.productId)?.priceExcVat * c.quantity,
       sellerId: existedProducts?.find((p) => p.productId === c.productId)?.sellerId,
     }));
-  if (!loading && products.length != 0) {
+  /* if (!loading && products.length != 0) {
     const notCArt = cart.filter(c => !Boolean(products.find((p) => p.productId === c.productId)))
 
     for (const c of notCArt) {
       removeProduct(c.productId)
     }
-  }
+  } */
 
   const handleCheckoutSuccess = () => {
     clearCart();
@@ -676,12 +677,12 @@ export default function Page() {
           </div>
         ) : (
           <>
-            {selectedCart && selectedCart.length > 0 ? (
+            {existedProducts.length>0 ? (
               <>
-                <SubTotal
+                {selectedCart && selectedCart.length > 0 && <SubTotal
                   selectedCart={selectedCart}
                   onCheckoutSuccess={handleCheckoutSuccess}
-                />
+                />}
                 <OrdersList2
                   orders={existedProducts}
                   isContactSeller={false}

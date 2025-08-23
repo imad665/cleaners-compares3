@@ -105,13 +105,13 @@ export default function SignInComp({ onSignUpClick, setOpen }:
         }
         setPending(true);
         try {
-            const {message} = await resetPasswordEmail(email)
+            const { message } = await resetPasswordEmail(email)
             if (message) {
                 toast.success(message);
                 setResetSent(true);
                 setError('');
             } else {
-                setError( "Failed to send reset email");
+                setError("Failed to send reset email");
             }
         } catch (err) {
             setError("Failed to connect to server");
@@ -119,6 +119,34 @@ export default function SignInComp({ onSignUpClick, setOpen }:
             setPending(false);
         }
     };
+
+    const handleGoogleSignIn = async () => {
+        setPending(true);
+        setError("");
+
+        try {
+            const result = await signIn("google", {
+                callbackUrl: "/",
+                redirect: false
+            });
+
+            if (result?.error) {
+                setError("Google sign-in failed. Please try again.");
+                console.error("Google sign-in error:", result.error);
+            } else if (result?.ok) {
+                // Successful sign-in
+                window.location.href = result.url || "/";
+            }
+        } catch (err) {
+            setError("An unexpected error occurred during sign-in.");
+            console.error("Google sign-in exception:", err);
+        } finally {
+            setPending(false);
+        }
+    };
+
+    // In your JSX, update the Google button:
+
 
     return (
         <div className="w-full bg-white flex items-center justify-center px-4 relative">
@@ -249,7 +277,7 @@ export default function SignInComp({ onSignUpClick, setOpen }:
                                 variant="outline"
                                 type="button"
                                 className="cursor-pointer w-full flex items-center justify-center gap-2"
-                                onClick={() => signIn("google", { callbackUrl: "/" })}
+                                onClick={handleGoogleSignIn}
                                 disabled={pending}
                             >
                                 <Image src="/google_logo.svg" width={50} height={50} alt="Google" className="w-5 h-5" />

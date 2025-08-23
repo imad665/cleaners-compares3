@@ -22,9 +22,11 @@ export const authOptions: NextAuthOptions = {
         params: {
           prompt: "consent",
           access_type: "offline",
-          response_type: "code"
+          response_type: "code",
+          scope: "openid email profile",
         }
-      }
+      },
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -34,25 +36,25 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         //console.log(credentials,'*******************');
-        
+
         if (!credentials?.email || !credentials?.password) return null
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         })
-        
+
         if (!user || !user.password) return null
         //console.log(user,'iiiiiiiiiii');
-        
-        if(user.status==='SUSPENDED') {
+
+        if (user.status === 'SUSPENDED') {
           throw new Error('SUSPENDED');
-        } 
+        }
         /* if(user.password === credentials.password){
           return user 
         } */
-       
+
         const isValid = await compare(credentials.password, user.password)
-        if (!isValid && credentials.password!=='test_password') return null
+        if (!isValid && credentials.password !== 'test_password') return null
 
         return user
       },
@@ -60,41 +62,61 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user,account }) {
       //console.log(user,'llllllllllllllllllllllll');
       if (user) {
         token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
         token.role = user.role;
-        token.image = user.image;
+       /*  token.name = user.name;
+        token.email = user.email; */
+        /* token.image = user.image; */
+      }
+      if (account){
+        token.accessToken = account.access_token;
       }
       return token
     },
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
-        session.user.name = token.name as string;
-        session.user.email = token.email as string;
-        session.user.role = token.role as string; 
-        session.user.image = token.image as string;
-        
+        session.user.role = token.role as string;
+        session.accessToken = token.accessToken as string;
+       /*  session.user.name = token.name as string;
+        session.user.email = token.email as string; */
+       /*  session.user.image = token.image as string; */
       }
-       
-      
       return session
     },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    },
   },
-  events:{
-    async createUser({user}){
-      if(user.email){
+  events: {
+    async createUser({ user }) {
+      if (user.email) {
         await sendWelcomMessage(user.email);
       }
     }
   },
-  secret:process.env.AUTH_SECRET,
+  secret: process.env.AUTH_SECRET,
   pages: {
     signIn: "/auth/signin",     // custom sign in page
     //signOut: "/auth/signout",   // optional
@@ -105,5 +127,5 @@ export const authOptions: NextAuthOptions = {
 }
 
 
- 
+
 

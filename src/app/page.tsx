@@ -40,8 +40,8 @@ export default async function Home() {
   } = await getAllHomeProducts();
   
   const recentOrderCount = await getRecentOrdersCount();
-  const messages = await getNotifications()
-  console.log(messages,'vvvvvvvvvvvvvv');
+  const messages = await getNotifications();
+  //console.log(messages,'vvvvvvvvvvvvvv');
   
   //console.log(dealsProducts, 'mmmmmmmmmmmmmm');
   return (

@@ -9,12 +9,14 @@ interface SellerConversationThreadProps {
   conversation: Conversation;
   onBack: () => void;
   loading?: boolean;
+  
 }
 
 const SellerConversationThread: React.FC<SellerConversationThreadProps> = ({ 
   conversation,
   onBack,
-  loading = false
+  loading = false,
+ 
 }) => {
   const {user} = useHomeContext();
   const [newMessage, setNewMessage] = useState('');
@@ -64,6 +66,7 @@ const SellerConversationThread: React.FC<SellerConversationThreadProps> = ({
         const { data } = await response.json();
         setMessages(prev => [...prev, data]);
         setNewMessage('');
+        
         toast.success('Message sent successfully');
       } else {
         toast.error('Failed to send message');

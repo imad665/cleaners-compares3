@@ -12,6 +12,7 @@ import { Loader2, Package, Clock, CheckCircle, AlertCircle, MessageCircle, Trend
 import { cancelOrderItem, shipOrderItem } from '@/actions/orderAction';
 import DashboardCard from '@/components/adminDashboard/shared/Card';
 import { captureSellerPayment } from '@/actions/checkoutAction';
+import Link from 'next/link';
 
 type OrderItem = {
   id: string;
@@ -147,8 +148,8 @@ export default function SellerOrdersPage() {
           return updated;
         });
         toast.success('Order marked as shipped');
-        const s = await captureSellerPayment(orderId,sellerId)
-        if(!s.success)toast.error(s.error)
+        const s = await captureSellerPayment(orderId, sellerId)
+        if (!s.success) toast.error(s.error)
         else toast.success('Payment captured successfully!');
 
       } else {
@@ -221,6 +222,11 @@ export default function SellerOrdersPage() {
   const handleMessagesClick = () => {
     router.push('/admin/myMessages/seller');
   };
+  const handleContactCustomerClick = (orderId: string, customerId: string) => {
+
+    router.push(`/admin/myMessages/seller?orderId=${orderId}&customerId=${customerId}`);
+
+  }
   return (
     <div className="container mx-auto py-8 space-y-6">
       {/* ... keep all your existing header and dashboard card code ... */}
@@ -346,7 +352,7 @@ export default function SellerOrdersPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          { !isCancel && (
+                          {!isCancel && (
                             <Button
                               size="sm"
                               onClick={() => handleShipOrder(orderId, orderItems)}
@@ -361,13 +367,14 @@ export default function SellerOrdersPage() {
                               ) : (
                                 <>
                                   <Truck className="h-4 w-4 mr-2" />
-                                  Confirm Shipment
+                                  Confirm Order
                                 </>
                               )}
                             </Button>
                           )}
+                          <Button onClick={()=>handleContactCustomerClick(orderId,firstItem.order.user.id)}>Contact Customer</Button>
 
-                         {/*  {canCancel && !isCancel && (
+                          {/*  {canCancel && !isCancel && (
                             <Button
                               variant="outline"
                               size="sm"

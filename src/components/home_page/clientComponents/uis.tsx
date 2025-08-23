@@ -16,7 +16,7 @@ export function ButtonSignOut() {
 export function AddCartButton({ productId, className = '', stock = -1, isOldProduct, isFromCart = false }: { productId: string, className?: string, stock?: number, isOldProduct: boolean, isFromCart?: boolean }) {
 
   const [count, setCount] = useState(0);
-  const { cart, addProduct } = useHomeContext();
+  const { cart, addProduct, removeProduct } = useHomeContext();
 
   useEffect(() => {
     setCount(cart?.find((c) => c.productId === productId)?.quantity || 0)
@@ -33,27 +33,34 @@ export function AddCartButton({ productId, className = '', stock = -1, isOldProd
   return (
     <div className={` bottom-2 left-1 ${className}`}>
       {count === 0 &&
-        <Button
-          onClick={() => handleCount(1)}
-          disabled={!isTherMore}
-          className='flex items-center cursor-pointer bg-yellow-400 text-black rounded-2xl hover:bg-yellow-500 w-fit px-6 text-xs'>
-          <ShoppingCart className="w-4 h-4 mr-2" />
-          <span> Add to cart</span>
-        </Button>}
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => handleCount(1)}
+            disabled={!isTherMore}
+            className='flex items-center cursor-pointer bg-yellow-400 text-black rounded-2xl hover:bg-yellow-500 w-fit px-6 text-xs'>
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            <span> Add to cart</span>
+          </Button>
+
+          {isFromCart && <Button onClick={() => removeProduct(productId)} className="flex items-center cursor-pointer bg-orange-400/50 text-black rounded-2xl hover:bg-red-500/50 w-fit px-5 text-xs">
+            <Trash2 size={16} />
+          </Button>}
+        </div>
+      }
       {isOldProduct && count > 0 &&
         <div className="flex items-center gap-2">
           <span
-            
+
             className='flex items-center    text-black rounded-2xl   w-fit text-xs'
           >
             <CheckCircle className="w-4 h-4 mr-2" />
-            
+
             <span>Added</span>
           </span>
           <Button onClick={() => handleCount(-1)} className="flex items-center cursor-pointer bg-orange-400/50 text-black rounded-2xl hover:bg-red-500/50 w-fit px-5 text-xs">
             <span>Remove</span>
           </Button>
-          
+
         </div>
 
       }

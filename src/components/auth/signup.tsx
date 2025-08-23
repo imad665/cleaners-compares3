@@ -51,7 +51,7 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
+    const [pending, setPending] = useState(false);
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -97,6 +97,38 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
         }
     };
 
+    const handleGoogleSignUP = async () => {
+        setPending(true);
+        setError("");
+
+        try {
+            const result = await signIn("google", {
+                callbackUrl: "/",
+                redirect: false
+            });
+
+            if (result?.error) {
+                // Handle specific Google errors
+                if (result.error.includes('access_denied')) {
+                    setError("Google sign-in was cancelled.");
+                } else if (result.error.includes('OAuthAccountNotLinked')) {
+                    setError("This email is already associated with another account.");
+                } else {
+                    setError("Google sign-in failed. Please try again.");
+                }
+                console.error("Google sign-in error:", result.error);
+            } else if (result?.ok) {
+                // Successful sign-in - reload the page
+                window.location.href = result.url || "/";
+            }
+        } catch (err) {
+            setError("An unexpected error occurred during sign-in.");
+            console.error("Google sign-in exception:", err);
+        } finally {
+            setPending(false);
+        }
+    };
+
     return (
         <div className="w-full bg-white flex items-center justify-center px-4 relative">
             {isLoading && <div className="w-full h-full bg-[rgba(0,0,0,0.5)] absolute z-1000 flex items-center justify-center"><BeatLoader /></div>}
@@ -113,27 +145,27 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <Label htmlFor="name">Name</Label>
-                            <Input 
-                                disabled={isLoading} 
-                                id="name" 
-                                value={name} 
-                                onChange={(e) => setName(e.target.value)} 
-                                name="name" 
-                                required 
+                            <Input
+                                disabled={isLoading}
+                                id="name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                name="name"
+                                required
                             />
                         </div>
 
                         <div>
                             <Label htmlFor="email">Email</Label>
-                            <Input 
-                                disabled={isLoading} 
-                                autoComplete="off" 
-                                value={email} 
-                                onChange={(e) => setEmail(e.target.value)} 
-                                id="email" 
-                                type="email" 
-                                name="email" 
-                                required 
+                            <Input
+                                disabled={isLoading}
+                                autoComplete="off"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                id="email"
+                                type="email"
+                                name="email"
+                                required
                             />
                         </div>
 
@@ -181,7 +213,7 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
                         type="button"
                         variant="outline"
                         className="w-full flex items-center justify-center gap-2"
-                        onClick={() => signIn("google", { callbackUrl: "/" })}
+                        onClick={handleGoogleSignUP}
                         disabled={isLoading}
                     >
                         <Image src="/google_logo.svg" width={50} height={50} alt="Google" className="w-5 h-5" />
@@ -191,15 +223,15 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
 
                 <CardFooter className="justify-center text-sm text-muted-foreground">
                     Already have an account?{" "}
-                    {onSignInClick && <button 
-                        onClick={onSignInClick} 
+                    {onSignInClick && <button
+                        onClick={onSignInClick}
                         className="text-blue-600 ml-1 border-none bg-none hover:underline"
                         disabled={isLoading}
                     >
                         Sign in
                     </button>}
-                    {!onSignInClick && <a 
-                        href="/auth/signin" 
+                    {!onSignInClick && <a
+                        href="/auth/signin"
                         className="text-blue-600 ml-1 hover:underline"
                     >
                         Sign in
@@ -216,11 +248,11 @@ export function SignupModal({ open, setOpen, onSignInClick }:
         setOpen: (v: boolean) => void
         onSignInClick: () => void
     }) {
-   
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="   h-auto">
-                <SignUpComp onSignInClick={onSignInClick}/>
+                <SignUpComp onSignInClick={onSignInClick} />
             </DialogContent>
         </Dialog>
     )

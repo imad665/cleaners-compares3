@@ -18,12 +18,15 @@ const SellerInboxList: React.FC<SellerInboxListProps> = ({
   const [localActiveConversationId, setLocalActiveConversationId] = useState<string | null>(null);
   const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isContact,setIsContact] = useState<boolean>(propConversations.some((c) => c.isContact))
 
   // Use props if provided, otherwise use local state
   const activeConversationId = propActiveConversationId !== undefined ? propActiveConversationId : localActiveConversationId;
   const setActiveConversationId = propSetActiveConversationId || setLocalActiveConversationId;
 
   // Transform order conversations to match the expected format for seller view
+  //console.log(propConversations,'xxxxxxxxxxxxxxxxxxxxx');
+  
   const transformedConversations = useMemo(() => {
     return propConversations.map(conv => ({
       id: conv.id,
@@ -37,7 +40,8 @@ const SellerInboxList: React.FC<SellerInboxListProps> = ({
       lastUpdated: conv.createdAt,
       messages: [], // Will be loaded when conversation is opened
       unreadCount: conv.sellerRead ? 0 : 1,
-      unreadMessageCount:conv.unreadMessageCount
+      unreadMessageCount:conv.unreadMessageCount,
+      isContact:conv.isContact,
     }));
   }, [propConversations]);
 
@@ -125,10 +129,12 @@ const SellerInboxList: React.FC<SellerInboxListProps> = ({
 
   const handleConversationClick = (conversationId: string) => {
     setActiveConversationId(conversationId);
+    
   };
 
   const handleBackClick = () => {
     setActiveConversationId(null);
+    setIsContact(false)
   };
 
   if (activeConversation) {
@@ -137,6 +143,7 @@ const SellerInboxList: React.FC<SellerInboxListProps> = ({
         conversation={activeConversation} 
         onBack={handleBackClick}
         loading={loading}
+        
       />
     );
   }
@@ -164,13 +171,16 @@ const SellerInboxList: React.FC<SellerInboxListProps> = ({
             </p>
           </div>
         ) : (
+          
           transformedConversations.map(conversation => (
             <SellerConversationItem
               key={conversation.id}
               conversation={conversation}
               onClick={handleConversationClick}
+              isContact={isContact}
             />
           ))
+
         )}
       </div>
     </div>

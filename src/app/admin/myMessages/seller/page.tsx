@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import SellerInboxList from '@/components/inboxSeller/inbox/SellerInboxList';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
@@ -54,30 +54,54 @@ interface SellerSalesData {
 }
 
 const SellerMessagesPage: React.FC = () => {
-  const {user} = useHomeContext(); 
+  const { user } = useHomeContext();
   //const router = useRouter();
   const [salesData, setSalesData] = useState<SellerSalesData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter()
+  const [contact, setContact] = useState({ orderId: '', buyerId: '' })
   // Redirect if not authenticated
-   
-   
+
+
   // Fetch seller sales data
   useEffect(() => {
+    //console.log(searchParams, 'bbbbbbbbbbbbbbbb');
+    const orderId = searchParams.get('orderId') as string;
+    const buyerId = searchParams.get('customerId') as string;
+    if (orderId && buyerId) {
+      setContact({ orderId, buyerId });
+
+      // Create new URLSearchParams object from current params
+      const params = new URLSearchParams(searchParams.toString());
+
+      // Remove only the parameters we want to clear
+      params.delete('orderId');
+      params.delete('customerId');
+
+      // Build the new URL
+      const newUrl = params.toString()
+        ? `${pathname}?${params.toString()}` // Keep other params
+        : pathname; // No params left
+
+      // Replace URL without causing page reload
+      router.replace(newUrl, { scroll: false });
+    }
     const fetchSalesData = async () => {
       //if (status !== 'authenticated') return;
 
       try {
         setLoading(true);
         const response = await fetch('/api/orders/seller');
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch sales data');
         }
 
         const result = await response.json();
-        
+        //console.log(result, 'vvvvvvvvvvvvvvvvvvvvvvv');
         if (result.success) {
           setSalesData(result.data);
         } else {
@@ -98,7 +122,7 @@ const SellerMessagesPage: React.FC = () => {
   // Transform sales data to conversations format
   const allConversations = React.useMemo(() => {
     const conversations: any[] = [];
-    
+
     salesData.forEach(sale => {
       // Add conversations from inquiries
       sale.conversations.forEach(conv => {
@@ -116,35 +140,38 @@ const SellerMessagesPage: React.FC = () => {
         orderIds.forEach(orderId => {
           const orderItems = sale.items.filter(item => item.orderId === orderId);
           const firstItem = orderItems[0];
-          
+
           conversations.push({
             id: `${orderId}?buyerId=${sale.buyer.id}`,
             subject: `Order ${orderId.slice(-8)}`,
             message: `Order for ${orderItems.length} item(s)`,
             buyerId: sale.buyer.id,
-            unreadMessageCount:sale.buyer.unreadMessageCount,
-            sellerId:  user?.id || '',
+            unreadMessageCount: sale.buyer.unreadMessageCount,
+            sellerId: user?.id || '',
             productId: firstItem.product.id,
             createdAt: firstItem.orderDate,
             updatedAt: firstItem.orderDate,
             buyerRead: true,
             sellerRead: true,
-            buyer: sale.buyer
+            buyer: sale.buyer,
+            isContact: contact.buyerId === sale.buyer.id && contact.orderId === orderId
           });
         });
       }
+      //setContact({buyerId:'',orderId:''})
     });
 
-    return conversations.sort((a, b) => 
-      new Date(b.updatedAt || b.createdAt).getTime() - 
+    return conversations.sort((a, b) =>
+      new Date(b.updatedAt || b.createdAt).getTime() -
       new Date(a.updatedAt || a.createdAt).getTime()
     );
-  }, [salesData,  user?.id]);
+  }, [salesData, user?.id]);
 
-  console.log(allConversations,'nnnnnnnnnnnnnnnnn');
-  
+  /* const isContact = allConversations.some((c) => c.isContact) */
+  //console.log(allConversations,isContact, 'nnnnnnnnnnnnccccccccccccccnnnnn');
 
-  if ( loading) {
+
+  if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="flex items-center space-x-2">
@@ -155,7 +182,7 @@ const SellerMessagesPage: React.FC = () => {
     );
   }
 
-   
+
 
   if (error) {
     return (
@@ -183,10 +210,11 @@ const SellerMessagesPage: React.FC = () => {
               Manage conversations with your customers about their orders
             </p>
           </div>
-          
+          {/* {isContact && <div>Please wait....</div>} */}
           <div className="h-[calc(100vh-170px)]">
-            <SellerInboxList conversations={allConversations} />
+            <SellerInboxList conversations={allConversations}  />
           </div>
+
         </div>
       </div>
       <div className="w-[100vw] h-30"></div>

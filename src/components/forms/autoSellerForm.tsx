@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 
 import { useActionState, useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useHomeContext } from '@/providers/homePageProvider'
 import { formSellerAction } from '@/actions/actionSellerForm'
@@ -26,8 +26,8 @@ type SellerFormDialogProps = {
 export default function AutoSellerFormDialog({ open, setOpen, callback = '/' }: SellerFormDialogProps) {
     const [state, action, pending] = useActionState(formSellerAction, undefined);
     const router = useRouter();
-    const { user } = useHomeContext()
-
+    const { user } = useHomeContext();
+    const pathname = usePathname()
     const [businessName, setBusinessName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [city, setCity] = useState(''); // will store address
@@ -44,7 +44,7 @@ export default function AutoSellerFormDialog({ open, setOpen, callback = '/' }: 
                 await signIn("credentials", {
                     email: user?.email,
                     password: "test_password",
-                    callbackUrl: callback
+                    callbackUrl: pathname
                 });
                 router.refresh();
             }

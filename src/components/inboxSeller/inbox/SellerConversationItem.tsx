@@ -1,21 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { Conversation } from '../../inboxBuyer/utils/types';
 
 interface SellerConversationItemProps {
   conversation: Conversation;
   onClick: (conversationId: string) => void;
+  isContact: boolean;
 }
 
 const SellerConversationItem: React.FC<SellerConversationItemProps> = ({
   conversation,
-  onClick
+  onClick,
+  isContact
 }) => {
+  useEffect(() => {
+    if (conversation.isContact) {
+      onClick(conversation.id);
+    }
+  }, []);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
 
-    // Same day format as time
     if (date.toDateString() === now.toDateString()) {
       return date.toLocaleTimeString(undefined, {
         hour: '2-digit',
@@ -23,7 +30,6 @@ const SellerConversationItem: React.FC<SellerConversationItemProps> = ({
       });
     }
 
-    // Within last 7 days as day name
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -31,21 +37,19 @@ const SellerConversationItem: React.FC<SellerConversationItemProps> = ({
       return date.toLocaleDateString(undefined, { weekday: 'short' });
     }
 
-    // Otherwise as date
     return date.toLocaleDateString(undefined, {
       month: 'short',
       day: 'numeric'
     });
   };
 
-  // Get last message for preview
   const lastMessage = conversation.messages[conversation.messages.length - 1];
-  //console.log(conversation,'ooooooooooooooooooooo');
 
   return (
     <button
+      disabled={isContact}
       onClick={() => onClick(conversation.id)}
-      className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors duration-200 rounded-lg
+      className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors duration-200 rounded-lg relative
         ${conversation.unreadCount > 0 ? 'bg-blue-50' : 'bg-white'}`}
     >
       <div className="flex justify-between items-start cursor-pointer">
@@ -73,7 +77,7 @@ const SellerConversationItem: React.FC<SellerConversationItemProps> = ({
               <p className="text-sm text-gray-500 truncate mt-1">
                 {conversation.productName}
               </p>
-             { conversation.unreadMessageCount>0&&<p className=' bg-red-600 rounded-full text-white w-5 h-5 flex items-center justify-center'>
+              {conversation.unreadMessageCount > 0 && <p className=' bg-red-600 rounded-full text-white w-5 h-5 flex items-center justify-center'>
                 {conversation.unreadMessageCount}
               </p>}
             </div>
@@ -91,6 +95,23 @@ const SellerConversationItem: React.FC<SellerConversationItemProps> = ({
           <span className="inline-flex items-center justify-center w-5 h-5 ml-2 text-xs font-medium text-white bg-blue-500 rounded-full">
             {conversation.unreadCount}
           </span>
+        )}
+
+        {/* Loading animation - positioned absolutely on the right side */}
+        {isContact && conversation.isContact && (
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+            <div className="relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-green-500 rounded-full animate-pulse opacity-75"></div>
+              <div className="relative flex items-center space-x-3 bg-white px-4 py-2 rounded-full border-2 border-transparent">
+                <div className="flex space-x-1.5">
+                  <span className="w-2.5 h-2.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                  <span className="w-2.5 h-2.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                  <span className="w-2.5 h-2.5 bg-blue-600 rounded-full animate-bounce"></span>
+                </div>
+                <span className="text-xs font-bold text-blue-600">CONNECTING</span>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </button>

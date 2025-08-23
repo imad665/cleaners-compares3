@@ -104,7 +104,8 @@ export async function GET(request: Request) {
             user: {
               select: {
                 name: true,
-                email: true
+                email: true,
+                id: true,
               },
             },
           },
@@ -116,12 +117,13 @@ export async function GET(request: Request) {
         }
       }
     });
-    if(isMain){
+    if (isMain) {
       return NextResponse.json({
-        ordersData:orders,
+        ordersData: orders,
         totalProductFeaturedRevenu,
         totalServiceFeaturedRevenu,
-        totalRevenueFromSellerPurchase})
+        totalRevenueFromSellerPurchase
+      })
     }
     return NextResponse.json(orders);
   } catch (error) {
