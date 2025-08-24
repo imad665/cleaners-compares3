@@ -546,7 +546,8 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
         </div>
 
         {checkoutStep === 'cart' && (
-          <Button
+          <Button 
+            disabled = {selectedCart.length === 0}
             onClick={() => {
               if (!user) {
                 setOpenSignIn(true);
@@ -679,7 +680,7 @@ export default function Page() {
           <>
             {existedProducts.length>0 ? (
               <>
-                {selectedCart && selectedCart.length > 0 && <SubTotal
+                {/* selectedCart && selectedCart.length > 0 && */ <SubTotal
                   selectedCart={selectedCart}
                   onCheckoutSuccess={handleCheckoutSuccess}
                 />}

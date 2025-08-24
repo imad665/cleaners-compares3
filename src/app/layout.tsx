@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { sendTestMessage } from "@/lib/payement/sendTestMessage";
 import { categories } from "@/components/video_ui/data/videos";
 import { embedProductsToNeon } from "@/lib/langchain/embeding/embed-products";
+import PWAInstallButton from "@/components/PWAInstallButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,6 +78,7 @@ export const metadata: Metadata = {
     images: ["/uploads/logo.png"], // Replace with your actual OG image
   },
   metadataBase: new URL("https://cleanerscompare.com"),
+  manifest:'/manifest.json',
 };
 
 async function removeDuplicateProducts() {
@@ -229,6 +231,7 @@ export default async function RootLayout({
           }}>Send Test Message</Button> */}
         {/* </HomeProductsProvider> */}
         <Toaster />
+        <PWAInstallButton />
       </body>
     </html>
   );
