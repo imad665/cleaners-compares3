@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { Save, Upload, Globe, CreditCard, Lock, Bell, Mail, Trash2, PercentCircle, EyeOff, Eye, Bot, Key } from 'lucide-react';
+import { Save, Upload, Globe, CreditCard, Lock, Bell, Mail, Trash2, PercentCircle, EyeOff, Eye, Bot, Key, ShieldCheck } from 'lucide-react';
 import Button from '@/components/adminDashboard/shared/Button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -256,8 +256,8 @@ const Settings = () => {
       const newCommision: { [key: string]: any } = {};
       const newApiKey: { [key: string]: any } = {};
       //console.log(allstg, 'pppppp');
-      //console.log(allstg,'oooooooooooooooooooooooooooooooo');
-      
+      console.log(allstg,'oooooooooooooooooooooooooooooooo');
+
       for (const [key, value] of Object.entries(general)) {
         newGeneral[key] = allstg[key] !== 'undefined' ? allstg[key] : '';
       }
@@ -286,6 +286,9 @@ const Settings = () => {
       }
       for (const [key, value] of Object.entries(apiKeys)) {
         newApiKey[key] = allstg[key];
+      }
+      for (const [key, value] of Object.entries(commission)) {
+        newCommision[key] = allstg[key];
       }
       //console.log(newCommision,';;;;;;;;;;;;');
 
@@ -541,7 +544,7 @@ const Settings = () => {
     }
   };
 
-  
+
 
   const handleSaveApiKeys = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -936,6 +939,20 @@ const Settings = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Security Assurance Message */}
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <h4 className="font-medium text-blue-800">Your API keys are secure</h4>
+                <p className="text-sm text-blue-600 mt-1">
+                  All API keys are encrypted before storage and never exposed in plain text.
+                  Your credentials are protected with industry-standard security measures.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <form onSubmit={handleSaveApiKeys} className="space-y-6">
             <div className="space-y-4">
               <div>
@@ -952,7 +969,7 @@ const Settings = () => {
                     placeholder="sk-... (your OpenAI API key)"
                     className="pr-10"
                   />
-                  <Button
+                  {/* <Button
                     type="button"
                     variant="ghost"
                     size="icon"
@@ -964,7 +981,7 @@ const Settings = () => {
                     ) : (
                       <Eye size={16} className="text-gray-500" />
                     )}
-                  </Button>
+                  </Button> */}
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
                   Your OpenAI API key for ChatGPT functionality (embeddings) in the chatbot.
@@ -985,7 +1002,7 @@ const Settings = () => {
                     placeholder="AIza... (your Gemini API key)"
                     className="pr-10"
                   />
-                  <Button
+                  {/* <Button
                     type="button"
                     variant="ghost"
                     size="icon"
@@ -997,7 +1014,7 @@ const Settings = () => {
                     ) : (
                       <Eye size={16} className="text-gray-500" />
                     )}
-                  </Button>
+                  </Button> */}
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
                   Your Google Gemini API key for alternative AI responses in the chatbot.

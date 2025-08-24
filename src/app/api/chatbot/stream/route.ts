@@ -1,4 +1,5 @@
 import { askRouterBotStream } from "@/lib/langchain/assistants/router";
+import getLLmApiKey from "@/lib/langchain/embeding/llm_api_key";
 import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 
@@ -13,10 +14,11 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const settings = await prisma.adminSetting.findMany({where:{key:{in:['openai','gemini']}}}) 
+        /* const settings = await prisma.adminSetting.findMany({where:{key:{in:['openai','gemini']}}}) 
         //console.log(settings,'ooooooooooooooooooooooooooooo');
         const apikey = settings.find((s)=>s.key==='openai')?.value || '' 
-        const geminiApiKey = settings.find((s)=>s.key === 'gemini')?.value || '';
+        const geminiApiKey = settings.find((s)=>s.key === 'gemini')?.value || ''; */
+        const {apikey,geminiApiKey}=await getLLmApiKey()
 
         
         const innerStream = await askRouterBotStream(question,apikey,geminiApiKey);

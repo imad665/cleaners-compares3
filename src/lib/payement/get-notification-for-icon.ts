@@ -54,7 +54,7 @@ export async function getNotifications(): Promise<Notification[] | null> {
      
     const messageNotifications = aggregatedMessages.map((group, index) => {
         const latest = group.latestMessage;
-        console.log(latest,';;;;;;;;;;;;;;;');
+        /* console.log(latest,';;;;;;;;;;;;;;;'); */
         const isSenderSeller = latest.sender !='BUYER';
         return {
             id: String(index + 1),
@@ -82,7 +82,7 @@ export async function getNotifications(): Promise<Notification[] | null> {
             title: 'New Order Received',
             preview: `Order #${order.id} for £${totalAmount.toFixed(2)}`,
             time: formatDistanceToNow(new Date(order.createdAt), { addSuffix: true }),
-            link: `/admin/dashboard/orders/${order.id}`
+            link: `/admin/orders`/* /${order.id} */
         };
     });
 
@@ -121,7 +121,7 @@ export async function getNotifications(): Promise<Notification[] | null> {
             title,
             preview,
             time: formatDistanceToNow(new Date(order.createdAt), { addSuffix: true }),
-            link: `/admin/dashboard/orders/${order.id}`
+            link: `/admin/orders/`/* ${order.id} */
         };
     });
 

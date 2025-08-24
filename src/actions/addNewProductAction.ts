@@ -1,6 +1,7 @@
 'use server'
 import { authOptions } from "@/lib/auth";
 import { deleteCloudinaryFileByUrl, uploadFileToCloud } from "@/lib/cloudStorage";
+import { embedProductsToNeon } from "@/lib/langchain/embeding/embed-products";
 import { processPayement } from "@/lib/payement/product-feature";
 import { prisma } from "@/lib/prisma";
 import { generateSlug, generateUniqueSlug } from "@/lib/products/slugGen";
@@ -173,6 +174,7 @@ export async function addNewProductAction(prev: any, formData: FormData) {
 
             }
         });
+        await embedProductsToNeon()
         if (featuredDuration?.toString()) {
             const url = await processPayement(featuredDuration.toString(), { productId: newProduct.id, type: 'product-feature' });
             return { success: true, url, message: 'Product successfully created.' };

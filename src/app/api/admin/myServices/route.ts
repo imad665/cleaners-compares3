@@ -1,4 +1,5 @@
 import { authOptions } from "@/lib/auth";
+import { embedEngineersToNeon } from "@/lib/langchain/embeding/embed_enginner";
 import { processPayement } from "@/lib/payement/servicePayement";
 import { prisma } from "@/lib/prisma";
 import { deleteImageFileAt, saveImageFileAt } from "@/lib/utils/saveImagesLocaly";
@@ -147,6 +148,7 @@ export async function POST(req: NextRequest) {
                 userId: userId, // you must set this from session/auth
             },
         });
+        await embedEngineersToNeon();
         if (featureDays?.toString()) {
             const url = await processPayement(featureDays.toString(), { productId: service.id, type: 'service-feature' });
             return NextResponse.json({ success: true, url, service, pictureUrl })

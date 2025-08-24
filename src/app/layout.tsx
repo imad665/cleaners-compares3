@@ -15,8 +15,6 @@ import { seedMachinesProducts, seedPartsProducts, seedSundriesProducts, seedUser
 import { hash, hashSync } from "bcryptjs";
 
 import ChatPage from "@/components/chatbot/main";
-import { embedMessagesToSupabase } from "@/lib/langchain/embeding/embed_messages";
-import { embedEngineersToSupabase } from "@/lib/langchain/embeding/embed_enginner";
  
 import { getRecentOrdersCount } from "@/lib/products/homeProducts";
 import { clearOrders, updatePasswordUsers } from "@/lib/clearTestData";
@@ -25,6 +23,7 @@ import { sendTestMessage } from "@/lib/payement/sendTestMessage";
 import { categories } from "@/components/video_ui/data/videos";
 import { embedProductsToNeon } from "@/lib/langchain/embeding/embed-products";
 import PWAInstallButton from "@/components/PWAInstallButton";
+import { embedEngineersToNeon } from "@/lib/langchain/embeding/embed_enginner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -204,12 +203,13 @@ export default async function RootLayout({
       name:'amir'
     }
   })  */
-   //await embedProductsToNeon();
+   //
   //await embedMessagesToSupabase() 
   //await embedEngineersToSupabase() 
   //const sellers = await prisma.sellerProfile.findMany();
   //console.log(sellers,';;;;;;;;;;;;;;;;llllllllllll');
-
+  //await embedProductsToNeon();
+  //await embedEngineersToNeon()
   //await updatePasswordUsers();
   //await clearOrders();
    

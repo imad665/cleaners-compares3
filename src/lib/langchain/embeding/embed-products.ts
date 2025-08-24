@@ -4,6 +4,7 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
 import { Pool } from "pg";
 import { prisma } from "@/lib/prisma";
+import getLLmApiKey from "./llm_api_key";
 
 export const embedProductsToNeon = async () => {
   // 1. Init PG pool (Neon connection)
@@ -50,8 +51,13 @@ export const embedProductsToNeon = async () => {
 
   return products; */
   // 5. Init embedding model
+   const {apikey,geminiApiKey}=await getLLmApiKey()
+
+   if(!apikey) return
+
   const embeddings = new OpenAIEmbeddings({
     model: "text-embedding-3-small",
+    apiKey:apikey
   }); 
 
   // 6. Store in Neon via LangChain PGVectorStore
