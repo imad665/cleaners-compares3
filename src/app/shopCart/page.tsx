@@ -605,7 +605,7 @@ export default function Page() {
   const [featuredProducts, setFeaturedProducts] = useState(null);
   const [footerData, setFooterData] = useState(null);
   const [isCheckoutSuccess, setIscheckoutSuccess] = useState(false);
-
+  const [headerData,setHeaderData] = useState({messages:null,recentOrderCoun:null})
   useEffect(() => {
     if (!cart || cart.length === 0) {
       setLoading(false);
@@ -627,8 +627,9 @@ export default function Page() {
           throw new Error('Failed to fetch cart items');
         }
 
-        const { products: products2, featuredProducts, footerData } = await res.json();
+        const { products: products2, featuredProducts, footerData,messages,recentOrderCoun } = await res.json();
         setFeaturedProducts(featuredProducts);
+        setHeaderData({messages,recentOrderCoun})
         setFooterData(footerData);
         setProducts(products2);
         /* if(products2.length === 0) clearCart(); */
@@ -668,7 +669,7 @@ export default function Page() {
   };
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header  notificationData={headerData.messages} recentOrderCount={headerData.recentOrderCoun}/>
 
       <main className="flex-grow p-4 space-y-5 max-w-6xl mx-auto">
         {loading ? (

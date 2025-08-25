@@ -4,6 +4,7 @@ import { FeaturedAndProducts } from "@/components/home_page/featured_product";
 import Footer from "@/components/home_page/footer";
 import ProductBreadcrumb from "@/components/productInfo/product/ProductBreadcrumb";
 import ServiceCard from "@/components/serviceEnginner";
+import { getNotifications } from "@/lib/payement/get-notification-for-icon";
 import { prisma } from "@/lib/prisma";
 import { getFeaturedProducts, getFooterData, getRecentOrdersCount } from "@/lib/products/homeProducts";
 import type { Metadata } from 'next';
@@ -105,10 +106,11 @@ export default async function Page({
         getFooterData(),
         getServices(name)
     ]);
-    const recentOrderCount = await getRecentOrdersCount(); 
+    const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications();
     return (
         <div>
-            <Header recentOrderCount={recentOrderCount}/>
+            <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
             <main className="container max-w-7xl m-auto space-y-8 mt-5">
                 <div className="flex justify-center mt-4">
                     <ProductBreadcrumb

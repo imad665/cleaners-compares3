@@ -21,7 +21,7 @@ import { getAllHomeProducts, getRecentOrdersCount } from "@/lib/products/homePro
 import { FormProvider } from "react-hook-form";
 import AddressSearchUK from "@/components/address-search";
 import { getNotifications } from "@/lib/payement/get-notification-for-icon";
- 
+
 
 export default async function Home() {
   //await prisma.sellerProfile.deleteMany();
@@ -38,16 +38,16 @@ export default async function Home() {
     footerData,
     //recentOrderCount,
   } = await getAllHomeProducts();
-  
+
   const recentOrderCount = await getRecentOrdersCount();
   const messages = await getNotifications();
   //console.log(messages,'vvvvvvvvvvvvvv');
-  
+
   //console.log(dealsProducts, 'mmmmmmmmmmmmmm');
   return (
     <div>
-      <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
-      
+      <Header recentOrderCount={recentOrderCount} notificationData={messages} />
+
       <main className="">
         <MainImage />
         {/* <ShopByCategory /> */}

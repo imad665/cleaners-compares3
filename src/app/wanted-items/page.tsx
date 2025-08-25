@@ -4,9 +4,10 @@ import { FeaturedAndProducts } from "@/components/home_page/featured_product";
 import Footer from "@/components/home_page/footer";
 import WantedItem from "@/components/home_page/serverComponents/wantedItem";
 import ProductBreadcrumb from "@/components/productInfo/product/ProductBreadcrumb";
-import { getFeaturedProducts, getFooterData, getWantedItems } from "@/lib/products/homeProducts";
+import { getNotifications } from "@/lib/payement/get-notification-for-icon";
+import { getFeaturedProducts, getFooterData, getRecentOrdersCount, getWantedItems } from "@/lib/products/homeProducts";
 import type { Metadata } from 'next';
- 
+
 export async function generateMetadata(): Promise<Metadata> {
     const { editedWantedItem } = await getWantedItems({ page: 1, pageSize: 3 });
 
@@ -86,10 +87,12 @@ export default async function Page() {
         getFooterData(),
         getWantedItems({ page: 1, pageSize: 100 })
     ]);
+    const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications();
 
     return (
         <div>
-            <Header />
+            <Header notificationData={messages} recentOrderCount={recentOrderCount}/>
             <main className="max-w-7xl m-auto space-y-8 mt-5">
                 <div className="flex justify-center mt-4">
                     <ProductBreadcrumb
@@ -109,10 +112,10 @@ export default async function Page() {
                 </div>
 
             </main>
-            <FeaturedAndProducts 
+            <FeaturedAndProducts
                 initFeaturedProducts={featuredProducts.editProducts}
             />
-            <Footer 
+            <Footer
                 footerData={footerData}
             />
         </div>

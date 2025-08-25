@@ -4,6 +4,7 @@ import { FeaturedAndProducts } from '@/components/home_page/featured_product';
 import Footer from '@/components/home_page/footer';
 import { CategoryCard } from '@/components/home_page/productTabs';
 import ProductBreadcrumb from '@/components/productInfo/product/ProductBreadcrumb';
+import { getNotifications } from '@/lib/payement/get-notification-for-icon';
 import { prisma } from '@/lib/prisma';
 import { getFeaturedProducts, getFooterData, getRecentOrdersCount } from '@/lib/products/homeProducts';
 export const revalidate = 18000; // ISR every 5 hours
@@ -141,11 +142,12 @@ export default async function ProductPageInfo(
 
     const isMachineOrParts = (subcategoriesUsed != undefined);
     const isParts = category === 'parts';
-    const recentOrderCount = await getRecentOrdersCount();    
+    const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications();
     return (
 
         <div className="min-h-screen flex flex-col">
-            <Header recentOrderCount={recentOrderCount}/>
+            <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
             <main >
                 <div className='m-auto'>
                     <div className="flex-grow max-w-8xl m-auto mt-5  mx-3">

@@ -47,6 +47,7 @@ const categories = [
 
 
 import type { Metadata } from 'next';
+import { getNotifications } from "@/lib/payement/get-notification-for-icon";
 
 export const metadata: Metadata = {
     title: "Expert Engineers Services - Laundry, Finishing, Dry Cleaning",
@@ -102,10 +103,11 @@ export default async function CategoryCards() {
         getFeaturedProducts({ page: 1, pageSize: 10 }),
         getFooterData(),
     ]);
-    const recentOrderCount = await getRecentOrdersCount(); 
+    const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications();
     return (
         <div className="min-h-screen w-full  flex flex-col">
-            <Header recentOrderCount={recentOrderCount}/>
+            <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
             <div className=" flex flex-col m-auto">
                 <div className="flex  justify-center mt-4">
                     <ProductBreadcrumb

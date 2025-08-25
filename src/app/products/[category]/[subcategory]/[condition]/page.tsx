@@ -5,6 +5,7 @@ import Footer from "@/components/home_page/footer";
 import ProductBreadcrumb from "@/components/productInfo/product/ProductBreadcrumb";
 import ProductDetailPage from "@/components/productInfo/ProductDetailPage";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getNotifications } from "@/lib/payement/get-notification-for-icon";
 import { prisma } from "@/lib/prisma";
 import { fetchProducts } from "@/lib/products/fetchProducts";
 import { getFeaturedProducts, getFooterData, getRecentOrdersCount } from "@/lib/products/homeProducts";
@@ -204,10 +205,11 @@ export default async function ProductsPageCondition(
             category, subcategory, condition, 1, 20);
 
         //console.log(products, pagination, categoryP, newSubcategory, '||||||||||||');
-        const recentOrderCount = await getRecentOrdersCount();      
+        const recentOrderCount = await getRecentOrdersCount();
+        const messages = await getNotifications();
         return (
             <div className="bg-gray-100 ">
-                <Header recentOrderCount={recentOrderCount}/>
+                <Header recentOrderCount={recentOrderCount} notificationData={messages} />
                 {!products ?
                     <div className="flex flex-col items-center">
                         <ProductBreadcrumb category={category}
@@ -237,10 +239,11 @@ export default async function ProductsPageCondition(
             </div>
         )
     } else {
-         const recentOrderCount = await getRecentOrdersCount(); 
+        const recentOrderCount = await getRecentOrdersCount();
+        const messages = await getNotifications();
         return (
             <div className="min-h-screen flex flex-col">
-                <Header recentOrderCount={recentOrderCount}/>
+                <Header recentOrderCount={recentOrderCount} notificationData={messages} />
                 <main className="flex-grow">
                     <ProductDetailPage
                         categorySlug={category}

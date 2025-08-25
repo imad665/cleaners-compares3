@@ -5,7 +5,8 @@ import BusinessForSale from "@/components/home_page/serverComponents/businessFor
 import WantedItem from "@/components/home_page/serverComponents/wantedItem";
 import ProductBreadcrumb from "@/components/productInfo/product/ProductBreadcrumb";
 import ServiceCard from "@/components/serviceEnginner";
-import { getBusinesessForSale, getFeaturedProducts, getFooterData } from "@/lib/products/homeProducts";
+import { getNotifications } from "@/lib/payement/get-notification-for-icon";
+import { getBusinesessForSale, getFeaturedProducts, getFooterData, getRecentOrdersCount } from "@/lib/products/homeProducts";
 
 import type { Metadata } from 'next';
  
@@ -91,10 +92,11 @@ export default async function Page() {
         getBusinesessForSale({ page: 1, pageSize: 100 })
     ]);
     //console.log(editedBusinessForSale,'ooooooooooooooooooooooooppppppppppppppppp');
-
+    const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications();
     return (
         <div>
-            <Header />
+            <Header notificationData={messages} recentOrderCount={recentOrderCount}/>
             <main className="max-w-7xl m-auto space-y-8 mt-5">
                 <div className="flex justify-center mt-4">
                     <ProductBreadcrumb
@@ -108,7 +110,7 @@ export default async function Page() {
 
                     {editedBusinessForSale.editedBusinessForSale.map((business, index) => (
                         <div key={index} className="mx-3">
-                            <BusinessForSale
+                            <BusinessForSale 
                                 className="min-w-[90vw] m-auto md:!min-w-[40vw] lg:!min-w-[300px] lg:!max-w-[500px]"
                                 {...business} />
                         </div>

@@ -14,6 +14,7 @@ import Navbar from '@/components/productInfo/layout/Navbar'; */
 import type { Metadata } from 'next';
  
 import { getFeaturedProducts, getFooterData, getRecentOrdersCount } from '@/lib/products/homeProducts';
+import { getNotifications } from '@/lib/payement/get-notification-for-icon';
 
 export async function generateMetadata({
     params,
@@ -120,11 +121,12 @@ export default async function ProductPageInfo(
         getFeaturedProducts({ page: 1, pageSize: 10 }),
         getFooterData(),
     ]);
-    const recentOrderCount = await getRecentOrdersCount();  
+    const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications(); 
     return (
 
         <div className="bg-gray-100 ">
-            <Header recentOrderCount={recentOrderCount}/>
+            <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
             {!products ?
                 <div className="flex flex-col items-center">
                     <ProductBreadcrumb

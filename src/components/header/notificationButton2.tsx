@@ -13,48 +13,52 @@ type Notification = {
   link: string;
 };
 
-export function NotificationDropdown({notificationData}:{notificationData:any}) {
+export function NotificationDropdown({ notificationData }: { notificationData: any }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [hasPlayedSound, setHasPlayedSound] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const router = useRouter();
- 
-  // Sample notifications data
-    const notifications: Notification[] = [
-    /* {
-      id: '1',
-      type: 'order',
-      title: 'New Order Received',
-      preview: 'Order #ORD-1234 for £89.99',
-      time: '2 mins ago',
-      link: '/admin/dashboard/orders/ORD-1234'
-    },
-    {
-      id: '2',
-      type: 'message',
-      title: 'New Product Inquiry',
-      preview: 'Customer asked about your premium laundry service',
-      time: '15 mins ago',
-      link: '/admin/dashboard/messages/123'
-    },
-    {
-      id: '3',
-      type: 'order',
-      title: 'Order Shipped',
-      preview: 'Your order #ORD-1233 has been delivered',
-      time: '1 hour ago',
-      link: '/admin/dashboard/orders/ORD-1233'
-    },
-    {
-      id: '4',
-      type: 'alert',
-      title: 'Payment Processed',
-      preview: '£245.80 has been deposited to your account',
-      time: '3 hours ago',
-      link: '/admin/dashboard/payments'
-    } */
-  ].concat(notificationData || []); 
 
-   
+  // Sample notifications data
+  const notifications: Notification[] = [
+    /* your notifications data */
+  ].concat(notificationData || []);
+
+  // Initialize audio on component mount
+  useEffect(() => {
+    audioRef.current = new Audio('/beep_notification.mp3'); // Update extension if needed
+    audioRef.current.volume = 0.3;
+    
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  // Play sound on first user interaction if there are notifications
+  const handleButtonClick = () => {
+    setIsOpen(!isOpen);
+    
+    // Play sound only on first interaction when there are notifications
+    if (notifications.length > 0 && !hasPlayedSound && !hasUserInteracted) {
+      try {
+        if (audioRef.current) {
+          audioRef.current.play().catch(error => {
+            console.log('Audio play failed:', error);
+          });
+          setHasPlayedSound(true);
+        }
+      } catch (error) {
+        console.error('Error playing notification sound:', error);
+      }
+    }
+    
+    setHasUserInteracted(true);
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -64,7 +68,6 @@ export function NotificationDropdown({notificationData}:{notificationData:any}) 
       }
     }
 
-    // Close when pressing Escape key
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         setIsOpen(false);
@@ -73,7 +76,7 @@ export function NotificationDropdown({notificationData}:{notificationData:any}) 
 
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('keydown', handleKeyDown);
-    
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
@@ -101,7 +104,7 @@ export function NotificationDropdown({notificationData}:{notificationData:any}) 
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleButtonClick}
         className="relative p-2 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
         aria-label="Notifications"
         aria-expanded={isOpen}
@@ -120,7 +123,7 @@ export function NotificationDropdown({notificationData}:{notificationData:any}) 
             <div className="px-4 py-2 border-b border-gray-100">
               <h3 className="text-sm font-medium text-gray-700">Notifications</h3>
             </div>
-            
+
             {notifications.length > 0 ? (
               notifications.map((notification) => (
                 <div
@@ -159,15 +162,7 @@ export function NotificationDropdown({notificationData}:{notificationData:any}) 
             )}
 
             <div className="px-4 py-2 border-t border-gray-100">
-              {/* <button
-                onClick={() => {
-                  router.push('/admin/dashboard/inbox');
-                  setIsOpen(false);
-                }}
-                className="w-full text-center text-sm font-medium text-blue-600 hover:text-blue-800"
-              >
-                View all notifications
-              </button> */}
+              {/* View all notifications button */}
             </div>
           </div>
         </div>

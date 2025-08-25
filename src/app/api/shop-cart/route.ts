@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma'; // adjust the path if needed
 import { truncateSync } from 'node:fs';
-import { getDealCountdown, getFeaturedProducts, getFooterData } from '@/lib/products/homeProducts';
+import { getDealCountdown, getFeaturedProducts, getFooterData, getRecentOrdersCount } from '@/lib/products/homeProducts';
+import { getNotifications } from '@/lib/payement/get-notification-for-icon';
 
 export async function POST(req: NextRequest) {
     try {
@@ -67,8 +68,9 @@ export async function POST(req: NextRequest) {
             getFeaturedProducts({ page: 1, pageSize: 10 }),
             getFooterData(),
         ]);
-
-        return NextResponse.json({products,featuredProducts,footerData}, { status: 200 });
+        const recentOrderCount = await getRecentOrdersCount();
+        const messages = await getNotifications();
+        return NextResponse.json({products,featuredProducts,footerData,messages,recentOrderCount}, { status: 200 });
 
     } catch (error) {
         console.error('Error fetching products:', error);

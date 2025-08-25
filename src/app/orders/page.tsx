@@ -86,7 +86,7 @@ function App() {
     }
     switchTab('inbox');
   };
-
+    
   return (
     <div className="min-h-screen bg-gray-100">
        <Header  />

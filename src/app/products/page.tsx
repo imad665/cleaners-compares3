@@ -6,6 +6,7 @@ import { NoProductsFound } from "./[category]/[subcategory]/[condition]/page";
 import { FeaturedAndProducts } from "@/components/home_page/featured_product";
 import Footer from "@/components/home_page/footer";
 import type { Metadata } from 'next';
+import { getNotifications } from "@/lib/payement/get-notification-for-icon";
 export const revalidate = 18000; // ISR every 5 hours
  
 interface PageProps {
@@ -107,9 +108,10 @@ export default async function Page({ searchParams }) {
     getFooterData(),
   ]);
   const recentOrderCount = await getRecentOrdersCount();
+  const messages = await getNotifications();
   return (
     <div>
-      <Header recentOrderCount={recentOrderCount}/>
+      <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
       {!editProducts ?
         <div className="flex flex-col items-center">
           <ProductBreadcrumb
