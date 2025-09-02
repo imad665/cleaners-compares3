@@ -25,6 +25,7 @@ export async function POST(req: Request) {
     try {
         const formData = await req.formData();
         const keysDays = []
+        
 
         for (const [key, value] of formData.entries()) {
             console.log(`Key: ${key}, Value: ${value}`);
@@ -37,8 +38,8 @@ export async function POST(req: Request) {
                     const { apikey, geminiApiKey } = await getLLmApiKey(false)
                     if (apikey !== stringValue && key === 'openai' || geminiApiKey !== stringValue && key === 'gemini') {
                         stringValue = encrypt(stringValue);
-                        await embedProductsToNeon();
-                        await embedEngineersToNeon();
+                         
+                        
                     }
 
                 }

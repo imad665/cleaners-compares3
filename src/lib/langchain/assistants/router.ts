@@ -59,11 +59,14 @@ export const askRouterBotStream = async (
     4
   );
 
+  //console.log(docsWithScores.length,'mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
+  
+
   const docs = docsWithScores.map(([doc]) => doc);
   const scores = docsWithScores.map(([_, score]) => score);
 
   // 5. Relevance threshold
-  const RELEVANCE_THRESHOLD = 0.7;
+  const RELEVANCE_THRESHOLD = 0.2;
 
   // 6. Utility function to extract IDs by doc_type
   const getRelevantIds = (docType: string) => {

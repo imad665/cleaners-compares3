@@ -28,6 +28,9 @@ export const askProductBotStream = async (
         },
     });
 
+    //console.log(productDetails,'ooooooooooooooooooooooooooooooooooooooooooooo');
+    
+
     const enrichedDocs = docs.map((doc: any) => {
         const { title, ref_id } = doc.metadata || {};
         const product = productDetails.find((p) => p.id === ref_id);
@@ -65,9 +68,15 @@ If no matching product is found, respond with:
 
     // ✅ Swap ChatOpenAI → ChatGoogleGenerativeAI
     let model = null;
-    if (geminiApiKey) {
+    model = new ChatOpenAI({
+            modelName: "gpt-4o-mini", // Recommended over gpt-4o-mini
+            temperature: 0.3,
+            streaming: true,
+            apiKey: openaikey
+        });
+    /* if (geminiApiKey) {
         model = new ChatGoogleGenerativeAI({
-            model: "gemini-2.0-flash", // or gemini-1.5-pro
+            model: "gemini-2.5-flash", // or gemini-1.5-pro
             temperature: 0.2,
             streaming: true,
             apiKey: geminiApiKey, // ✅ dynamic key
@@ -79,7 +88,7 @@ If no matching product is found, respond with:
             streaming: true,
             apiKey: openaikey
         });
-    }
+    } */
 
     const outputParser = new StringOutputParser();
 

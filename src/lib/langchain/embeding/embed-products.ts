@@ -19,7 +19,8 @@ export const embedProductsToNeon = async () => {
   );
 
   const existingProductIds = new Set(res.rows.map((r) => r.ref_id));
-
+  console.log(existingProductIds.size,';;;;;;;;;;;;;;;⚠️⚠️⚠️;');
+  
   // 3. Fetch products from Prisma
   const products = await prisma.product.findMany({
     where: { title: { not: "" } },
@@ -30,6 +31,7 @@ export const embedProductsToNeon = async () => {
   /* console.log(products,existingProductIds,'iiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
 
   return products; */
+  //console.log(products.length,';;;;;;;;;;;;;;;⚠️⚠️⚠️;');
   
   const newProducts = products.filter(
     (p) => !existingProductIds.has(p.id)
