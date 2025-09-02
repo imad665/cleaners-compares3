@@ -5,6 +5,8 @@ import path from 'path';
 import fs from 'fs/promises';
 import { encrypt, isEncrypted } from "@/lib/encryption";
 import getLLmApiKey from "@/lib/langchain/embeding/llm_api_key";
+import { embedProductsToNeon } from "@/lib/langchain/embeding/embed-products";
+import { embedEngineersToNeon } from "@/lib/langchain/embeding/embed_enginner";
 export async function GET() {
     try {
         const allstg: { [key: string]: any } = {}
@@ -35,6 +37,8 @@ export async function POST(req: Request) {
                     const { apikey, geminiApiKey } = await getLLmApiKey(false)
                     if (apikey !== stringValue && key === 'openai' || geminiApiKey !== stringValue && key === 'gemini') {
                         stringValue = encrypt(stringValue);
+                        await embedProductsToNeon();
+                        await embedEngineersToNeon();
                     }
 
                 }

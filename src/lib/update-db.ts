@@ -18,9 +18,10 @@ export default async function deleteUserTested() {
 
     if (userIds.length === 0) {
       console.log('No users found created after July 19, 2025');
-      return;
+      return; 
     }
-    return
+    //console.log(`Found ${userIds.length} users to delete`);
+    //return
 
     console.log(`Found ${userIds.length} users to delete`);
 

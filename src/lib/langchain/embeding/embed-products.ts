@@ -25,7 +25,7 @@ export const embedProductsToNeon = async () => {
     where: { title: { not: "" } },
     select: { id: true, title: true, description: true },
     orderBy: { title: "asc" },
-    take:5,
+    //take:5,
   });
   /* console.log(products,existingProductIds,'iiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
 

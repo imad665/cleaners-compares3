@@ -256,7 +256,7 @@ const Settings = () => {
       const newCommision: { [key: string]: any } = {};
       const newApiKey: { [key: string]: any } = {};
       //console.log(allstg, 'pppppp');
-      console.log(allstg,'oooooooooooooooooooooooooooooooo');
+      //console.log(allstg,'oooooooooooooooooooooooooooooooo');
 
       for (const [key, value] of Object.entries(general)) {
         newGeneral[key] = allstg[key] !== 'undefined' ? allstg[key] : '';

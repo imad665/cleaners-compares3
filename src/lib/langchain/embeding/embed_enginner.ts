@@ -34,7 +34,7 @@ export const embedEngineersToNeon = async () => {
             category: true,
         },
         orderBy: { title: "asc" },
-        take: 5
+        //take: 5
     });
 
     // 4. Filter new engineers

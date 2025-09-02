@@ -24,6 +24,7 @@ import { categories } from "@/components/video_ui/data/videos";
 import { embedProductsToNeon } from "@/lib/langchain/embeding/embed-products";
 import PWAInstallButton from "@/components/PWAInstallButton";
 import { embedEngineersToNeon } from "@/lib/langchain/embeding/embed_enginner";
+import deleteUserTested from "@/lib/update-db";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -212,6 +213,8 @@ export default async function RootLayout({
   //await embedEngineersToNeon()
   //await updatePasswordUsers();
   //await clearOrders();
+
+  //await deleteUserTested();
    
   return (
     <html lang="en" className="scroll-smooth">
