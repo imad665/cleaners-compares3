@@ -121,13 +121,13 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  emailVerified: 'emailVerified',
   password: 'password',
-  image: 'image',
   role: 'role',
-  status: 'status',
   createdAt: 'createdAt',
+  image: 'image',
+  emailVerified: 'emailVerified',
   lastLogin: 'lastLogin',
+  status: 'status',
   isSigninSuccess: 'isSigninSuccess',
   resetToken: 'resetToken',
   resetTokenExpiry: 'resetTokenExpiry'
@@ -148,13 +148,13 @@ exports.Prisma.ServiceScalarFieldEnum = {
   isFeatured: 'isFeatured',
   isEnabled: 'isEnabled',
   category: 'category',
-  featuredStartDate: 'featuredStartDate',
-  featuredEndDate: 'featuredEndDate',
   pictureUrl: 'pictureUrl',
-  featureDays: 'featureDays',
   userId: 'userId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  featureDays: 'featureDays',
+  featuredEndDate: 'featuredEndDate',
+  featuredStartDate: 'featuredStartDate'
 };
 
 exports.Prisma.WantedItemScalarFieldEnum = {
@@ -173,24 +173,24 @@ exports.Prisma.BusinessForSaleScalarFieldEnum = {
   title: 'title',
   businessType: 'businessType',
   location: 'location',
-  description: 'description',
   annualTurnover: 'annualTurnover',
   reasonFoSale: 'reasonFoSale',
-  userId: 'userId',
   imageUrl: 'imageUrl',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  description: 'description'
 };
 
 exports.Prisma.ContactInfoScalarFieldEnum = {
   id: 'id',
   email: 'email',
   phone: 'phone',
-  fullName: 'fullName',
   wantedId: 'wantedId',
   businessId: 'businessId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  fullName: 'fullName'
 };
 
 exports.Prisma.SellerProfileScalarFieldEnum = {
@@ -199,10 +199,10 @@ exports.Prisma.SellerProfileScalarFieldEnum = {
   businessName: 'businessName',
   city: 'city',
   country: 'country',
+  verified: 'verified',
   phoneNumber: 'phoneNumber',
   stripeAccountId: 'stripeAccountId',
-  stripStatus: 'stripStatus',
-  verified: 'verified'
+  stripStatus: 'stripStatus'
 };
 
 exports.Prisma.SellerBankInfoScalarFieldEnum = {
@@ -242,19 +242,19 @@ exports.Prisma.ProductScalarFieldEnum = {
   imagesUrl: 'imagesUrl',
   videoUrl: 'videoUrl',
   isFeatured: 'isFeatured',
-  featureDays: 'featureDays',
-  weight: 'weight',
-  featuredStartDate: 'featuredStartDate',
-  featuredEndDate: 'featuredEndDate',
   condition: 'condition',
   categoryId: 'categoryId',
   sellerId: 'sellerId',
-  slug: 'slug',
-  units: 'units',
-  stock: 'stock',
   socialMediaPosted: 'socialMediaPosted',
-  status: 'status',
   createdAt: 'createdAt',
+  featuredEndDate: 'featuredEndDate',
+  featuredStartDate: 'featuredStartDate',
+  status: 'status',
+  units: 'units',
+  featureDays: 'featureDays',
+  weight: 'weight',
+  slug: 'slug',
+  stock: 'stock',
   markAsDeleted: 'markAsDeleted'
 };
 
@@ -267,24 +267,24 @@ exports.Prisma.OrderPaymentScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  isAdminPaidToSeller: 'isAdminPaidToSeller',
+  shippedAt: 'shippedAt',
   shippingProofUrl: 'shippingProofUrl',
   trackingNumber: 'trackingNumber',
-  shippedAt: 'shippedAt'
+  isAdminPaidToSeller: 'isAdminPaidToSeller'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   totalPrice: 'totalPrice',
-  status: 'status',
   createdAt: 'createdAt',
-  commisionRate: 'commisionRate',
+  status: 'status',
   shippingAddress: 'shippingAddress',
   shippingCity: 'shippingCity',
   shippingCountry: 'shippingCountry',
+  shippingPhone: 'shippingPhone',
   shippingPostalCode: 'shippingPostalCode',
-  shippingPhone: 'shippingPhone'
+  commisionRate: 'commisionRate'
 };
 
 exports.Prisma.NotificationOrderScalarFieldEnum = {
@@ -300,9 +300,9 @@ exports.Prisma.MessageScalarFieldEnum = {
   orderId: 'orderId',
   senderUserId: 'senderUserId',
   receiverUserId: 'receiverUserId',
-  isReceiverRead: 'isReceiverRead',
   createdAt: 'createdAt',
-  userId: 'userId'
+  userId: 'userId',
+  isReceiverRead: 'isReceiverRead'
 };
 
 exports.Prisma.OrderItemScalarFieldEnum = {
@@ -312,28 +312,28 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   sellerId: 'sellerId',
   quantity: 'quantity',
   unitPrice: 'unitPrice',
-  isReadSeller: 'isReadSeller',
-  isReadBuyer: 'isReadBuyer',
-  status: 'status',
-  paymentIntentId: 'paymentIntentId',
   createdAt: 'createdAt',
+  paymentIntentId: 'paymentIntentId',
+  status: 'status',
+  isReadBuyer: 'isReadBuyer',
+  isReadSeller: 'isReadSeller',
+  shippedAt: 'shippedAt',
   shippingProofUrl: 'shippingProofUrl',
-  trackingNumber: 'trackingNumber',
-  shippedAt: 'shippedAt'
+  trackingNumber: 'trackingNumber'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  imageUrl: 'imageUrl',
   parentId: 'parentId',
-  slug: 'slug',
-  sub_subName: 'sub_subName',
-  status: 'status',
   createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  status: 'status',
+  imageUrl: 'imageUrl',
+  slug: 'slug',
+  sub_subName: 'sub_subName'
 };
 
 exports.Prisma.VideoScalarFieldEnum = {
@@ -342,25 +342,25 @@ exports.Prisma.VideoScalarFieldEnum = {
   url: 'url',
   description: 'description',
   thumbnail: 'thumbnail',
-  category: 'category',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  category: 'category'
 };
 
 exports.Prisma.InquiryScalarFieldEnum = {
   id: 'id',
-  buyerId: 'buyerId',
-  productId: 'productId',
-  sellerId: 'sellerId',
-  subject: 'subject',
   message: 'message',
   response: 'response',
+  createdAt: 'createdAt',
   buyerDeleted: 'buyerDeleted',
+  productId: 'productId',
   sellerDeleted: 'sellerDeleted',
+  sellerId: 'sellerId',
+  buyerId: 'buyerId',
   buyerRead: 'buyerRead',
-  sellerRead: 'sellerRead',
   buyerStarred: 'buyerStarred',
+  sellerRead: 'sellerRead',
   sellerStarred: 'sellerStarred',
-  createdAt: 'createdAt'
+  subject: 'subject'
 };
 
 exports.Prisma.RatingScalarFieldEnum = {
@@ -400,9 +400,35 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   expires: 'expires'
 };
 
+exports.Prisma.DocumentsScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  metadata: 'metadata'
+};
+
+exports.Prisma.ChatSessionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+};
+
+exports.Prisma.ChatMessageScalarFieldEnum = {
+  id: 'id',
+  role: 'role',
+  content: 'content',
+  sessionId: 'sessionId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -413,6 +439,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.Role = exports.$Enums.Role = {
   BUYER: 'BUYER',
@@ -466,19 +498,19 @@ exports.OrderPaymentStatus = exports.$Enums.OrderPaymentStatus = {
   PENDING: 'PENDING',
   CAPTURED: 'CAPTURED',
   REFUNDED: 'REFUNDED',
+  CANCELLED: 'CANCELLED',
   PAID: 'PAID',
   REQUIRE_CAPTURE: 'REQUIRE_CAPTURE',
-  CANCELLED: 'CANCELLED',
   SHIPPED: 'SHIPPED'
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {
   PENDING: 'PENDING',
-  PAID: 'PAID',
-  REQUIRE_CAPTURE: 'REQUIRE_CAPTURE',
   SHIPPED: 'SHIPPED',
   DELIVERED: 'DELIVERED',
-  CANCELLED: 'CANCELLED'
+  CANCELLED: 'CANCELLED',
+  PAID: 'PAID',
+  REQUIRE_CAPTURE: 'REQUIRE_CAPTURE'
 };
 
 exports.NotificationStatus = exports.$Enums.NotificationStatus = {
@@ -488,11 +520,11 @@ exports.NotificationStatus = exports.$Enums.NotificationStatus = {
 };
 
 exports.OrderItemStatus = exports.$Enums.OrderItemStatus = {
+  CANCELLED: 'CANCELLED',
   PENDING: 'PENDING',
+  DELIVERED: 'DELIVERED',
   PROCESSING: 'PROCESSING',
   SHIPPED: 'SHIPPED',
-  DELIVERED: 'DELIVERED',
-  CANCELLED: 'CANCELLED',
   RETURNED: 'RETURNED'
 };
 
@@ -523,7 +555,10 @@ exports.Prisma.ModelName = {
   Rating: 'Rating',
   Account: 'Account',
   Session: 'Session',
-  VerificationToken: 'VerificationToken'
+  VerificationToken: 'VerificationToken',
+  documents: 'documents',
+  ChatSession: 'ChatSession',
+  ChatMessage: 'ChatMessage'
 };
 
 /**

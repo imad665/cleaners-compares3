@@ -1,20 +1,22 @@
 'use client';
 
 import { useRef, useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
-import { MessageSquare, Send, Loader2, X, MessageCircle } from "lucide-react";
+import { MessageSquare, Send, Loader2, X, MessageCircle, Bot, User } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { ShoppingCartCheckOut } from "./llm-response/shopping-cart-checkout";
+import renderLLMResponse from "./llm-response/renderer";
 
 export default function ChatWidget() {
     const [question, setQuestion] = useState("");
     const [messages, setMessages] = useState<Array<{ type: string, content: string }>>([]);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
-    const kref = useRef(0);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
+    const welcomeTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // WhatsApp configuration
     const whatsappNumber = "441702597067";
@@ -29,6 +31,26 @@ export default function ChatWidget() {
         scrollToBottom();
     }, [messages, isOpen]);
 
+    // Show welcome message after 5 seconds if chat is open and no messages
+    useEffect(() => {
+        if (isOpen && messages.length === 0) {
+            welcomeTimerRef.current = setTimeout(() => {
+                setShowWelcomeMessage(true);
+            }, 5000);
+        } else {
+            if (welcomeTimerRef.current) {
+                clearTimeout(welcomeTimerRef.current);
+            }
+            setShowWelcomeMessage(false);
+        }
+
+        return () => {
+            if (welcomeTimerRef.current) {
+                clearTimeout(welcomeTimerRef.current);
+            }
+        };
+    }, [isOpen, messages.length]);
+
     const askBot = async () => {
         if (!question.trim()) return;
 
@@ -36,6 +58,7 @@ export default function ChatWidget() {
         setQuestion("");
         setMessages(prev => [...prev, { type: "user", content: userQuestion }]);
         setLoading(true);
+        setShowWelcomeMessage(false); // Hide welcome message when user interacts
 
         try {
             const res = await fetch("/api/chatbot/stream", {
@@ -59,7 +82,8 @@ export default function ChatWidget() {
 
                 const chunk = decoder.decode(value, { stream: true });
                 botMessage += chunk;
-
+                console.log(botMessage);
+                
                 // Live update last message (bot)
                 setMessages(prev => {
                     const updated = [...prev];
@@ -67,7 +91,7 @@ export default function ChatWidget() {
                     if (updated[lastIndex]?.type === "bot") {
                         updated[lastIndex] = {
                             ...updated[lastIndex],
-                            content: botMessage.replace('```', '').replace('markdown', ''),
+                            content: botMessage,
                         };
                     }
                     return updated;
@@ -76,7 +100,10 @@ export default function ChatWidget() {
 
         } catch (error) {
             console.error("Stream error:", error);
-            setMessages(prev => [...prev, { type: "bot", content: "Sorry, I encountered an error. Please try again." }]);
+            setMessages(prev => [...prev, {
+                type: "bot",
+                content: "<Response><Text>Sorry, I encountered an error. Please try again.</Text></Response>"
+            }]);
         } finally {
             setLoading(false);
         }
@@ -100,6 +127,20 @@ export default function ChatWidget() {
         adjustTextareaHeight();
     }, [question]);
 
+    const clearChat = () => {
+        setMessages([]);
+        setShowWelcomeMessage(false);
+    };
+
+    const handleSuggestionClick = (suggestion: string) => {
+        setQuestion(suggestion);
+        setShowWelcomeMessage(false);
+        // Focus on input after setting question
+        setTimeout(() => {
+            inputRef.current?.focus();
+        }, 100);
+    };
+
     return (
         <>
             {/* Floating Chat Button with Wave Effect */}
@@ -111,15 +152,15 @@ export default function ChatWidget() {
                         <div className="absolute inset-0 rounded-full bg-indigo-400/30 animate-ping-slower"></div>
                     </div>
                 )}
-                
+
                 <button
                     onClick={() => setIsOpen(!isOpen)}
                     className={`
                         flex items-center justify-center 
                         w-12 h-12 sm:w-14 sm:h-14 
                         rounded-full shadow-lg transition-all duration-300 relative
-                        ${isOpen 
-                            ? 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700' 
+                        ${isOpen
+                            ? 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700'
                             : 'bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
                         } 
                         text-white transform hover:scale-105
@@ -130,6 +171,13 @@ export default function ChatWidget() {
                         <X className="h-5 w-5 sm:h-6 sm:w-6" />
                     ) : (
                         <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />
+                    )}
+
+                    {/* Notification badge when closed */}
+                    {!isOpen && messages.length > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                            {messages.length}
+                        </span>
                     )}
                 </button>
             </div>
@@ -145,7 +193,7 @@ export default function ChatWidget() {
                         sm:bottom-6 sm:right-24 
                         flex items-center justify-center 
                         w-12 h-12 sm:w-14 sm:h-14 
-                        rounded-full shadow-lg bg-green-50 hover:bg-green-100 
+                        rounded-full shadow-lg bg-green-500 hover:bg-green-600 
                         text-white transition-all duration-300 z-50
                         transform hover:scale-105
                     "
@@ -156,7 +204,7 @@ export default function ChatWidget() {
                         alt="WhatsApp"
                         width={28}
                         height={28}
-                        priority={false}
+                        className="filter brightness-0 invert"
                     />
                 </Link>
             )}
@@ -168,8 +216,7 @@ export default function ChatWidget() {
                     sm:right-6 sm:left-auto 
                     w-auto max-w-full 
                     sm:max-w-md 
-                    min-w-[430px]
-                    bg-white rounded-t-2xl rounded-bl-2xl shadow-xl 
+                    bg-white rounded-2xl shadow-xl 
                     overflow-hidden z-40 flex flex-col
                     border border-gray-200
                 `}
@@ -179,64 +226,149 @@ export default function ChatWidget() {
                         minHeight: '300px'
                     }}>
 
-                    {/* Header with WhatsApp and Close button */}
-                    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-3 text-white flex justify-between items-center">
-                        <div className="flex items-center space-x-2 sm:space-x-3">
-                            <a
-                                href={whatsappUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-1 sm:p-2 rounded-full bg-lime-500 hover:bg-lime-600 transition-colors"
-                                aria-label="Contact us on WhatsApp"
-                                title="whatsapp"
-                            >
-                                <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" />
-                            </a>
+                    {/* Header with Shopping Cart, WhatsApp and Close button */}
+                    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 text-white flex justify-between items-center">
+                        <div className="flex items-center space-x-3">
+                            <div className="p-2 rounded-full bg-indigo-700">
+                                <Bot className="h-5 w-5" />
+                            </div>
                             <div>
-                                <h1 className="text-sm sm:text-lg font-bold">Store Assistant</h1>
-                                <p className="text-indigo-100 text-xs">How can I help you today?</p>
+                                <h1 className="text-lg font-bold">CleanersCompare Assistant</h1>
+                                <p className="text-indigo-100 text-sm">How can I help you today?</p>
                             </div>
                         </div>
-                        <button
-                            onClick={() => setIsOpen(false)}
-                            className="p-1 rounded-full hover:bg-indigo-700 transition-colors"
-                            aria-label="Close chat"
-                        >
-                            <X className="h-4 w-4 sm:h-5 sm:w-5" />
-                        </button>
+                        <div className="flex items-center space-x-2">
+                            {/* Shopping Cart Button */}
+                            <ShoppingCartCheckOut />
+                            
+                            <button
+                                onClick={clearChat}
+                                className="p-2 rounded-full hover:bg-indigo-700 transition-colors text-sm"
+                                aria-label="Clear chat"
+                                title="Clear chat"
+                            >
+                                Clear
+                            </button>
+                            <button
+                                onClick={() => setIsOpen(false)}
+                                className="p-2 rounded-full hover:bg-indigo-700 transition-colors"
+                                aria-label="Close chat"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Messages Container */}
-                    <div className="flex-1 overflow-y-auto p-2 sm:p-3 bg-gray-50">
+                    <div
+                        ref={chatContainerRef}
+                        className="flex-1 overflow-y-auto p-4 bg-gray-50"
+                    >
                         {messages.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-gray-400 p-4 text-center">
-                                <MessageSquare className="h-8 w-8 sm:h-10 sm:w-10 mb-2 sm:mb-3 opacity-50" />
-                                <p className="text-xs sm:text-sm">Ask me about products, prices, or anything else!</p>
+                                <Bot className="h-12 w-12 mb-3 opacity-50" />
+                                <h3 className="font-medium text-lg mb-1">Welcome to CleanersCompare</h3>
+                                <p className="text-sm max-w-xs mb-4">I can help you find equipment or connect you with expert engineers!</p>
+
+                                <div className="mt-4 space-y-3 w-full max-w-xs">
+                                    {/* Product Suggestions */}
+                                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Products & Equipment</div>
+                                    <div
+                                        className="bg-white p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+                                        onClick={() => setQuestion("Show me products under $50")}
+                                    >
+                                        <p className="text-sm font-medium">Show me products under $50</p>
+                                    </div>
+                                    <div
+                                        className="bg-white p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+                                        onClick={() => handleSuggestionClick("Show me laundry machines under $1000")}
+                                    >
+                                        <p className="text-sm font-medium">Laundry machines on budget</p>
+                                    </div>
+                                    <div
+                                        className="bg-white p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+                                        onClick={() => handleSuggestionClick("What dry cleaning equipment do you have?")}
+                                    >
+                                        <p className="text-sm font-medium">Dry cleaning equipment</p>
+                                    </div>
+
+                                    {/* Engineer Suggestions */}
+                                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-4">Engineer Services</div>
+                                    <div
+                                        className="bg-white p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+                                        onClick={() => handleSuggestionClick("I need someone to fix my finishing machine")}
+                                    >
+                                        <p className="text-sm font-medium">Finishing machine repair</p>
+                                    </div>
+                                    <div
+                                        className="bg-white p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+                                        onClick={() => handleSuggestionClick("Looking for laundry equipment maintenance")}
+                                    >
+                                        <p className="text-sm font-medium">Laundry equipment maintenance</p>
+                                    </div>
+                                    <div
+                                        className="bg-white p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+                                        onClick={() => handleSuggestionClick("Need emergency repair for dry cleaning machine")}
+                                    >
+                                        <p className="text-sm font-medium">Emergency dry cleaning repair</p>
+                                    </div>
+                                </div>
                             </div>
                         ) : (
-                            <div className="space-y-2 sm:space-y-3">
+                            <div className="space-y-4">
                                 {messages.map((msg, index) => (
                                     <div
                                         key={index}
                                         className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
                                     >
-                                        <div
-                                            className={`max-w-[90%] sm:max-w-[80%] rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base ${msg.type === 'user'
-                                                ? 'bg-indigo-600 text-white rounded-br-none'
-                                                : 'bg-white border border-gray-200 rounded-bl-none shadow-sm'
-                                                }`}
-                                        >
-                                            <ReactMarkdown rehypePlugins={[rehypeRaw]}>{msg.content}</ReactMarkdown>
-                                        </div>
+                                        {msg.type === 'user' ? (
+                                            <div className="flex flex-row-reverse items-end max-w-full gap-2">
+                                                <div className="flex-shrink-0 rounded-full p-2 bg-indigo-100 text-indigo-600">
+                                                    <User className="h-4 w-4" />
+                                                </div>
+                                                <div className="max-w-[80%]">
+                                                    <div className="bg-indigo-600 text-white rounded-2xl rounded-br-none px-4 py-3">
+                                                        <p className="text-sm">{msg.content}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="w-full">
+                                                {renderLLMResponse(msg.content, true)}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
+                                
+                                {/* Welcome message that appears after 5 seconds */}
+                                {showWelcomeMessage && (
+                                    <div className="flex justify-start">
+                                        <div className="flex items-end gap-2 max-w-[90%]">
+                                            <div className="flex-shrink-0 rounded-full p-2 bg-purple-100 text-purple-600">
+                                                <Bot className="h-4 w-4" />
+                                            </div>
+                                            <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
+                                                <p className="text-sm text-gray-700">
+                                                    Hi there! 👋 I'm here to help you find the perfect cleaning equipment or connect you with expert engineers. 
+                                                    What can I assist you with today?
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                
                                 {loading && (
                                     <div className="flex justify-start">
-                                        <div className="bg-white border border-gray-200 rounded-lg rounded-bl-none px-3 py-2 shadow-sm max-w-[80%]">
-                                            <div className="flex space-x-2">
-                                                <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"></div>
-                                                <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                                                <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                                        <div className="flex items-end gap-2 max-w-[90%]">
+                                            <div className="flex-shrink-0 rounded-full p-2 bg-purple-100 text-purple-600">
+                                                <Bot className="h-4 w-4" />
+                                            </div>
+                                            <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
+                                                <div className="flex space-x-2">
+                                                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"></div>
+                                                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -247,21 +379,22 @@ export default function ChatWidget() {
                     </div>
 
                     {/* Input Area */}
-                    <div className="border-t border-gray-200 p-2 sm:p-3 bg-white">
-                        <div className="relative">
+                    <div className="border-t border-gray-200 p-4 bg-white">
+                        <div className="relative flex items-end gap-2">
                             <textarea
                                 ref={inputRef}
                                 value={question}
                                 onChange={(e) => {
                                     setQuestion(e.target.value);
                                     adjustTextareaHeight();
+                                    setShowWelcomeMessage(false); // Hide welcome message when user types
                                 }}
                                 onKeyDown={handleKeyPress}
-                                className="w-full p-2 pr-10 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm sm:text-base"
+                                className="w-full py-3 px-4 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm"
                                 rows={1}
-                                placeholder="Type your question..."
+                                placeholder="Ask about products or engineers..."
                                 style={{
-                                    minHeight: '40px',
+                                    minHeight: '48px',
                                     maxHeight: '120px',
                                     boxSizing: 'border-box'
                                 }}
@@ -269,22 +402,28 @@ export default function ChatWidget() {
                             <button
                                 onClick={askBot}
                                 disabled={loading || !question.trim()}
-                                className={`absolute right-2 bottom-2 p-1 rounded-lg ${loading || !question.trim()
+                                className={`flex-shrink-0 p-3 rounded-full ${loading || !question.trim()
                                     ? 'bg-gray-200 text-gray-400'
                                     : 'bg-indigo-600 text-white hover:bg-indigo-700'
                                     } transition-colors`}
                             >
                                 {loading ? (
-                                    <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                                    <Loader2 className="h-5 w-5 animate-spin" />
                                 ) : (
-                                    <Send className="h-4 w-4 sm:h-5 sm:w-5" />
+                                    <Send className="h-5 w-5" />
                                 )}
                             </button>
+                        </div>
+
+                        <div className="mt-2 flex justify-center">
+                            <p className="text-xs text-gray-500">
+                                Powered by AI • May produce inaccurate information
+                            </p>
                         </div>
                     </div>
                 </div>
             )}
-            
+
             {/* Add custom animation styles */}
             <style jsx>{`
                 @keyframes ping-slow {

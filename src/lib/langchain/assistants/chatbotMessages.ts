@@ -1,91 +1,62 @@
-'use server'
-import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { createClient } from "@supabase/supabase-js";
-import { AIMessageChunk } from "@langchain/core/messages";
-import { ReadableStream } from "web-streams-polyfill/ponyfill";
+'use server';
+
 import { StringOutputParser } from "@langchain/core/output_parsers";
-import { prisma } from "@/lib/prisma";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { ChatOpenAI } from "@langchain/openai";
+import { ReadableStream } from "web-streams-polyfill/ponyfill";
 
-export const askMessageBotStream = async (userQuestion: string, docs: any): Promise<ReadableStream> => {
-    
-    const messagesDetails = await prisma.inquiry.findMany({
-        where: {
-            sellerRead: { not: true }
-        },
-        select: {
-            id: true,
-            buyer: {
-                select: {
-                    name: true
-                }
-            },
-            message: true,
-            subject: true,
-            product: {
-                select: {
-                    title: true,
-                    description: true,
-                    imagesUrl: true,
-                }
-            }
-        }
-    });
+/**
+ * Chatbot for CleanersCompare.com store assistant.
+ * Responds directly to user input without embedding search.
+ */
+export const askMessageBotStream = async (
+    userQuestion: string,
+    openaikey: string
+): Promise<ReadableStream> => {
 
-    const enrichedDocs = docs.map((doc: any) => {
-        const { title, ref_id } = doc.metadata || {};
-        const inquiry = messagesDetails.find(p => p.id === ref_id);
-
-        return `
-**New Message Alert**  
-**From:** ${inquiry?.buyer?.name ?? "Unknown"}  
-**Subject:** ${inquiry?.subject ?? "No Subject"}  
-**Regarding Product:** ${inquiry?.product?.title ?? "N/A"}  
-<img src="${inquiry?.product?.imagesUrl?.[0] ?? ""}" alt="${inquiry?.product?.title}" width="150" />  
-**Message Content:**  
-${inquiry?.message ?? "N/A"}  
-**Full Context:** ${doc.pageContent}
-        `.trim();
-    });
-
-    const context = enrichedDocs.join("\n\n");
-
+    // 🟢 Define the prompt with knowledge about the store
     const prompt = ChatPromptTemplate.fromTemplate(`
-You're an assistant helping manage customer inquiries and messages.
+    You are the friendly store assistant for **CleanersCompare.com**.
+    This website sells professional laundry & dry cleaning equipment, machines, parts, sundries, and offers engineer services.
 
-Use the context below to summarize or respond to messages appropriately.  
-Format your response clearly in **Markdown**.
+    When responding:
+    - Be friendly, helpful, and concise.
+    - Mention products, categories, or services only if relevant.
+    - Provide advice, recommendations, or steps if user asks for guidance.
+    - Respond in Markdown format with clear structure.
 
-For new messages, highlight the key details.  
-If no relevant messages are found, respond with:  
-**"No unread messages found."**
+    Examples:
+    User: "hello!"
+    Assistant: "Hello! How can I assist you today? If you need help finding something specific, just let me know!"
 
----
+    User: "Can you show me finishing machines on sale?"
+    Assistant: "Sure! Here are some finishing machines currently available: ..."
 
-{context}
+    Respond only to the user's question below.
 
-**Request:** {input}  
-**Assistant:**
-    `);
+    **User:** {input}
+    **Assistant:**`);
+
 
     const model = new ChatOpenAI({
-        modelName: "gpt-4-turbo", // or "gpt-4o"
+        modelName: "gpt-4o-mini", // or "gpt-4-turbo"
         temperature: 0.2,
         streaming: true,
+        apiKey: openaikey,
     });
 
+    function xmlWarapper(content:string){
+        return `<Response><Text>${content}</Text></Response>`
+    }
+
     const outputParser = new StringOutputParser();
+    const chain = prompt.pipe(model).pipe(outputParser).pipe(xmlWarapper);
 
-    const chain = prompt.pipe(model).pipe(outputParser);
-
-    const stream = new ReadableStream({
+    return new ReadableStream({
         async start(controller) {
             const encoder = new TextEncoder();
-            
             try {
                 const stream = await chain.stream({
-                    context,
                     input: userQuestion,
                 });
 
@@ -100,6 +71,4 @@ If no relevant messages are found, respond with:
             controller.close();
         },
     });
-
-    return stream;
 };

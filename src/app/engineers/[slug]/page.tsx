@@ -10,9 +10,9 @@ import { getFeaturedProducts, getFooterData, getRecentOrdersCount } from "@/lib/
 import type { Metadata } from 'next';
 
 export async function generateMetadata(
-    { params }: { params: { slug: string } }
+    { params }: {params: Promise<{ slug: string }>}
 ): Promise<Metadata> {
-    const rawSlug = params.slug;
+    const {slug:rawSlug} = await params;
     const name = rawSlug.charAt(0).toUpperCase() + rawSlug.slice(1).replace('-', ' ');
 
     return {
@@ -83,12 +83,7 @@ async function getServices(name: string) {
 
 
 
-export default async function Page({
-    params
-}:
-    {
-        params: Promise<{ slug: string }>
-    }
+export default async function Page({ params }: {params: Promise<{ category: string }>}
 ) {
 
     const { slug } = await params;

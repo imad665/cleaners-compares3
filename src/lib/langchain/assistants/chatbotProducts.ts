@@ -1,120 +1,135 @@
-"use server";
-
+'use server';
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";  // ✅ Gemini wrapper
+import { ChatOpenAI } from "@langchain/openai";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ReadableStream } from "web-streams-polyfill/ponyfill";
 import { prisma } from "@/lib/prisma";
-import { ChatOpenAI } from "@langchain/openai";
 
 export const askProductBotStream = async (
-    userQuestion: string,
-    productIds: any,
-    docs: any,
-    geminiApiKey: string,
-    openaikey: string
+  userQuestion: string,
+  productIds: string[],
+  docs: any,
+  geminiApiKey: string | null,
+  openaikey: string
+  
 ): Promise<ReadableStream> => {
-    const productDetails = await prisma.product.findMany({
-        where: { id: { in: productIds } },
-        select: {
-            id: true,
-            title: true,
-            price: true,
-            discountPrice: true,
-            discountPercentage: true,
-            stock: true,
-            isDealActive: true,
-            imagesUrl: true,
-        },
-    });
+  // 1. Fetch products
+  const productDetails = await prisma.product.findMany({
+    where: { id: { in: productIds } },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      price: true,
+      discountPercentage: true,
+      discountPrice: true,
+      stock: true,
+      condition: true,
+      isFeatured: true,
+      imagesUrl: true,
+      category: { select: { name: true } },
+    },
+  });
 
-    //console.log(productDetails,'ooooooooooooooooooooooooooooooooooooooooooooo');
-    
+  // 2. Prepare context with only productIds to save tokens
+  const context = productDetails.map((p, idx) => `product${idx + 1}: <Product productId="${p.id}" />`).join("\n");
 
-    const enrichedDocs = docs.map((doc: any) => {
-        const { title, ref_id } = doc.metadata || {};
-        const product = productDetails.find((p) => p.id === ref_id);
+  // 3. Prompt with minimal product info
+  const prompt = ChatPromptTemplate.fromTemplate(`
+        You are a helpful store assistant.  
+        Always respond using this XML-like structure:
 
-        return `
-**Product:** ${title ?? "N/A"}  
-<img src="${product?.imagesUrl?.[0] ?? ""}" alt="${title}" width="150" />  
-- **Price:** $${product?.discountPrice ?? product?.price ?? "N/A"}  
-- **Original Price:** $${product?.price ?? "N/A"} (${product?.discountPercentage ?? 0}% off)  
-- **Stock:** ${product?.stock ?? "N/A"}  
-- **Deal Active:** ${product?.isDealActive ? "✅ Yes" : "❌ No"}  
-- **Description:** ${doc.pageContent}
-    `.trim();
-    });
+        <Response>
+        <Text>Some friendly greeting or explanation for the customer.</Text>
+        <Carousel>
+            {products}
+        </Carousel>
+        <Text>Optional extra helpful advice or call to action.</Text>
+        </Response>
 
-    const context = enrichedDocs.join("\n\n");
+        Guidelines:
+        - Only include <Product> entries for products provided in the context.
+        - Each <Product> must include attribute: productId.
+        - Do not invent new products.
+        - Only respond to the user's question below.
 
-    const prompt = ChatPromptTemplate.fromTemplate(`
-You're a friendly store assistant helping customers.
+        Conversation History:
+        user: Hello!
+        assistant: Hello! Welcome to CleanersCompare.com! I'm your store assistant. How can I help you today?
 
-Use the context below to answer the customer's question clearly and helpfully.  
-Respond in **Markdown format** with structured details.
+        Context:
+        {context}
 
-Only use information found in the context.  
-If no matching product is found, respond with:  
-**"Sorry, I couldn't find any matching product."**
+        **Customer Question:** {input}
+        **Assistant:**`);
 
----
+  const model = new ChatOpenAI({
+    modelName: "gpt-4o-mini",
+    temperature: 0.3,
+    streaming: true,
+    apiKey: openaikey,
+  });
 
-{context}
+  const products = productDetails
+  .map((p) => `<Product productId="${p.id}" />`)
+  .join("\n");
 
-**Customer:** {input}  
-**Assistant:**
-  `);
+  const outputParser = new StringOutputParser();
+  const chain = prompt.pipe(model).pipe(outputParser);
 
-    // ✅ Swap ChatOpenAI → ChatGoogleGenerativeAI
-    let model = null;
-    model = new ChatOpenAI({
-            modelName: "gpt-4o-mini", // Recommended over gpt-4o-mini
-            temperature: 0.3,
-            streaming: true,
-            apiKey: openaikey
-        });
-    /* if (geminiApiKey) {
-        model = new ChatGoogleGenerativeAI({
-            model: "gemini-2.5-flash", // or gemini-1.5-pro
-            temperature: 0.2,
-            streaming: true,
-            apiKey: geminiApiKey, // ✅ dynamic key
-        });
-    } else {
-        model = new ChatOpenAI({
-            modelName: "gpt-4o-mini", // Recommended over gpt-4o-mini
-            temperature: 0.3,
-            streaming: true,
-            apiKey: openaikey
-        });
-    } */
+  const stream = new ReadableStream({
+    async start(controller) {
+      const encoder = new TextEncoder();
+      try {
+        // 4. Generate initial response
+        let response = '';
+        const llmStream = await chain.stream({ context, input: userQuestion,products });
 
-    const outputParser = new StringOutputParser();
+        for await (const chunk of llmStream) {
+          response += chunk;
+        }
 
-    const chain = prompt.pipe(model).pipe(outputParser);
+        // 5. Replace each <Product productId="..."/> with full product data
+        const fullResponse = response.replace(
+          /<Product\s+productId="([^"]+)"\s*\/>/g,
+          (_, productId) => {
+            const p = productDetails.find(pd => pd.id === productId);
+            if (!p) return ''; // skip if not found
 
-    const stream = new ReadableStream({
-        async start(controller) {
-            const encoder = new TextEncoder();
+            const discount = p.discountPercentage && p.discountPercentage > 0
+              ? `${p.discountPercentage}%`
+              : p.discountPrice
+              ? `$${p.discountPrice}`
+              : "No discount";
 
-            try {
-                const stream = await chain.stream({
-                    context,
-                    input: userQuestion,
-                });
+            const images = p.imagesUrl && p.imagesUrl.length > 0
+              ? p.imagesUrl.join(", ")
+              : "";
 
-                for await (const chunk of stream) {
-                    controller.enqueue(encoder.encode(chunk));
-                }
-            } catch (error) {
-                controller.enqueue(encoder.encode("⚠️ Error streaming response."));
-                console.error("Streaming error:", error);
-            }
+            return `<Product
+                    productId="${p.id}"
+                    title="${p.title}"
+                    description="${p.description ?? "N/A"}"
+                    category="${p.category?.name ?? "Uncategorized"}"
+                    price="$${p.price}"
+                    discount="${discount}"
+                    condition="${p.condition}"
+                    stock="${p.stock ?? "N/A"}"
+                    featured="${p.isFeatured ? "Yes" : "No"}"
+                    images="${images}"
+                    />`;
+          }
+        );
 
-            controller.close();
-        },
-    });
+        // 6. Stream final response
+        controller.enqueue(encoder.encode(fullResponse));
+      } catch (error) {
+        controller.enqueue(encoder.encode("⚠️ Error streaming response."));
+        console.error("Streaming error:", error);
+      }
+      controller.close();
+    },
+  });
 
-    return stream;
+  return stream;
 };

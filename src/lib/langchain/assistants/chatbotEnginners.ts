@@ -1,139 +1,123 @@
-'use server'
-import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
+'use server';
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { createClient } from "@supabase/supabase-js";
-import { AIMessageChunk } from "@langchain/core/messages";
-import { ReadableStream } from "web-streams-polyfill/ponyfill";
+import { ChatOpenAI, ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { StringOutputParser } from "@langchain/core/output_parsers";
+import { ReadableStream } from "web-streams-polyfill/ponyfill";
 import { prisma } from "@/lib/prisma";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
-export const askEnginnerBotStream = async (userQuestion: string, docs: any, category: 'DRY_CLEANING' | 'FINISHING' | 'LAUNDRY', geminiApiKey: string, openaikey: string): Promise<ReadableStream> => {
+export const askEngineerBotStream = async (
+  userQuestion: string,
+  engineerIds: string[],
+  docs: any,
+  category: 'DRY_CLEANING' | 'FINISHING' | 'LAUNDRY',
+  geminiApiKey: string | null,
+  openaikey: string
+): Promise<ReadableStream> => {
 
-    const enginnerDetails = await prisma.service.findMany({
-        where: { category },
-        select: {
-            id: true,  // Required for matching with ref_id
-            address: true,
-            email: true,
-            pictureUrl: true,
-            experience: true,
-            areaOfService: true,
-            contactNumber: true,
-        },
-    });
+  // 1️⃣ Fetch engineers
+  const engineerDetails = await prisma.service.findMany({
+    where: { id: { in: engineerIds }, category },
+    select: {
+      id: true,
+      title: true,
+      address: true,
+      email: true,
+      pictureUrl: true,
+      experience: true,
+      areaOfService: true,
+      contactNumber: true,
+      companyType: true,
+      ratePerHour: true,
+      isFeatured: true,
+    },
+  });
 
-    const enrichedDocs = docs.map((doc: any) => {
-        const { title, ref_id } = doc.metadata || {};
-        const enginner = enginnerDetails.find(p => p.id === ref_id);
+  // 2️⃣ Minimal context placeholders
+  const context = engineerDetails
+    .map((e, idx) => `engineer${idx + 1}: <Engineer engineerId="${e.id}" />`)
+    .join("\n");
 
-        return `
-**Service:** ${title || "Professional Service"}  
-${enginner?.pictureUrl ? `<img src="${enginner.pictureUrl}" alt="${title}" width="150" />` : ''}  
+  // 3️⃣ Prompt template
+  const prompt = ChatPromptTemplate.fromTemplate(`
+You are a professional assistant that helps users find the right engineer.
+Always respond using this XML-like structure:
 
-**Key Details:**  
-- **Service Area:** ${enginner?.areaOfService || "Multiple regions"}  
-- **Experience:** ${enginner?.experience ? `${enginner.experience} years` : "Experienced"}  
-- **Contact:** ${enginner?.contactNumber || "Available upon request"}  
-- **Email:** ${enginner?.email || "Not specified"}  
-- **Address:** ${enginner?.address || "Headquarters location available"}  
+<Response>
+  <Text>Friendly greeting or explanation for the customer.</Text>
+  <EngineerCarousel>
+    {engineers}
+  </EngineerCarousel>
+  <Text>Optional extra helpful advice or call to action.</Text>
+</Response>
 
-**Service Description:**  
-${doc.pageContent || "Comprehensive service details available upon contact"}  
-`.trim();
-    });
+Guidelines:
+- Only include <Engineer> entries for engineers provided in the context.
+- Each <Engineer> must include attribute: engineerId.
+- Never make up data.
+- Respond only to the user's question below.
 
-    const context = enrichedDocs.join("\n\n---\n\n");
+Conversation History:
+user: Hello!
+assistant: Hello! Welcome to CleanersCompare.com! I'm your service assistant. How can I help you today?
 
-    const serviceType = category.toLowerCase().replace('_', ' ');
-
-    const prompt = ChatPromptTemplate.fromTemplate(`
-You are a professional assistant that helps users find the right engineer based on their request. You ONLY use the information provided in the context below — never make up information.
-
----
-
-**How to respond:**
-
-1. ✅ **Match the request with the best-fit engineer(s)**:
-   - Identify relevant expertise (from description)
-   - Check for location match or nearest area
-   - Match specialty (hospital, eco, installation, hotel, etc.)
-
-2. 🧾 **Present their service details clearly**:
-   - Service name + specialty
-   - Area of service
-   - Years of experience
-   - Rate
-   - Company type
-   - Contact info (phone/email/address if available)
-   - Add service image if provided (Markdown format)
-
-3. 📌 **Use a friendly, helpful tone. Keep response human.**
-
----
-
-**If NO perfect match:**
-
-> "🔍 I couldn’t find an exact match, but here are a few engineers who may still meet your needs:"
-
-List the closest engineers based on area or specialty.
-
----
-
-**Available Engineers:**  
+Context:
 {context}
 
----
+**Customer Question:** {input}
+**Assistant:**`);
 
-**User Request:**  
-"{input}"
+  // 4️⃣ Select model
+  const model = geminiApiKey
+    ? new ChatGoogleGenerativeAI({ model: "gemini-2.0-flash", streaming: true, apiKey: geminiApiKey })
+    : new ChatOpenAI({ modelName: "gpt-4o-mini", temperature: 0.3, streaming: true, apiKey: openaikey });
 
----
+  const engineersPlaceholder = engineerDetails
+    .map(e => `<Engineer engineerId="${e.id}" />`)
+    .join("\n");
 
-**Your Response (Markdown):**
-`);
+  const outputParser = new StringOutputParser();
+  const chain = prompt.pipe(model).pipe(outputParser);
 
+  // 5️⃣ Stream response
+  return new ReadableStream({
+    async start(controller) {
+      const encoder = new TextEncoder();
+      try {
+        let response = '';
+        const llmStream = await chain.stream({ context, input: userQuestion, engineers: engineersPlaceholder });
 
-    // ✅ Swap ChatOpenAI → ChatGoogleGenerativeAI
-    let model = null;
-    if (geminiApiKey) {
-        model = new ChatGoogleGenerativeAI({
-            model: "gemini-2.0-flash", // or gemini-1.5-pro
-            temperature: 0.2,
-            streaming: true,
-            apiKey: geminiApiKey, // ✅ dynamic key
-        });
-    } else {
-        model = new ChatOpenAI({
-            modelName: "gpt-4o-mini", // Recommended over gpt-4o-mini
-            temperature: 0.3,
-            streaming: true,
-            apiKey: openaikey
-        });
+        for await (const chunk of llmStream) {
+          response += chunk;
+        }
+
+        // 6️⃣ Replace placeholders with full data
+        const fullResponse = response.replace(
+          /<Engineer\s+engineerId="([^"]+)"\s*\/>/g,
+          (_, engineerId) => {
+            const e = engineerDetails.find(en => en.id === engineerId);
+            if (!e) return '';
+            return `<Engineer
+              engineerId="${e.id}"
+              title="${e.title}"
+              areaOfService="${e.areaOfService}"
+              experience="${e.experience ?? 'Experienced'} years"
+              contactNumber="${e.contactNumber ?? 'Available upon request'}"
+              email="${e.email ?? 'Not specified'}"
+              address="${e.address ?? 'Headquarters location available'}"
+              ratePerHour="${e.ratePerHour ?? 'N/A'}"
+              companyType="${e.companyType ?? 'N/A'}"
+              pictureUrl="${e.pictureUrl ?? ''}"
+              featured="${e.isFeatured ? 'Yes' : 'No'}"
+            />`;
+          }
+        );
+
+        controller.enqueue(encoder.encode(fullResponse));
+      } catch (error) {
+        controller.enqueue(encoder.encode("⚠️ Service currently unavailable. Please try again later."));
+        console.error("Streaming error:", error);
+      }
+      controller.close();
     }
-
-
-    const outputParser = new StringOutputParser();
-    const chain = prompt.pipe(model).pipe(outputParser);
-
-    return new ReadableStream({
-        async start(controller) {
-            const encoder = new TextEncoder();
-            try {
-                const stream = await chain.stream({
-                    context,
-                    input: userQuestion,
-                });
-
-                for await (const chunk of stream) {
-                    controller.enqueue(encoder.encode(chunk));
-                }
-            } catch (error) {
-                controller.enqueue(encoder.encode("⚠️ Service currently unavailable. Please try again later."));
-                console.error("Streaming error:", error);
-            }
-            controller.close();
-        },
-    });
+  });
 };

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -15,65 +9,63 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  email         String    @unique
-  emailVerified DateTime? // 👈 THIS is required for OAuth like Google
-  password      String?
-  image         String?
-  role          Role      @default(BUYER)
-  // NEXTAUTH REQUIRED RELATIONS:
-  accounts      Account[]
-  sessions      Session[]
-
-  // Your existing app data:
-  sellerProfile    SellerProfile?
-  products         Product[]         @relation("SellerProducts")
-  orders           Order[]
-  inquiries        Inquiry[]         @relation("buyer")
-  favorites        Product[]         @relation("UserFavorites")
-  ratings          Rating[]
-  OrderItem        OrderItem[]
-  wantedItems      WantedItem[]
-  BusinessForSale  BusinessForSale[]
-  status           UserStatus        @default(INACTIVE)
+  id               String            @id @default(cuid())
+  name             String
+  email            String            @unique
+  password         String?
+  role             Role              @default(BUYER)
   createdAt        DateTime          @default(now())
+  image            String?
+  emailVerified    DateTime?
   lastLogin        DateTime          @default(now())
-  inquiriesSeller  Inquiry[]         @relation("seller")
-  Service          Service[]
+  status           UserStatus        @default(INACTIVE)
   isSigninSuccess  Boolean?          @default(true)
-  OrderPayment     OrderPayment[]
-  Message          Message[]
   resetToken       String?
   resetTokenExpiry DateTime?
-  messageSent      Message[]         @relation("SentMessages")
+  accounts         Account[]
+  BusinessForSale  BusinessForSale[]
+  inquiries        Inquiry[]         @relation("buyer")
+  inquiriesSeller  Inquiry[]         @relation("seller")
   messageReceived  Message[]         @relation("ReceivedMessages")
+  messageSent      Message[]         @relation("SentMessages")
+  Message          Message[]
+  orders           Order[]
+  OrderItem        OrderItem[]
+  OrderPayment     OrderPayment[]
+  products         Product[]         @relation("SellerProducts")
+  ratings          Rating[]
   sellerBankInfo   SellerBankInfo?
+  sellerProfile    SellerProfile?
+  Service          Service[]
+  sessions         Session[]
+  wantedItems      WantedItem[]
+  favorites        Product[]         @relation("UserFavorites")
+  ChatSession      ChatSession[]
 }
 
 model Service {
   id                String          @id @default(cuid())
   title             String
-  callOutCharges    Float // Service call out charges (£)
-  ratePerHour       Float // Rate per hour (£)
+  callOutCharges    Float
+  ratePerHour       Float
   experience        String
   areaOfService     String
   email             String
   contactNumber     String
-  companyType       CompanyType // Company/Private
+  companyType       CompanyType
   address           String
   description       String
-  isFeatured        Boolean         @default(false) // Featured Service
-  isEnabled         Boolean         @default(true) // Enable Service
+  isFeatured        Boolean         @default(false)
+  isEnabled         Boolean         @default(true)
   category          ServiceCategory
-  featuredStartDate DateTime? // NEW
-  featuredEndDate   DateTime? // NEW
   pictureUrl        String?
-  featureDays       String?
-  user              User            @relation(fields: [userId], references: [id])
   userId            String
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
+  featureDays       String?
+  featuredEndDate   DateTime?
+  featuredStartDate DateTime?
+  user              User            @relation(fields: [userId], references: [id])
 }
 
 model WantedItem {
@@ -82,11 +74,11 @@ model WantedItem {
   location    String
   description String
   imageUrl    String
-  user        User         @relation(fields: [userId], references: [id])
   userId      String
-  contactInfo ContactInfo? @relation("ItemContact")
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  contactInfo ContactInfo? @relation("ItemContact")
+  user        User         @relation(fields: [userId], references: [id])
 }
 
 model BusinessForSale {
@@ -94,66 +86,63 @@ model BusinessForSale {
   title          String
   businessType   String
   location       String
-  description    String
   annualTurnover String
   reasonFoSale   String
-  user           User         @relation(fields: [userId], references: [id])
-  userId         String
   imageUrl       String
-  contactInfo    ContactInfo? @relation("BusinessContact")
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  userId         String
+  description    String
+  user           User         @relation(fields: [userId], references: [id])
+  contactInfo    ContactInfo? @relation("BusinessContact")
 }
 
 model ContactInfo {
-  id       String  @id @default(cuid())
-  email    String
-  phone    String
-  fullName String?
-
-  wantedItem WantedItem? @relation("ItemContact", fields: [wantedId], references: [id])
-  wantedId   String?     @unique
-
-  businessForSale BusinessForSale? @relation("BusinessContact", fields: [businessId], references: [id])
+  id              String           @id @default(cuid())
+  email           String
+  phone           String
+  wantedId        String?          @unique
   businessId      String?          @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  fullName        String?
+  businessForSale BusinessForSale? @relation("BusinessContact", fields: [businessId], references: [id])
+  wantedItem      WantedItem?      @relation("ItemContact", fields: [wantedId], references: [id])
 }
 
 model SellerProfile {
   id              String      @id @default(cuid())
-  user            User        @relation(fields: [userId], references: [id])
   userId          String      @unique
   businessName    String
   city            String
   country         String
+  verified        Boolean     @default(false)
   phoneNumber     String
   stripeAccountId String?
   stripStatus     StripStatus @default(PENDING)
-  verified        Boolean     @default(false)
+  user            User        @relation(fields: [userId], references: [id])
 }
 
 model SellerBankInfo {
   id              String   @id @default(cuid())
-  user            User     @relation(fields: [userId], references: [id])
   userId          String   @unique
   accountHolder   String
   sortCode        String
   accountNumber   String
   bankName        String?
-  iban            String? // Optional: For EU payments
-  swiftCode       String? // Optional: For international
-  paypalEmail     String? // If preferredMethod = "paypal"
-  preferredMethod String? // e.g., "bank", "paypal"
+  iban            String?
+  swiftCode       String?
+  paypalEmail     String?
+  preferredMethod String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model AdminSetting {
   id        String       @id @default(cuid())
-  key       String       @unique // e.g., "site_name", "contact_email"
-  value     String // can store string, JSON, etc.
+  key       String       @unique
+  value     String
   type      SettingType?
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
@@ -164,148 +153,133 @@ model Product {
   title              String
   description        String
   price              Float
-  discountPercentage Float? // Percentage discount like "Save 20%"
-  discountPrice      Float? // Fixed discounted price (e.g., $99.99 instead of original price)
-  dealStartDate      DateTime? // Start date of the special offer
-  dealEndDate        DateTime? // End date of the special offer
-  isDealActive       Boolean          @default(false) // If the deal is currently active
+  discountPercentage Float?
+  discountPrice      Float?
+  dealStartDate      DateTime?
+  dealEndDate        DateTime?
+  isDealActive       Boolean          @default(false)
   imagesUrl          String[]
-  videoUrl           String? // optional video about the product
+  videoUrl           String?
   isFeatured         Boolean          @default(false)
+  condition          ProductCondition
+  categoryId         String
+  sellerId           String
+  socialMediaPosted  Boolean          @default(false)
+  createdAt          DateTime         @default(now())
+  featuredEndDate    DateTime?
+  featuredStartDate  DateTime?
+  status             ProductStatus    @default(HIDDEN)
+  units              Int
   featureDays        String?
   weight             Float?
-  featuredStartDate  DateTime? // NEW
-  featuredEndDate    DateTime? // NEW
-  condition          ProductCondition
-  category           Category?        @relation(fields: [categoryId], references: [id])
-  categoryId         String
-  seller             User?            @relation("SellerProducts", fields: [sellerId], references: [id])
-  sellerId           String
   slug               String?
-  ratings            Rating[] // star reviews
-  units              Int
   stock              Int?
-  socialMediaPosted  Boolean          @default(false)
-  favoritedBy        User[]           @relation("UserFavorites")
-  orderItem          OrderItem[]
-  status             ProductStatus    @default(HIDDEN)
-  createdAt          DateTime         @default(now())
   markAsDeleted      Boolean          @default(false)
   Inquiry            Inquiry[]
+  orderItem          OrderItem[]
+  category           Category         @relation(fields: [categoryId], references: [id])
+  seller             User             @relation("SellerProducts", fields: [sellerId], references: [id])
+  ratings            Rating[]
+  favoritedBy        User[]           @relation("UserFavorites")
 }
 
 model OrderPayment {
-  id              String             @id @default(cuid())
-  order           Order              @relation(fields: [orderId], references: [id])
-  orderId         String
-  seller          User               @relation(fields: [sellerId], references: [id])
-  sellerId        String
-  amount          Float
-  paymentIntentId String
-  status          OrderPaymentStatus @default(PENDING)
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
-
-  isAdminPaidToSeller Boolean   @default(false)
-  // New fields
+  id                  String             @id @default(cuid())
+  orderId             String
+  sellerId            String
+  amount              Float
+  paymentIntentId     String             @unique
+  status              OrderPaymentStatus @default(PENDING)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  shippedAt           DateTime?
   shippingProofUrl    String?
   trackingNumber      String?
-  shippedAt           DateTime?
-
-  @@unique([paymentIntentId])
+  isAdminPaidToSeller Boolean            @default(false)
+  order               Order              @relation(fields: [orderId], references: [id])
+  seller              User               @relation(fields: [sellerId], references: [id])
 }
 
 model Order {
   id                 String             @id @default(cuid())
-  user               User               @relation(fields: [userId], references: [id])
   userId             String
-  orderItems         OrderItem[]
   totalPrice         Float
-  status             OrderStatus        @default(PENDING)
   createdAt          DateTime           @default(now())
-  commisionRate      Int?               @default(9)
-  notificationOrder  NotificationOrder?
+  status             OrderStatus        @default(PENDING)
   shippingAddress    String?
   shippingCity       String?
   shippingCountry    String?
-  shippingPostalCode String?
   shippingPhone      String?
-  orderPayments      OrderPayment[]
+  shippingPostalCode String?
+  commisionRate      Int?               @default(9)
   Message            Message[]
+  notificationOrder  NotificationOrder?
+  user               User               @relation(fields: [userId], references: [id])
+  orderItems         OrderItem[]
+  orderPayments      OrderPayment[]
 }
 
 model NotificationOrder {
   id      String             @id @default(cuid())
-  order   Order              @relation(fields: [orderId], references: [id])
-  orderId String             @unique // This enforces the one-to-one 
+  orderId String             @unique
   status  NotificationStatus
+  order   Order              @relation(fields: [orderId], references: [id])
 }
 
 model Message {
   id             String   @id @default(cuid())
   content        String
-  sender         String // 'BUYER' or 'SELLER'
-  order          Order    @relation(fields: [orderId], references: [id])
+  sender         String
   orderId        String
-  senderUser     User     @relation("SentMessages", fields: [senderUserId], references: [id])
   senderUserId   String
-  receiverUser   User     @relation("ReceivedMessages", fields: [receiverUserId], references: [id])
   receiverUserId String
-  isReceiverRead Boolean  @default(false)
   createdAt      DateTime @default(now())
-  User           User?    @relation(fields: [userId], references: [id])
   userId         String?
+  isReceiverRead Boolean  @default(false)
+  order          Order    @relation(fields: [orderId], references: [id])
+  receiverUser   User     @relation("ReceivedMessages", fields: [receiverUserId], references: [id])
+  senderUser     User     @relation("SentMessages", fields: [senderUserId], references: [id])
+  User           User?    @relation(fields: [userId], references: [id])
 }
 
 model OrderItem {
   id               String          @id @default(cuid())
-  order            Order           @relation(fields: [orderId], references: [id])
   orderId          String
-  product          Product         @relation(fields: [productId], references: [id])
   productId        String
-  seller           User            @relation(fields: [sellerId], references: [id])
   sellerId         String
   quantity         Int
   unitPrice        Float
-  isReadSeller     Boolean         @default(false)
-  isReadBuyer      Boolean         @default(false)
-  status           OrderItemStatus @default(PENDING)
-  paymentIntentId  String? // Reference to the specific payment intent
   createdAt        DateTime        @default(now())
-  shippingProofUrl String? // Image of shipping label or receipt
-  trackingNumber   String? // Optional tracking code
+  paymentIntentId  String?
+  status           OrderItemStatus @default(PENDING)
+  isReadBuyer      Boolean         @default(false)
+  isReadSeller     Boolean         @default(false)
   shippedAt        DateTime?
+  shippingProofUrl String?
+  trackingNumber   String?
+  order            Order           @relation(fields: [orderId], references: [id])
+  product          Product         @relation(fields: [productId], references: [id])
+  seller           User            @relation(fields: [sellerId], references: [id])
 }
 
 model Category {
   id          String        @id @default(cuid())
   name        String
   description String?
-  imageUrl    String?
-  products    Product[]
-  parent      Category?     @relation("Subcategories", fields: [parentId], references: [id])
   parentId    String?
+  createdAt   DateTime      @default(now())
+  deletedAt   DateTime?
+  updatedAt   DateTime      @updatedAt
+  status      CategrySatuts @default(HIDDEN)
+  imageUrl    String?
   slug        String?
   sub_subName String?
-  status      CategrySatuts @default(HIDDEN)
+  parent      Category?     @relation("Subcategories", fields: [parentId], references: [id])
   children    Category[]    @relation("Subcategories")
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  deletedAt   DateTime? // used to mark when deletion should be permanent
+  products    Product[]
 
   @@unique([name, parentId])
 }
-
-/**
- * model BlogPost {
- * id        String   @id @default(cuid())
- * title     String
- * slug      String   @unique
- * content   String
- * imageUrl  String?
- * createdAt DateTime @default(now())
- * }
- */
 
 model Video {
   id          String   @id @default(cuid())
@@ -313,43 +287,39 @@ model Video {
   url         String
   description String?
   thumbnail   String?
-  category    String?
   createdAt   DateTime @default(now())
+  category    String?
 }
 
 model Inquiry {
-  id        String   @id @default(cuid())
-  buyer     User     @relation("buyer", fields: [buyerId], references: [id])
-  buyerId   String
-  product   Product? @relation(fields: [productId], references: [id])
-  productId String?
-  seller    User     @relation("seller", fields: [sellerId], references: [id]) // Seller
-  sellerId  String
-
-  subject       String?
+  id            String   @id @default(cuid())
   message       String
   response      String?
-  // Soft delete flags
-  buyerDeleted  Boolean @default(false)
-  sellerDeleted Boolean @default(false)
-  // New features
-  buyerRead     Boolean @default(false)
-  sellerRead    Boolean @default(false)
-  buyerStarred  Boolean @default(false)
-  sellerStarred Boolean @default(false)
-
-  createdAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+  buyerDeleted  Boolean  @default(false)
+  productId     String?
+  sellerDeleted Boolean  @default(false)
+  sellerId      String
+  buyerId       String
+  buyerRead     Boolean  @default(false)
+  buyerStarred  Boolean  @default(false)
+  sellerRead    Boolean  @default(false)
+  sellerStarred Boolean  @default(false)
+  subject       String?
+  buyer         User     @relation("buyer", fields: [buyerId], references: [id])
+  product       Product? @relation(fields: [productId], references: [id])
+  seller        User     @relation("seller", fields: [sellerId], references: [id])
 }
 
 model Rating {
   id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id])
   userId    String
-  product   Product  @relation(fields: [productId], references: [id])
   productId String
-  stars     Int // from 1 to 5
+  stars     Int
   comment   String?
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, productId])
 }
@@ -388,12 +358,37 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model documents {
+  id        Int                    @id @default(autoincrement())
+  text      String?
+  metadata  Json?
+  embedding Unsupported("vector")?
+}
+
+model ChatSession {
+  id        String        @id @default(cuid())
+  createdAt DateTime      @default(now())
+  user      User          @relation(fields: [userId], references: [id])
+  updatedAt DateTime      @updatedAt
+  messages  ChatMessage[]
+  userId    String
+}
+
+model ChatMessage {
+  id        String      @id @default(cuid())
+  role      String // "user" or "assistant"
+  content   String
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+}
+
 enum OrderItemStatus {
+  CANCELLED
   PENDING
+  DELIVERED
   PROCESSING
   SHIPPED
-  DELIVERED
-  CANCELLED
   RETURNED
 }
 
@@ -419,9 +414,9 @@ enum OrderPaymentStatus {
   PENDING
   CAPTURED
   REFUNDED
+  CANCELLED
   PAID
   REQUIRE_CAPTURE
-  CANCELLED
   SHIPPED
 }
 
@@ -440,11 +435,11 @@ enum ProductCondition {
 
 enum OrderStatus {
   PENDING
-  PAID
-  REQUIRE_CAPTURE
   SHIPPED
   DELIVERED
   CANCELLED
+  PAID
+  REQUIRE_CAPTURE
 }
 
 enum CategrySatuts {
