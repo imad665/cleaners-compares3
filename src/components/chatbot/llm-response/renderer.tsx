@@ -5,11 +5,10 @@ import Carousel from './carousel';
 import EngineerCarousel from './engineer-carousel';
 import Text from './text';
 import Product from './product';
- 
 import { ProductProps } from './product';
- 
 import { Bot } from 'lucide-react';
 import Engineer, { EngineerProps } from './enginner';
+import ReactMarkdown from 'react-markdown';
 
 export interface ResponseElement {
   type: 'text' | 'carousel' | 'engineerCarousel';
@@ -17,6 +16,29 @@ export interface ResponseElement {
 }
 
 export function renderLLMResponse(xmlString: string, showIcon: boolean = false): React.ReactNode {
+  // Check if <Response> Tag not in xmlString
+  if (!xmlString.includes('<Response>')) {
+    // If not, render as Markdown using react-markdown
+    return (
+      <div className="w-full">
+        <div className="flex justify-start items-end gap-2 mb-3">
+          {showIcon && (
+            <div className="flex-shrink-0 rounded-full p-2 bg-purple-100 text-purple-600">
+              <Bot className="h-4 w-4" />
+            </div>
+          )}
+          <div className="max-w-[80%]">
+            <div className="bg-white border border-gray-200 text-gray-800 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
+              <ReactMarkdown  >
+                {xmlString}
+              </ReactMarkdown>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Parse XML while preserving order
   const parseXML = (xml: string): ResponseElement[] => {
     const elements: ResponseElement[] = [];
@@ -75,6 +97,9 @@ export function renderLLMResponse(xmlString: string, showIcon: boolean = false):
           while ((attrMatch = attrRegex.exec(attributesStr)) !== null) {
             attributes[attrMatch[1]] = attrMatch[2];
           }
+
+          //console.log(productContent,'dddddddddddddddd');
+          
           
           products.push({
             title: attributes.title || '',
@@ -86,7 +111,10 @@ export function renderLLMResponse(xmlString: string, showIcon: boolean = false):
             stock: attributes.stock || '',
             featured: attributes.featured || '',
             images: attributes.images ? attributes.images.split(',').map(img => img.trim()) : [],
-            productId: attributes.productId || `product-${products.length}`
+            productId: attributes.productId || `product-${products.length}`,
+            priceExcVat: attributes.priceExcVat || '',
+            unitPrice: attributes.unitPrice || '',
+            units: attributes.units || '1'
           });
         }
         
@@ -150,7 +178,7 @@ export function renderLLMResponse(xmlString: string, showIcon: boolean = false):
     const responseElements = parseXML(xmlString);
     
     // Debug: log parsed elements
-    console.log('Parsed response elements:', responseElements);
+    //console.log('Parsed response elements:', responseElements);
     
     return (
       <div className="w-full">

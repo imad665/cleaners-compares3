@@ -28,6 +28,8 @@ export const askProductBotStream = async (
       isFeatured: true,
       imagesUrl: true,
       category: { select: { name: true } },
+      units:true,
+      isDealActive:true
     },
   });
 
@@ -52,11 +54,12 @@ export const askProductBotStream = async (
         - Each <Product> must include attribute: productId.
         - Do not invent new products.
         - Only respond to the user's question below.
+         
 
         Conversation History:
         user: Hello!
         assistant: Hello! Welcome to CleanersCompare.com! I'm your store assistant. How can I help you today?
-
+        
         Context:
         {context}
 
@@ -73,7 +76,8 @@ export const askProductBotStream = async (
   const products = productDetails
   .map((p) => `<Product productId="${p.id}" />`)
   .join("\n");
-
+   
+  
   const outputParser = new StringOutputParser();
   const chain = prompt.pipe(model).pipe(outputParser);
 
@@ -99,23 +103,32 @@ export const askProductBotStream = async (
             const discount = p.discountPercentage && p.discountPercentage > 0
               ? `${p.discountPercentage}%`
               : p.discountPrice
-              ? `$${p.discountPrice}`
+              ? `£${p.discountPrice}`
               : "No discount";
 
             const images = p.imagesUrl && p.imagesUrl.length > 0
               ? p.imagesUrl.join(", ")
               : "";
 
+            const isFeatured= p.isFeatured;
+            const units= p.units;
+            const unitPrice= (!p.isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1);
+            const priceExcVat= !p.isDealActive ? p.price : p.discountPrice;
+            const price= p.price;
+            const stock=p.stock;
             return `<Product
                     productId="${p.id}"
                     title="${p.title}"
                     description="${p.description ?? "N/A"}"
                     category="${p.category?.name ?? "Uncategorized"}"
-                    price="$${p.price}"
+                    price="£${price}"
+                    priceExcVat="£${priceExcVat}"
+                    unitPrice="£${unitPrice}"
                     discount="${discount}"
                     condition="${p.condition}"
-                    stock="${p.stock ?? "N/A"}"
-                    featured="${p.isFeatured ? "Yes" : "No"}"
+                    units="${units}"
+                    stock="${stock ?? "N/A"}"
+                    featured="${isFeatured ? "Yes" : "No"}"
                     images="${images}"
                     />`;
           }

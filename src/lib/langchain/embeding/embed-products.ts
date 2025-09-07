@@ -5,7 +5,18 @@ import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
 import { Pool } from "pg";
 import { prisma } from "@/lib/prisma";
 import getLLmApiKey from "./llm_api_key";
-
+const isDateExpired = (date: Date | string | null | undefined): boolean => {
+  if (!date) return false;
+  
+  try {
+    const dateObj = date instanceof Date ? date : new Date(date);
+    const now = new Date();
+    return dateObj < now;
+  } catch (error) {
+    console.error("Error parsing date:", date, error);
+    return false;
+  }
+};
 export const embedProductsToNeon = async () => {
   // 1. Init PG pool (Neon connection)
   const pool = new Pool({
@@ -53,7 +64,13 @@ export const embedProductsToNeon = async () => {
   const texts = newProducts.map((p) => {
     const catName = p.category?.name ?? "Uncategorized";
     const now = new Date();
-    const discount = p.dealEndDate && p?.dealEndDate >= now ? `Discount:${p.discountPercentage}%` : 'No discount';
+    const units = p.units;
+    const unitPrice = (!p.isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1);
+    const priceExcVat = !p.isDealActive ? p.price : p.discountPrice;
+    const price = p.price;
+    const discount = p.dealEndDate && p?.dealEndDate >= now ? 
+    `Discount:${p.discountPercentage}%\nDiscountPrice:£${priceExcVat}` :
+    'No discount';
 
     p.discountPercentage
       ? `Discount:${p.discountPercentage}%` :
@@ -63,19 +80,23 @@ export const embedProductsToNeon = async () => {
       Product: ${p.title}
       Description: ${p.description}
       Category: ${catName}
-      Price: $${p.price}
+      Price: £${price}
       ${discount}
+      Units:${units} 
+      UnitPrice:${unitPrice}
       Condition: ${p.condition}
       Stock: ${p.stock ?? 0} units
       Featured: ${p.isFeatured ? "Yes" : "No"}
     `.replace(/\s+/g, " ");
   })
 
-  const metadata = newProducts.map((p)=>({
-    doc_type:'product',
+  const metadata = newProducts.map((p) => ({
+    doc_type: 'product',
     ref_id: p.id,
     title: p.title,
-    
+    dealend:isDateExpired(p.dealEndDate)?null:p.dealEndDate?.toISOString(),
+    isFeatured:p.isFeatured,
+    featuredEnd:isDateExpired(p.featuredEndDate)?null:p.featuredEndDate?.toISOString(),
   }))
 
 
@@ -88,7 +109,7 @@ export const embedProductsToNeon = async () => {
   if (!apikey) return
 
   const embeddings = new OpenAIEmbeddings({
-    model: "text-embedding-3-large",
+    model: "text-embedding-3-small",
     apiKey: apikey
   });
 

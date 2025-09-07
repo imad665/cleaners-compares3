@@ -64,9 +64,9 @@ export async function GET(req: NextRequest) {
             reviews: product.ratings.length,
             isNew: new Date(product.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // new if added in last 7 days
             isSale: !!product.discountPrice || !!product.discountPercentage,
-            isFeatured: product.isFeatured,
             videoUrl: product.videoUrl || null,
             images: product.imagesUrl,
+            isFeatured: product.isFeatured,
             units: product.units,
             unitPrice: (!product.isDealActive ? product.price : (product.discountPrice || productp.price)) / (product.units || 1),
             priceExcVat: !product.isDealActive ? product.price : product.discountPrice,

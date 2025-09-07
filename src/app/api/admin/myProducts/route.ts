@@ -1,6 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import { deleteCloudinaryFileByUrl } from "@/lib/cloudStorage";
 import { getCategories } from "@/lib/functions";
+import { removeEmbeddingByRefId } from "@/lib/langchain/embeding/utils/embed-handler";
 import { prisma } from "@/lib/prisma";
 import { updateExpiredAndDealsProducts } from "@/lib/updateExpiredProducts";
 import { getServerSession } from "next-auth";
@@ -145,6 +146,7 @@ export async function DELETE(req: NextRequest) {
             select: {
                 imagesUrl: true,
                 videoUrl: true,
+                id:true
             }
         });
         deletedProduct.imagesUrl.forEach(async (url) => {
@@ -152,6 +154,9 @@ export async function DELETE(req: NextRequest) {
         });
         if (deletedProduct.videoUrl) {
             deleteCloudinaryFileByUrl(deletedProduct.videoUrl);
+        }
+        if(deletedProduct){
+            await removeEmbeddingByRefId(deletedProduct.id)
         }
 
 

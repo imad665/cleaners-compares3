@@ -6,17 +6,22 @@ import Link from "next/link";
 import Image from "next/image";
 import { ShoppingCartCheckOut } from "./llm-response/shopping-cart-checkout";
 import renderLLMResponse from "./llm-response/renderer";
+import { useHomeContext } from "@/providers/homePageProvider";
+import { Input } from "../ui/input";
 
 export default function ChatWidget() {
     const [question, setQuestion] = useState("");
     const [messages, setMessages] = useState<Array<{ type: string, content: string }>>([]);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const { user } = useHomeContext();
     const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
+    const [showWelcomeBubble, setShowWelcomeBubble] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
     const welcomeTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const welcomeBubbleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // WhatsApp configuration
     const whatsappNumber = "441702597067";
@@ -26,6 +31,9 @@ export default function ChatWidget() {
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
+    
+    // Get user image or fallback to default
+    const userImg = user?.image  
 
     useEffect(() => {
         scrollToBottom();
@@ -51,6 +59,26 @@ export default function ChatWidget() {
         };
     }, [isOpen, messages.length]);
 
+    // Show welcome bubble after 5 seconds if chat is closed
+    useEffect(() => {
+        if (!isOpen) {
+            welcomeBubbleTimerRef.current = setTimeout(() => {
+                setShowWelcomeBubble(true);
+            }, 5000);
+        } else {
+            if (welcomeBubbleTimerRef.current) {
+                clearTimeout(welcomeBubbleTimerRef.current);
+            }
+            setShowWelcomeBubble(false);
+        }
+
+        return () => {
+            if (welcomeBubbleTimerRef.current) {
+                clearTimeout(welcomeBubbleTimerRef.current);
+            }
+        };
+    }, [isOpen]);
+
     const askBot = async () => {
         if (!question.trim()) return;
 
@@ -58,7 +86,7 @@ export default function ChatWidget() {
         setQuestion("");
         setMessages(prev => [...prev, { type: "user", content: userQuestion }]);
         setLoading(true);
-        setShowWelcomeMessage(false); // Hide welcome message when user interacts
+        setShowWelcomeMessage(false);
 
         try {
             const res = await fetch("/api/chatbot/stream", {
@@ -73,7 +101,6 @@ export default function ChatWidget() {
             const decoder = new TextDecoder();
             let botMessage = "";
 
-            // Add placeholder bot message (empty string)
             setMessages(prev => [...prev, { type: "bot", content: "" }]);
 
             while (true) {
@@ -83,8 +110,7 @@ export default function ChatWidget() {
                 const chunk = decoder.decode(value, { stream: true });
                 botMessage += chunk;
                 console.log(botMessage);
-                
-                // Live update last message (bot)
+
                 setMessages(prev => {
                     const updated = [...prev];
                     const lastIndex = updated.length - 1;
@@ -135,7 +161,6 @@ export default function ChatWidget() {
     const handleSuggestionClick = (suggestion: string) => {
         setQuestion(suggestion);
         setShowWelcomeMessage(false);
-        // Focus on input after setting question
         setTimeout(() => {
             inputRef.current?.focus();
         }, 100);
@@ -143,9 +168,27 @@ export default function ChatWidget() {
 
     return (
         <>
+            {/* Welcome Bubble - appears above the chat button */}
+            {showWelcomeBubble && !isOpen && (
+                <div className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 animate-fade-in">
+                    <div className="relative bg-white rounded-2xl shadow-lg p-4 max-w-xs border border-gray-200">
+                        <div className="absolute bottom-0 right-4 transform translate-y-1/2 rotate-45 w-4 h-4 bg-white border-r border-b border-gray-200"></div>
+                        <p className="text-sm text-gray-800">
+                            Hello! Do you need help or are you searching for something?
+                        </p>
+                        <button
+                            onClick={() => setShowWelcomeBubble(false)}
+                            className="absolute top-1 right-1 text-gray-400 hover:text-gray-600"
+                            aria-label="Close welcome message"
+                        >
+                            <X className="h-4 w-4" />
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Floating Chat Button with Wave Effect */}
             <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
-                {/* Wave effect - only shown when chat is closed */}
                 {!isOpen && (
                     <div className="absolute inset-0 -m-3">
                         <div className="absolute inset-0 rounded-full bg-indigo-400/40 animate-ping-slow"></div>
@@ -154,7 +197,10 @@ export default function ChatWidget() {
                 )}
 
                 <button
-                    onClick={() => setIsOpen(!isOpen)}
+                    onClick={() => {
+                        setIsOpen(!isOpen);
+                        setShowWelcomeBubble(false);
+                    }}
                     className={`
                         flex items-center justify-center 
                         w-12 h-12 sm:w-14 sm:h-14 
@@ -173,7 +219,6 @@ export default function ChatWidget() {
                         <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />
                     )}
 
-                    {/* Notification badge when closed */}
                     {!isOpen && messages.length > 0 && (
                         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                             {messages.length}
@@ -209,7 +254,7 @@ export default function ChatWidget() {
                 </Link>
             )}
 
-            {/* Chat Panel - Responsive sizing */}
+            {/* Chat Panel */}
             {isOpen && (
                 <div className={`
                     fixed right-4 left-4 bottom-16 
@@ -221,12 +266,12 @@ export default function ChatWidget() {
                     border border-gray-200
                 `}
                     style={{
-                        height: 'min(80vh, 600px)',
+                        height: 'min(80vh, 700px)',
                         maxHeight: 'calc(100vh - 5rem)',
-                        minHeight: '300px'
+                        minHeight: '500px'
                     }}>
 
-                    {/* Header with Shopping Cart, WhatsApp and Close button */}
+                    {/* Header */}
                     <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 text-white flex justify-between items-center">
                         <div className="flex items-center space-x-3">
                             <div className="p-2 rounded-full bg-indigo-700">
@@ -238,9 +283,7 @@ export default function ChatWidget() {
                             </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                            {/* Shopping Cart Button */}
                             <ShoppingCartCheckOut />
-                            
                             <button
                                 onClick={clearChat}
                                 className="p-2 rounded-full hover:bg-indigo-700 transition-colors text-sm"
@@ -271,17 +314,16 @@ export default function ChatWidget() {
                                 <p className="text-sm max-w-xs mb-4">I can help you find equipment or connect you with expert engineers!</p>
 
                                 <div className="mt-4 space-y-3 w-full max-w-xs">
-                                    {/* Product Suggestions */}
                                     <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Products & Equipment</div>
                                     <div
                                         className="bg-white p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
-                                        onClick={() => setQuestion("Show me products under $50")}
+                                        onClick={() => setQuestion("Show me products under £50")}
                                     >
-                                        <p className="text-sm font-medium">Show me products under $50</p>
+                                        <p className="text-sm font-medium">Show me products under £50</p>
                                     </div>
                                     <div
                                         className="bg-white p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
-                                        onClick={() => handleSuggestionClick("Show me laundry machines under $1000")}
+                                        onClick={() => handleSuggestionClick("Show me laundry machines under £1000")}
                                     >
                                         <p className="text-sm font-medium">Laundry machines on budget</p>
                                     </div>
@@ -292,7 +334,6 @@ export default function ChatWidget() {
                                         <p className="text-sm font-medium">Dry cleaning equipment</p>
                                     </div>
 
-                                    {/* Engineer Suggestions */}
                                     <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-4">Engineer Services</div>
                                     <div
                                         className="bg-white p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
@@ -323,8 +364,16 @@ export default function ChatWidget() {
                                     >
                                         {msg.type === 'user' ? (
                                             <div className="flex flex-row-reverse items-end max-w-full gap-2">
-                                                <div className="flex-shrink-0 rounded-full p-2 bg-indigo-100 text-indigo-600">
-                                                    <User className="h-4 w-4" />
+                                                <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-indigo-100 flex items-center justify-center">
+                                                    {userImg ? (
+                                                        <img 
+                                                            src={userImg} 
+                                                            alt="User" 
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <User className="h-4 w-4 text-indigo-600" />
+                                                    )}
                                                 </div>
                                                 <div className="max-w-[80%]">
                                                     <div className="bg-indigo-600 text-white rounded-2xl rounded-br-none px-4 py-3">
@@ -339,8 +388,7 @@ export default function ChatWidget() {
                                         )}
                                     </div>
                                 ))}
-                                
-                                {/* Welcome message that appears after 5 seconds */}
+
                                 {showWelcomeMessage && (
                                     <div className="flex justify-start">
                                         <div className="flex items-end gap-2 max-w-[90%]">
@@ -349,14 +397,14 @@ export default function ChatWidget() {
                                             </div>
                                             <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
                                                 <p className="text-sm text-gray-700">
-                                                    Hi there! 👋 I'm here to help you find the perfect cleaning equipment or connect you with expert engineers. 
+                                                    Hi there! 👋 I'm here to help you find the perfect cleaning equipment or connect you with expert engineers.
                                                     What can I assist you with today?
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                 )}
-                                
+
                                 {loading && (
                                     <div className="flex justify-start">
                                         <div className="flex items-end gap-2 max-w-[90%]">
@@ -381,13 +429,13 @@ export default function ChatWidget() {
                     {/* Input Area */}
                     <div className="border-t border-gray-200 p-4 bg-white">
                         <div className="relative flex items-end gap-2">
-                            <textarea
+                            <Input
                                 ref={inputRef}
                                 value={question}
                                 onChange={(e) => {
                                     setQuestion(e.target.value);
                                     adjustTextareaHeight();
-                                    setShowWelcomeMessage(false); // Hide welcome message when user types
+                                    setShowWelcomeMessage(false);
                                 }}
                                 onKeyDown={handleKeyPress}
                                 className="w-full py-3 px-4 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm"
@@ -446,11 +494,24 @@ export default function ChatWidget() {
                         opacity: 0;
                     }
                 }
+                @keyframes fade-in {
+                    from {
+                        opacity: 0;
+                        transform: translateY(10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
                 .animate-ping-slow {
                     animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
                 }
                 .animate-ping-slower {
                     animation: ping-slower 4s cubic-bezier(0, 0, 0.2, 1) infinite;
+                }
+                .animate-fade-in {
+                    animation: fade-in 0.3s ease-out forwards;
                 }
             `}</style>
         </>

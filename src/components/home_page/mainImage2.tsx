@@ -3,8 +3,6 @@ import Image from "next/image";
 import { ProductSearchBar } from "../header/productSearchBar";
 import styles from "./mainImage2.module.css"
 import { Button } from "../ui/button";
-
-
 import { motion } from 'framer-motion';
 import { Plus } from "lucide-react";
 
@@ -15,8 +13,6 @@ export function BigButton({ text, onClick, disabled }: { text: string, onClick: 
       whileTap={{ scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 10 }}
     >
-      
-      
       <Button
         disabled={disabled}
         className="font-extrabold bg-blue-600 hover:bg-blue-700 cursor-pointer relative overflow-hidden group"
@@ -80,92 +76,89 @@ export function MainImage() {
         </div>
       </div>
 
-      {/* Enhanced Animated Waves - More Visible */}
+      {/* Enhanced Animated Waves - Fixed Bars Issue */}
       <div className="absolute inset-0 w-full h-full overflow-hidden z-10 pointer-events-none">
         {/* Base Blue Layer */}
         <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-blue-100 to-transparent opacity-30"></div>
 
-        {/* Main Wave - More Visible */}
-        <svg
-          className="absolute bottom-0 left-0 w-[200%] h-[220px] opacity-70"
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{
-            animation: 'waveAnimation 18s linear infinite',
-          }}
-        >
-          <path
-            fill="url(#waveGradient1)"
-            fillOpacity="0.6"
-            d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          ></path>
-          <defs>
-            <linearGradient id="waveGradient1" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.5" />
-            </linearGradient>
-          </defs>
-        </svg>
+        {/* Wave Container with Overflow Hidden */}
+        <div className="absolute bottom-0 left-0 w-full h-[220px] overflow-hidden">
+          {/* Main Wave - More Visible */}
+          <svg
+            className="absolute bottom-0 left-0 w-[200%] h-full opacity-70"
+            viewBox="0 0 1440 320"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{
+              animation: `${styles.waveAnimation} 18s linear infinite`,
+            }}
+          >
+            <path
+              fill="url(#waveGradient1)"
+              fillOpacity="0.6"
+              d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+            ></path>
+            <defs>
+              <linearGradient id="waveGradient1" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.5" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
 
-        {/* Secondary Wave - Contrast */}
-        <svg
-          className="absolute bottom-0 left-0 w-[200%] h-[200px] opacity-50"
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{
-            animation: 'waveAnimation 12s linear infinite reverse',
-          }}
-        >
-          <path
-            fill="url(#waveGradient2)"
-            fillOpacity="0.5"
-            d="M0,256L48,261.3C96,267,192,277,288,277.3C384,277,480,267,576,245.3C672,224,768,192,864,181.3C960,171,1056,181,1152,192C1248,203,1344,213,1392,218.7L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          ></path>
-          <defs>
-            <linearGradient id="waveGradient2" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#93c5fd" stopOpacity="0.4" />
-            </linearGradient>
-          </defs>
-        </svg>
+        {/* Wave Container with Overflow Hidden */}
+        <div className="absolute bottom-0 left-0 w-full h-[200px] overflow-hidden">
+          {/* Secondary Wave - Contrast */}
+          <svg
+            className="absolute bottom-0 left-0 w-[200%] h-full opacity-50"
+            viewBox="0 0 1440 320"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{
+              animation: `${styles.waveAnimation} 12s linear infinite reverse`,
+            }}
+          >
+            <path
+              fill="url(#waveGradient2)"
+              fillOpacity="0.5"
+              d="M0,256L48,261.3C96,267,192,277,288,277.3C384,277,480,267,576,245.3C672,224,768,192,864,181.3C960,171,1056,181,1152,192C1248,203,1344,213,1392,218.7L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+            ></path>
+            <defs>
+              <linearGradient id="waveGradient2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#93c5fd" stopOpacity="0.4" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
 
-        {/* Light Accent Wave */}
-        <svg
-          className="absolute bottom-0 left-0 w-[200%] h-[180px] opacity-40"
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{
-            animation: 'waveAnimation 15s linear infinite',
-          }}
-        >
-          <path
-            fill="url(#waveGradient3)"
-            fillOpacity="0.4"
-            d="M0,160L48,170.7C96,181,192,203,288,202.7C384,203,480,181,576,186.7C672,192,768,224,864,218.7C960,213,1056,171,1152,165.3C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          ></path>
-          <defs>
-            <linearGradient id="waveGradient3" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#93c5fd" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#bfdbfe" stopOpacity="0.3" />
-            </linearGradient>
-          </defs>
-        </svg>
+        {/* Wave Container with Overflow Hidden */}
+        <div className="absolute bottom-0 left-0 w-full h-[180px] overflow-hidden">
+          {/* Light Accent Wave */}
+          <svg
+            className="absolute bottom-0 left-0 w-[200%] h-full opacity-40"
+            viewBox="0 0 1440 320"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{
+              animation: `${styles.waveAnimation} 15s linear infinite`,
+            }}
+          >
+            <path
+              fill="url(#waveGradient3)"
+              fillOpacity="0.4"
+              d="M0,160L48,170.7C96,181,192,203,288,202.7C384,203,480,181,576,186.7C672,192,768,224,864,218.7C960,213,1056,171,1152,165.3C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+            ></path>
+            <defs>
+              <linearGradient id="waveGradient3" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#93c5fd" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#bfdbfe" stopOpacity="0.3" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
       </div>
-
-      {/* Add this to your global CSS or CSS module */}
-      <style jsx>{`
-        @keyframes waveAnimation {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
     </div>
   );
 }

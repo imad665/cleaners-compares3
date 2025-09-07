@@ -20,6 +20,9 @@ export interface ProductProps {
   images: string[];
   className?: string;
   productId: string;
+  priceExcVat: string;
+  unitPrice: string;
+  units: string;
 }
 
 export function Product({
@@ -34,16 +37,16 @@ export function Product({
   images,
   className,
   productId,
+  priceExcVat,
+  unitPrice,
+  units,
 }: ProductProps) {
-
-  console.log(productId,';;;;;.................................');
-  
   const hasDiscount = discount && discount !== "No discount";
-  const parsedPrice = parseFloat(price.replace('$', ''));
+  const parsedPrice = parseFloat(price.replace('£', ''));
   const parsedDiscount = hasDiscount ? 
     (discount.includes('%') 
       ? parseFloat(discount.replace('%', '')) 
-      : parseFloat(discount.replace('$', ''))) 
+      : parseFloat(discount.replace('£', ''))) 
     : 0;
   
   const finalPrice = hasDiscount
@@ -54,10 +57,13 @@ export function Product({
 
   const isInStock = parseInt(stock) > 0;
   const stockStatus = isInStock ? "In Stock" : "Out of Stock";
-
+  const parsedUnits = parseInt(units) || 1;
+  const showUnitPricing = parsedUnits > 1;
+  //console.log(unitPrice);
+  
   return (
     <Card className={cn(
-      'w-52 flex-shrink-0 border border-gray-200/60 bg-white/95 backdrop-blur-sm',
+      'w-60 flex-shrink-0 border border-gray-200/60 bg-white/95 backdrop-blur-sm',
       'transition-all duration-200 hover:shadow-md hover:border-gray-300',
       className
     )}>
@@ -111,20 +117,36 @@ export function Product({
           {title}
         </h3>
         
+        {/* Unit information if applicable */}
+        {showUnitPricing && (
+          <div className="mb-2">
+            <span className="text-xs text-muted-foreground">
+              {parsedUnits} {parsedUnits === 1 ? 'unit' : 'units'} • {unitPrice} per unit
+            </span>
+          </div>
+        )}
+        
         {/* Price and Add to Cart */}
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <div className="flex items-baseline space-x-1.5">
               <span className="font-bold text-foreground text-sm">
-                ${finalPrice.toFixed(2)}
+                £{finalPrice.toFixed(2)}
               </span>
               
               {hasDiscount && (
                 <span className="text-xs text-muted-foreground line-through">
-                  ${parsedPrice.toFixed(2)}
+                  £{parsedPrice.toFixed(2)}
                 </span>
               )}
             </div>
+            
+            {/* Price ex VAT if available */}
+            {priceExcVat && priceExcVat !== "£0" && (
+              <span className="text-[11px] text-muted-foreground">
+                priceExcVat: {priceExcVat}
+              </span>
+            )}
             
             {/* Stock Status */}
             <span className={`text-[11px] font-medium ${isInStock ? 'text-green-600' : 'text-red-600'}`}>
@@ -138,7 +160,6 @@ export function Product({
             isOldProduct={false}
             stock={parseInt(stock || '0')} 
           />
-             
         </div>
       </CardContent>
     </Card>

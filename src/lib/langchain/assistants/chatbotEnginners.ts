@@ -13,7 +13,7 @@ export const askEngineerBotStream = async (
   geminiApiKey: string | null,
   openaikey: string
 ): Promise<ReadableStream> => {
-
+ 
   // 1️⃣ Fetch engineers
   const engineerDetails = await prisma.service.findMany({
     where: { id: { in: engineerIds }, category },

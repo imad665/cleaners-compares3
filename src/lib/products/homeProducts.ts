@@ -726,8 +726,6 @@ export async function getFooterData() {
 
 export async function getAllHomeProducts() {
 
-
-
     const [
         featuredProducts,
         dealsProducts,

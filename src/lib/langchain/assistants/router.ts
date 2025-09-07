@@ -9,7 +9,8 @@ import { askProductBotStream } from "./chatbotProducts";
 import { askMessageBotStream } from "./chatbotMessages";
 import { classifyIntent } from "./classifyIntent";
 import { askEngineerBotStream } from "./chatbotEnginners";
-
+import { reembedByRefId } from "../embeding/utils/embed-handler";
+ 
 type DocWithScore = [any, number];
 
 const ENGINEER_DOC_TYPES = new Set([
@@ -46,10 +47,56 @@ const getRelevantIds = (
     .map(([doc]) => doc.metadata?.ref_id)
     .filter((id: unknown): id is string => !!id);
 
+// Function to check if dates are expired
+const isDateExpired = (dateString: string | null | undefined): boolean => {
+  if (!dateString) return false;
+  
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    return date < now;
+  } catch (error) {
+    console.error("Error parsing date:", dateString, error);
+    return false;
+  }
+};
+
+// Function to check for expired products and re-embed them
+const checkAndReembedExpiredProducts = async (
+  docsWithScores: DocWithScore[],
+  openaikey: string
+): Promise<boolean> => {
+  const productDocs = docsWithScores.filter(([doc]) => doc.metadata?.doc_type === "product");
+  
+  let needsReembedding = false;
+  const reembedPromises: Promise<any>[] = [];
+
+  for (const [doc] of productDocs) {
+    const metadata = doc.metadata || {};
+    const dealEnd = metadata.dealend;
+    const featuredEnd = metadata.featuredEnd;
+    const refId = metadata.ref_id;
+
+    if (refId && (isDateExpired(dealEnd) || isDateExpired(featuredEnd))) {
+      console.log(`🔄 Product ${refId} has expired dates, re-embedding...`);
+      needsReembedding = true;
+      reembedPromises.push(reembedByRefId(refId));
+    }
+  }
+
+  if (reembedPromises.length > 0) {
+    await Promise.allSettled(reembedPromises);
+    console.log(`✅ Re-embedded ${reembedPromises.length} expired products`);
+  }
+
+  return needsReembedding;
+};
+
 export const askRouterBotStream = async (
   userQuestion: string,
   openaikey: string | null,
-  geminiApikey: string | null
+  geminiApikey: string | null,
+  retryCount: number = 0 // Add retry counter to prevent infinite loops
 ): Promise<ReadableStream | undefined> => {
   if (!openaikey) {
     const msg =
@@ -63,6 +110,12 @@ export const askRouterBotStream = async (
     });
   }
 
+  // Prevent infinite recursion
+  if (retryCount > 2) {
+    console.log("❌ Maximum retry count reached, falling back to general response");
+    return askMessageBotStream(userQuestion, openaikey);
+  }
+
   // 1) Classify the user's intent first
   const classification = await classifyIntent(userQuestion, openaikey);
   console.log(
@@ -74,7 +127,7 @@ export const askRouterBotStream = async (
 
   // 2) If greeting/other: do NOT hit RAG; reply directly
   if (classification.intent === "greeting" || classification.intent === "other") {
-    return askMessageBotStream(userQuestion, openaikey);
+    return askMessageBotStream(userQuestion, openaikey,false);
   }
 
   // 3) Build vector store
@@ -129,7 +182,20 @@ export const askRouterBotStream = async (
     console.log("Document types found:", docsWithScores.map(([doc]) => doc.metadata?.doc_type));
   }
 
-  // 5) Route based on intent with the filtered results
+  // 5) Check for expired products and re-embed if needed (only for product queries)
+  if (classification.intent === "product_query" && docsWithScores.length > 0) {
+    const needsReembedding = await checkAndReembedExpiredProducts(docsWithScores, openaikey);
+    
+    if (needsReembedding) {
+      console.log("🔄 Re-embedded expired products, recalling function...");
+      // Close the pool before recalling
+      await pool.end();
+      // Recall the function with increased retry count
+      return askRouterBotStream(userQuestion, openaikey, geminiApikey, retryCount + 1);
+    }
+  }
+
+  // 6) Route based on intent with the filtered results
   if (classification.intent === "product_query") {
     const productIds = getRelevantIds(docsWithScores, "product", RELEVANCE_THRESHOLD);
 
@@ -170,7 +236,7 @@ export const askRouterBotStream = async (
     }
   }
 
-  // 6) Fallback: If no documents found with intent filter, try without filter
+  // 7) Fallback: If no documents found with intent filter, try without filter
   console.log("No documents found with intent filter, trying without filter...");
   
   const fallbackDocsWithScores = await vectorStore.similaritySearchWithScore(userQuestion, K);
@@ -179,7 +245,7 @@ export const askRouterBotStream = async (
     console.log("Fallback documents found:", fallbackDocsWithScores.map(([doc]) => doc.metadata?.doc_type));
   }
 
-  // 7) If we have engineer intent but no engineer docs, use a targeted approach
+  // 8) If we have engineer intent but no engineer docs, use a targeted approach
   if (classification.intent === "engineer_query") {
     console.log("Engineer query detected but no engineer docs found, using targeted search...");
     
@@ -221,7 +287,7 @@ export const askRouterBotStream = async (
     });
   }
 
-  // 8) Final fallback: general assistant message
+  // 9) Final fallback: general assistant message
   console.log("Falling back to general message assistant.");
-  return askMessageBotStream(userQuestion, openaikey);
+  return askMessageBotStream(userQuestion, openaikey,classification.intent === "product_query");
 };

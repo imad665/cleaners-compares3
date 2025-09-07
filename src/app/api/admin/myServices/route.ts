@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { embedEngineersToNeon } from "@/lib/langchain/embeding/embed_enginner";
+import { reembedByRefId, removeEmbeddingByRefId } from "@/lib/langchain/embeding/utils/embed-handler";
 import { processPayement } from "@/lib/payement/servicePayement";
 import { prisma } from "@/lib/prisma";
 import { deleteImageFileAt, saveImageFileAt } from "@/lib/utils/saveImagesLocaly";
@@ -148,12 +149,13 @@ export async function POST(req: NextRequest) {
                 userId: userId, // you must set this from session/auth
             },
         });
-        await embedEngineersToNeon();
+        
         if (featureDays?.toString()) {
             const url = await processPayement(featureDays.toString(), { productId: service.id, type: 'service-feature' });
+            await embedEngineersToNeon();
             return NextResponse.json({ success: true, url, service, pictureUrl })
         }
-
+        await embedEngineersToNeon();
         return NextResponse.json({ success: true, service, pictureUrl })
 
     } catch (error) {
@@ -208,8 +210,10 @@ export async function PATCH(req: NextRequest) {
         })
         if (featureDays?.toString() && !service.isFeatured) {
             const url = await processPayement(featureDays.toString(), { productId: service.id, type: 'service-feature' });
+            await reembedByRefId(id);
             return NextResponse.json({ success: true, url, service, pictureUrl })
         }
+        await reembedByRefId(id);
         return NextResponse.json({ success: true, service, pictureUrl })
 
     } catch (error) {
@@ -235,6 +239,7 @@ export async function DELETE(req: NextRequest) {
         if (pictureUrl)
             await deleteImageFileAt('uploads/services', pictureUrl.split('/').pop());
 
+        await removeEmbeddingByRefId(id);
 
         return NextResponse.json({ success: true, message: 'the service deleted successfuly' }, { status: 200 });
 

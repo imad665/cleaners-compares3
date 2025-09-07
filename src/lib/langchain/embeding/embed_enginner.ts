@@ -60,7 +60,7 @@ export const embedEngineersToNeon = async () => {
     return {
       doc_type: docType,
       ref_id: e.id,
-      
+      featuredEnd:e.featuredEndDate,
     };
   });
 

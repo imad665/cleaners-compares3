@@ -2,6 +2,7 @@
 import { authOptions } from "@/lib/auth";
 import { deleteCloudinaryFileByUrl, uploadFileToCloud } from "@/lib/cloudStorage";
 import { embedProductsToNeon } from "@/lib/langchain/embeding/embed-products";
+import { reembedByRefId, removeEmbeddingByRefId } from "@/lib/langchain/embeding/utils/embed-handler";
 import { processPayement } from "@/lib/payement/product-feature";
 import { prisma } from "@/lib/prisma";
 import { generateSlug, generateUniqueSlug } from "@/lib/products/slugGen";
@@ -143,8 +144,11 @@ export async function addNewProductAction(prev: any, formData: FormData) {
         
         if (featuredDuration?.toString() && !updatedProduct.isFeatured) {
             const url = await processPayement(featuredDuration.toString(), { productId: updatedProduct.id, type: 'product-feature' });
+            await reembedByRefId(productId)
             return { success: true, url, message: 'Product successfully created.' };
+
         }
+        await reembedByRefId(productId)
         return { success: true, message: 'Product updated successfuly!' };
     }
     else {
@@ -174,11 +178,13 @@ export async function addNewProductAction(prev: any, formData: FormData) {
 
             }
         });
-        await embedProductsToNeon()
+        
         if (featuredDuration?.toString()) {
             const url = await processPayement(featuredDuration.toString(), { productId: newProduct.id, type: 'product-feature' });
+            await embedProductsToNeon();
             return { success: true, url, message: 'Product successfully created.' };
         }
+        await embedProductsToNeon(); 
         return { success: true, url: '/admin/allProducts', message: 'Product successfully created.' };
     }
 
