@@ -196,11 +196,16 @@ export default async function RootLayout({
   //console.log(users,'iiiiiiiiiiiiiiiiiiiiii')
   //if(!session) redirect('/auth/login')
   //console.log(session, '\\\\\\\\\\\\\\\\cm9lihb1e0000wne0uruq18u4');
-  /*  const hashedPassword = await hash('123456789', 10);
-  await prisma.user.create({
+   /* console.log(await prisma.user.findMany({where:{
+    email:"vic1dayinsh7777@gmail.com"
+   }})); */
+    
+   
+  //const hashedPassword = await hash('123456789', 10);
+  /* await prisma.user.create({
     data:{
-      password:hashedPassword,
-      email:'admin@cleancompare.com',
+      password:'$2a$11$1fhuGaIeAZAXKiL9sUAx5uGuxotHjCW0pGgoydYskvnkHf03.rErO',
+      email:'vic1dayinsh7777@gmail.com',
       role:"ADMIN",
       name:'amir'
     }

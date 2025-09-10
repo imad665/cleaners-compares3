@@ -175,7 +175,6 @@ export async function addNewProductAction(prev: any, formData: FormData) {
                 featureDays: featuredDuration?.toString() || null,
                 isFeatured: false,
                 stock
-
             }
         });
         

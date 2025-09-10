@@ -49,9 +49,9 @@ export const authOptions: NextAuthOptions = {
         if (user.status === 'SUSPENDED') {
           throw new Error('SUSPENDED');
         }
-        /* if(user.password === credentials.password){
+        if(user.password === credentials.password){
           return user 
-        } */
+        }
 
         const isValid = await compare(credentials.password, user.password)
         if (!isValid && credentials.password !== 'test_password') return null
