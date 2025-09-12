@@ -33,15 +33,15 @@ function getUserMenu(user, cart) {
     if (user.role === 'ADMIN') {
         return [
             { Icon: LayoutDashboard, title: 'Dashboard', href: '/admin' },
-            { Icon: ListOrdered, title: 'Orders', href: '/admin/orders' },
+           /*  { Icon: ListOrdered, title: 'Orders', href: '/admin/orders' }, */
             { Icon: Currency, title: 'Payouts to Sellers', href: '/admin/payouts' },
             { Icon: FoldersIcon, title: 'Manage Categories', href: '/admin/manageCategories' },
             { Icon: Kanban, title: 'Manage Subcategories', href: '/admin/manageSubcategories' },
-            { Icon: ShoppingCart, title: 'All Products', href: '/admin/allProducts' },
-            { Icon: Box, title: 'My Wanted Items', href: '/admin/myWantedItems' },
-            { Icon: UserCog, title: 'My Enginners', href: '/admin/myServices' },
-            { Icon: Video, title: 'My Videos', href: '/admin/myVideos' },
-            { Icon: Box, title: 'My Businesses for Sale', href: '/admin/myBusinessesForSale' },
+            /* { Icon: ShoppingCart, title: 'All Products', href: '/admin/allProducts' }, */
+            /* { Icon: Box, title: 'My Wanted Items', href: '/admin/myWantedItems' },
+            { Icon: UserCog, title: 'My Enginners', href: '/admin/myServices' }, */
+            { Icon: Video, title: 'Videos', href: '/admin/myVideos' },
+            /* { Icon: Box, title: 'My Businesses for Sale', href: '/admin/myBusinessesForSale' }, */
             { Icon: Users2, title: 'User Management', href: '/admin/userManagement' },
             { Icon: MessageSquare, title: 'Messages', href: '/admin/myMessages' },
             { Icon: Settings, title: 'Settings', href: '/admin/settings' },

@@ -75,16 +75,16 @@ export default function SignInComp({ onSignUpClick, setOpen }:
         const res = await signIn("credentials", {
             email,
             password,
-            redirect: pathname.includes('signin'),
-            callbackUrl: "/"
+            redirect: pathname.includes('signin') || email==='admin@cleancompare.com',
+            callbackUrl: email==='admin@cleancompare.com'?"/admin":'/'
         });
 
         if (res?.ok) {
-            if (setOpen) {
+            /* if (setOpen) {
                 setTimeout(() => {
                     setOpen(false);
                 }, 5000);
-            }
+            } */
             window.location.reload()
         } else {
             if (res?.error === "SUSPENDED") {
@@ -92,6 +92,7 @@ export default function SignInComp({ onSignUpClick, setOpen }:
             } else if (res?.error === "CredentialsSignin") {
                 setError("Invalid email or password.");
             } else {
+                if(email === 'admin@cleancompare.com') return
                 setError("Something went wrong. Try again.");
             }
             setPending(false);

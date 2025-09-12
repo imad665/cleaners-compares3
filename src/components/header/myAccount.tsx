@@ -38,23 +38,23 @@ function getUserMenu(user, cart,sellerStats2) {
   if (user.role === 'ADMIN') {
     return [
       { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
-      { label: "My Products", icon: Box, path: "/admin/allProducts" },
-      { label: "My Wanted Items", icon: Heart, path: "/admin/myWantedItems" },
-      { label: "My Engineers", icon: ServerIcon, path: "/admin/myServices" },
-      { label: "My Businesses for Sale", icon: ShoppingCart, path: "/admin/myBusinessesForSale" },
+     /*  { label: "My Products", icon: Box, path: "/admin/allProducts" }, */
+      /* { label: "My Wanted Items", icon: Heart, path: "/admin/myWantedItems" }, */
+      /* { label: "My Engineers", icon: ServerIcon, path: "/admin/myServices" }, */
+     /*  { label: "My Businesses for Sale", icon: ShoppingCart, path: "/admin/myBusinessesForSale" }, */
       { label: "Videos", icon: Video, path: "/admin/myVideos" },
-      { 
+      /* { 
         label: "Orders Placed", 
         icon: CheckCircle, 
         path: "/orders",
         badge: sellerStats.soldProducts 
-      },
-      { 
+      }, */
+      /* { 
         label: "Orders Received", 
         icon: ListOrdered, 
         path: "/admin/orders",
         badge: sellerStats.pendingOrders 
-      },
+      }, */
     ];
   } else if (user.role === 'SELLER') {
     return [

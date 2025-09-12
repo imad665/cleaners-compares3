@@ -316,23 +316,23 @@ const Dashboard = () => {
         {/* Recent Products Table */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-medium text-gray-900">Recent Products</h2>
+            {/* <h2 className="text-lg font-medium text-gray-900">Recent Products</h2> */}
             {/* <a href="/products" className="text-sm font-medium text-blue-600 hover:text-blue-500 flex items-center">
               View All <TrendingUp size={16} className="ml-1" />
             </a> */}
           </div>
-          <Table
+          {/* <Table
             columns={columns}
             data={dashboardData?.recentProducts || []}
             keyField="id"
             itemsPerPage={5}
-          /* actions={(product) => (
+          actions={(product) => (
             <div className="space-x-2">
               <button className="text-blue-600 hover:text-blue-800">View</button>
               <button className="text-gray-600 hover:text-gray-800">Edit</button>
             </div>
-          )} */
-          />
+          )}
+          /> */}
         </div>
       </>
       }

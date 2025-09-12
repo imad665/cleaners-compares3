@@ -4,6 +4,7 @@ import InboxList from '@/components/inboxBuyer/inbox/InboxList';
 import OrdersList from '@/components/inboxBuyer/orders/OrdersList';
 import TabNavigation from '@/components/inboxBuyer/TabNavigation';
 import { useTab } from '@/components/inboxBuyer/utils/hooks/useTab';
+import { useHomeContext } from '@/providers/homePageProvider';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -15,6 +16,10 @@ function App() {
   const [orders, setOrders] = useState<any[]>([]);
   const [allConversations, setAllConversations] = useState<any[]>([]);
   const [loading,setLoading] = useState(true);
+  const {user} = useHomeContext()
+  if(!user){
+    window.location.replace("/")
+  }
   useEffect(()=>{
     const fetchPurshase = async ()=>{
       setLoading(true)

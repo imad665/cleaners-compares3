@@ -7,6 +7,7 @@ import { Search, X } from "lucide-react"
 import Link from "next/link"
 import { ProductCard } from "./product-card"
 import { Header } from "@/components/header/header"
+import { ItemFeaturedProduct } from "@/components/home_page/serverComponents/uis"
 
 interface Product {
     id: string
@@ -35,9 +36,12 @@ async function getSearchResults(params: SearchParams) {
     if (params.q) searchParams.append('query', params.q)
     if (params.category) searchParams.append('category', params.category)
     if (params.page) searchParams.append('page', params.page)
+    searchParams.append("isInsearch", 'true');
 
     const res = await fetch(`${process.env.NODE_ENV !== 'production' ? process.env.NEXT_PUBLIC_BASE_URL_LOCAL : process.env.NEXT_PUBLIC_BASE_URL}/api/search?${searchParams.toString()}`)
     if (!res.ok) throw new Error('Failed to fetch search results')
+
+
     return res.json()
 }
 
@@ -50,6 +54,7 @@ export default async function SearchPage({
     const { q: query = '', category: categoryId = '', page = '1' } = params
 
     const { products, categories, meta } = await getSearchResults(params)
+    console.log(categories, 'oooooooooooo');
 
     const activeCategory = categories.find(c => c.id === categoryId)
     const parentCategories = categories.filter(c => !c.isSubcategory)
@@ -107,21 +112,17 @@ export default async function SearchPage({
                             <>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                     {products.map((product: Product) => (
-                                        <ProductCard
-                                            key={product.id}
-                                            title={product.title}
-                                            image={product.image}
-                                            href={product.href}
-                                            price={product.price}
-                                            discountPrice={product.discountPrice}
-                                            isDealActive={product.isDealActive}
-                                            category={product.category}
+
+                                        <ItemFeaturedProduct
+                                            {...product}
+                                            key={product.productId}
                                         />
+
                                     ))}
                                 </div>
 
                                 {/* Pagination */}
-                                {meta && meta.total > meta.limit && (
+                                {/*  {meta && meta.total > meta.limit && (
                                     <div className="mt-8">
                                         <Pagination
                                             currentPage={parseInt(page)}
@@ -129,7 +130,7 @@ export default async function SearchPage({
                                             baseUrl={`/search?q=${encodeURIComponent(query)}${categoryId ? `&category=${categoryId}` : ''}`}
                                         />
                                     </div>
-                                )}
+                                )} */}
                             </>
                         ) : (
                             <div className="text-center py-12">

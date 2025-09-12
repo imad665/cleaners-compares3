@@ -77,7 +77,7 @@ export function MainImage() {
       </div>
 
       {/* Enhanced Animated Waves - Fixed Bars Issue */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden z-10 pointer-events-none">
+      <div className="absolute z-22 inset-0 w-full h-full overflow-hidden  pointer-events-none">
         {/* Base Blue Layer */}
         <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-blue-100 to-transparent opacity-30"></div>
 

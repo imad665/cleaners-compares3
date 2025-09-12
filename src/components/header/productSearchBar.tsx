@@ -66,9 +66,9 @@ export function ProductSearchBar({
   const [query, setQuery] = useState("")
   const [loading, setLoading] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false);
-  const [openSellerDialog,setOpenSellerDialog] = useState(false);
-  const [openDialog,setOpenDialog] = useState(false);
-  const {user} = useHomeContext();
+  const [openSellerDialog, setOpenSellerDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const { user } = useHomeContext();
   const [results, setResults] = useState<SearchResponse>({
     products: [],
     categories: []
@@ -89,6 +89,8 @@ export function ProductSearchBar({
     try {
       const response = await fetch(`/api/search?query=${encodeURIComponent(searchQuery)}`)
       const data = await response.json()
+      console.log(data,'dsssssssssssss');
+      
       setResults(data)
     } catch (error) {
       console.error("Search failed:", error)
