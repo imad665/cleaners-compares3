@@ -307,7 +307,7 @@ export default function ChatWidget() {
                         ref={chatContainerRef}
                         className="flex-1 overflow-y-auto p-4 bg-gray-50"
                     >
-                        {messages.length === 0 ? (
+                        {messages.length === 0 && false ? (
                             <div className="flex flex-col items-center justify-center h-full text-gray-400 p-4 text-center">
                                 <Bot className="h-12 w-12 mb-3 opacity-50" />
                                 <h3 className="font-medium text-lg mb-1">Welcome to CleanersCompare</h3>

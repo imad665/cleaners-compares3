@@ -93,7 +93,7 @@ export function ItemFeaturedProduct({
     discountPercentage,
 }: ItemProps) {
     const isUnits = units > 0;
-    //console.log(isOldProduct+';;;;;==================;;;;;;')
+    console.log(productId+';;;;;==================;;;;;;')
     return (
         <div className={`md:min-w-[300px] w-[75vw] grow flex flex-col justify-between md:max-w-[300px] border-1 shadow-md pb-4 rounded-md bg-white min-h-[430px] mx-2 ${className}`}>
             <div className=' relative  flex flex-col gap-1 grow  '>

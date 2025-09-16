@@ -381,6 +381,7 @@ function formatProducts(products: any[]) {
       stars: p.ratings?.reduce((sum, item) => (sum + item.stars), 0) / p.ratings?.length,
       starsCount: p.ratings?.length,
       units: p.units,
+      productId:p.id,
       unitPrice: ((!isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1)),
       priceExcVat: !isDealActive ? p.price : p.discountPrice,
       price: p.price,

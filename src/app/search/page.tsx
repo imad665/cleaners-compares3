@@ -54,7 +54,7 @@ export default async function SearchPage({
     const { q: query = '', category: categoryId = '', page = '1' } = params
 
     const { products, categories, meta } = await getSearchResults(params)
-    console.log(categories, 'oooooooooooo');
+    console.log(products, 'oooooooooooo');
 
     const activeCategory = categories.find(c => c.id === categoryId)
     const parentCategories = categories.filter(c => !c.isSubcategory)
