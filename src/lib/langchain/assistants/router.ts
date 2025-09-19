@@ -166,7 +166,7 @@ export const askRouterBotStream = async (
   }
 
   const K = 12;
-  const RELEVANCE_THRESHOLD = 0.6;
+  const RELEVANCE_THRESHOLD = 0.1;
   const docsWithScores = await vectorStore.similaritySearchWithScore(
     userQuestion, 
     K, 

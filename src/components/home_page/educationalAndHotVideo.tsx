@@ -71,7 +71,7 @@ export function EducationalAndVideos(
                 </div>
                 <MyCarousel>
                     {youtubeVideos?.map((slide, i) => (
-                        <VideoItem   key={i} {...slide} />
+                        <VideoItem key={i} {...slide} />
                     ))}
                 </MyCarousel>
             </div>

@@ -2,9 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { useHomeContext } from "@/providers/homePageProvider";
-import { CheckCircle, Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import { CheckCircle, Minus, Pause, Play, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { signOut } from "next-auth/react"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
 export function ButtonSignOut() {
@@ -99,40 +99,89 @@ export type ItemVideoItemProps = {
 
 export function VideoItem({ title, videoUrl, thumbnail, description, onClick }: ItemVideoItemProps) {
   const [open, setOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Function to send play/pause commands to YouTube iframe
+  const togglePlayPause = () => {
+    if (iframeRef.current) {
+      const message = JSON.stringify({
+        event: 'command',
+        func: isPlaying ? 'pauseVideo' : 'playVideo',
+        args: ''
+      });
+      iframeRef.current.contentWindow?.postMessage(message, '*');
+      setIsPlaying(!isPlaying);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(isOpen) => {
+      setOpen(isOpen);
+      if (!isOpen) setIsPlaying(false); // Reset play state when dialog closes
+    }}>
       <DialogTrigger asChild>
         <div
-          className="cursor-pointer w-[85vw] min-h-[290px] bg-yellow-50 min-w-[280px] md:max-w-[320px] mx-3 border-1 rounded-lg overflow-hidden shadow hover:shadow-lg transition"
-          onClick={() => {
-            /* onClick(videoUrl); */
-            setOpen(true);
-          }}
+          className="cursor-pointer w-[85vw] min-w-[280px] md:max-w-[320px] h-[320px] mx-3 border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white"
+          onClick={() => setOpen(true)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          <Image src={thumbnail} alt={title} width={400} height={200} className="w-full object-cover" />
-          <div className="p-4">
-            <h3 className="text-lg font-semibold line-clamp-2">{title}</h3>
-            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{description}</p>
+          <div className="relative h-[180px] overflow-hidden">
+            <Image 
+              src={thumbnail} 
+              alt={title} 
+              fill
+              className="object-cover transition-transform duration-300 hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+              <div className="bg-red-600 text-white p-3 rounded-full">
+                <Play size={24} fill="white" />
+              </div>
+            </div>
+          </div>
+          <div className="p-4 h-[140px] flex flex-col">
+            <h3 className="text-lg font-semibold line-clamp-2 mb-2">{title}</h3>
+            <p className="text-sm text-muted-foreground line-clamp-3 flex-grow">{description}</p>
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-6xl mt-5">
-        <DialogTitle>{title}</DialogTitle>
-        {videoUrl ? (
-          <div className="w-full aspect-video">
-            <iframe
-              width="100%"
-              height="100%"
-              src={videoUrl}
-              title={title}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-        ) : (
-          <p className="text-red-500">Invalid YouTube URL{videoUrl}</p>
-        )}
+      <DialogContent className="w-full max-w-4xl lg:max-w-6xl p-0 overflow-hidden bg-black border-none">
+        <div className="relative w-full aspect-video bg-black">
+          {videoUrl ? (
+            <>
+              <iframe
+                ref={iframeRef}
+                width="100%"
+                height="100%"
+                src={videoUrl}
+                title={title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0"
+              />
+              <div className="absolute bottom-4 right-4 z-10">
+                <button
+                  onClick={togglePlayPause}
+                  className="bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                  aria-label={isPlaying ? 'Pause video' : 'Play video'}
+                >
+                  {isPlaying ? <Pause size={20} /> : <Play size={20} fill="white" />}
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-white">
+              <p className="text-red-500">Invalid YouTube URL</p>
+            </div>
+          )}
+        </div>
+        <div className="p-4 bg-white">
+          <DialogTitle className="text-xl mb-2">{title}</DialogTitle>
+          <p className="text-gray-600">{description}</p>
+        </div>
       </DialogContent>
     </Dialog>
   );

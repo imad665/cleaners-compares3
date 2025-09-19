@@ -81,7 +81,7 @@ export const embedProductsToNeon = async () => {
       Description: ${p.description}
       Category: ${catName}
       Price: £${price}
-      ${discount}
+      ${discount} 
       Units:${units} 
       UnitPrice:${unitPrice}
       Condition: ${p.condition}
