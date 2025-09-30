@@ -22,7 +22,7 @@ interface User {
   products_count: number,
   wantedItems_count: number,
   BusinessForSale_count: number,
-  sellerProfile:any;
+  sellerProfile: any;
 }
 
 const UserManagement = () => {
@@ -139,6 +139,7 @@ const UserManagement = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   useEffect(() => {
     setLoading(true);
     const fetchUsers = async () => {
@@ -163,12 +164,23 @@ const UserManagement = () => {
 
     }
     fetchUsers();
+
   }, [refresh])
+  useEffect(() => {
+    applyFilters();
+  }, [usersData, searchTerm, roleFilter, statusFilter]);
 
   // Apply filters to users
   const applyFilters = () => {
     let filtered = usersData;
-    console.log(filtered, ';;;;;;;;;;;;;;;;;;;;;;;;;;;;');
+
+    // Apply search filter
+    if (searchTerm.trim() !== '') {
+      filtered = filtered.filter(user =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
 
     if (roleFilter !== 'all') {
       filtered = filtered.filter(user => user.role === roleFilter);
@@ -185,6 +197,7 @@ const UserManagement = () => {
   const resetFilters = () => {
     setRoleFilter('all');
     setStatusFilter('all');
+    setSearchTerm('');
     setFilteredUsers(usersData);
   };
 
@@ -349,7 +362,7 @@ const UserManagement = () => {
   };
 
   //console.log(filteredUsers);
-  
+
 
   return (
     <div className="space-y-6">
@@ -372,6 +385,8 @@ const UserManagement = () => {
             <input
               type="text"
               placeholder="Search users..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
@@ -395,7 +410,7 @@ const UserManagement = () => {
                 id="roleFilter"
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="block p-3 w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               >
                 <option value="all">All Roles</option>
                 <option value="seller">Seller</option>
@@ -412,7 +427,7 @@ const UserManagement = () => {
                 id="statusFilter"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="block w-full p-3 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               >
                 <option value="all">All Statuses</option>
                 <option value="active">Active</option>
@@ -449,11 +464,11 @@ const UserManagement = () => {
           data={filteredUsers}
           keyField="id"
           pagination={true}
-          itemsPerPage={8}
+          itemsPerPage={20}
           actions={(user: User) => (
             <div className="flex space-x-2 justify-end">
               <SellerInfoDialog
-                seller={{...user,...user.sellerProfile} }
+                seller={{ ...user, ...user.sellerProfile }}
               />
               {/* <button
                 onClick={(e) => {

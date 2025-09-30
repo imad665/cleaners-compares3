@@ -15,7 +15,7 @@ import { seedMachinesProducts, seedPartsProducts, seedSundriesProducts, seedUser
 import { hash, hashSync } from "bcryptjs";
 
 import ChatPage from "@/components/chatbot/main";
- 
+
 import { getRecentOrdersCount } from "@/lib/products/homeProducts";
 import { clearOrders, updatePasswordUsers } from "@/lib/clearTestData";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,8 @@ import PWAInstallButton from "@/components/PWAInstallButton";
 import { embedEngineersToNeon } from "@/lib/langchain/embeding/embed_enginner";
 import deleteUserTested from "@/lib/update-db";
 import { clearAllEngineerEmbeddings, reembedAllEngineers, reembedAllProducts } from "@/lib/langchain/embeding/utils/embed-handler";
+import { seedUsers2 } from "@/lib/data-old-website/add-users2";
+import { seedCategories, seedMachines, seedParts, seedSubcategories, seedSundries, updateUserRoles } from "@/lib/data-old-website/seed-categories";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -79,7 +81,7 @@ export const metadata: Metadata = {
     images: ["/uploads/logo.png"], // Replace with your actual OG image
   },
   metadataBase: new URL("https://cleanerscompare.com"),
-  manifest:'/manifest.json',
+  manifest: '/manifest.json',
 };
 
 async function removeDuplicateProducts() {
@@ -123,7 +125,7 @@ async function removeDuplicateProducts() {
 }
 
 
- 
+
 
 export default async function RootLayout({
   children,
@@ -131,7 +133,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  //await prisma.product.deleteMany()
+  //await prisma.product.deleteMany()  
   //await deleteAllCloudinaryImages()  
   //await seedUsers()
   /* await prisma.product.updateMany({
@@ -178,11 +180,11 @@ export default async function RootLayout({
   }) */
 
   const session = await getServerSession(authOptions);
-  
-   
+
+
   //console.log(cats,'mmmmmmmmmmmmmmm');
-  
-  
+
+
   //await prisma.category.delete({where:{id:'cmd8zu8qa00fhwnj4valms5fx'}});
   /* const users = await prisma.user.update({
     where:{email:'admin@cleancompare.com'},
@@ -196,21 +198,21 @@ export default async function RootLayout({
   //console.log(users,'iiiiiiiiiiiiiiiiiiiiii')
   //if(!session) redirect('/auth/login')
   //console.log(session, '\\\\\\\\\\\\\\\\cm9lihb1e0000wne0uruq18u4');
-   /* console.log(await prisma.user.findMany({where:{
-    email:"vic1dayinsh7777@gmail.com"
-   }})); */
-    
-   
+  /* console.log(await prisma.user.findMany({where:{
+   email:"vic1dayinsh7777@gmail.com"
+  }})); */
+
+
   //const hashedPassword = await hash('123456789', 10);
   /* await prisma.user.create({
     data:{
-      password:'$2a$11$1fhuGaIeAZAXKiL9sUAx5uGuxotHjCW0pGgoydYskvnkHf03.rErO',
-      email:'vic1dayinsh7777@gmail.com',
+      password:hashedPassword,
+      email:'admin@cleancompare.com',
       role:"ADMIN",
       name:'amir'
     }
   })  */
-   //
+  //
   //await embedMessagesToSupabase() 
   //await embedEngineersToSupabase() 
   //const sellers = await prisma.sellerProfile.findMany();
@@ -224,7 +226,22 @@ export default async function RootLayout({
 
   //await reembedAllEngineers()
   //await reembedAllProducts()
-   
+  // Exclusive77!!!
+
+
+  //await prisma.product.deleteMany()
+  // ================ new version data ======================
+  //await deleteAllCloudinaryImages()
+  //await seedUsers2()
+  //await seedCategories() 
+  //await seedSubcategories()
+ // await seedMachines()
+  //await seedSundries()
+  //await seedParts() 
+  //await updateUserRoles() 
+
+  
+
   return (
     <html lang="en" className="scroll-smooth">
       <body
@@ -233,7 +250,7 @@ export default async function RootLayout({
         {/* <HomeProductsProvider> */}
         <HomeProvider user={session?.user}>
           {children}
-          <ChatPage className='fixed bottom-2 right-2'/>
+          <ChatPage className='fixed bottom-2 right-2' />
           {/* <InitData/> */}
 
         </HomeProvider>

@@ -11,6 +11,7 @@ datasource db {
 model User {
   id               String            @id @default(cuid())
   name             String
+  userIdOld        String?
   email            String            @unique
   password         String?
   role             Role              @default(BUYER)
@@ -40,7 +41,6 @@ model User {
   sessions         Session[]
   wantedItems      WantedItem[]
   favorites        Product[]         @relation("UserFavorites")
-  ChatSession      ChatSession[]
 }
 
 model Service {
@@ -114,11 +114,13 @@ model SellerProfile {
   id              String      @id @default(cuid())
   userId          String      @unique
   businessName    String
-  city            String
-  country         String
+  city            String // address
+  country         String // postcode
   verified        Boolean     @default(false)
+  town            String? // city
   phoneNumber     String
   stripeAccountId String?
+  bio             String?
   stripStatus     StripStatus @default(PENDING)
   user            User        @relation(fields: [userId], references: [id])
 }
@@ -358,30 +360,14 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model documents {
-  id        Int                    @id @default(autoincrement())
-  text      String?
-  metadata  Json?
-  embedding Unsupported("vector")?
-}
-
-model ChatSession {
-  id        String        @id @default(cuid())
-  createdAt DateTime      @default(now())
-  user      User          @relation(fields: [userId], references: [id])
-  updatedAt DateTime      @updatedAt
-  messages  ChatMessage[]
-  userId    String
-}
-
-model ChatMessage {
-  id        String      @id @default(cuid())
-  role      String // "user" or "assistant"
-  content   String
-  sessionId String
-  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  createdAt DateTime    @default(now())
-}
+/**
+ * model documents {
+ * id        Int                    @id @default(autoincrement())
+ * text      String?
+ * metadata  Json?
+ * embedding Unsupported("vector")?
+ * }
+ */
 
 enum OrderItemStatus {
   CANCELLED

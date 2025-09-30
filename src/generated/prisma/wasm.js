@@ -120,6 +120,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  userIdOld: 'userIdOld',
   email: 'email',
   password: 'password',
   role: 'role',
@@ -200,8 +201,10 @@ exports.Prisma.SellerProfileScalarFieldEnum = {
   city: 'city',
   country: 'country',
   verified: 'verified',
+  town: 'town',
   phoneNumber: 'phoneNumber',
   stripeAccountId: 'stripeAccountId',
+  bio: 'bio',
   stripStatus: 'stripStatus'
 };
 
@@ -400,35 +403,9 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   expires: 'expires'
 };
 
-exports.Prisma.DocumentsScalarFieldEnum = {
-  id: 'id',
-  text: 'text',
-  metadata: 'metadata'
-};
-
-exports.Prisma.ChatSessionScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  userId: 'userId'
-};
-
-exports.Prisma.ChatMessageScalarFieldEnum = {
-  id: 'id',
-  role: 'role',
-  content: 'content',
-  sessionId: 'sessionId',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
-};
-
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -439,12 +416,6 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
-};
-
-exports.Prisma.JsonNullValueFilter = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull,
-  AnyNull: Prisma.AnyNull
 };
 exports.Role = exports.$Enums.Role = {
   BUYER: 'BUYER',
@@ -555,10 +526,7 @@ exports.Prisma.ModelName = {
   Rating: 'Rating',
   Account: 'Account',
   Session: 'Session',
-  VerificationToken: 'VerificationToken',
-  documents: 'documents',
-  ChatSession: 'ChatSession',
-  ChatMessage: 'ChatMessage'
+  VerificationToken: 'VerificationToken'
 };
 
 /**

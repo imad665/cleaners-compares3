@@ -4,9 +4,6 @@ import { useEffect, useState } from 'react';
 import { ItemFeaturedProduct, ItemLimitedTimeDeals, ItemProductProps, ItemProps, ProductViewerForSubCategory } from '../home_page/serverComponents/uis';
 import { Loader2 } from 'lucide-react';
 
-
-
-
 type PaginatedProductsProps = {
   initProducts: ItemProductProps[];
   page?: number;
@@ -17,6 +14,7 @@ type PaginatedProductsProps = {
   showDescription?: boolean
   title?: string
 };
+
 function getPaginationRange(current: number, total: number, delta = 2): (number | string)[] {
   const range: (number | string)[] = [];
   const left = Math.max(2, current - delta);
@@ -42,32 +40,44 @@ function getPaginationRange(current: number, total: number, delta = 2): (number 
 
   return range;
 }
+
 export function PaginatedProducts({ initProducts, title = '', page = 1, pageSize = 10, subCategory, condition = undefined, totalPages, showDescription = true }: PaginatedProductsProps) {
   const [currentPage, setCurrentPage] = useState(page);
   const [products, setProducts] = useState(initProducts);
   const [loading, setLoading] = useState(false);
   const [start, setStart] = useState(true);
 
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Smooth scrolling
+    });
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
+
       if (currentPage === 1 && start) return
+      setTimeout(() => {
+        scrollToTop();
+      }, 300);
       setLoading(true);
       try {
-
         const url = `/api/subCategoryProducts?id=${subCategory.id}&page=${currentPage}&pageSize=${pageSize}&condition=${condition}`;
         await new Promise((res) => setTimeout(res, 3000));
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to fetch');
 
         const { products } = await res.json();
-        //console.log(products, subCategory.id, currentPage, pageSize, condition, ';;;;;;;;********;;;;;');
-
         setProducts(products);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
         setLoading(false);
-        setStart(false)
+        setStart(false);
+        // Scroll to top after products are loaded
+        scrollToTop();
       }
     };
 
@@ -77,6 +87,8 @@ export function PaginatedProducts({ initProducts, title = '', page = 1, pageSize
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
+      // Scroll to top immediately when page changes
+      scrollToTop();
     }
   };
 
@@ -100,24 +112,17 @@ export function PaginatedProducts({ initProducts, title = '', page = 1, pageSize
         <div className='space-y-5'>
           {title != '' && <h2 className='font-bold text-2xl pl-3'>{title}</h2>}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:grid-cols-3">
-
             {subCategory.id != 'deals' && products.map((product) =>
               <ItemFeaturedProduct isOldProduct={product.isOldProduct} className='m-auto w-[90vw] md:w-[50vw] md:!max-w-[320px] md:!min-w-[200px]' key={product.productId} {...product} />
-
             )}
             {subCategory.id === 'deals' && products.map((product) =>
-              <ItemLimitedTimeDeals  className='!min-w-[90vw] !m-auto md:!max-w-[400px] md:!min-w-[0px] md:!w-[330px] lg:!w-[27vw] lg:!max-w-[300px] ' key={product.productId} {...product} />
-
+              <ItemLimitedTimeDeals className='!min-w-[90vw] !m-auto md:!max-w-[400px] md:!min-w-[0px] md:!w-[330px] lg:!w-[27vw] lg:!max-w-[300px] ' key={product.productId} {...product} />
             )}
-
-
           </div>
         </div>
-
       )}
 
       {/* Pagination Controls */}
-      {/* Smart Pagination Controls */}
       <div className="flex justify-center items-center gap-2 flex-wrap mt-6">
         <button
           className="px-3 py-1 border rounded-md text-sm hover:bg-gray-100 disabled:opacity-50"
