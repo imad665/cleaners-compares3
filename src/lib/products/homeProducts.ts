@@ -154,7 +154,7 @@ export async function getFeaturedProducts({ page = 1, pageSize = 10, isFeatured 
                 image: p.imagesUrl[0],
                 stock: p.stock,
                 title: p.title,
-                isOldProduct: new Date(p.createdAt) < new Date('2025-07-18')
+                isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
             }
         })
 
@@ -244,7 +244,7 @@ async function mockDeals() {
             endDeal: getDealCountdown(dealEndDate),
             stock: p.stock,
             discountPercentage: discount,
-            isOldProduct: new Date(p.createdAt) < new Date('2025-07-18')
+            isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
         }
     })
     return editProducts
@@ -364,7 +364,7 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
             dealCountdown: isDealActive ? getDealCountdown(p.dealEndDate) : null,
             stock: p.stock,
             discountPercentage: p.discountPercentage,
-            isOldProduct: new Date(p.createdAt) < new Date('2025-07-18')
+            isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
         }
     }
     )
@@ -519,7 +519,7 @@ export async function getPartsAndAccessoirsProducts({ page = 1, pageSize = 10, i
             image: p.imagesUrl[0],
             title: p.title,
             stock: p.stock,
-            isOldProduct: new Date(p.createdAt) < new Date('2025-07-18')
+            isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
         }
     }
     )

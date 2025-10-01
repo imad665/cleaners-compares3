@@ -240,6 +240,8 @@ export default async function RootLayout({
   //await seedParts() 
   //await updateUserRoles() 
 
+  //await prisma.service.deleteMany()
+
   
 
   return (

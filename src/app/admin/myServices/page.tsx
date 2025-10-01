@@ -42,14 +42,14 @@ export default function ServicesPage() {
         <main className="py-10 px-4 bg-gray-50 min-h-screen">
             <div className="max-w-full mx-auto overflow-auto">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-semibold">Your Services</h1>
+                    <h1 className="text-2xl font-semibold">My Enginners</h1>
                     <Dialog open={open} onOpenChange={setOpen}>
                         <DialogTrigger asChild>
-                            <Button className="bg-blue-600 hover:bg-blue-500 cursor-pointer text-white ">+ Add New Service</Button>
+                            <Button className="bg-blue-600 hover:bg-blue-500 cursor-pointer text-white ">+ Add New Enginner</Button>
                         </DialogTrigger>
                         <DialogContent className=" min-w-fit">
                             <DialogHeader>
-                                <DialogTitle>Add New Service</DialogTitle>
+                                <DialogTitle>Add New Enginner</DialogTitle>
                             </DialogHeader>
                             <ServiceForm onSubmitSuccess={onSubmitSuccess} />
                         </DialogContent>

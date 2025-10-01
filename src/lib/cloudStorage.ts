@@ -8,7 +8,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-export async function uploadFileToCloud(
+/* export async function uploadFileToCloud(
   file: File,
   publicId?: string
 ): Promise<{ url: string; public_id: string }> {
@@ -38,8 +38,39 @@ export async function uploadFileToCloud(
 
     stream.pipe(uploadStream);
   });
+} */
+export async function uploadFileToCloud(
+  file: File,
+  options: { folder?: string; publicId?: string } = {}
+): Promise<{ url: string; public_id: string }> {
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const stream = Readable.from(buffer);
+
+  // Dynamically determine resource_type (image or video)
+  const mime = file.type;
+  const isVideo = mime.startsWith("video/");
+  const resourceType = isVideo ? "video" : "image";
+
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: options.folder || "products", // 👈 default to products
+        public_id: options.publicId,
+        resource_type: resourceType,
+      },
+      (error, result) => {
+        if (error || !result) return reject(error);
+        resolve({ url: result.secure_url, public_id: result.public_id });
+      }
+    );
+
+    stream.pipe(uploadStream);
+  });
 }
-function getPublicIdFromCloudinaryUrl(url: string): { publicId: string; resourceType: 'image' | 'video' } | null {
+
+
+  function getPublicIdFromCloudinaryUrl(url: string): { publicId: string; resourceType: 'image' | 'video' } | null {
   const match = url.match(/\/(?:image|video)\/upload\/(?:v\d+\/)?(.+)\.(\w+)$/);
   if (!match) return null;
 

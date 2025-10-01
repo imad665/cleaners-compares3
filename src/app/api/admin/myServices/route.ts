@@ -1,4 +1,5 @@
 import { authOptions } from "@/lib/auth";
+import { deleteCloudinaryFileByUrl, uploadFileToCloud } from "@/lib/cloudStorage";
 import { embedEngineersToNeon } from "@/lib/langchain/embeding/embed_enginner";
 import { reembedByRefId, removeEmbeddingByRefId } from "@/lib/langchain/embeding/utils/embed-handler";
 import { processPayement } from "@/lib/payement/servicePayement";
@@ -107,144 +108,197 @@ export async function GET() {
 }
 
 
+
 export async function POST(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
-        if (!session || !session.user) redirect('/login');
+        if (!session || !session.user) {
+            return NextResponse.redirect("/login");
+        }
 
         const userId = session.user.id;
 
         const formData = await req.formData();
-        const file = formData.get('picture') as File | null;
+        const file = formData.get("picture") as File | null;
 
         let pictureUrl: string | null = null;
 
+        // ✅ Upload service picture to Cloudinary instead of local fs
         if (file && file.size > 0) {
-            const fileName = `${uuidv4()}-${file.name}`;
-            const { url } = await saveImageFileAt(file, 'uploads/services', fileName)
+            const { url, public_id } = await uploadFileToCloud(file, {
+                folder: "services",
+                publicId: `${uuidv4()}-${file.name}`,
+            });
             pictureUrl = url;
         }
-        //console.log(formData);
 
-        const featureDays = formData.get('featureDays')?.toString() === 'null' || formData?.get('featureDays') === 'undefined' ? null : formData.get('featureDays') as string;
-        //console.log(featureDays,formData.get('featureDays'),'ooooooollllllkkkkkkkk');
-         
+        console.log(formData,'@@@@@@@@@@@@@@########');
+        
+
+        const featureDays =
+            formData.get("featureDays")?.toString() === "null" ||
+                formData?.get("featureDays") === "undefined"
+                ? null
+                : (formData.get("featureDays") as string);
+
         const service = await prisma.service.create({
             data: {
-                title: formData.get('title') as string,
-                callOutCharges: parseFloat(formData.get('callOutCharge') as string),
-                ratePerHour: parseFloat(formData.get('hourlyRate') as string),
-                experience: formData.get('experience') as string,
-                areaOfService: formData.get('areaOfService') as string,
-                email: formData.get('email') as string,
-                contactNumber: formData.get('contactNumber') as string,
-                companyType: formData.get('companyType') as any,
-                address: formData.get('address') as string,
-                description: formData.get('description') as string,
+                title: formData.get("title") as string,
+                callOutCharges: parseFloat(formData.get("callOutCharge") as string),
+                ratePerHour: parseFloat(formData.get("hourlyRate") as string),
+                experience: formData.get("experience") as string,
+                areaOfService: formData.get("areaOfService") as string,
+                email: formData.get("email") as string,
+                contactNumber: formData.get("contactNumber") as string,
+                companyType: formData.get("companyType") as any,
+                address: formData.get("address") as string,
+                description: formData.get("description") as string,
                 isFeatured: false,
-                isEnabled: formData.get('enabled') === 'true',
-                category: formData.get('category') as any,
+                isEnabled: formData.get("enabled") === "true",
+                category: formData.get("category") as any,
                 featureDays: featureDays,
                 pictureUrl: pictureUrl,
-                userId: userId, // you must set this from session/auth
+                userId: userId,
             },
         });
-        
-        if (featureDays?.toString()) {
-            const url = await processPayement(featureDays.toString(), { productId: service.id, type: 'service-feature' });
-            await embedEngineersToNeon();
-            return NextResponse.json({ success: true, url, service, pictureUrl })
-        }
-        await embedEngineersToNeon();
-        return NextResponse.json({ success: true, service, pictureUrl })
 
+        // If featured, process payment
+        if (featureDays?.toString()) {
+            const url = await processPayement(featureDays.toString(), {
+                productId: service.id,
+                type: "service-feature",
+            });
+            await embedEngineersToNeon();
+            return NextResponse.json({ success: true, url, service, pictureUrl });
+        }
+
+        await embedEngineersToNeon();
+        return NextResponse.json({ success: true, service, pictureUrl });
     } catch (error) {
-        console.error('Error creating service:', error);
-        return NextResponse.json({ success: false, error: 'Failed to create service' }, { status: 500 })
+        console.error("Error creating service:", error);
+        return NextResponse.json(
+            { success: false, error: "Failed to create service" },
+            { status: 500 }
+        );
     }
 }
 
 export async function PATCH(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
-        if (!session || !session.user) redirect('/login');
+        if (!session || !session.user) {
+            return NextResponse.redirect("/login");
+        }
 
         const formData = await req.formData();
-        const id = formData.get('id') as string || null;
+        const id = (formData.get("id") as string) || null;
 
-        if (!id?.trim())
-            return NextResponse.json({ success: false, error: 'id required' });
+        if (!id?.trim()) {
+            return NextResponse.json({ success: false, error: "id required" });
+        }
 
-        const file = formData.get('picture') as File | null;
-        let pictureUrl = formData.get('pictureUrl') as string | null;
+        const file = formData.get("picture") as File | null;
+        let pictureUrl = (formData.get("pictureUrl") as string) || null;
 
-        //console.log(formData, 'oooooooooooooooooo');
-
+        // ✅ Handle picture replacement on Cloudinary
         if (file && file.size > 0) {
-            const fileName = `${uuidv4()}-${file.name}`;
-            if (pictureUrl)
-                await deleteImageFileAt('uploads/services', pictureUrl.split('/').pop());
+            // delete old file if exists
+            if (pictureUrl) {
+                await deleteCloudinaryFileByUrl(pictureUrl);
+            }
 
-            const { url } = await saveImageFileAt(file, 'uploads/services', fileName)
+            // upload new file
+            const { url } = await uploadFileToCloud(file, {
+                folder: "services",
+                publicId: `${uuidv4()}-${file.name}`,
+            });
             pictureUrl = url;
         }
-        const featureDays = formData.get('featureDays')?.toString() === 'null' ? null : formData.get('featureDays') as string;
+
+        const featureDays =
+            formData.get("featureDays")?.toString() === "null"
+                ? null
+                : (formData.get("featureDays") as string);
+
         const service = await prisma.service.update({
             where: { id },
             data: {
-                title: formData.get('title') as string,
-                callOutCharges: parseFloat(formData.get('callOutCharge') as string),
-                ratePerHour: parseFloat(formData.get('hourlyRate') as string),
-                experience: formData.get('experience') as string,
-                areaOfService: formData.get('areaOfService') as string,
-                email: formData.get('email') as string,
-                contactNumber: formData.get('contactNumber') as string,
-                companyType: formData.get('companyType') as any,
-                address: formData.get('address') as string,
-                description: formData.get('description') as string,
-                isEnabled: formData.get('enabled') === 'true',
-                category: formData.get('category') as any,
+                title: formData.get("title") as string,
+                callOutCharges: parseFloat(formData.get("callOutCharge") as string),
+                ratePerHour: parseFloat(formData.get("hourlyRate") as string),
+                experience: formData.get("experience") as string,
+                areaOfService: formData.get("areaOfService") as string,
+                email: formData.get("email") as string,
+                contactNumber: formData.get("contactNumber") as string,
+                companyType: formData.get("companyType") as any,
+                address: formData.get("address") as string,
+                description: formData.get("description") as string,
+                isEnabled: formData.get("enabled") === "true",
+                category: formData.get("category") as any,
                 featureDays: featureDays,
                 pictureUrl: pictureUrl,
-            }
-        })
-        if (featureDays?.toString() && !service.isFeatured) {
-            const url = await processPayement(featureDays.toString(), { productId: service.id, type: 'service-feature' });
-            await reembedByRefId(id);
-            return NextResponse.json({ success: true, url, service, pictureUrl })
-        }
-        await reembedByRefId(id);
-        return NextResponse.json({ success: true, service, pictureUrl })
+            },
+        });
 
+        if (featureDays?.toString() && !service.isFeatured) {
+            const url = await processPayement(featureDays.toString(), {
+                productId: service.id,
+                type: "service-feature",
+            });
+            await reembedByRefId(id);
+            return NextResponse.json({ success: true, url, service, pictureUrl });
+        }
+
+        await reembedByRefId(id);
+        return NextResponse.json({ success: true, service, pictureUrl });
     } catch (error) {
-        return NextResponse.json({ success: false, error: 'Failed to update service' }, { status: 500 })
+        console.error("Error updating service:", error);
+        return NextResponse.json(
+            { success: false, error: "Failed to update service" },
+            { status: 500 }
+        );
     }
 }
 
 
+
+
 export async function DELETE(req: NextRequest) {
     try {
-
         const { id } = await req.json();
-        if (!id) return NextResponse.json({ success: false, error: 'the id required' }, { status: 400 });
+        if (!id) {
+            return NextResponse.json(
+                { success: false, error: "the id required" },
+                { status: 400 }
+            );
+        }
 
+        // 1. Delete service entry in DB
         const deletedService = await prisma.service.delete({
             where: { id },
             select: {
-                pictureUrl: true
-            }
+                //picturePublicId: true, // <-- store `public_id` from Cloudinary instead of full URL
+                pictureUrl: true, // optional, if you still want to keep URL
+            },
         });
 
-        const pictureUrl = deletedService.pictureUrl;
-        if (pictureUrl)
-            await deleteImageFileAt('uploads/services', pictureUrl.split('/').pop());
+        // 2. Delete from Cloudinary
+        if (deletedService.pictureUrl) {
+            await deleteCloudinaryFileByUrl(deletedService.pictureUrl);
+        }
 
+        // 3. Remove vector embedding
         await removeEmbeddingByRefId(id);
 
-        return NextResponse.json({ success: true, message: 'the service deleted successfuly' }, { status: 200 });
-
-
+        return NextResponse.json(
+            { success: true, message: "the service deleted successfully" },
+            { status: 200 }
+        );
     } catch (error) {
-        return NextResponse.json({ success: false, error: 'failed to delete the service' }, { status: 500 });
+        console.error(error);
+        return NextResponse.json(
+            { success: false, error: "failed to delete the service" },
+            { status: 500 }
+        );
     }
 }

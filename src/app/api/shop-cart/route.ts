@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
             sellerId:p.seller?.id,
             description: p.description,
             sellerEmail: p.seller?.email,
-            isOldProduct : new Date(p.createdAt) < new Date('2025-07-18')    
+            isOldProduct : false//new Date(p.createdAt) < new Date('2025-07-18')    
 
         }));
         const [

@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
             stock:product.stock,
             dealCountdown: product.isDealActive ? getDealCountdown(product.dealEndDate) : null,
             sellerEmail:product.seller?.email,
-            isOldProduct:new Date(product.createdAt)<new Date('2025-07-18')
+            isOldProduct:false//new Date(product.createdAt)<new Date('2025-07-18')
         };
 
         const reviews = product.ratings.map((r) => ({
