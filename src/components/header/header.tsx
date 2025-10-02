@@ -272,9 +272,9 @@ function NavDesktop({ user, cart, setOpenDialog, recentOrderCount,notificationDa
                         Become a Seller
                     </Button>
                 }
-                {/* {user &&
-                    <ContactDialog />
-                } */}
+                { 
+                    <ContactDialog textButton={'Report poblem'} />
+                }
                 {user &&
                     <NotificationDropdown notificationData={notificationData} />
                 }
@@ -337,7 +337,7 @@ interface Props {
     setOpenDialog: (open: boolean) => void;
 }
 
-export function NavMobile({ user, cart, setOpenDialog, recentOrderCount }: Props) {
+export function NavMobile({ user, cart, setOpenDialog,   recentOrderCount,notificationData  }: Props) {
     const [open, setOpen] = useState(false);
     const cartCount = cart.reduce((sum, prev) => sum + prev.quantity, 0);
     const [openSignUp, setOpenSignUp] = useState(false);
@@ -365,7 +365,7 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount }: Props
                 )}
             </Link> */}
             {user &&
-                <NotificationDropdown />
+                <NotificationDropdown notificationData={notificationData} />
             }
 
             {/* Mobile Menu */}
@@ -395,6 +395,7 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount }: Props
                         >
                             Cart ({cartCount})
                         </Link>
+                         <ContactDialog textButton={'Report poblem'} />
 
                         {user ? (
                             <Link
@@ -474,6 +475,7 @@ export function Header({ className = '', recentOrderCount,notificationData }: { 
                     user={user}
                     setOpenDialog={setOpenDialog}
                     recentOrderCount={recentOrderCount}
+                    notificationData={notificationData}
                     cart={cart} />
 
             </div>

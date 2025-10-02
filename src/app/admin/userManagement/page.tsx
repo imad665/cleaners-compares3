@@ -6,6 +6,8 @@ import Button from '@/components/adminDashboard/shared/Button';
 import Table from '@/components/adminDashboard/shared/Table';
 import { toast } from 'sonner';
 import { SellerInfoDialog } from './SellerInfoDialog';
+import { SendBuyerMessageDialog } from './send-buyer-message-dialog';
+import { SendSellerMessageDialog } from './send-seller-message-dialogue';
 
 
 interface User {
@@ -372,6 +374,10 @@ const UserManagement = () => {
           <p className="mt-1 text-sm text-gray-500">
             Manage users registered on your marketplace.
           </p>
+          <div className='flex items-center gap-2'>
+            <SendBuyerMessageDialog/>
+            <SendSellerMessageDialog/>
+          </div>
         </div>
       </div>
 

@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/auth";
-import { sendContactReply } from "@/lib/payement/sendMessage";
+import { getAdminCompanyEmails } from "@/lib/payement/notifySellerByEmail";
+import { sendContactReply, sendContactToAdmin } from "@/lib/payement/sendMessage";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -13,21 +14,19 @@ export async function GET(req: NextRequest) {
         const session = await getServerSession(authOptions);
 
         if (!session || !session.user) {
-            redirect('/login');
+            redirect('auth/signin');
         }
-        if(session.user.role !=='ADMIN') redirect("/")
-
+        if (session.user.role !== 'ADMIN') redirect("/")
 
         const messages = await prisma.inquiry.findMany({
             where: {
                 sellerId: session.user.id,
-                sellerDeleted:false,
+                sellerDeleted: false,
             },
             include: {
                 seller: true,
                 buyer: true
             },
-
         })
 
 
@@ -72,6 +71,36 @@ export async function POST(req: NextRequest) {
         const { message, subject } = await req.json();
         //console.log(message,subject,';;;;;;;;;;;;;;;;');
 
+        const sender = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: {
+                email: true,
+                name: true,
+                sellerProfile: {
+                    select: {
+                        phoneNumber: true,
+                        businessName: true,
+                    }
+                }
+            }
+        })
+        if (!sender) { return NextResponse.json({ error: 'failed to send message' }, { status: 404 }); }
+        const contactData = {
+            fromEmail: sender?.email,
+            fromName: sender?.name,
+            subject: subject,
+            message: message,
+            phone: sender?.sellerProfile?.phoneNumber ,
+            company: sender?.sellerProfile?.businessName || 'unknonw',
+            inquiryType: `General Inquiry from ${sender?.sellerProfile ? "seller" : "buyer"}`,
+        };
+        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        for (const email of getAdminCompanyEmails()) {
+            await delay(2000);
+            await sendContactToAdmin({ ...contactData, to: email });
+        }
+       //await sendContactToAdmin({ ...contactData, to: 'programmingi77i@gmail.com' });
+
         const inquiry = await prisma.inquiry.create({
             data: {
                 message,
@@ -94,7 +123,7 @@ export async function PATCH(req: NextRequest) {
     try {
         const { message } = await req.json();
         //console.log(message,'yyyyyyyyyyyyyyy');
-        await sendContactReply(message.email,message.from,message.response);
+        await sendContactReply(message.email, message.from, message.response);
         await prisma.inquiry.update({
             where: { id: message.id },
             data: {
@@ -115,8 +144,8 @@ export async function DELETE(req: NextRequest) {
     try {
         const { id } = await req.json();
         if (!id) return NextResponse.json({ success: false }, { status: 400 });
-        console.log(id,'oooooooooooo');
-        
+        //console.log(id,'oooooooooooo');
+
         await prisma.inquiry.update({
             where: { id },
             data: {

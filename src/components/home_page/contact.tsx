@@ -14,7 +14,9 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Mail } from 'lucide-react';
+import { Mail, User } from 'lucide-react';
+import { useHomeContext } from '@/providers/homePageProvider';
+import { SignInUpModal } from '../header/header';
 
 export function ContactUs() {
     const [subject, setSubject] = useState('');
@@ -57,7 +59,7 @@ export function ContactUs() {
         <Card className="shadow-md w-full">
             <CardContent className="p-6">
                 <p className="mb-6 text-gray-600">
-                    We're here to help. Send us your message or call us at{' '}
+                    We're here to help. Send us your message or <br /> call us at : {' '}
                     <span className="font-semibold text-black">+44 01702 597067</span>.
                 </p>
 
@@ -96,35 +98,62 @@ export function ContactUs() {
                     </form>
                 )}
             </CardContent>
+
         </Card>
     );
 }
 
-export function ContactDialog() {
-    return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant="default" className="bg-blue-600 hover:bg-blue-500 cursor-pointer">
-                    Contact Us
-                </Button>
-            </DialogTrigger>
+export function ContactDialog({ textButton }: { textButton?: string }) {
+    const [openSignUp, setOpenSignUp] = useState(false);
+    const [openSignIn, setOpenSignIn] = useState(false);
+    const { user } = useHomeContext();
+    const [open, setOpen] = useState(false)
 
-            <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>Contact Us</DialogTitle>
-                </DialogHeader>
-                <ContactUs />
-            </DialogContent>
-        </Dialog>
+    const handleContactClick = () => {
+        if (!user) {
+            setOpenSignIn(true);
+        } else {
+            setOpen(true);
+        }
+    }
+
+    return (
+        <div>
+            <Button 
+                onClick={handleContactClick}
+                variant={textButton ? "destructive" : 'default'} 
+                className={`cursor-pointer ${textButton ? "bg-red-600 hover:bg-red-500" : "bg-blue-600 hover:bg-blue-500"}`}
+            >
+                {textButton ? textButton : "Contact Us"}
+            </Button>
+
+            {/* Dialog only shown when user is authenticated */}
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>{textButton ? textButton : "Contact Us"}</DialogTitle>
+                    </DialogHeader>
+                    <ContactUs />
+                </DialogContent>
+            </Dialog>
+            
+            <SignInUpModal
+                openSignIn={openSignIn}
+                openSignUp={openSignUp}
+                setOpenSignIn={setOpenSignIn}
+                setOpenSignUp={setOpenSignUp}
+                /* onSignInSuccess={() => {
+                    // This will be called after successful sign in
+                    setOpen(true); // Open the contact dialog
+                    setOpenSignIn(false); // Close the sign in modal
+                }} */
+            />
+        </div>
     );
 }
 
 
- 
-
-
-
-export function SendMessageForm({to}:{to:string}) {
+export function SendMessageForm({ to }: { to: string }) {
     const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
@@ -141,7 +170,7 @@ export function SendMessageForm({to}:{to:string}) {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ subject, message,to }),
+                    body: JSON.stringify({ subject, message, to }),
                 });
 
                 if (!res.ok) {
@@ -164,7 +193,7 @@ export function SendMessageForm({to}:{to:string}) {
     return (
         <Card className="shadow-md w-full">
             <CardContent className="p-6">
-                 
+
 
                 {submitted ? (
                     <div className="text-green-600 font-medium">Thank you! We’ll get back to you soon.</div>
@@ -212,12 +241,12 @@ export function SendMessageForm({to}:{to:string}) {
 
 
 
-export function SendMessageDialogue({to}:{to:string}) {
+export function SendMessageDialogue({ to }: { to: string }) {
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant="default" className="bg-blue-600 hover:bg-blue-500 cursor-pointer">
-                    <Mail/>
+                    <Mail />
                 </Button>
             </DialogTrigger>
 

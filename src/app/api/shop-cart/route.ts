@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'; // adjust the path if needed
 import { truncateSync } from 'node:fs';
 import { getDealCountdown, getFeaturedProducts, getFooterData, getRecentOrdersCount } from '@/lib/products/homeProducts';
 import { getNotifications } from '@/lib/payement/get-notification-for-icon';
+import getDelveryChargeFromWight from '@/lib/delivery_charge_from_weight';
 
 export async function POST(req: NextRequest) {
     try {
@@ -30,7 +31,7 @@ export async function POST(req: NextRequest) {
                     in: productIds,
                 }
             },
-            include: { 
+            include: {
                 seller: true,
                 ratings: true,
                 category: {
@@ -55,10 +56,13 @@ export async function POST(req: NextRequest) {
             title: p.title,
             sellerName: p.seller?.name,
             sellerAvatar: p.seller?.image,
-            sellerId:p.seller?.id,
+            sellerId: p.seller?.id,
             description: p.description,
             sellerEmail: p.seller?.email,
-            isOldProduct : false//new Date(p.createdAt) < new Date('2025-07-18')    
+            isIncVAT: p.isIncVAT,
+            delivery_charge:p.delivery_charge? p.delivery_charge: getDelveryChargeFromWight(p.weight || 0),
+            
+            isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')    
 
         }));
         const [
@@ -70,7 +74,7 @@ export async function POST(req: NextRequest) {
         ]);
         const recentOrderCount = await getRecentOrdersCount();
         const messages = await getNotifications();
-        return NextResponse.json({products,featuredProducts,footerData,messages,recentOrderCount}, { status: 200 });
+        return NextResponse.json({ products, featuredProducts, footerData, messages, recentOrderCount }, { status: 200 });
 
     } catch (error) {
         console.error('Error fetching products:', error);

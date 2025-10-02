@@ -86,7 +86,13 @@ export async function holdCustomerCheckout(
       key: 'commissionRate'
     }
   })
-  const commissionRate = parseInt(rate?.value || '0')
+  const stripCommisionv = await prisma.adminSetting.findFirst({
+    where:{
+      key:'stripComission'
+    }
+  })
+  const commissionRate = parseFloat(rate?.value || '4')
+  const stripCommision = parseFloat(stripCommisionv?.value || '2.5')
   //console.log(commissionRate,'------------------------------+++++++++');
 
   const order = await prisma.order.create({
@@ -100,6 +106,7 @@ export async function holdCustomerCheckout(
       shippingPostalCode: shippingInfo.postalCode,
       shippingPhone: shippingInfo.phone,
       commisionRate: commissionRate,
+      stripCommission:stripCommision,
       orderPayments: {
         create: sellerPayments.map(payment => ({
           sellerId: payment.sellerId,

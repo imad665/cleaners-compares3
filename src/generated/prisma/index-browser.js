@@ -256,6 +256,8 @@ exports.Prisma.ProductScalarFieldEnum = {
   units: 'units',
   featureDays: 'featureDays',
   weight: 'weight',
+  delivery_charge: 'delivery_charge',
+  isIncVAT: 'isIncVAT',
   slug: 'slug',
   stock: 'stock',
   markAsDeleted: 'markAsDeleted'
@@ -287,7 +289,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   shippingCountry: 'shippingCountry',
   shippingPhone: 'shippingPhone',
   shippingPostalCode: 'shippingPostalCode',
-  commisionRate: 'commisionRate'
+  commisionRate: 'commisionRate',
+  stripCommission: 'stripCommission'
 };
 
 exports.Prisma.NotificationOrderScalarFieldEnum = {
@@ -403,9 +406,20 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   expires: 'expires'
 };
 
+exports.Prisma.DocumentsScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  metadata: 'metadata'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -416,6 +430,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.Role = exports.$Enums.Role = {
   BUYER: 'BUYER',
@@ -526,7 +546,8 @@ exports.Prisma.ModelName = {
   Rating: 'Rating',
   Account: 'Account',
   Session: 'Session',
-  VerificationToken: 'VerificationToken'
+  VerificationToken: 'VerificationToken',
+  documents: 'documents'
 };
 
 /**

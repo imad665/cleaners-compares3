@@ -215,7 +215,7 @@ const Messages = () => {
     updateMessagePost(selectedMessage);
     // Here you would normally send the reply via API
     // For demo purposes, we'll just show an alert
-    alert('Reply sent!');
+    //alert('Reply sent!');
 
 
     setReplyText('');

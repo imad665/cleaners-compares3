@@ -67,6 +67,7 @@ export const fetchProducts = async (
                     dealEndDate: true,
                     createdAt:true,
                     stock: true,
+                    isIncVAT:true,
                     ratings: {
                         select: {
                             stars: true,
@@ -123,7 +124,8 @@ export const fetchProducts = async (
                     stock: p.stock,
                     title: p.title,
                     condition: p.condition,
-                    isOldProduct:new Date(p.createdAt) < new Date('2025-07-18')
+                    isIncVAT:p.isIncVAT,
+                    isOldProduct:false//new Date(p.createdAt) < new Date('2025-07-18')
                 };
             });
 

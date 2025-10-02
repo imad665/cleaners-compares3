@@ -43,7 +43,7 @@ export default async function Home() {
   const messages = await getNotifications();
   //console.log(messages,'vvvvvvvvvvvvvv');
 
-  //console.log(dealsProducts, 'mmmmmmmmmmmmmm');
+  //console.log(featuredProducts, 'mmmmmmmmmmmmmm');
   return (
     <div>
       <Header recentOrderCount={recentOrderCount} notificationData={messages} />

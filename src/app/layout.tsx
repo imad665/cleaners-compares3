@@ -17,7 +17,7 @@ import { hash, hashSync } from "bcryptjs";
 import ChatPage from "@/components/chatbot/main";
 
 import { getRecentOrdersCount } from "@/lib/products/homeProducts";
-import { clearOrders, updatePasswordUsers } from "@/lib/clearTestData";
+import { clearOrders, deleteUserByEmail, updatePasswordUsers } from "@/lib/clearTestData";
 import { Button } from "@/components/ui/button";
 import { sendTestMessage } from "@/lib/payement/sendTestMessage";
 import { categories } from "@/components/video_ui/data/videos";
@@ -244,6 +244,30 @@ export default async function RootLayout({
 
   
 
+  /* 
+  amirshahz777@gmail.com
+  maz@exclusivecleaners.co.uk
+  amirshahz777@yahoo.co.uk
+  asasa@gmail.com
+  amirshahz77@gmail.com
+  Amir@tlc.com
+  programmingi77i@gmail.com
+  med.hasnaoui92@gmail.com
+  ddqdeqd@gmail.com
+  seller1@gmail.com
+  vic1dayinsh7777@gmail.com
+  srtechsolutions03@gmail.com
+  */
+
+  //await deleteUserByEmail("amirshahz777@gmail.com")
+  //await deleteUserByEmail("maz@exclusivecleaners.co.uk")
+  //await deleteUserByEmail("maz@exclusivecleaners.co.uk")
+  
+  /* await deleteUserTested(['amirshahz777@gmail.com','maz@exclusivecleaners.co.uk','amirshahz777@yahoo.co.uk',
+    'asasa@gmail.com','amirshahz77@gmail.com','Amir@tlc.com','programmingi77i@gmail.com','med.hasnaoui92@gmail.com',
+    'ddqdeqd@gmail.com','seller1@gmail.com','vic1dayinsh7777@gmail.com','srtechsolutions03@gmail.com'
+  ]) */
+  //await deleteUserTested()
   return (
     <html lang="en" className="scroll-smooth">
       <body

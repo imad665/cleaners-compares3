@@ -67,6 +67,8 @@ const Dashboard = () => {
         // Fetch order statistics
         try {
           const ordersRes = await fetch('/api/seller/orders?isMain=true');
+          
+          
           if (ordersRes.ok) {
             const {
               ordersData,
@@ -74,7 +76,7 @@ const Dashboard = () => {
               totalServiceFeaturedRevenu,
               totalRevenueFromSellerPurchase
             } = await ordersRes.json();
-
+            console.log(ordersData,'wwwwwwwwwwwwwww');
             const totalOrders = ordersData.length;
             const pendingOrders = ordersData.filter((order: any) => order.status === 'PENDING').length;
             const shippedOrders = ordersData.filter((order: any) => order.status === 'SHIPPED').length;
@@ -83,12 +85,12 @@ const Dashboard = () => {
               .filter((order: any) => order.status === 'DELIVERED')
               .reduce((sum: number, order: any) => sum + (order.unitPrice), 0); */
             //console.log(ordersData, 'mmmmmmmmmmmmmmmmmmm');
-
+            
             const totalRevenue = ordersData
               .filter((order: any) => order.status === 'DELIVERED')
               .reduce((sum, order) => {
                 const totalPrice = order.unitPrice;
-                const commission = totalPrice * (order.order.commisionRate / 100);
+                const commission = totalPrice * ((order.order.commisionRate + order.order.stripCommission) / 100);
                 const sellerEarnings = totalPrice - commission;
                 return sum + sellerEarnings;
               }, 0);
@@ -266,7 +268,7 @@ const Dashboard = () => {
         </div>
 
         {/* Order Statistics Cards */}
-        {orderStats && (
+        {orderStats && user?.role !== 'ADMIN' && (
           <>
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-gray-900">Order Management</h2>
@@ -303,7 +305,7 @@ const Dashboard = () => {
                 description="In transit"
               />
               <Card
-                title="Revenue (Delivered)"
+                title="total Revenue"
                 value={`£${orderStats.totalRevenue.toFixed(2)}`}
                 icon={<DollarSign size={20} />}
                 trend="up"
@@ -312,7 +314,7 @@ const Dashboard = () => {
             </div>
           </>
         )}
-
+   
         {/* Recent Products Table */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">

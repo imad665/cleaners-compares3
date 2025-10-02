@@ -118,6 +118,11 @@ export type Session = $Result.DefaultSelection<Prisma.$SessionPayload>
  * 
  */
 export type VerificationToken = $Result.DefaultSelection<Prisma.$VerificationTokenPayload>
+/**
+ * Model documents
+ * 
+ */
+export type documents = $Result.DefaultSelection<Prisma.$documentsPayload>
 
 /**
  * Enums
@@ -637,6 +642,16 @@ export class PrismaClient<
     * ```
     */
   get verificationToken(): Prisma.VerificationTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.documents`: Exposes CRUD operations for the **documents** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Documents
+    * const documents = await prisma.documents.findMany()
+    * ```
+    */
+  get documents(): Prisma.documentsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1097,7 +1112,8 @@ export namespace Prisma {
     Rating: 'Rating',
     Account: 'Account',
     Session: 'Session',
-    VerificationToken: 'VerificationToken'
+    VerificationToken: 'VerificationToken',
+    documents: 'documents'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1116,7 +1132,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "service" | "wantedItem" | "businessForSale" | "contactInfo" | "sellerProfile" | "sellerBankInfo" | "adminSetting" | "product" | "orderPayment" | "order" | "notificationOrder" | "message" | "orderItem" | "category" | "video" | "inquiry" | "rating" | "account" | "session" | "verificationToken"
+      modelProps: "user" | "service" | "wantedItem" | "businessForSale" | "contactInfo" | "sellerProfile" | "sellerBankInfo" | "adminSetting" | "product" | "orderPayment" | "order" | "notificationOrder" | "message" | "orderItem" | "category" | "video" | "inquiry" | "rating" | "account" | "session" | "verificationToken" | "documents"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2674,6 +2690,80 @@ export namespace Prisma {
           }
         }
       }
+      documents: {
+        payload: Prisma.$documentsPayload<ExtArgs>
+        fields: Prisma.documentsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.documentsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.documentsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload>
+          }
+          findFirst: {
+            args: Prisma.documentsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.documentsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload>
+          }
+          findMany: {
+            args: Prisma.documentsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload>[]
+          }
+          create: {
+            args: Prisma.documentsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload>
+          }
+          createMany: {
+            args: Prisma.documentsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.documentsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload>[]
+          }
+          delete: {
+            args: Prisma.documentsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload>
+          }
+          update: {
+            args: Prisma.documentsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload>
+          }
+          deleteMany: {
+            args: Prisma.documentsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.documentsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.documentsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload>[]
+          }
+          upsert: {
+            args: Prisma.documentsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentsPayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocuments>
+          }
+          groupBy: {
+            args: Prisma.documentsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.documentsCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2779,6 +2869,7 @@ export namespace Prisma {
     account?: AccountOmit
     session?: SessionOmit
     verificationToken?: VerificationTokenOmit
+    documents?: documentsOmit
   }
 
   /* Types for Logging */
@@ -12875,6 +12966,7 @@ export namespace Prisma {
     discountPrice: number | null
     units: number | null
     weight: number | null
+    delivery_charge: number | null
     stock: number | null
   }
 
@@ -12884,6 +12976,7 @@ export namespace Prisma {
     discountPrice: number | null
     units: number | null
     weight: number | null
+    delivery_charge: number | null
     stock: number | null
   }
 
@@ -12910,6 +13003,8 @@ export namespace Prisma {
     units: number | null
     featureDays: string | null
     weight: number | null
+    delivery_charge: number | null
+    isIncVAT: boolean | null
     slug: string | null
     stock: number | null
     markAsDeleted: boolean | null
@@ -12938,6 +13033,8 @@ export namespace Prisma {
     units: number | null
     featureDays: string | null
     weight: number | null
+    delivery_charge: number | null
+    isIncVAT: boolean | null
     slug: string | null
     stock: number | null
     markAsDeleted: boolean | null
@@ -12967,6 +13064,8 @@ export namespace Prisma {
     units: number
     featureDays: number
     weight: number
+    delivery_charge: number
+    isIncVAT: number
     slug: number
     stock: number
     markAsDeleted: number
@@ -12980,6 +13079,7 @@ export namespace Prisma {
     discountPrice?: true
     units?: true
     weight?: true
+    delivery_charge?: true
     stock?: true
   }
 
@@ -12989,6 +13089,7 @@ export namespace Prisma {
     discountPrice?: true
     units?: true
     weight?: true
+    delivery_charge?: true
     stock?: true
   }
 
@@ -13015,6 +13116,8 @@ export namespace Prisma {
     units?: true
     featureDays?: true
     weight?: true
+    delivery_charge?: true
+    isIncVAT?: true
     slug?: true
     stock?: true
     markAsDeleted?: true
@@ -13043,6 +13146,8 @@ export namespace Prisma {
     units?: true
     featureDays?: true
     weight?: true
+    delivery_charge?: true
+    isIncVAT?: true
     slug?: true
     stock?: true
     markAsDeleted?: true
@@ -13072,6 +13177,8 @@ export namespace Prisma {
     units?: true
     featureDays?: true
     weight?: true
+    delivery_charge?: true
+    isIncVAT?: true
     slug?: true
     stock?: true
     markAsDeleted?: true
@@ -13188,6 +13295,8 @@ export namespace Prisma {
     units: number
     featureDays: string | null
     weight: number | null
+    delivery_charge: number | null
+    isIncVAT: boolean | null
     slug: string | null
     stock: number | null
     markAsDeleted: boolean
@@ -13236,6 +13345,8 @@ export namespace Prisma {
     units?: boolean
     featureDays?: boolean
     weight?: boolean
+    delivery_charge?: boolean
+    isIncVAT?: boolean
     slug?: boolean
     stock?: boolean
     markAsDeleted?: boolean
@@ -13272,6 +13383,8 @@ export namespace Prisma {
     units?: boolean
     featureDays?: boolean
     weight?: boolean
+    delivery_charge?: boolean
+    isIncVAT?: boolean
     slug?: boolean
     stock?: boolean
     markAsDeleted?: boolean
@@ -13303,6 +13416,8 @@ export namespace Prisma {
     units?: boolean
     featureDays?: boolean
     weight?: boolean
+    delivery_charge?: boolean
+    isIncVAT?: boolean
     slug?: boolean
     stock?: boolean
     markAsDeleted?: boolean
@@ -13334,12 +13449,14 @@ export namespace Prisma {
     units?: boolean
     featureDays?: boolean
     weight?: boolean
+    delivery_charge?: boolean
+    isIncVAT?: boolean
     slug?: boolean
     stock?: boolean
     markAsDeleted?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "price" | "discountPercentage" | "discountPrice" | "dealStartDate" | "dealEndDate" | "isDealActive" | "imagesUrl" | "videoUrl" | "isFeatured" | "condition" | "categoryId" | "sellerId" | "socialMediaPosted" | "createdAt" | "featuredEndDate" | "featuredStartDate" | "status" | "units" | "featureDays" | "weight" | "slug" | "stock" | "markAsDeleted", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "price" | "discountPercentage" | "discountPrice" | "dealStartDate" | "dealEndDate" | "isDealActive" | "imagesUrl" | "videoUrl" | "isFeatured" | "condition" | "categoryId" | "sellerId" | "socialMediaPosted" | "createdAt" | "featuredEndDate" | "featuredStartDate" | "status" | "units" | "featureDays" | "weight" | "delivery_charge" | "isIncVAT" | "slug" | "stock" | "markAsDeleted", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Inquiry?: boolean | Product$InquiryArgs<ExtArgs>
     orderItem?: boolean | Product$orderItemArgs<ExtArgs>
@@ -13392,6 +13509,8 @@ export namespace Prisma {
       units: number
       featureDays: string | null
       weight: number | null
+      delivery_charge: number | null
+      isIncVAT: boolean | null
       slug: string | null
       stock: number | null
       markAsDeleted: boolean
@@ -13847,6 +13966,8 @@ export namespace Prisma {
     readonly units: FieldRef<"Product", 'Int'>
     readonly featureDays: FieldRef<"Product", 'String'>
     readonly weight: FieldRef<"Product", 'Float'>
+    readonly delivery_charge: FieldRef<"Product", 'Float'>
+    readonly isIncVAT: FieldRef<"Product", 'Boolean'>
     readonly slug: FieldRef<"Product", 'String'>
     readonly stock: FieldRef<"Product", 'Int'>
     readonly markAsDeleted: FieldRef<"Product", 'Boolean'>
@@ -15566,11 +15687,13 @@ export namespace Prisma {
   export type OrderAvgAggregateOutputType = {
     totalPrice: number | null
     commisionRate: number | null
+    stripCommission: number | null
   }
 
   export type OrderSumAggregateOutputType = {
     totalPrice: number | null
     commisionRate: number | null
+    stripCommission: number | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -15585,6 +15708,7 @@ export namespace Prisma {
     shippingPhone: string | null
     shippingPostalCode: string | null
     commisionRate: number | null
+    stripCommission: number | null
   }
 
   export type OrderMaxAggregateOutputType = {
@@ -15599,6 +15723,7 @@ export namespace Prisma {
     shippingPhone: string | null
     shippingPostalCode: string | null
     commisionRate: number | null
+    stripCommission: number | null
   }
 
   export type OrderCountAggregateOutputType = {
@@ -15613,6 +15738,7 @@ export namespace Prisma {
     shippingPhone: number
     shippingPostalCode: number
     commisionRate: number
+    stripCommission: number
     _all: number
   }
 
@@ -15620,11 +15746,13 @@ export namespace Prisma {
   export type OrderAvgAggregateInputType = {
     totalPrice?: true
     commisionRate?: true
+    stripCommission?: true
   }
 
   export type OrderSumAggregateInputType = {
     totalPrice?: true
     commisionRate?: true
+    stripCommission?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -15639,6 +15767,7 @@ export namespace Prisma {
     shippingPhone?: true
     shippingPostalCode?: true
     commisionRate?: true
+    stripCommission?: true
   }
 
   export type OrderMaxAggregateInputType = {
@@ -15653,6 +15782,7 @@ export namespace Prisma {
     shippingPhone?: true
     shippingPostalCode?: true
     commisionRate?: true
+    stripCommission?: true
   }
 
   export type OrderCountAggregateInputType = {
@@ -15667,6 +15797,7 @@ export namespace Prisma {
     shippingPhone?: true
     shippingPostalCode?: true
     commisionRate?: true
+    stripCommission?: true
     _all?: true
   }
 
@@ -15768,6 +15899,7 @@ export namespace Prisma {
     shippingPhone: string | null
     shippingPostalCode: string | null
     commisionRate: number | null
+    stripCommission: number
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -15801,6 +15933,7 @@ export namespace Prisma {
     shippingPhone?: boolean
     shippingPostalCode?: boolean
     commisionRate?: boolean
+    stripCommission?: boolean
     Message?: boolean | Order$MessageArgs<ExtArgs>
     notificationOrder?: boolean | Order$notificationOrderArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -15821,6 +15954,7 @@ export namespace Prisma {
     shippingPhone?: boolean
     shippingPostalCode?: boolean
     commisionRate?: boolean
+    stripCommission?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
@@ -15836,6 +15970,7 @@ export namespace Prisma {
     shippingPhone?: boolean
     shippingPostalCode?: boolean
     commisionRate?: boolean
+    stripCommission?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
@@ -15851,9 +15986,10 @@ export namespace Prisma {
     shippingPhone?: boolean
     shippingPostalCode?: boolean
     commisionRate?: boolean
+    stripCommission?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "totalPrice" | "createdAt" | "status" | "shippingAddress" | "shippingCity" | "shippingCountry" | "shippingPhone" | "shippingPostalCode" | "commisionRate", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "totalPrice" | "createdAt" | "status" | "shippingAddress" | "shippingCity" | "shippingCountry" | "shippingPhone" | "shippingPostalCode" | "commisionRate" | "stripCommission", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Message?: boolean | Order$MessageArgs<ExtArgs>
     notificationOrder?: boolean | Order$notificationOrderArgs<ExtArgs>
@@ -15890,6 +16026,7 @@ export namespace Prisma {
       shippingPhone: string | null
       shippingPostalCode: string | null
       commisionRate: number | null
+      stripCommission: number
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -16328,7 +16465,8 @@ export namespace Prisma {
     readonly shippingCountry: FieldRef<"Order", 'String'>
     readonly shippingPhone: FieldRef<"Order", 'String'>
     readonly shippingPostalCode: FieldRef<"Order", 'String'>
-    readonly commisionRate: FieldRef<"Order", 'Int'>
+    readonly commisionRate: FieldRef<"Order", 'Float'>
+    readonly stripCommission: FieldRef<"Order", 'Float'>
   }
     
 
@@ -28003,6 +28141,1005 @@ export namespace Prisma {
 
 
   /**
+   * Model documents
+   */
+
+  export type AggregateDocuments = {
+    _count: DocumentsCountAggregateOutputType | null
+    _avg: DocumentsAvgAggregateOutputType | null
+    _sum: DocumentsSumAggregateOutputType | null
+    _min: DocumentsMinAggregateOutputType | null
+    _max: DocumentsMaxAggregateOutputType | null
+  }
+
+  export type DocumentsAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type DocumentsSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type DocumentsMinAggregateOutputType = {
+    id: number | null
+    text: string | null
+  }
+
+  export type DocumentsMaxAggregateOutputType = {
+    id: number | null
+    text: string | null
+  }
+
+  export type DocumentsCountAggregateOutputType = {
+    id: number
+    text: number
+    metadata: number
+    _all: number
+  }
+
+
+  export type DocumentsAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type DocumentsSumAggregateInputType = {
+    id?: true
+  }
+
+  export type DocumentsMinAggregateInputType = {
+    id?: true
+    text?: true
+  }
+
+  export type DocumentsMaxAggregateInputType = {
+    id?: true
+    text?: true
+  }
+
+  export type DocumentsCountAggregateInputType = {
+    id?: true
+    text?: true
+    metadata?: true
+    _all?: true
+  }
+
+  export type DocumentsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which documents to aggregate.
+     */
+    where?: documentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of documents to fetch.
+     */
+    orderBy?: documentsOrderByWithRelationInput | documentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: documentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned documents
+    **/
+    _count?: true | DocumentsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DocumentsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DocumentsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentsMaxAggregateInputType
+  }
+
+  export type GetDocumentsAggregateType<T extends DocumentsAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocuments]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocuments[P]>
+      : GetScalarType<T[P], AggregateDocuments[P]>
+  }
+
+
+
+
+  export type documentsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: documentsWhereInput
+    orderBy?: documentsOrderByWithAggregationInput | documentsOrderByWithAggregationInput[]
+    by: DocumentsScalarFieldEnum[] | DocumentsScalarFieldEnum
+    having?: documentsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentsCountAggregateInputType | true
+    _avg?: DocumentsAvgAggregateInputType
+    _sum?: DocumentsSumAggregateInputType
+    _min?: DocumentsMinAggregateInputType
+    _max?: DocumentsMaxAggregateInputType
+  }
+
+  export type DocumentsGroupByOutputType = {
+    id: number
+    text: string | null
+    metadata: JsonValue | null
+    _count: DocumentsCountAggregateOutputType | null
+    _avg: DocumentsAvgAggregateOutputType | null
+    _sum: DocumentsSumAggregateOutputType | null
+    _min: DocumentsMinAggregateOutputType | null
+    _max: DocumentsMaxAggregateOutputType | null
+  }
+
+  type GetDocumentsGroupByPayload<T extends documentsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentsGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type documentsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    text?: boolean
+    metadata?: boolean
+  }, ExtArgs["result"]["documents"]>
+
+  export type documentsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    text?: boolean
+    metadata?: boolean
+  }, ExtArgs["result"]["documents"]>
+
+  export type documentsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    text?: boolean
+    metadata?: boolean
+  }, ExtArgs["result"]["documents"]>
+
+  export type documentsSelectScalar = {
+    id?: boolean
+    text?: boolean
+    metadata?: boolean
+  }
+
+  export type documentsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "text" | "metadata", ExtArgs["result"]["documents"]>
+
+  export type $documentsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "documents"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      text: string | null
+      metadata: Prisma.JsonValue | null
+    }, ExtArgs["result"]["documents"]>
+    composites: {}
+  }
+
+  type documentsGetPayload<S extends boolean | null | undefined | documentsDefaultArgs> = $Result.GetResult<Prisma.$documentsPayload, S>
+
+  type documentsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<documentsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DocumentsCountAggregateInputType | true
+    }
+
+  export interface documentsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['documents'], meta: { name: 'documents' } }
+    /**
+     * Find zero or one Documents that matches the filter.
+     * @param {documentsFindUniqueArgs} args - Arguments to find a Documents
+     * @example
+     * // Get one Documents
+     * const documents = await prisma.documents.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends documentsFindUniqueArgs>(args: SelectSubset<T, documentsFindUniqueArgs<ExtArgs>>): Prisma__documentsClient<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Documents that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {documentsFindUniqueOrThrowArgs} args - Arguments to find a Documents
+     * @example
+     * // Get one Documents
+     * const documents = await prisma.documents.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends documentsFindUniqueOrThrowArgs>(args: SelectSubset<T, documentsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__documentsClient<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Documents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentsFindFirstArgs} args - Arguments to find a Documents
+     * @example
+     * // Get one Documents
+     * const documents = await prisma.documents.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends documentsFindFirstArgs>(args?: SelectSubset<T, documentsFindFirstArgs<ExtArgs>>): Prisma__documentsClient<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Documents that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentsFindFirstOrThrowArgs} args - Arguments to find a Documents
+     * @example
+     * // Get one Documents
+     * const documents = await prisma.documents.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends documentsFindFirstOrThrowArgs>(args?: SelectSubset<T, documentsFindFirstOrThrowArgs<ExtArgs>>): Prisma__documentsClient<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Documents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Documents
+     * const documents = await prisma.documents.findMany()
+     * 
+     * // Get first 10 Documents
+     * const documents = await prisma.documents.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const documentsWithIdOnly = await prisma.documents.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends documentsFindManyArgs>(args?: SelectSubset<T, documentsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Documents.
+     * @param {documentsCreateArgs} args - Arguments to create a Documents.
+     * @example
+     * // Create one Documents
+     * const Documents = await prisma.documents.create({
+     *   data: {
+     *     // ... data to create a Documents
+     *   }
+     * })
+     * 
+     */
+    create<T extends documentsCreateArgs>(args: SelectSubset<T, documentsCreateArgs<ExtArgs>>): Prisma__documentsClient<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Documents.
+     * @param {documentsCreateManyArgs} args - Arguments to create many Documents.
+     * @example
+     * // Create many Documents
+     * const documents = await prisma.documents.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends documentsCreateManyArgs>(args?: SelectSubset<T, documentsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Documents and returns the data saved in the database.
+     * @param {documentsCreateManyAndReturnArgs} args - Arguments to create many Documents.
+     * @example
+     * // Create many Documents
+     * const documents = await prisma.documents.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Documents and only return the `id`
+     * const documentsWithIdOnly = await prisma.documents.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends documentsCreateManyAndReturnArgs>(args?: SelectSubset<T, documentsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Documents.
+     * @param {documentsDeleteArgs} args - Arguments to delete one Documents.
+     * @example
+     * // Delete one Documents
+     * const Documents = await prisma.documents.delete({
+     *   where: {
+     *     // ... filter to delete one Documents
+     *   }
+     * })
+     * 
+     */
+    delete<T extends documentsDeleteArgs>(args: SelectSubset<T, documentsDeleteArgs<ExtArgs>>): Prisma__documentsClient<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Documents.
+     * @param {documentsUpdateArgs} args - Arguments to update one Documents.
+     * @example
+     * // Update one Documents
+     * const documents = await prisma.documents.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends documentsUpdateArgs>(args: SelectSubset<T, documentsUpdateArgs<ExtArgs>>): Prisma__documentsClient<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Documents.
+     * @param {documentsDeleteManyArgs} args - Arguments to filter Documents to delete.
+     * @example
+     * // Delete a few Documents
+     * const { count } = await prisma.documents.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends documentsDeleteManyArgs>(args?: SelectSubset<T, documentsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Documents
+     * const documents = await prisma.documents.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends documentsUpdateManyArgs>(args: SelectSubset<T, documentsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Documents and returns the data updated in the database.
+     * @param {documentsUpdateManyAndReturnArgs} args - Arguments to update many Documents.
+     * @example
+     * // Update many Documents
+     * const documents = await prisma.documents.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Documents and only return the `id`
+     * const documentsWithIdOnly = await prisma.documents.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends documentsUpdateManyAndReturnArgs>(args: SelectSubset<T, documentsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Documents.
+     * @param {documentsUpsertArgs} args - Arguments to update or create a Documents.
+     * @example
+     * // Update or create a Documents
+     * const documents = await prisma.documents.upsert({
+     *   create: {
+     *     // ... data to create a Documents
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Documents we want to update
+     *   }
+     * })
+     */
+    upsert<T extends documentsUpsertArgs>(args: SelectSubset<T, documentsUpsertArgs<ExtArgs>>): Prisma__documentsClient<$Result.GetResult<Prisma.$documentsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentsCountArgs} args - Arguments to filter Documents to count.
+     * @example
+     * // Count the number of Documents
+     * const count = await prisma.documents.count({
+     *   where: {
+     *     // ... the filter for the Documents we want to count
+     *   }
+     * })
+    **/
+    count<T extends documentsCountArgs>(
+      args?: Subset<T, documentsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentsAggregateArgs>(args: Subset<T, DocumentsAggregateArgs>): Prisma.PrismaPromise<GetDocumentsAggregateType<T>>
+
+    /**
+     * Group by Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends documentsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: documentsGroupByArgs['orderBy'] }
+        : { orderBy?: documentsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, documentsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the documents model
+   */
+  readonly fields: documentsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for documents.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__documentsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the documents model
+   */
+  interface documentsFieldRefs {
+    readonly id: FieldRef<"documents", 'Int'>
+    readonly text: FieldRef<"documents", 'String'>
+    readonly metadata: FieldRef<"documents", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * documents findUnique
+   */
+  export type documentsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * Filter, which documents to fetch.
+     */
+    where: documentsWhereUniqueInput
+  }
+
+  /**
+   * documents findUniqueOrThrow
+   */
+  export type documentsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * Filter, which documents to fetch.
+     */
+    where: documentsWhereUniqueInput
+  }
+
+  /**
+   * documents findFirst
+   */
+  export type documentsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * Filter, which documents to fetch.
+     */
+    where?: documentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of documents to fetch.
+     */
+    orderBy?: documentsOrderByWithRelationInput | documentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for documents.
+     */
+    cursor?: documentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of documents.
+     */
+    distinct?: DocumentsScalarFieldEnum | DocumentsScalarFieldEnum[]
+  }
+
+  /**
+   * documents findFirstOrThrow
+   */
+  export type documentsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * Filter, which documents to fetch.
+     */
+    where?: documentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of documents to fetch.
+     */
+    orderBy?: documentsOrderByWithRelationInput | documentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for documents.
+     */
+    cursor?: documentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of documents.
+     */
+    distinct?: DocumentsScalarFieldEnum | DocumentsScalarFieldEnum[]
+  }
+
+  /**
+   * documents findMany
+   */
+  export type documentsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * Filter, which documents to fetch.
+     */
+    where?: documentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of documents to fetch.
+     */
+    orderBy?: documentsOrderByWithRelationInput | documentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing documents.
+     */
+    cursor?: documentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` documents.
+     */
+    skip?: number
+    distinct?: DocumentsScalarFieldEnum | DocumentsScalarFieldEnum[]
+  }
+
+  /**
+   * documents create
+   */
+  export type documentsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a documents.
+     */
+    data?: XOR<documentsCreateInput, documentsUncheckedCreateInput>
+  }
+
+  /**
+   * documents createMany
+   */
+  export type documentsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many documents.
+     */
+    data: documentsCreateManyInput | documentsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * documents createManyAndReturn
+   */
+  export type documentsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * The data used to create many documents.
+     */
+    data: documentsCreateManyInput | documentsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * documents update
+   */
+  export type documentsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a documents.
+     */
+    data: XOR<documentsUpdateInput, documentsUncheckedUpdateInput>
+    /**
+     * Choose, which documents to update.
+     */
+    where: documentsWhereUniqueInput
+  }
+
+  /**
+   * documents updateMany
+   */
+  export type documentsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update documents.
+     */
+    data: XOR<documentsUpdateManyMutationInput, documentsUncheckedUpdateManyInput>
+    /**
+     * Filter which documents to update
+     */
+    where?: documentsWhereInput
+    /**
+     * Limit how many documents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * documents updateManyAndReturn
+   */
+  export type documentsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * The data used to update documents.
+     */
+    data: XOR<documentsUpdateManyMutationInput, documentsUncheckedUpdateManyInput>
+    /**
+     * Filter which documents to update
+     */
+    where?: documentsWhereInput
+    /**
+     * Limit how many documents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * documents upsert
+   */
+  export type documentsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the documents to update in case it exists.
+     */
+    where: documentsWhereUniqueInput
+    /**
+     * In case the documents found by the `where` argument doesn't exist, create a new documents with this data.
+     */
+    create: XOR<documentsCreateInput, documentsUncheckedCreateInput>
+    /**
+     * In case the documents was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<documentsUpdateInput, documentsUncheckedUpdateInput>
+  }
+
+  /**
+   * documents delete
+   */
+  export type documentsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+    /**
+     * Filter which documents to delete.
+     */
+    where: documentsWhereUniqueInput
+  }
+
+  /**
+   * documents deleteMany
+   */
+  export type documentsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which documents to delete
+     */
+    where?: documentsWhereInput
+    /**
+     * Limit how many documents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * documents without action
+   */
+  export type documentsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documents
+     */
+    select?: documentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documents
+     */
+    omit?: documentsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -28179,6 +29316,8 @@ export namespace Prisma {
     units: 'units',
     featureDays: 'featureDays',
     weight: 'weight',
+    delivery_charge: 'delivery_charge',
+    isIncVAT: 'isIncVAT',
     slug: 'slug',
     stock: 'stock',
     markAsDeleted: 'markAsDeleted'
@@ -28216,7 +29355,8 @@ export namespace Prisma {
     shippingCountry: 'shippingCountry',
     shippingPhone: 'shippingPhone',
     shippingPostalCode: 'shippingPostalCode',
-    commisionRate: 'commisionRate'
+    commisionRate: 'commisionRate',
+    stripCommission: 'stripCommission'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -28365,12 +29505,29 @@ export namespace Prisma {
   export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
 
 
+  export const DocumentsScalarFieldEnum: {
+    id: 'id',
+    text: 'text',
+    metadata: 'metadata'
+  };
+
+  export type DocumentsScalarFieldEnum = (typeof DocumentsScalarFieldEnum)[keyof typeof DocumentsScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -28387,6 +29544,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -28636,6 +29802,20 @@ export namespace Prisma {
    * Reference to a field of type 'CategrySatuts[]'
    */
   export type ListEnumCategrySatutsFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CategrySatuts[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
   /**
    * Deep Input Types
@@ -29423,6 +30603,8 @@ export namespace Prisma {
     units?: IntFilter<"Product"> | number
     featureDays?: StringNullableFilter<"Product"> | string | null
     weight?: FloatNullableFilter<"Product"> | number | null
+    delivery_charge?: FloatNullableFilter<"Product"> | number | null
+    isIncVAT?: BoolNullableFilter<"Product"> | boolean | null
     slug?: StringNullableFilter<"Product"> | string | null
     stock?: IntNullableFilter<"Product"> | number | null
     markAsDeleted?: BoolFilter<"Product"> | boolean
@@ -29458,6 +30640,8 @@ export namespace Prisma {
     units?: SortOrder
     featureDays?: SortOrderInput | SortOrder
     weight?: SortOrderInput | SortOrder
+    delivery_charge?: SortOrderInput | SortOrder
+    isIncVAT?: SortOrderInput | SortOrder
     slug?: SortOrderInput | SortOrder
     stock?: SortOrderInput | SortOrder
     markAsDeleted?: SortOrder
@@ -29496,6 +30680,8 @@ export namespace Prisma {
     units?: IntFilter<"Product"> | number
     featureDays?: StringNullableFilter<"Product"> | string | null
     weight?: FloatNullableFilter<"Product"> | number | null
+    delivery_charge?: FloatNullableFilter<"Product"> | number | null
+    isIncVAT?: BoolNullableFilter<"Product"> | boolean | null
     slug?: StringNullableFilter<"Product"> | string | null
     stock?: IntNullableFilter<"Product"> | number | null
     markAsDeleted?: BoolFilter<"Product"> | boolean
@@ -29531,6 +30717,8 @@ export namespace Prisma {
     units?: SortOrder
     featureDays?: SortOrderInput | SortOrder
     weight?: SortOrderInput | SortOrder
+    delivery_charge?: SortOrderInput | SortOrder
+    isIncVAT?: SortOrderInput | SortOrder
     slug?: SortOrderInput | SortOrder
     stock?: SortOrderInput | SortOrder
     markAsDeleted?: SortOrder
@@ -29568,6 +30756,8 @@ export namespace Prisma {
     units?: IntWithAggregatesFilter<"Product"> | number
     featureDays?: StringNullableWithAggregatesFilter<"Product"> | string | null
     weight?: FloatNullableWithAggregatesFilter<"Product"> | number | null
+    delivery_charge?: FloatNullableWithAggregatesFilter<"Product"> | number | null
+    isIncVAT?: BoolNullableWithAggregatesFilter<"Product"> | boolean | null
     slug?: StringNullableWithAggregatesFilter<"Product"> | string | null
     stock?: IntNullableWithAggregatesFilter<"Product"> | number | null
     markAsDeleted?: BoolWithAggregatesFilter<"Product"> | boolean
@@ -29682,7 +30872,8 @@ export namespace Prisma {
     shippingCountry?: StringNullableFilter<"Order"> | string | null
     shippingPhone?: StringNullableFilter<"Order"> | string | null
     shippingPostalCode?: StringNullableFilter<"Order"> | string | null
-    commisionRate?: IntNullableFilter<"Order"> | number | null
+    commisionRate?: FloatNullableFilter<"Order"> | number | null
+    stripCommission?: FloatFilter<"Order"> | number
     Message?: MessageListRelationFilter
     notificationOrder?: XOR<NotificationOrderNullableScalarRelationFilter, NotificationOrderWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -29702,6 +30893,7 @@ export namespace Prisma {
     shippingPhone?: SortOrderInput | SortOrder
     shippingPostalCode?: SortOrderInput | SortOrder
     commisionRate?: SortOrderInput | SortOrder
+    stripCommission?: SortOrder
     Message?: MessageOrderByRelationAggregateInput
     notificationOrder?: NotificationOrderOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
@@ -29723,7 +30915,8 @@ export namespace Prisma {
     shippingCountry?: StringNullableFilter<"Order"> | string | null
     shippingPhone?: StringNullableFilter<"Order"> | string | null
     shippingPostalCode?: StringNullableFilter<"Order"> | string | null
-    commisionRate?: IntNullableFilter<"Order"> | number | null
+    commisionRate?: FloatNullableFilter<"Order"> | number | null
+    stripCommission?: FloatFilter<"Order"> | number
     Message?: MessageListRelationFilter
     notificationOrder?: XOR<NotificationOrderNullableScalarRelationFilter, NotificationOrderWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -29743,6 +30936,7 @@ export namespace Prisma {
     shippingPhone?: SortOrderInput | SortOrder
     shippingPostalCode?: SortOrderInput | SortOrder
     commisionRate?: SortOrderInput | SortOrder
+    stripCommission?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -29764,7 +30958,8 @@ export namespace Prisma {
     shippingCountry?: StringNullableWithAggregatesFilter<"Order"> | string | null
     shippingPhone?: StringNullableWithAggregatesFilter<"Order"> | string | null
     shippingPostalCode?: StringNullableWithAggregatesFilter<"Order"> | string | null
-    commisionRate?: IntNullableWithAggregatesFilter<"Order"> | number | null
+    commisionRate?: FloatNullableWithAggregatesFilter<"Order"> | number | null
+    stripCommission?: FloatWithAggregatesFilter<"Order"> | number
   }
 
   export type NotificationOrderWhereInput = {
@@ -30514,6 +31709,50 @@ export namespace Prisma {
     identifier?: StringWithAggregatesFilter<"VerificationToken"> | string
     token?: StringWithAggregatesFilter<"VerificationToken"> | string
     expires?: DateTimeWithAggregatesFilter<"VerificationToken"> | Date | string
+  }
+
+  export type documentsWhereInput = {
+    AND?: documentsWhereInput | documentsWhereInput[]
+    OR?: documentsWhereInput[]
+    NOT?: documentsWhereInput | documentsWhereInput[]
+    id?: IntFilter<"documents"> | number
+    text?: StringNullableFilter<"documents"> | string | null
+    metadata?: JsonNullableFilter<"documents">
+  }
+
+  export type documentsOrderByWithRelationInput = {
+    id?: SortOrder
+    text?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+  }
+
+  export type documentsWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: documentsWhereInput | documentsWhereInput[]
+    OR?: documentsWhereInput[]
+    NOT?: documentsWhereInput | documentsWhereInput[]
+    text?: StringNullableFilter<"documents"> | string | null
+    metadata?: JsonNullableFilter<"documents">
+  }, "id">
+
+  export type documentsOrderByWithAggregationInput = {
+    id?: SortOrder
+    text?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    _count?: documentsCountOrderByAggregateInput
+    _avg?: documentsAvgOrderByAggregateInput
+    _max?: documentsMaxOrderByAggregateInput
+    _min?: documentsMinOrderByAggregateInput
+    _sum?: documentsSumOrderByAggregateInput
+  }
+
+  export type documentsScalarWhereWithAggregatesInput = {
+    AND?: documentsScalarWhereWithAggregatesInput | documentsScalarWhereWithAggregatesInput[]
+    OR?: documentsScalarWhereWithAggregatesInput[]
+    NOT?: documentsScalarWhereWithAggregatesInput | documentsScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"documents"> | number
+    text?: StringNullableWithAggregatesFilter<"documents"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"documents">
   }
 
   export type UserCreateInput = {
@@ -31416,6 +32655,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -31451,6 +32692,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -31482,6 +32725,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -31517,6 +32762,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -31550,6 +32797,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -31577,6 +32826,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -31606,6 +32857,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -31725,6 +32978,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     Message?: MessageCreateNestedManyWithoutOrderInput
     notificationOrder?: NotificationOrderCreateNestedOneWithoutOrderInput
     user: UserCreateNestedOneWithoutOrdersInput
@@ -31744,6 +32998,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     Message?: MessageUncheckedCreateNestedManyWithoutOrderInput
     notificationOrder?: NotificationOrderUncheckedCreateNestedOneWithoutOrderInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -31760,7 +33015,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     Message?: MessageUpdateManyWithoutOrderNestedInput
     notificationOrder?: NotificationOrderUpdateOneWithoutOrderNestedInput
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
@@ -31779,7 +33035,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     Message?: MessageUncheckedUpdateManyWithoutOrderNestedInput
     notificationOrder?: NotificationOrderUncheckedUpdateOneWithoutOrderNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -31798,6 +33055,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
   }
 
   export type OrderUpdateManyMutationInput = {
@@ -31810,7 +33068,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
   }
 
   export type OrderUncheckedUpdateManyInput = {
@@ -31824,7 +33083,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
   }
 
   export type NotificationOrderCreateInput = {
@@ -32608,6 +33868,45 @@ export namespace Prisma {
     identifier?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
     expires?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type documentsCreateInput = {
+    text?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type documentsUncheckedCreateInput = {
+    id?: number
+    text?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type documentsUpdateInput = {
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type documentsUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type documentsCreateManyInput = {
+    id?: number
+    text?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type documentsUpdateManyMutationInput = {
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type documentsUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -33485,6 +34784,8 @@ export namespace Prisma {
     units?: SortOrder
     featureDays?: SortOrder
     weight?: SortOrder
+    delivery_charge?: SortOrder
+    isIncVAT?: SortOrder
     slug?: SortOrder
     stock?: SortOrder
     markAsDeleted?: SortOrder
@@ -33496,6 +34797,7 @@ export namespace Prisma {
     discountPrice?: SortOrder
     units?: SortOrder
     weight?: SortOrder
+    delivery_charge?: SortOrder
     stock?: SortOrder
   }
 
@@ -33522,6 +34824,8 @@ export namespace Prisma {
     units?: SortOrder
     featureDays?: SortOrder
     weight?: SortOrder
+    delivery_charge?: SortOrder
+    isIncVAT?: SortOrder
     slug?: SortOrder
     stock?: SortOrder
     markAsDeleted?: SortOrder
@@ -33550,6 +34854,8 @@ export namespace Prisma {
     units?: SortOrder
     featureDays?: SortOrder
     weight?: SortOrder
+    delivery_charge?: SortOrder
+    isIncVAT?: SortOrder
     slug?: SortOrder
     stock?: SortOrder
     markAsDeleted?: SortOrder
@@ -33561,6 +34867,7 @@ export namespace Prisma {
     discountPrice?: SortOrder
     units?: SortOrder
     weight?: SortOrder
+    delivery_charge?: SortOrder
     stock?: SortOrder
   }
 
@@ -33731,11 +35038,13 @@ export namespace Prisma {
     shippingPhone?: SortOrder
     shippingPostalCode?: SortOrder
     commisionRate?: SortOrder
+    stripCommission?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
     totalPrice?: SortOrder
     commisionRate?: SortOrder
+    stripCommission?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -33750,6 +35059,7 @@ export namespace Prisma {
     shippingPhone?: SortOrder
     shippingPostalCode?: SortOrder
     commisionRate?: SortOrder
+    stripCommission?: SortOrder
   }
 
   export type OrderMinOrderByAggregateInput = {
@@ -33764,11 +35074,13 @@ export namespace Prisma {
     shippingPhone?: SortOrder
     shippingPostalCode?: SortOrder
     commisionRate?: SortOrder
+    stripCommission?: SortOrder
   }
 
   export type OrderSumOrderByAggregateInput = {
     totalPrice?: SortOrder
     commisionRate?: SortOrder
+    stripCommission?: SortOrder
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -34245,6 +35557,79 @@ export namespace Prisma {
     identifier?: SortOrder
     token?: SortOrder
     expires?: SortOrder
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type documentsCountOrderByAggregateInput = {
+    id?: SortOrder
+    text?: SortOrder
+    metadata?: SortOrder
+  }
+
+  export type documentsAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type documentsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    text?: SortOrder
+  }
+
+  export type documentsMinOrderByAggregateInput = {
+    id?: SortOrder
+    text?: SortOrder
+  }
+
+  export type documentsSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type AccountCreateNestedManyWithoutUserInput = {
@@ -36434,6 +37819,29 @@ export namespace Prisma {
     _min?: NestedEnumCategrySatutsFilter<$PrismaModel>
     _max?: NestedEnumCategrySatutsFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type AccountCreateWithoutUserInput = {
     id?: string
@@ -36702,6 +38110,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     Message?: MessageCreateNestedManyWithoutOrderInput
     notificationOrder?: NotificationOrderCreateNestedOneWithoutOrderInput
     orderItems?: OrderItemCreateNestedManyWithoutOrderInput
@@ -36719,6 +38128,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     Message?: MessageUncheckedCreateNestedManyWithoutOrderInput
     notificationOrder?: NotificationOrderUncheckedCreateNestedOneWithoutOrderInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -36837,6 +38247,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -36870,6 +38282,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -37111,6 +38525,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -37145,6 +38561,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -37370,7 +38788,8 @@ export namespace Prisma {
     shippingCountry?: StringNullableFilter<"Order"> | string | null
     shippingPhone?: StringNullableFilter<"Order"> | string | null
     shippingPostalCode?: StringNullableFilter<"Order"> | string | null
-    commisionRate?: IntNullableFilter<"Order"> | number | null
+    commisionRate?: FloatNullableFilter<"Order"> | number | null
+    stripCommission?: FloatFilter<"Order"> | number
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutSellerInput = {
@@ -37486,6 +38905,8 @@ export namespace Prisma {
     units?: IntFilter<"Product"> | number
     featureDays?: StringNullableFilter<"Product"> | string | null
     weight?: FloatNullableFilter<"Product"> | number | null
+    delivery_charge?: FloatNullableFilter<"Product"> | number | null
+    isIncVAT?: BoolNullableFilter<"Product"> | boolean | null
     slug?: StringNullableFilter<"Product"> | string | null
     stock?: IntNullableFilter<"Product"> | number | null
     markAsDeleted?: BoolFilter<"Product"> | boolean
@@ -39220,6 +40641,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     Message?: MessageCreateNestedManyWithoutOrderInput
     notificationOrder?: NotificationOrderCreateNestedOneWithoutOrderInput
     user: UserCreateNestedOneWithoutOrdersInput
@@ -39238,6 +40660,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     Message?: MessageUncheckedCreateNestedManyWithoutOrderInput
     notificationOrder?: NotificationOrderUncheckedCreateNestedOneWithoutOrderInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -39342,7 +40765,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     Message?: MessageUpdateManyWithoutOrderNestedInput
     notificationOrder?: NotificationOrderUpdateOneWithoutOrderNestedInput
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
@@ -39360,7 +40784,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     Message?: MessageUncheckedUpdateManyWithoutOrderNestedInput
     notificationOrder?: NotificationOrderUncheckedUpdateOneWithoutOrderNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -39804,6 +41229,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     Message?: MessageCreateNestedManyWithoutOrderInput
     user: UserCreateNestedOneWithoutOrdersInput
     orderItems?: OrderItemCreateNestedManyWithoutOrderInput
@@ -39822,6 +41248,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     Message?: MessageUncheckedCreateNestedManyWithoutOrderInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     orderPayments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
@@ -39853,7 +41280,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     Message?: MessageUpdateManyWithoutOrderNestedInput
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     orderItems?: OrderItemUpdateManyWithoutOrderNestedInput
@@ -39871,7 +41299,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     Message?: MessageUncheckedUpdateManyWithoutOrderNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     orderPayments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
@@ -39888,6 +41317,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     notificationOrder?: NotificationOrderCreateNestedOneWithoutOrderInput
     user: UserCreateNestedOneWithoutOrdersInput
     orderItems?: OrderItemCreateNestedManyWithoutOrderInput
@@ -39906,6 +41336,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     notificationOrder?: NotificationOrderUncheckedCreateNestedOneWithoutOrderInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     orderPayments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
@@ -40156,7 +41587,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     notificationOrder?: NotificationOrderUpdateOneWithoutOrderNestedInput
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     orderItems?: OrderItemUpdateManyWithoutOrderNestedInput
@@ -40174,7 +41606,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     notificationOrder?: NotificationOrderUncheckedUpdateOneWithoutOrderNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     orderPayments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
@@ -40428,6 +41861,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     Message?: MessageCreateNestedManyWithoutOrderInput
     notificationOrder?: NotificationOrderCreateNestedOneWithoutOrderInput
     user: UserCreateNestedOneWithoutOrdersInput
@@ -40446,6 +41880,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
     Message?: MessageUncheckedCreateNestedManyWithoutOrderInput
     notificationOrder?: NotificationOrderUncheckedCreateNestedOneWithoutOrderInput
     orderPayments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
@@ -40478,6 +41913,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -40512,6 +41949,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -40619,7 +42058,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     Message?: MessageUpdateManyWithoutOrderNestedInput
     notificationOrder?: NotificationOrderUpdateOneWithoutOrderNestedInput
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
@@ -40637,7 +42077,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     Message?: MessageUncheckedUpdateManyWithoutOrderNestedInput
     notificationOrder?: NotificationOrderUncheckedUpdateOneWithoutOrderNestedInput
     orderPayments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
@@ -40676,6 +42117,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -40710,6 +42153,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -40894,6 +42339,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -40927,6 +42374,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -41131,6 +42580,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -41165,6 +42616,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -41363,6 +42816,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -41397,6 +42852,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -41506,6 +42963,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -41540,6 +42999,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -41659,6 +43120,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -41693,6 +43156,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -42187,6 +43652,7 @@ export namespace Prisma {
     shippingPhone?: string | null
     shippingPostalCode?: string | null
     commisionRate?: number | null
+    stripCommission?: number
   }
 
   export type OrderItemCreateManySellerInput = {
@@ -42242,6 +43708,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -42582,7 +44050,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     Message?: MessageUpdateManyWithoutOrderNestedInput
     notificationOrder?: NotificationOrderUpdateOneWithoutOrderNestedInput
     orderItems?: OrderItemUpdateManyWithoutOrderNestedInput
@@ -42599,7 +44068,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
     Message?: MessageUncheckedUpdateManyWithoutOrderNestedInput
     notificationOrder?: NotificationOrderUncheckedUpdateOneWithoutOrderNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -42616,7 +44086,8 @@ export namespace Prisma {
     shippingCountry?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPhone?: NullableStringFieldUpdateOperationsInput | string | null
     shippingPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    commisionRate?: NullableIntFieldUpdateOperationsInput | number | null
+    commisionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    stripCommission?: FloatFieldUpdateOperationsInput | number
   }
 
   export type OrderItemUpdateWithoutSellerInput = {
@@ -42731,6 +44202,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -42764,6 +44237,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -42796,6 +44271,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -42966,6 +44443,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -43000,6 +44479,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -43032,6 +44513,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -43482,6 +44965,8 @@ export namespace Prisma {
     units: number
     featureDays?: string | null
     weight?: number | null
+    delivery_charge?: number | null
+    isIncVAT?: boolean | null
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -43552,6 +45037,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -43585,6 +45072,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -43617,6 +45106,8 @@ export namespace Prisma {
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
+    isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean

@@ -39,13 +39,30 @@ export default function AutoSellerFormDialog({ open, setOpen, callback = '/' }: 
         if (!state) return
         if (state.success) {
             setOpen(false)
-            toast.success(state.message)
+            toast.success(state.message);
+
             const a = async () => {
-                await signIn("credentials", {
-                    email: user?.email,
-                    password: "test_password",
-                    callbackUrl: pathname
-                });
+                const res = await fetch("/api/userSignin", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                if (!res.ok) {
+                    throw new Error("Failed to fetch user");
+                }
+                const data = await res.json()
+                const user = data.user // your route returns { user }
+                if (user.password) {
+                    await signIn("credentials", {
+                        email: user?.email,
+                        password: user.password,
+                        callbackUrl: pathname
+                    });
+                } else {
+                    await signIn('google', { callbackUrl: pathname })
+                }
+
                 router.refresh();
             }
             a();

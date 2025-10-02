@@ -57,7 +57,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
   isSignIn,
   isContactSeller
 }) => {
-  //console.log(order, ';;;;;;;;;;;;;;;');
+  console.log(order, ';;;;;;;;;;############;;;;;');
   const [openSignUp, setOpenSignUp] = useState(false);
   const [openSignIn, setOpenSignIn] = useState(false);
   const isUnits = order.units > 0;
@@ -109,7 +109,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
                   {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{parseFloat(order.unitPrice).toFixed(2)}</span></p>}
                   <div>
                     <p className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Price Exc Vat:</span>
+                      <span className="text-muted-foreground">{order.isIncVAT?"Price Inc Vat:":"Price Exc Vat:"}</span>
                       <span className='text-lg font-bold'>£{order.priceExcVat}</span>
                     </p>
 

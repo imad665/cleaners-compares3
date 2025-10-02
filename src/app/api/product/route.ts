@@ -74,6 +74,7 @@ export async function GET(req: NextRequest) {
             stock:product.stock,
             dealCountdown: product.isDealActive ? getDealCountdown(product.dealEndDate) : null,
             sellerEmail:product.seller?.email,
+            isIncVAT:product.isIncVAT,
             isOldProduct:false//new Date(product.createdAt)<new Date('2025-07-18')
         };
 

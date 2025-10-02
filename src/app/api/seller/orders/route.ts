@@ -71,15 +71,17 @@ export async function GET(request: Request) {
         order: {
           select: {
             commisionRate: true,
+            stripCommission: true,
           }
         }
       }
     })
-
+    console.log(ordersData.map((o)=>o.order.stripCommission),'###################');
+    
     totalRevenueFromSellerPurchase = ordersData
       .reduce((sum, order) => {
         const totalPrice = order.unitPrice;
-        const commission = totalPrice * ((order.order.commisionRate || 0) / 100);
+        const commission = totalPrice * (((order.order.commisionRate || 0) + (order.order.stripCommission || 0)) / 100);
         return sum + commission;
       }, 0);
   }

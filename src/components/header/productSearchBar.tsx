@@ -89,7 +89,7 @@ export function ProductSearchBar({
     try {
       const response = await fetch(`/api/search?query=${encodeURIComponent(searchQuery)}`)
       const data = await response.json()
-      console.log(data,'dsssssssssssss');
+      //console.log(data,'dsssssssssssss');
       
       setResults(data)
     } catch (error) {

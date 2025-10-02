@@ -7,13 +7,15 @@ import { Label } from "../ui/label";
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { ProducImageAndMedia } from "./clientsUi";
-import { useActionState, useEffect, useRef, useState } from "react";
+import React, { useActionState, useEffect, useRef, useState } from "react";
 import { addNewProductAction } from "@/actions/addNewProductAction";
 import { toast } from "sonner";
 import { Checkbox } from "../ui/checkbox";
 import { useRouter } from "next/navigation";
 import { dataFeatureProduct } from "@/lib/payement/data";
 import { Badge } from "../ui/badge";
+import getDelveryChargeFromWight from "@/lib/delivery_charge_from_weight";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 type ReqInputType = {
     labelText: string
     placeholder: string
@@ -26,9 +28,9 @@ type ReqInputType = {
     required?: boolean
     onChange?: (v: any) => void
     step?: number;
-    info?:string
+    info?: string
 }
-function ReqInput({ labelText, className,info, step = null, placeholder, type, name, onChange = null, isTextArea = false, numberMin = -1, defaultValue = '', required = true }: ReqInputType) {
+function ReqInput({ labelText, className, info, step = null, placeholder, type, name, onChange = null, isTextArea = false, numberMin = -1, defaultValue = '', required = true }: ReqInputType) {
     const [value, setValue] = useState(defaultValue);
     return (
         <div className={`space-y-2 ${className}`}>
@@ -144,155 +146,250 @@ function BasicInfo({ name = '', description = '', productionCondition = '' }: {
 
 
 
-function PricingInventory({
-    price = 1,
-    discount = 0,
-    discountEndDate = undefined,
-    units = 1,
-    weight = null,
-    featured = false,
-    featureDays = null,
-    selectedCategory,
-    stock,
 
+function VatSelector({
+  value,
+  onChange,
 }: {
-    price?: number,
-    discount?: number,
-    discountEndDate?: string,
-    units?: number,
-    weight?: number,
-    featureDays?: string,
-    selectedCategory?: string,
-    stock: number,
-    featured?: boolean
-
+  value: "inc" | "exc"
+  onChange: (v: "inc" | "exc") => void
 }) {
-    //console.log(discountEndDate,'00000000000000000000000');
-
-    const [isFeatured, setIsFeatured] = useState(featureDays != null);
-    const [featuredDuration, setFeaturedDuration] = useState(featureDays?.toString());
-    const [percent, setPercent] = useState(discount || 0);
-    const [price2, setPrice2] = useState(price || 0)
-
-    const discountAmount = price2 * (percent / 100)
-    const discountedPrice = price2 - discountAmount
-    return (
-        <div className="rounded-md bg-white shadow-sm m-2 p-6 space-y-3 px-5 border">
-            <h3 className="tracking-tight text-xl font-medium text-gray-800">Pricing & Inventory</h3>
-            <div className="flex gap-6 flex-wrap">
-                <ReqInput
-                    labelText="Price (£)"
-                    type="number"
-                    name="price"
-                    placeholder="0.00"
-                    className="grow"
-                    defaultValue={price}
-                    onChange={setPrice2}
-                    step="0.01"
-                    numberMin={0.01}
-                />
-                <div>
-                    <ReqInput
-                        labelText="Discount (%)"
-                        type="number"
-                        name="discount"
-                        placeholder="0"
-                        numberMin={0}
-                        className="grow"
-                        defaultValue={discount}
-                        required={false}
-                        onChange={setPercent}
-                    />
-                    {percent > 0 && (
-                        <p className="text-xs text-muted-foreground mt-2">
-                            <span className="line-through mr-2">£{price2}</span>
-                            ✅ New price £{discountedPrice}
-                        </p>
-                    )}
-                </div>
-
-                <div className="grow space-y-2">
-                    <ReqInput
-                        labelText="Discount End Date"
-                        type="date"
-                        name="discountEndDate"
-                        placeholder="YYYY-MM-DD"
-                        defaultValue={discountEndDate}
-                        required={false}
-                    />
-                    <div className="text-muted-foreground text-xs">
-                        Optional. Leave empty for no end date.
-                    </div>
-                </div>
-                {(selectedCategory !== 'Machines') && <ReqInput
-                    labelText="Units"
-                    type="number"
-                    name="units"
-                    placeholder="1"
-                    defaultValue={units}
-                    numberMin={1}
-                    info="(No of pieces in box/pack)"
-                />}
-                 
-                    <ReqInput
-                        labelText="Inventory Stock"
-                        type="number"
-                        name="stock"
-                        placeholder="0"
-                        numberMin={0}
-                        defaultValue={stock}
-                        className="grow"
-                        info="(Available Stock)"
-
-                    />
-                    
-            </div>
-
-            {/* Featured product section */}
-            {!featured && <div className="pt-4 space-y-2 border-t mt-4">
-                <div className="flex items-center gap-2">
-                    <Checkbox
-                        id="featured"
-                        checked={isFeatured}
-                        onCheckedChange={(checked) => setIsFeatured(Boolean(checked))}
-                    />
-                    <Label htmlFor="featured" className="text-base font-medium">
-                        Mark as Featured Product
-                    </Label>
-                </div>
-                {isFeatured && (
-                    <div className="space-y-2">
-                        <Label htmlFor="featuredDuration" className="text-base font-medium">
-                            Select Duration & Fee
-                        </Label>
-                        <Select
-                            name="featuredDuration"
-                            value={featuredDuration}
-                            onValueChange={(v) => setFeaturedDuration(v)}
-                        >
-                            <SelectTrigger className="w-full md:w-[300px]">
-                                <SelectValue placeholder="Select a duration" />
-                            </SelectTrigger>
-                            <SelectContent className="z-20000">
-                                {dataFeatureProduct.map((feature) => (
-                                    <SelectItem value={feature.key}>{feature.value}</SelectItem>
-                                ))}
-
-                                {/* <SelectItem value="5d-3$">5 days - $3 <span className="text-sm text-gray-600">(most popular)</span></SelectItem>
-                                <SelectItem value="7d-5$">7 days - $5</SelectItem>
-                                <SelectItem value="14d-10$">14 days - $10</SelectItem> */}
-                            </SelectContent>
-                        </Select>
-                        <div className="text-muted-foreground text-xs">
-                            This will charge you according to the selected duration.
-                        </div>
-                    </div>
-                )}
-            </div>}
-            {featured && <Badge variant='outline' className="bg-green-100 border-1 border-green-500"> Featured </Badge>}
-        </div>
-    );
+  return (
+    <RadioGroup
+      value={value}
+      onValueChange={(v) => onChange(v as "inc" | "exc")}
+      className="flex items-center gap-6"
+      name="vat"
+    >
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="inc" id="inc" />
+        <Label htmlFor="inc">Inc VAT</Label>
+      </div>
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="exc" id="exc" />
+        <Label htmlFor="exc">Exc VAT</Label>
+      </div>
+    </RadioGroup>
+  )
 }
+
+ 
+
+// your ReqInput, getDelveryChargeFromWight, dataFeatureProduct should be imported
+
+const VAT_RATE = 0.2 // 20% VAT
+
+function PricingInventory({
+  price = 1,
+  discount = 0,
+  discountEndDate = undefined,
+  units = 1,
+  weight = null,
+  featured = false,
+  featureDays = null,
+  isIncVAT,
+  selectedCategory,
+  stock,
+  machineDeliveryCharge,
+}: {
+  price?: number
+  discount?: number
+  discountEndDate?: string
+  units?: number
+  weight?: number
+  featureDays?: string
+  selectedCategory?: string
+  stock: number
+  featured?: boolean,
+  isIncVAT?:boolean,
+  machineDeliveryCharge?:number
+}) {
+  const [isFeatured, setIsFeatured] = useState(featureDays != null)
+  const [featuredDuration, setFeaturedDuration] = useState(
+    featureDays?.toString()
+  )
+  const [percent, setPercent] = useState(discount || 0)
+  const [price2, setPrice2] = useState(price || 0)
+  const [w, setw] = useState(weight)
+
+  // New: track VAT type
+  const [vatType, setVatType] = useState<"inc" | "exc">(isIncVAT? "inc":'exc')
+
+  // Apply VAT logic
+  const basePrice =
+    vatType === "inc" ? price2 / (1 + VAT_RATE) : price2 // store exc VAT internally
+  const finalPrice =
+    vatType === "inc" ? basePrice * (1 + VAT_RATE) : basePrice
+
+  const discountAmount = finalPrice * (percent / 100)
+  const discountedPrice = finalPrice - discountAmount
+
+  return (
+    <div className="rounded-md bg-white shadow-sm m-2 p-6 space-y-3 px-5 border">
+      <h3 className="tracking-tight text-xl font-medium text-gray-800">
+        Pricing & Inventory
+      </h3>
+      <div className="flex gap-6 flex-wrap">
+        <div className="flex flex-col gap-2">
+          <ReqInput
+            labelText={`Price (£) ${vatType === "inc" ? "(Inc VAT)" : "(Exc VAT)"}`}
+            type="number"
+            name="price"
+            placeholder="0.00"
+            className="grow"
+            defaultValue={price}
+            onChange={setPrice2}
+            step="0.01"
+            numberMin={0.01}
+          />
+          <VatSelector value={vatType} onChange={setVatType} />
+        </div>
+
+        <div>
+          <ReqInput
+            labelText="Discount (%)"
+            type="number"
+            name="discount"
+            placeholder="0"
+            numberMin={0}
+            className="grow"
+            defaultValue={discount}
+            required={false}
+            onChange={setPercent}
+          />
+          {percent > 0 && (
+            <p className="text-xs text-muted-foreground mt-2">
+              <span className="line-through mr-2">£{finalPrice.toFixed(2)}</span>
+              ✅ New price £{discountedPrice.toFixed(2)}
+            </p>
+          )}
+        </div>
+
+        <div className="grow space-y-2">
+          <ReqInput
+            labelText="Discount End Date"
+            type="date"
+            name="discountEndDate"
+            placeholder="YYYY-MM-DD"
+            defaultValue={discountEndDate}
+            required={false}
+          />
+          <div className="text-muted-foreground text-xs">
+            Optional. Leave empty for no end date.
+          </div>
+        </div>
+
+        {selectedCategory !== "Machines" && (
+          <ReqInput
+            labelText="Units"
+            type="number"
+            name="units"
+            placeholder="1"
+            defaultValue={units}
+            numberMin={1}
+            info="(No of pieces in box/pack)"
+          />
+        )}
+
+        <ReqInput
+          labelText="Inventory Stock"
+          type="number"
+          name="stock"
+          placeholder="0"
+          numberMin={0}
+          defaultValue={stock || 20}
+          className="grow"
+          info="(Available Stock)"
+        />
+
+        {selectedCategory !== "Machines" && (
+          <div className="grow space-y-2">
+            <ReqInput
+              labelText="Weight"
+              type="number"
+              name="weight"
+              placeholder="0"
+              numberMin={0}
+              defaultValue={weight}
+              className="grow"
+              info="(kg per box/package)"
+              onChange={setw}
+            />
+            <div className="text-muted-foreground text-xs">
+              Delivery charge: {getDelveryChargeFromWight(w)}£
+            </div>
+          </div>
+        )}
+
+        {selectedCategory == "Machines" && (
+          <ReqInput
+            labelText="Delivery charge £"
+            type="number"
+            name="delivery_charge"
+            placeholder="0"
+            numberMin={0}
+            defaultValue={machineDeliveryCharge}
+            className="grow"
+            info="(per machine)"
+          />
+        )}
+      </div>
+
+      {/* Featured product section */}
+      {!featured && (
+        <div className="pt-4 space-y-2 border-t mt-4">
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="featured"
+              checked={isFeatured}
+              onCheckedChange={(checked) => setIsFeatured(Boolean(checked))}
+            />
+            <Label htmlFor="featured" className="text-base font-medium">
+              Mark as Featured Product
+            </Label>
+          </div>
+          {isFeatured && (
+            <div className="space-y-2">
+              <Label
+                htmlFor="featuredDuration"
+                className="text-base font-medium"
+              >
+                Select Duration & Fee
+              </Label>
+              <Select
+                name="featuredDuration"
+                value={featuredDuration}
+                onValueChange={(v) => setFeaturedDuration(v)}
+              >
+                <SelectTrigger className="w-full md:w-[300px]">
+                  <SelectValue placeholder="Select a duration" />
+                </SelectTrigger>
+                <SelectContent className="z-20000">
+                  {dataFeatureProduct.map((feature) => (
+                    <SelectItem key={feature.key} value={feature.key}>
+                      {feature.value}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="text-muted-foreground text-xs">
+                This will charge you according to the selected duration.
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      {featured && (
+        <Badge variant="outline" className="bg-green-100 border-1 border-green-500">
+          Featured
+        </Badge>
+      )}
+    </div>
+  )
+}
+
+ 
+
 
 
 function ProductCategory({ id = '', categories, mainCategory = '', subCategory = '', setSelectedCategory }: {
@@ -425,6 +522,7 @@ export function AddNewProductForm({
     imagesUrl,
     videoUrl,
     price,
+    isIncVAT,
     discount,
     discountEnd,
     stockQuantity,
@@ -440,7 +538,8 @@ export function AddNewProductForm({
     stock,
     dealeEnd,
     onSuccessEditing,
-    onFailedEditing
+    onFailedEditing,
+    machineDeliveryCharge,
 }: any) {
     //alert(subCategoryId)
     const [images, setImages] = useState<{ id: string, url: string, file: File }[]>([]);
@@ -507,6 +606,7 @@ export function AddNewProductForm({
                     date={discountEnd && discountEnd.split("T")[0]}
                     discount={discount}
                     price={price}
+                    isIncVAT={isIncVAT}
                     units={stockQuantity}
                     weight={weight}
                     featureDays={featureDays}
@@ -514,6 +614,7 @@ export function AddNewProductForm({
                     stock={stock}
                     featured={isFeatured}
                     discountEndDate={dealeEnd}
+                    machineDeliveryCharge={machineDeliveryCharge}
                 />
 
 

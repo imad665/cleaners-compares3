@@ -6,6 +6,7 @@ import slugify from "slugify";
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import { generateUniqueSlug } from "@/lib/products/slugGen";
+import { deleteCloudinaryFileByUrl, uploadFileToCloud } from "@/lib/cloudStorage";
 
 async function deleteSubCategories() {
     try {
@@ -48,13 +49,13 @@ export async function GET() {
             prisma.category.findMany({
                 where: {
                     parentId: null,
-                    status:{not:"DELETING"}
+                    status: { not: "DELETING" }
                 },
                 include: {
                     children: {
-                        where:{
-                            status:{
-                                not:'DELETING'
+                        where: {
+                            status: {
+                                not: 'DELETING'
                             },
                         },
                         include: {
@@ -65,7 +66,7 @@ export async function GET() {
             }),
             deleteSubCategories(),
         ])
-        
+
         const formatted = categories.map((category, index) => ({
             id: category.id,
             name: category.name,
@@ -93,7 +94,7 @@ export async function GET() {
 
 }
 
-export async function POST(req: NextRequest) {
+/* export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
         const name = formData.get('name')?.toString();
@@ -132,9 +133,60 @@ export async function POST(req: NextRequest) {
         console.error('Failed adding subcategory', error);
         return NextResponse.json({ success: false, error: 'Failed to add subcategory!' }, { status: 500 });
     }
+} */
+
+export async function POST(req: NextRequest) {
+    try {
+        const formData = await req.formData();
+        const name = formData.get("name")?.toString();
+        const parentCategoryId = formData.get("parentCategoryId")?.toString();
+        const status = formData.get("status")?.toString();
+        const description = (formData.get("description") as string) || "";
+        const imageFile = formData.get("imageFile") as File | null;
+
+        if (!name || !parentCategoryId || !status || !imageFile) {
+            return NextResponse.json(
+                { success: false, error: "Missing fields" },
+                { status: 400 }
+            );
+        }
+
+        // ✅ Upload image to Cloudinary
+        let imageUrl: string | null = null;
+        if (imageFile && imageFile.size > 0) {
+            const { url } = await uploadFileToCloud(imageFile, {
+                folder: "subCategory",
+                publicId: `${uuidv4()}-${imageFile.name}`,
+            });
+            imageUrl = url;
+        }
+
+        // ✅ Generate unique slug
+        const slug = await generateUniqueSlug(name);
+
+        // ✅ Save subcategory in DB
+        const subcategory = await prisma.category.create({
+            data: {
+                name: name.trim(),
+                imageUrl,
+                status: status.toUpperCase(),
+                parentId: parentCategoryId,
+                description,
+                slug,
+            },
+        });
+
+        return NextResponse.json({ success: true, subcategory }, { status: 201 });
+    } catch (error) {
+        console.error("Failed adding subcategory:", error);
+        return NextResponse.json(
+            { success: false, error: "Failed to add subcategory!" },
+            { status: 500 }
+        );
+    }
 }
 
-export async function PATCH(req: NextRequest) {
+/* export async function PATCH(req: NextRequest) {
     try {
         const formData = await req.formData();
         const id = formData.get('id') as string
@@ -203,9 +255,84 @@ export async function PATCH(req: NextRequest) {
             { status: 500 }
         );
     }
-}
+} */
 
-export async function DELETE(req: NextRequest) {
+export async function PATCH(req: NextRequest) {
+    try {
+        const formData = await req.formData();
+        const id = (formData.get("id") as string) || null;
+        const name = (formData.get("name") as string) || null;
+        const status = (formData.get("status") as string) || null;
+        const description = (formData.get("description") as string) || null;
+
+        if (!id?.trim()) {
+            return NextResponse.json(
+                { success: false, error: "Invalid or missing subcategory ID." },
+                { status: 400 }
+            );
+        }
+
+        if (!name?.trim()) {
+            return NextResponse.json(
+                { success: false, error: "Name is required." },
+                { status: 400 }
+            );
+        }
+
+        if (!status || !["ACTIVE", "HIDDEN"].includes(status.toUpperCase())) {
+            return NextResponse.json(
+                { success: false, error: "Invalid status. Must be ACTIVE or HIDDEN." },
+                { status: 400 }
+            );
+        }
+
+        // handle image
+        const file = formData.get("imageFile") as File | null;
+        let imageUrl = (formData.get("imageUrl") as string) || null;
+
+        if (file && file != 'null' && file.size > 0) {
+            // delete old file if exists
+            if (imageUrl) {
+                await deleteCloudinaryFileByUrl(imageUrl);
+            }
+
+            // upload new file to cloudinary
+            const { url } = await uploadFileToCloud(file, {
+                folder: "subCategory",
+                publicId: `${uuidv4()}-${file.name}`,
+            });
+            imageUrl = url;
+        }
+
+        // slug
+        const slug = name.replace(/ /g, "-").toLowerCase();
+
+        // update DB
+        const updatedSubCategory = await prisma.category.update({
+            where: { id },
+            data: {
+                name: name.trim(),
+                status: status.toUpperCase(),
+                description,
+                slug,
+                imageUrl,
+            },
+        });
+
+        return NextResponse.json({
+            success: true,
+            subcategory: updatedSubCategory,
+        });
+    } catch (error: any) {
+        console.error("Failed to update subcategory:", error);
+        return NextResponse.json(
+            { success: false, error: "Failed to update subcategory." },
+            { status: 500 }
+        );
+    }
+}
+/* export async function DELETE(req: NextRequest) {
+
     try {
         const { id } = await req.json();
 
@@ -237,6 +364,68 @@ export async function DELETE(req: NextRequest) {
         console.error('Failed to delete subcategory:', error);
         return NextResponse.json(
             { success: false, error: 'Failed to schedule deletion for subcategory.' },
+            { status: 500 }
+        );
+    }
+} */
+
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const { id } = await req.json();
+
+        if (!id) { 
+            return NextResponse.json(
+                { success: false, error: "Subcategory ID is required." },
+                { status: 400 }
+            );
+        }
+
+        // ✅ Find subcategory first
+        const category = await prisma.category.findUnique({
+            where: { id },
+            select: { id: true, name: true, imageUrl: true },
+        });
+
+        if (!category) {
+            return NextResponse.json(
+                { success: false, error: "Subcategory not found." },
+                { status: 404 }
+            );
+        }
+
+        // ✅ Schedule deletion (soft delete)
+        const deletedAt = addDays(new Date(), 7); // 7 days instead of 1 day
+        const updatedCategory = await prisma.category.update({
+            where: { id },
+            data: {
+                deletedAt,
+                status: "DELETING",
+            },
+        });
+
+        // ✅ Delete associated image from Cloudinary immediately (optional: or delay)
+        if (category.imageUrl) {
+            try {
+                await deleteCloudinaryFileByUrl(category.imageUrl);
+            } catch (err) {
+                console.error("Cloudinary delete failed:", err);
+                // we don’t block DB update even if Cloudinary fails
+            }
+        }
+
+        return NextResponse.json({
+            success: true,
+            category: {
+                ...updatedCategory,
+                slug: slugify(updatedCategory.name, { lower: true }),
+            },
+            message: "Subcategory scheduled for deletion in 7 days.",
+        });
+    } catch (error) {
+        console.error("Failed to delete subcategory:", error);
+        return NextResponse.json(
+            { success: false, error: "Failed to schedule deletion for subcategory." },
             { status: 500 }
         );
     }

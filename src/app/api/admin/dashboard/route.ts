@@ -103,8 +103,11 @@ export async function GET() {
         if (!session || !session.user) redirect('/auth/signin');
         const user = session.user; 
         const sellerId = user.id;
+        
+        const where = user.role === 'ADMIN'?{}:{sellerId}
+
         const [totalProducts, totalUsers, totalRevenue, newListings] = await Promise.all([
-            prisma.product.count({where:{sellerId}}),
+            prisma.product.count({where:where}),
             prisma.user.count(),
             prisma.order.aggregate({
                 _sum: {

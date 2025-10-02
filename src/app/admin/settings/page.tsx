@@ -20,12 +20,12 @@ function PayementPricing({ handleSavePayment, payment, handlePaymentChange, setP
 
   };
   useEffect(() => {
-    console.log(payment.day_based_pricing.length, 'ppppppppp');
+    //console.log(payment.day_based_pricing.length, 'ppppppppp');
 
     if (payment.day_based_pricing.length !== 0 && !isInit) {
       setIsInit(true);
       setDayPriceList(payment.day_based_pricing);
-      console.log(dayPriceList, payment, payment.day_based_pricing, 'uuuuuuuuuuuuuuuuu');
+      //console.log(dayPriceList, payment, payment.day_based_pricing, 'uuuuuuuuuuuuuuuuu');
 
     }
 
@@ -242,7 +242,9 @@ const Settings = () => {
   });
   const [commission, setCommission] = useState({
     commissionRate: '',
+    stripComission:''
   })
+  
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -254,6 +256,7 @@ const Settings = () => {
       const newEmails: { [key: string]: any } = {};
       const newPass: { [key: string]: any } = {};
       const newCommision: { [key: string]: any } = {};
+      const newStripCommision: { [key: string]: any } = {};
       const newApiKey: { [key: string]: any } = {};
       //console.log(allstg, 'pppppp');
       //console.log(allstg,'oooooooooooooooooooooooooooooooo');
@@ -290,15 +293,18 @@ const Settings = () => {
       for (const [key, value] of Object.entries(commission)) {
         newCommision[key] = allstg[key];
       }
+       
       //console.log(newCommision,';;;;;;;;;;;;');
 
       setEmail(newEmails);
       setPayment(newPayement);
-      setCommission(newCommision)
-      setApiKeys(newApiKey)
+      setCommission(newCommision);
+       
+      setApiKeys(newApiKey);
       //console.log(allstg, ';;;;;===========;;;;;;');
-      setGeneral(newGeneral)
-      setPassword(newPass)
+      setGeneral(newGeneral);
+      setPassword(newPass);
+      
       setLogoPreview('/uploads/logo.png')
     }
     fetchSettings()
@@ -350,6 +356,7 @@ const Settings = () => {
       [name]: value,
     })
   }
+   
   //console.log(commission,'++++++++++++++++=========');
 
   const handleSaveCommission = async (e: React.FormEvent) => {
@@ -907,6 +914,28 @@ const Settings = () => {
                     onChange={handleCommissionChange}
                     className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                     placeholder="e.g. 10"
+                  />
+                </div>
+                <p className="mt-2 text-sm text-gray-500">
+                  This percentage will be deducted from each seller’s earnings after a buyer confirms delivery.
+                </p>
+              </div>
+               <div>
+                <label htmlFor="stripComission" className="block text-sm font-medium text-gray-700">
+                  Strip Commission Percentage (%)
+                </label>
+                <div className="mt-1">
+                  <Input
+                    type="number"
+                    min={0}
+                    max={100}
+                    step={0.1}
+                    id="stripComission"
+                    name="stripComission"
+                    value={commission.stripComission}
+                    onChange={handleCommissionChange}
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    placeholder="e.g. 2.5"
                   />
                 </div>
                 <p className="mt-2 text-sm text-gray-500">

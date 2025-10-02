@@ -283,7 +283,7 @@ export default function SellerOrdersPage() {
                   const canShip = orderItems.some(item =>
                     item.status === 'PENDING' || item.status === 'PROCESSING'
                   );
-                  const isCancel = orderItems.some(item => item.status === 'CANCELLED')
+                  const isCancel = orderItems.some(item => item.status === 'CANCELLED') || firstItem.status==='DELIVERED'
 
                   return (
                     <TableRow key={orderId}>
@@ -352,7 +352,7 @@ export default function SellerOrdersPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          {!isCancel && (
+                          {!isCancel && canShip  && (
                             <Button
                               size="sm"
                               onClick={() => handleShipOrder(orderId, orderItems)}

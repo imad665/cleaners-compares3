@@ -1,24 +1,29 @@
+import { deleteCloudinaryFileByUrl } from "./cloudStorage";
 import { prisma } from "./prisma";
 
-export default async function deleteUserTested() {
+export default async function deleteUserTested(userEmails?: string[]) {
   try {
     // Find users created after July 19, 2025
+
+    
+
+    const where = userEmails && userEmails.length > 0 ? {email:{in:userEmails}}:{createdAt: {gt: new Date('2025-10-1') }}
+
     const users = await prisma.user.findMany({
-      where: {
-        createdAt: {
-          gt: new Date('2025-07-19')
-        }
-      },
+      where,
       select: {
         id: true
       }
     });
 
+    console.log(users,'ffffffff');
+    
+    
     const userIds = users.map(user => user.id);
 
     if (userIds.length === 0) {
       console.log('No users found created after July 19, 2025');
-      return; 
+      return;
     }
     //console.log(`Found ${userIds.length} users to delete`);
     //return
@@ -36,10 +41,20 @@ export default async function deleteUserTested() {
         }
       },
       select: {
-        id: true
+        id: true,
+        imagesUrl:true,
       }
     });
 
+    const products = await prisma.product.findMany({where:{
+      sellerId:{in:userIds}
+    }})
+
+    for (const product of products) {
+      await deleteCloudinaryFileByUrl(product.imagesUrl[0])
+    }
+
+     
     // Disconnect all users from these products
     await prisma.$transaction(
       favoriteProducts.map(product =>
@@ -82,7 +97,7 @@ export default async function deleteUserTested() {
         where: {
           OR: [
             { sellerId: { in: userIds } },
-            { order: { userId: { in: userIds } }}
+            { order: { userId: { in: userIds } } }
           ]
         }
       }),

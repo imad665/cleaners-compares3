@@ -16,10 +16,6 @@ export async function updatePasswordUsers() {
     })
 }
 
-
-
-
-
 export async function clearOrders() {
   const date = new Date("2025-07-30");
 
@@ -89,4 +85,16 @@ export async function clearOrders() {
   } finally {
     await prisma.$disconnect();
   }
+}
+
+
+export async function deleteUserByEmail(userEmail:string) {
+
+    const products = await prisma.product.findMany({where:{seller:{email:userEmail}}}) 
+
+    const users = await prisma.user.findMany({where:{email:userEmail}})
+    console.log({products,users});
+    
+
+
 }

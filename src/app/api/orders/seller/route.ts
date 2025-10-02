@@ -87,13 +87,14 @@ export async function GET(req: NextRequest) {
         ])
 
 
-
+        //console.log(orders,';;;;;;;;;;;;;;;');
+        
         // Transform the data to group by buyer
         const salesByBuyer = orders.reduce((acc, order) => {
             const buyerId = order.userId;
             //console.log(order, 'nnnnnnnnnnnnnnnnnnnnnnnnn cmed3frib0006crr9th1e9oiu');
             const messagesLength = order.Message.length;
-            if (messagesLength > 0) {
+            if (messagesLength >= 0) {
                 if (!acc[buyerId]) {
                     acc[buyerId] = {
                         buyer: {

@@ -173,7 +173,9 @@ model Product {
   status             ProductStatus    @default(HIDDEN)
   units              Int
   featureDays        String?
-  weight             Float?
+  weight             Float? // weight or delivery_charge if product is machine
+  delivery_charge    Float?
+  isIncVAT           Boolean?         @default(false)
   slug               String?
   stock              Int?
   markAsDeleted      Boolean          @default(false)
@@ -213,7 +215,8 @@ model Order {
   shippingCountry    String?
   shippingPhone      String?
   shippingPostalCode String?
-  commisionRate      Int?               @default(9)
+  commisionRate      Float?             @default(4)
+  stripCommission    Float              @default(2.5)
   Message            Message[]
   notificationOrder  NotificationOrder?
   user               User               @relation(fields: [userId], references: [id])
@@ -360,14 +363,12 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-/**
- * model documents {
- * id        Int                    @id @default(autoincrement())
- * text      String?
- * metadata  Json?
- * embedding Unsupported("vector")?
- * }
- */
+model documents {
+  id        Int                    @id @default(autoincrement())
+  text      String?
+  metadata  Json?
+  embedding Unsupported("vector")?
+}
 
 enum OrderItemStatus {
   CANCELLED

@@ -119,7 +119,7 @@ export default function EditProfileForm({ sellerProfile, id, password,/* bankInf
               type="tel"
               value={formData.phoneNumber}
               onChange={handleChange}
-              placeholder="+212 600-000000"
+              placeholder="+44 00000 000000."
             />
           </div>
 
@@ -141,12 +141,12 @@ export default function EditProfileForm({ sellerProfile, id, password,/* bankInf
               name="postCode"
               value={formData.postCode}
               onChange={handleChange}
-              placeholder="e.g. 40000"
+              placeholder="e.g. SW1"
             />
           </div>
 
           {/* Password Update Section - Only shown if seller has password (not Google auth) */}
-          {password && (
+          {/* {password && (
             <div className="space-y-4 pt-4 border-t">
               {!showPasswordSection ? (
                 <Button
@@ -207,7 +207,7 @@ export default function EditProfileForm({ sellerProfile, id, password,/* bankInf
                 </>
               )}
             </div>
-          )}
+          )} */}
 
           <Button disabled={loading} type="submit" className="w-full mt-4">
             {loading ? "Saving..." : "Save Changes"}

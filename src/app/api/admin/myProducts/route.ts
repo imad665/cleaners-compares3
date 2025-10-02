@@ -55,7 +55,9 @@ export async function GET(req: NextRequest) {
                 featuredEndDate: true,
                 isDealActive: true,
                 weight: true,
+                isIncVAT:true,
                 featureDays: true,
+                delivery_charge:true,
                 stock: true,
                 category: {
                     select: {
@@ -88,7 +90,9 @@ export async function GET(req: NextRequest) {
                 videoUrl: p.videoUrl,
                 isDealActive: p.isDealActive,
                 discountPercentage: p.discountPercentage,
+                isIncVAT:p.isIncVAT,
                 discountPrice: p.discountPrice,
+                delivery_charge:p.delivery_charge,
                 dealEndDateFormate: p.dealEndDate?.toISOString().split('T')[0],
                 dealEndDate: p.dealEndDate
                     ? new Date(p.dealEndDate).toLocaleString('en-GB', {

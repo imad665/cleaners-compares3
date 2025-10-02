@@ -6,7 +6,7 @@ import { useCartStorage } from "@/hooks/useCartStorage";
 import { useHomeContext } from "@/providers/homePageProvider";
 import { ArrowRight, Loader2, ShieldCheck } from "lucide-react";
 import { orders } from "@/components/inboxBuyer/utils/data/mockData";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { FeaturedAndProducts } from "@/components/home_page/featured_product";
 import Footer from "@/components/home_page/footer";
@@ -514,8 +514,20 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
   selectedCart: any[],
   onCheckoutSuccess: () => void
 }) {
-  const totalPrice = selectedCart.reduce((sum, product) => sum + product.priceExcVat, 0);
-  const totalProducts = selectedCart.length;
+  //console.log(selectedCart, 'selected cart debug');
+  
+  // Memoize calculations to prevent unnecessary recalculations
+  const { totalPrice, totalDliveryCharge, totalProducts, grandTotal } = useMemo(() => {
+    const price = selectedCart.reduce((sum, product) => sum + product.priceExcVat, 0);
+    const delivery = selectedCart.reduce((sum, product) => sum + product.delivery_charge, 0);
+    return {
+      totalPrice: price,
+      totalDliveryCharge: delivery,
+      totalProducts: selectedCart.length,
+      grandTotal: price + delivery
+    };
+  }, [selectedCart]);
+
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'shipping' | 'payment'>('cart');
   const [shippingInfo, setShippingInfo] = useState({
     address: '',
@@ -533,37 +545,52 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
     setCheckoutStep('payment');
   };
 
+  const handleCheckoutClick = () => {
+    if (!user) {
+      setOpenSignIn(true);
+    } else {
+      setCheckoutStep('shipping');
+    }
+  };
+
   return (
     <div className="space-y-4">
-      <div className="p-3 space-y-2 bg-yellow-50 border border-yellow-100 rounded-lg mx-4 flex items-center justify-between py-3 shadow-sm">
-        <div>
-          <h3 className="font-medium text-gray-800">
-            Total ({totalProducts} items): <strong className="text-black">£{totalPrice.toFixed(2)}</strong>
-          </h3>
-          <p className="text-sm text-gray-500">
-            {/* Shipping and taxes calculated at checkout */}
-          </p>
+      {/* Summary Card */}
+      <div className="p-4 bg-yellow-50 border border-yellow-100 rounded-lg mx-4 shadow-sm">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          {/* Price Breakdown */}
+          <div className="flex-1">
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Subtotal ({totalProducts} items):</span>
+                <strong className="text-black">£{totalPrice.toFixed(2)}</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Delivery charge:</span>
+                <strong className="text-black">£{totalDliveryCharge.toFixed(2)}</strong>
+              </div>
+              <div className="flex justify-between pt-1 border-t border-yellow-200">
+                <span className="text-gray-800 font-medium">Total:</span>
+                <strong className="text-black text-lg">£{grandTotal.toFixed(2)}</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Checkout Button */}
+          {checkoutStep === 'cart' && (
+            <Button 
+              disabled={selectedCart.length === 0}
+              onClick={handleCheckoutClick}
+              className="rounded-full py-3 px-6 bg-amber-500 hover:bg-amber-600 text-white cursor-pointer flex items-center gap-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Proceed to checkout
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          )}
         </div>
-
-        {checkoutStep === 'cart' && (
-          <Button 
-            disabled = {selectedCart.length === 0}
-            onClick={() => {
-              if (!user) {
-                setOpenSignIn(true);
-              } else {
-                setCheckoutStep('shipping')
-              }
-
-            }}
-            className="rounded-full py-4 bg-amber-500 hover:bg-amber-600 text-white cursor-pointer flex items-center"
-          >
-            Proceed to checkout
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        )}
       </div>
 
+      {/* Shipping Step */}
       {checkoutStep === 'shipping' && (
         <div className="p-4 border rounded-lg bg-white shadow-sm max-w-md mx-auto">
           <h3 className="text-lg font-bold mb-4">Shipping Information</h3>
@@ -571,6 +598,7 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
         </div>
       )}
 
+      {/* Payment Step */}
       {checkoutStep === 'payment' && (
         <div className="p-4 border rounded-lg bg-white shadow-sm max-w-md mx-auto">
           <h3 className="text-lg font-bold mb-4 flex items-center">
@@ -579,7 +607,7 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
           </h3>
           <Elements stripe={stripePromise}>
             <CheckoutForm
-              totalPrice={totalPrice}
+              totalPrice={grandTotal} // Use grandTotal instead of totalPrice
               selectedCart={selectedCart}
               onSuccess={onCheckoutSuccess}
               shippingInfo={shippingInfo}
@@ -587,12 +615,12 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
           </Elements>
         </div>
       )}
+
       <SignInUpModal
         openSignIn={openSignIn}
         openSignUp={openSignUp}
         setOpenSignIn={setOpenSignIn}
         setOpenSignUp={setOpenSignUp}
-
       />
     </div>
   );
@@ -646,12 +674,14 @@ export default function Page() {
   const existedProducts = products.filter((p) => cart.find(c => c.productId === p.productId))
   //console.log(existedProducts.length, products.length);
   //console.log(existedProducts, ';;;;;;;;;;;;', cart);
-
+  //console.log(existedProducts,';;;;;;;;;...........');
+  
   const selectedCart = cart
     ?.filter(c => c.quantity != 0 && products.find((p) => p.productId === c.productId))
     .map((c) => ({
       ...c,
       priceExcVat: existedProducts?.find((p) => p.productId === c.productId)?.priceExcVat * c.quantity,
+      delivery_charge:existedProducts?.find((p)=>p.productId === c.productId)?.delivery_charge * c.quantity,
       sellerId: existedProducts?.find((p) => p.productId === c.productId)?.sellerId,
     }));
   /* if (!loading && products.length != 0) {
@@ -664,7 +694,7 @@ export default function Page() {
 
   const handleCheckoutSuccess = () => {
     clearCart();
-    setIscheckoutSuccess(true)
+    setIscheckoutSuccess(true);
     // Optionally redirect to order confirmation page
   };
   return (

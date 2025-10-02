@@ -441,6 +441,8 @@ const AllProducts = () => {
                         onFailedEditing={onFailedEditing}
                         name={selectedProduct?.name}
                         productId={selectedProduct?.id}
+                        isIncVAT ={selectedProduct?.isIncVAT}
+                        machineDeliveryCharge = {selectedProduct?.delivery_charge}
                         // @ts-ignore
                         description={selectedProduct?.description}
                         discount={selectedProduct?.discountPercentage}

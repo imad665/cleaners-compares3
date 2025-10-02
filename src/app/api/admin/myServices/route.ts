@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
             pictureUrl = url;
         }
 
-        console.log(formData,'@@@@@@@@@@@@@@########');
+        //console.log(formData,'@@@@@@@@@@@@@@########');
         
 
         const featureDays =

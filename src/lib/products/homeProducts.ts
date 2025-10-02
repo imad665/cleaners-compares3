@@ -64,6 +64,7 @@ function getFeaturedProductsChunk(where: any, skip: number, pageSize: number) {
             dealEndDate: true,
             createdAt: true,
             stock: true,
+            isIncVAT:true,
             ratings: {
                 select: {
                     stars: true,
@@ -154,6 +155,7 @@ export async function getFeaturedProducts({ page = 1, pageSize = 10, isFeatured 
                 image: p.imagesUrl[0],
                 stock: p.stock,
                 title: p.title,
+                isIncVAT:p.isIncVAT,
                 isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
             }
         })
@@ -243,6 +245,7 @@ async function mockDeals() {
             title: p.title,
             endDeal: getDealCountdown(dealEndDate),
             stock: p.stock,
+            isIncVAT:p.isIncVAT,
             discountPercentage: discount,
             isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
         }
@@ -292,6 +295,7 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
                 dealEndDate: true,
                 stock: true,
                 createdAt: true,
+                isIncVAT:true,
                 ratings: {
                     select: {
                         stars: true,
@@ -364,6 +368,7 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
             dealCountdown: isDealActive ? getDealCountdown(p.dealEndDate) : null,
             stock: p.stock,
             discountPercentage: p.discountPercentage,
+            isIncVAT:p.isIncVAT,
             isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
         }
     }

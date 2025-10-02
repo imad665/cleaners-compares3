@@ -168,8 +168,8 @@ const PayoutsToSellers: React.FC<PayoutsToSellersProps> = ({ payments }) => {
     });
   }; */
   const onConfirm = (orderPaymentId: string) => {
-    setPaymentsData(paymentsData.map((p)=>({
-      ...p,isAdminPaidToSeller:p.id===orderPaymentId?true:p.isAdminPaidToSeller
+    setPaymentsData(paymentsData.map((p) => ({
+      ...p, isAdminPaidToSeller: p.id === orderPaymentId ? true : p.isAdminPaidToSeller
     })))
     //setPaymentsData(paymentsData.filter(payment => payment.id !== orderPaymentId));
     toast.success('Payment marked as paid successfully');
@@ -258,15 +258,20 @@ const PayoutsToSellers: React.FC<PayoutsToSellersProps> = ({ payments }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {payment.isAdminPaidToSeller ? (
-                    <PaymentStatusBadge isPaid={true} />
+                    <div className='flex gap-2'> 
+                      <PaymentStatusBadge isPaid={true} />
+                      {/* <SellerInfoDialog
+                        seller={payment} /> */}
+                    </div>
+
                   ) : (
                     <div className='flex gap-2'>
                       <PaymentConfirmationDialog
                         paymentId={payment.id}
                         onConfirm={onConfirm}
                       />
-                      <SellerInfoDialog 
-                      seller={payment}/>
+                      <SellerInfoDialog
+                        seller={payment} />
                     </div>
 
                   )}

@@ -72,7 +72,8 @@ export type ItemProps = {
     stock?: number,
     className?: string,
     isOldProduct: boolean,
-    discountPercentage:number
+    discountPercentage:number,
+    isIncVAT:boolean
 }
 
 export function ItemFeaturedProduct({
@@ -90,10 +91,12 @@ export function ItemFeaturedProduct({
     stock,
     className,
     isOldProduct,
+    isIncVAT,
     discountPercentage,
 }: ItemProps) {
     const isUnits = units > 0;
-    console.log(productId+';;;;;==================;;;;;;')
+    console.log(isIncVAT+';;;;;==================; ;;;;;')
+    const vatLabel = !isIncVAT?"Price Exc Vat:":"Price Inc Vat:"
     return (
         <div className={`md:min-w-[300px] w-[75vw] grow flex flex-col justify-between md:max-w-[300px] border-1 shadow-md pb-4 rounded-md bg-white min-h-[430px] mx-2 ${className}`}>
             <div className=' relative  flex flex-col gap-1 grow  '>
@@ -114,7 +117,7 @@ export function ItemFeaturedProduct({
                     {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{parseFloat(unitPrice).toFixed(3)}</span></p>}
                     <div>
                         <p className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Price Exc Vat:</span>
+                            <span className="text-muted-foreground">{vatLabel}</span>
                             <span className='text-lg font-bold'>£{parseFloat(priceExcVat).toFixed(3)}</span>
                         </p>
 

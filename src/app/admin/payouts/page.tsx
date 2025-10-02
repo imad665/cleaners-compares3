@@ -62,6 +62,7 @@ export default async function AdminPayoutsPage() {
         select: {
           id: true,
           commisionRate: true,
+          stripCommission:true,
         },
       },
     },
@@ -88,7 +89,8 @@ export default async function AdminPayoutsPage() {
         },
       });
 
-      const commissionRate = payment.order.commisionRate || 9; // Default to 9% if not specified
+      const commissionRate = (payment.order.commisionRate || 9) + (payment.order.stripCommission || 2.5); // Default to 9% if not specified
+      
       const itemsTotal = orderItems.reduce(
         (sum, item) => sum + (item.unitPrice ),
         0

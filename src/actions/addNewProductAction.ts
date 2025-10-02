@@ -40,8 +40,14 @@ export async function addNewProductAction(prev: any, formData: FormData) {
     const subCategory = formData.get('subCategory')?.toString().trim();
     const subcategoryId = formData.get('subcategoryId')?.toString().trim();
     const featuredDuration = formData.get('featuredDuration');
-    const productWeight = formData.get('weight')?.toString().trim() || '0';
+    const productWeight = formData.get('weight')?.toString().trim() || null;
+    const machineDeliveryCharge = formData.get("delivery_charge")?.toString().trim() || null;
+    const vat = formData.get('vat') // inc or exc
     const stock = parseFloat(formData.get('stock')?.toString().trim() || "0");
+    const isIncVAT = vat === 'inc';
+
+    //console.log(machineDeliveryCharge,productWeight,isIncVAT,'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+    
     // Validate required fields
     /* console.log(submitType,productName,description,product_condition);
     console.log(price,discount,discountEnd,category,subCategory);
@@ -129,7 +135,9 @@ export async function addNewProductAction(prev: any, formData: FormData) {
                 dealEndDate: discountEnd ? new Date(discountEnd + "T00:00:00.000Z") : undefined,
                 dealStartDate: discountEnd ? new Date() : undefined,
                 units: units,
-                weight: parseFloat(productWeight),
+                delivery_charge:parseFloat(machineDeliveryCharge),
+                weight: parseFloat(productWeight!),
+                isIncVAT:isIncVAT,
                 condition: (product_condition as 'USED' | 'NEW'),
                 imagesUrl: imageUrls,
                 videoUrl: videoUrl?.toString() || null, // Optional, it can be null
@@ -165,9 +173,11 @@ export async function addNewProductAction(prev: any, formData: FormData) {
                 dealEndDate: discountEnd ? new Date(discountEnd + "T00:00:00.000Z") : undefined,
                 dealStartDate: discountEnd ? new Date() : undefined,
                 units: units,
-                weight: parseFloat(productWeight),
+                weight: parseFloat(productWeight!),
+                delivery_charge:parseFloat(machineDeliveryCharge),
                 condition: (product_condition as 'USED' | 'NEW'),
                 imagesUrl: imageUrls,
+                isIncVAT:isIncVAT,
                 videoUrl: videoUrl?.toString() || null, // Optional, it can be null
                 categoryId: subcategory.id,
                 slug,

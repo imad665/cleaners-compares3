@@ -29,8 +29,10 @@ export default function ProductInfo({
 }: ProductInfoProps) {
   const [openSignUp, setOpenSignUp] = useState(false);
   const [openSignIn, setOpenSignIn] = useState(false);
-  const {user} = useHomeContext();
+  //const {user} = useHomeContext();
   const isUnits = product.units > 0;
+  const isIncVAT = product.isIncVAT;
+
   return (
     <div className="flex flex-col space-y-6">
       {/* Product badges */}
@@ -80,7 +82,7 @@ export default function ProductInfo({
         {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{parseFloat(product.unitPrice).toFixed(3)}</span></p>}
         <div>
           <p className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Price Exc Vat:</span>
+            <span className="text-muted-foreground">{isIncVAT?"Price Inc Vat:":"Price Exc Vat:"}</span>
             <span className='text-lg font-bold'>£{parseFloat(product.priceExcVat).toFixed(3)}</span>
           </p>
 
