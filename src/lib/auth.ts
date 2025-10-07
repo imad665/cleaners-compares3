@@ -10,6 +10,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { redirect } from "next/navigation"
 import { prisma } from "./prisma"
 import { sendWelcomMessage } from "./payement/sendMessage"
+import { decryptPassword } from "./crypto"
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -49,14 +50,24 @@ export const authOptions: NextAuthOptions = {
         if (user.status === 'SUSPENDED') {
           throw new Error('SUSPENDED');
         }
-        if(user.password === credentials.password){
-          return user 
+        if (user.password === credentials.password) {
+          return user
         }
 
-        const isValid = await compare(credentials.password, user.password)
-        if (!isValid/*  && credentials.password !== 'test_password' */) return null
 
-        return user
+        const isValid2 = decryptPassword(user.password) === credentials.password;
+         
+        
+        if (isValid2) {
+          return user
+        }
+        else {
+          const isValid = await compare(credentials.password, user.password)
+          if (isValid) return user
+        }
+        //if (!isValid && !isValid2/*  && credentials.password !== 'test_password' */) return null
+
+        return null
       },
     }),
   ],
@@ -76,16 +87,16 @@ export const authOptions: NextAuthOptions = {
     },
   },
   callbacks: {
-    async jwt({ token, user,account }) {
+    async jwt({ token, user, account }) {
       //console.log(user,'llllllllllllllllllllllll');
       if (user) {
         token.id = user.id;
         token.role = user.role;
-       /*  token.name = user.name;
-        token.email = user.email; */
+        /*  token.name = user.name;
+         token.email = user.email; */
         /* token.image = user.image; */
       }
-      if (account){
+      if (account) {
         token.accessToken = account.access_token;
       }
       return token
@@ -95,9 +106,9 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
         session.accessToken = token.accessToken as string;
-       /*  session.user.name = token.name as string;
-        session.user.email = token.email as string; */
-       /*  session.user.image = token.image as string; */
+        /*  session.user.name = token.name as string;
+         session.user.email = token.email as string; */
+        /*  session.user.image = token.image as string; */
       }
       return session
     },

@@ -28,6 +28,7 @@ import deleteUserTested from "@/lib/update-db";
 import { clearAllEngineerEmbeddings, reembedAllEngineers, reembedAllProducts } from "@/lib/langchain/embeding/utils/embed-handler";
 import { seedUsers2 } from "@/lib/data-old-website/add-users2";
 import { seedCategories, seedMachines, seedParts, seedSubcategories, seedSundries, updateUserRoles } from "@/lib/data-old-website/seed-categories";
+import { encryptPassword } from "@/lib/crypto";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -263,11 +264,12 @@ export default async function RootLayout({
   //await deleteUserByEmail("maz@exclusivecleaners.co.uk")
   //await deleteUserByEmail("maz@exclusivecleaners.co.uk")
   
-  /* await deleteUserTested(['amirshahz777@gmail.com','maz@exclusivecleaners.co.uk','amirshahz777@yahoo.co.uk',
+  /* await deleteUserTested(['amirshahz77@gmail.com','simo@email.com','amirshahz777@yahoo.co.uk',
     'asasa@gmail.com','amirshahz77@gmail.com','Amir@tlc.com','programmingi77i@gmail.com','med.hasnaoui92@gmail.com',
     'ddqdeqd@gmail.com','seller1@gmail.com','vic1dayinsh7777@gmail.com','srtechsolutions03@gmail.com'
   ]) */
   //await deleteUserTested()
+   
   return (
     <html lang="en" className="scroll-smooth">
       <body

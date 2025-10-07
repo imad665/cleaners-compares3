@@ -60,7 +60,7 @@ export function ContactUs() {
             <CardContent className="p-6">
                 <p className="mb-6 text-gray-600">
                     We're here to help. Send us your message or <br /> call us at : {' '}
-                    <span className="font-semibold text-black">+44 01702 597067</span>.
+                    <span className="font-semibold text-black">+44 020 8763 1777</span>.
                 </p>
 
                 {submitted ? (

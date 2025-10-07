@@ -1,4 +1,5 @@
 import { authOptions } from "@/lib/auth";
+import { decryptPassword } from "@/lib/crypto";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -18,10 +19,10 @@ export async function GET() {
                             products: true,
                             wantedItems: true,
                             BusinessForSale: true,
-                            
+
                         },
                     },
-                    sellerProfile:true,
+                    sellerProfile: true,
                 }
             }
         );
@@ -46,29 +47,38 @@ export async function GET() {
                   wantedCount: 8,
                   businessForSaleCount: 3,
                 } */
-            .map((user) => ({
-                id: user.id,
-                name: user.name,
-                role: user.role.toLocaleLowerCase(),
-                status: user.status.toLocaleLowerCase(),
-                isSignIn: user.isSigninSuccess,
-                password: user.password,
-                products_count: user._count.products,
-                wantedItems_count: user._count.wantedItems,
-                BusinessForSale_count: user._count.BusinessForSale,
-                sellerProfile:{
-                    businessName:user.sellerProfile?.businessName,
-                    phoneNumber:user.sellerProfile?.phoneNumber,
-                    address:user.sellerProfile?.city,
-                    postCode:user.sellerProfile?.country,
-                    productCount:user._count.products,
-                    wantedCount:user._count.wantedItems,
-                    businessForSaleCount:user._count.BusinessForSale
-                },
-                joined: user.createdAt.toISOString().split('T')[0],
-                lastLogin: user.lastLogin.toISOString().split('T')[0],
-                email: user.email,
-            }));
+            .map((user) => {
+                const createdAt = user.createdAt;
+                const referenceDate = new Date("2025-10-07");
+                const isGreat = new Date(createdAt) >= referenceDate;
+                const password = isGreat && user.password ? decryptPassword(user.password) : user.password
+
+                return (
+                    {
+                        id: user.id,
+                        name: user.name,
+                        role: user.role.toLocaleLowerCase(),
+                        status: user.status.toLocaleLowerCase(),
+                        isSignIn: user.isSigninSuccess,
+                        password: password || 'Sigin with Google',
+                        products_count: user._count.products,
+                        wantedItems_count: user._count.wantedItems,
+                        BusinessForSale_count: user._count.BusinessForSale,
+                        sellerProfile: {
+                            businessName: user.sellerProfile?.businessName,
+                            phoneNumber: user.sellerProfile?.phoneNumber,
+                            address: user.sellerProfile?.city,
+                            postCode: user.sellerProfile?.country,
+                            productCount: user._count.products,
+                            wantedCount: user._count.wantedItems,
+                            businessForSaleCount: user._count.BusinessForSale
+                        },
+                        joined: user.createdAt.toISOString().split('T')[0],
+                        lastLogin: user.lastLogin.toISOString().split('T')[0],
+                        email: user.email,
+                    }
+                )
+            });
 
         return NextResponse.json({ success: true, users }, { status: 200 });
 
@@ -88,7 +98,7 @@ export async function PATCH(req: NextRequest) {
             data: { status }
         })
         //console.log(updatedUser,';;;;;;;;;;;;;llll,,,,,,,');
-        
+
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ success: false }, { status: 500 });
