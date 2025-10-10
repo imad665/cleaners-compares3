@@ -225,7 +225,7 @@ export async function sendBuyerBroadcastMessage(params: BroadcastEmailParams) {
     `;
 
     const result = await resend.emails.send({
-      from: 'CleanersCompare <noreply@yummymeatrecipes.com>',
+      from: 'CleanersCompare <noreply@cleanerscompare.com>',
       to,
       subject: title,
       html,

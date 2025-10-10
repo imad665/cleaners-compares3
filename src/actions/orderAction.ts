@@ -270,7 +270,7 @@ export async function shipOrderItem(orderItemId: string) {
     }));
 
     await resend.emails.send({
-      from: 'notifications@yummymeatrecipes.com',
+      from: 'notifications@cleanerscompare.com',
       to: updatedItem.order.user.email,
       subject: `📦 Your order has been shipped - ${products.length} Item${products.length > 1 ? 's' : ''}`,
       html: `
@@ -484,7 +484,7 @@ export async function cancelOrderItem(orderItemId: string) {
     const products = orderItem?.order?.orderItems?.map((o) => o.product)
     const totalAmount = orderItem?.order?.orderItems?.reduce((sum,o)=>sum+o.unitPrice,0);
     await resend.emails.send({
-      from: 'notifications@yummymeatrecipes.com',
+      from: 'notifications@cleanerscompare.com',
       to: orderItem.order.user.email,
       subject: `❌ Order Cancelled - ${products.length} Item${products.length > 1 ? 's' : ''}`,
       html: `

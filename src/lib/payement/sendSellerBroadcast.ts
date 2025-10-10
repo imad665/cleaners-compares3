@@ -223,7 +223,7 @@ export async function sendSellerBroadcastMessage(params: SellerBroadcastEmailPar
     `;
 
     const result = await resend.emails.send({
-      from: 'CleanersCompare <noreply@yummymeatrecipes.com>',
+      from: 'CleanersCompare <noreply@cleanerscompare.com>',
       to,
       subject: title,
       html,

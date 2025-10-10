@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function sendTestMessage(to: string) {
     try {
         await resend.emails.send({
-            from: 'CleanersCompare <noreply@yummymeatrecipes.com>',
+            from: 'CleanersCompare <noreply@cleanerscompare.com>',
             to,
             subject: 'Welcome to CleanersCompare – The Laundry Marketplace Built for You',
             html: `

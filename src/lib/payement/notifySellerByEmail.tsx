@@ -11,7 +11,7 @@ export async function sentToSeller(itemsBySeller: any, order: any, adminEmail?: 
       const baseUrl = process.env.NEXTAUTH_URL;
       const linkOrder = `${baseUrl}/admin/orders`
       await resend.emails.send({
-        from: 'orders@yummymeatrecipes.com',
+        from: 'orders@cleanerscompare.com',
         to: sellerEmail,
         subject: `New Order #${order.id} - Your Products Need Shipping`,
         html: `
@@ -102,7 +102,7 @@ export async function notifySellerByEmail(order: any) {
         const baseUrl = process.env.NEXTAUTH_URL;
         const linkOrder = `${baseUrl}/admin/orders`
         await resend.emails.send({
-          from: 'orders@yummymeatrecipes.com',
+          from: 'orders@cleanerscompare.com',
           to: sellerEmail,
           subject: `New Order #${order.id} - Your Products Need Shipping`,
           html: `

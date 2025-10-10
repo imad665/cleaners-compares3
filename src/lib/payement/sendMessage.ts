@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function sendWelcomMessage(to: string) {
   try {
     await resend.emails.send({
-      from: 'CleanersCompare <noreply@yummymeatrecipes.com>',
+      from: 'CleanersCompare <noreply@cleanerscompare.com>',
       to,
       subject: 'Welcome to CleanersCompare – The Laundry Marketplace Built for You',
       html: `
@@ -48,7 +48,7 @@ export async function sendWelcomMessage(to: string) {
 export async function sendContactReply(to: string, name: string, response: string) {
   try {
     await resend.emails.send({
-      from: 'CleanersCompare <noreply@yummymeatrecipes.com>',
+      from: 'CleanersCompare <noreply@cleanerscompare.com>',
       to,
       subject: 'Re: Your Message to CleanersCompare',
       html: `
@@ -82,7 +82,7 @@ export async function sendContactReply(to: string, name: string, response: strin
 export async function sendAdminMessage(to: string, subject: string, message: string) {
   try {
     await resend.emails.send({
-      from: 'YummyMeat Admin <noreply@yummymeatrecipes.com>',
+      from: 'YummyMeat Admin <noreply@cleanerscompare.com>',
       to,
       subject,
       html: `
@@ -127,7 +127,7 @@ export async function sendContactToAdmin(params: ContactToAdminParams) {
     } = params;
 
     await resend.emails.send({
-      from: 'CleanersCompare Contact <noreply@yummymeatrecipes.com>',
+      from: 'CleanersCompare Contact <noreply@cleanerscompare.com>',
       to: to,//'admin@cleanerscompare.com', // Replace with your admin email
       //reply_to: fromEmail,
       subject: `New Contact: ${subject}`,

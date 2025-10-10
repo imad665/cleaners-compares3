@@ -27,7 +27,7 @@ export async function sendShippingNotification(userId: string, orderItemId: stri
 
     // 2. Send simple shipping notification email
     await resend.emails.send({
-      from: 'orders@yummymeatrecipes.com',
+      from: 'orders@cleanerscompare.com',
       to: orderItem.order.user.email,
       subject: `Your order has shipped!`,
       html: `

@@ -31,7 +31,7 @@ export async function resetPasswordEmail(email: string) {
         const resetUrl = `${process.env.NEXTAUTH_URL}/auth/reset-password?token=${resetToken}`;
 
         const { data, error } = await resend.emails.send({
-            from: 'CleanersCompare <noreply@yummymeatrecipes.com>',
+            from: 'CleanersCompare <noreply@cleanerscompare.com>',
             to: email,
             subject: 'Password Reset Request',
             html: `
