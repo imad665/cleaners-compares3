@@ -24,7 +24,7 @@ export default function ChatWidget() {
     const welcomeBubbleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // WhatsApp configuration
-    const whatsappNumber = "441702597067";
+    const whatsappNumber = "00447786910151";
     const whatsappMessage = "Hello, I have a question about your products";
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
