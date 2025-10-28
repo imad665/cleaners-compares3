@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getDealCountdown } from "@/lib/products/homeProducts";
+import { excludeSuspendedSeller, getDealCountdown } from "@/lib/products/homeProducts";
 
 export async function GET(req: NextRequest) {
   try {
@@ -77,6 +77,7 @@ async function getExactWordSearchProducts(query: string, isInsearch: string | nu
   try {
     // Fetch all products for search indexing
     const allProducts = await prisma.product.findMany({
+      where:{...excludeSuspendedSeller},
       select: {
         id: true,
         title: true,
@@ -146,6 +147,7 @@ async function getExactWordSearchProducts(query: string, isInsearch: string | nu
     // Fetch complete product details for the paginated IDs
     const products = await prisma.product.findMany({
       where: {
+        ...excludeSuspendedSeller,
         id: { in: paginatedProductIds }
       },
       select: {
@@ -219,6 +221,7 @@ async function getAllProducts(page: number, limit: number) {
   const take = limit;
 
   const products = await prisma.product.findMany({
+    where:excludeSuspendedSeller,
     skip,
     take,
     select: {
@@ -300,7 +303,8 @@ async function getTextSearchProducts(query: string, isInsearch: any, page: numbe
 
   const products = await prisma.product.findMany({
     where: {
-      OR: exactMatchConditions
+      OR: exactMatchConditions,
+      ...excludeSuspendedSeller,
     },
     skip,
     take,

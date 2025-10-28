@@ -60,7 +60,7 @@ export async function GET() {
                         role: user.role.toLocaleLowerCase(),
                         status: user.status.toLocaleLowerCase(),
                         isSignIn: user.isSigninSuccess,
-                        password: password || 'Sigin with Google',
+                        password: password || 'Signed in with Google',
                         products_count: user._count.products,
                         wantedItems_count: user._count.wantedItems,
                         BusinessForSale_count: user._count.BusinessForSale,

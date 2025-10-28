@@ -1,5 +1,5 @@
 import { prisma } from "../prisma";
-import { getDealCountdown } from "./homeProducts";
+import { excludeSuspendedSeller, getDealCountdown } from "./homeProducts";
 import { generateSlug } from "./slugGen";
 
 
@@ -28,12 +28,14 @@ export const fetchProducts = async (
             // Fetch by product ID
             whereClause = {
                 categoryId:id,
+                ...excludeSuspendedSeller,
                 condition: { in: inCondition }
             };
         } else {
             // Fetch by category and subcategory slug
             whereClause = {
                 condition: { in: inCondition },
+                ...excludeSuspendedSeller,
                 category: {
                     slug: {
                         equals: subcategory,

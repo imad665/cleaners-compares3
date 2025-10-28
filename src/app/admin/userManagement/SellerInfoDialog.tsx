@@ -11,6 +11,7 @@ import { Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 export function SellerInfoDialog({
     seller,
@@ -25,12 +26,28 @@ export function SellerInfoDialog({
         productCount: number;
         wantedCount: number;
         businessForSaleCount: number;
+        role?: string; // Add this if it exists
     };
 }) {
-    ///console.log(seller, 'yyyyyyyyyyyyyyyyyyyy');
     const [loading, setLoadin] = useState(false);
+    //const { data: session } = useSession();
+
     async function handleConnect() {
         setLoadin(true);
+        
+        // Store admin credentials and impersonation flag BEFORE making the API call
+        
+            localStorage.setItem('adminEmail', 'admin@cleancompare.com');
+            localStorage.setItem('isImpersonating', 'true');
+            localStorage.setItem('impersonatedSellerId', seller.email); // Using email as identifier
+            localStorage.setItem('impersonatedSellerName', seller.businessName);
+            
+            console.log('Stored admin credentials for return:', {
+                adminEmail: 'admin@cleancompare.com',
+                sellerEmail: seller.email
+            });
+        
+
         const res = await fetch('/api/admin/impersonate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -38,24 +55,29 @@ export function SellerInfoDialog({
         });
 
         if (res.ok) {
+            console.log('Successfully connected to seller account');
             // Redirect to seller dashboard
-            window.location.href = seller.role==='buyer' ?'/':'/admin';
-            
+            window.location.href = seller.role === 'buyer' ? '/' : '/admin';
         } else {
             const error = await res.json();
+            // Clear the stored credentials if connection fails
+            localStorage.removeItem('isImpersonating');
+            localStorage.removeItem('impersonatedSellerId');
+            localStorage.removeItem('adminEmail');
+            localStorage.removeItem('impersonatedSellerName');
+            
             alert('Failed to connect: ' + error.error);
         }
 
         setLoadin(false);
     }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <button
-
                     className="p-1 text-gray-500 hover:text-blue-600 transition-colors2">
                     <Eye className="w-4 h-4" />
-
                 </button>
             </DialogTrigger>
 
@@ -106,7 +128,7 @@ export function SellerInfoDialog({
                         disabled={loading}
                         className=''
                         onClick={handleConnect}>
-                        {loading?"...":"Connect"}
+                        {loading ? "Connecting..." : "Connect to Seller Account"}
                     </Button>
                 </div>
             </DialogContent>

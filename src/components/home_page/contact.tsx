@@ -14,7 +14,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Mail, User } from 'lucide-react';
+import { Mail, User, Phone, MessageCircle } from 'lucide-react';
 import { useHomeContext } from '@/providers/homePageProvider';
 import { SignInUpModal } from '../header/header';
 
@@ -23,6 +23,12 @@ export function ContactUs() {
     const [message, setMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const phoneNumber = '01702597067'; // Remove spaces for tel: link
+
+    const handleCall = () => {
+        window.open(`tel:${phoneNumber}`, '_self');
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -58,47 +64,101 @@ export function ContactUs() {
     return (
         <Card className="shadow-md w-full">
             <CardContent className="p-6">
-                <p className="mb-6 text-gray-600">
-                    We're here to help. Send us your message or <br /> call us at : {' '}
-                    <span className="font-semibold text-black">+44 020 8763 1777</span>.
-                </p>
+                {/* Enhanced Contact Options */}
+                <div className="mb-6 space-y-4">
+                    <p className="text-gray-600 text-center">
+                        We're here to help. Choose how you'd like to contact us:
+                    </p>
+                    
+                    {/* Call Button Section */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <div className="flex items-center gap-2">
+                            <Phone className="h-5 w-5 text-blue-600" />
+                            <span className="text-gray-700">Call us at:</span>
+                            <span className="font-semibold text-black">01702 597 067</span>
+                        </div>
+                        <Button 
+                            onClick={handleCall}
+                            className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+                            size="sm"
+                        >
+                            <Phone className="h-4 w-4" />
+                            Call Now
+                        </Button>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="relative flex items-center justify-center">
+                        <div className="flex-grow border-t border-gray-300"></div>
+                        <span className="mx-4 text-sm text-gray-500">or</span>
+                        <div className="flex-grow border-t border-gray-300"></div>
+                    </div>
+                </div>
 
                 {submitted ? (
-                    <div className="text-green-600 font-medium">Thank you! We’ll get back to you soon.</div>
+                    <div className="text-center py-6">
+                        <div className="text-green-600 font-medium text-lg mb-2">
+                            Thank you for your message!
+                        </div>
+                        <p className="text-gray-600">
+                            We'll get back to you as soon as possible.
+                        </p>
+                    </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="subject">Subject</Label>
+                            <Label htmlFor="subject" className="flex items-center gap-2 mb-2">
+                                <MessageCircle className="h-4 w-4" />
+                                Subject
+                            </Label>
                             <Input
                                 id="subject"
                                 name="subject"
                                 required
-                                placeholder="Enter subject..."
+                                placeholder="What is this regarding?"
                                 value={subject}
                                 onChange={(e) => setSubject(e.target.value)}
+                                className="focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
 
                         <div>
-                            <Label htmlFor="message">Message</Label>
+                            <Label htmlFor="message" className="flex items-center gap-2 mb-2">
+                                <Mail className="h-4 w-4" />
+                                Message
+                            </Label>
                             <Textarea
                                 id="message"
                                 name="message"
                                 rows={5}
                                 required
-                                placeholder="Type your message..."
+                                placeholder="Please provide details about your inquiry..."
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
+                                className="focus:ring-2 focus:ring-blue-500 resize-vertical"
                             />
                         </div>
 
-                        <Button disabled={loading} type="submit" className="w-full">
-                            {loading ? 'Sending...' : 'Send Message'}
+                        <Button 
+                            disabled={loading} 
+                            type="submit" 
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5"
+                        >
+                            {loading ? (
+                                <div className="flex items-center gap-2">
+                                    <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    Sending...
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <Mail className="h-4 w-4" />
+                                    Send Message
+                                </div>
+                            )}
                         </Button>
                     </form>
                 )}
             </CardContent>
-
         </Card>
     );
 }
@@ -122,8 +182,13 @@ export function ContactDialog({ textButton }: { textButton?: string }) {
             <Button 
                 onClick={handleContactClick}
                 variant={textButton ? "destructive" : 'default'} 
-                className={`cursor-pointer ${textButton ? "bg-red-600 hover:bg-red-500" : "bg-blue-600 hover:bg-blue-500"}`}
+                className={`cursor-pointer flex items-center gap-2 ${
+                    textButton 
+                    ? "bg-red-600 hover:bg-red-500" 
+                    : "bg-blue-600 hover:bg-blue-500"
+                }`}
             >
+                <MessageCircle className="h-4 w-4" />
                 {textButton ? textButton : "Contact Us"}
             </Button>
 
@@ -131,7 +196,10 @@ export function ContactDialog({ textButton }: { textButton?: string }) {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>{textButton ? textButton : "Contact Us"}</DialogTitle>
+                        <DialogTitle className="flex items-center gap-2">
+                            <MessageCircle className="h-5 w-5" />
+                            {textButton ? textButton : "Contact Us"}
+                        </DialogTitle>
                     </DialogHeader>
                     <ContactUs />
                 </DialogContent>
@@ -142,16 +210,10 @@ export function ContactDialog({ textButton }: { textButton?: string }) {
                 openSignUp={openSignUp}
                 setOpenSignIn={setOpenSignIn}
                 setOpenSignUp={setOpenSignUp}
-                /* onSignInSuccess={() => {
-                    // This will be called after successful sign in
-                    setOpen(true); // Open the contact dialog
-                    setOpenSignIn(false); // Close the sign in modal
-                }} */
             />
         </div>
     );
 }
-
 
 export function SendMessageForm({ to }: { to: string }) {
     const [subject, setSubject] = useState('');
@@ -193,14 +255,22 @@ export function SendMessageForm({ to }: { to: string }) {
     return (
         <Card className="shadow-md w-full">
             <CardContent className="p-6">
-
-
                 {submitted ? (
-                    <div className="text-green-600 font-medium">Thank you! We’ll get back to you soon.</div>
+                    <div className="text-center py-6">
+                        <div className="text-green-600 font-medium text-lg mb-2">
+                            Message Sent!
+                        </div>
+                        <p className="text-gray-600">
+                            Your message has been delivered successfully.
+                        </p>
+                    </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="subject">Subject</Label>
+                            <Label htmlFor="subject" className="flex items-center gap-2 mb-2">
+                                <MessageCircle className="h-4 w-4" />
+                                Subject
+                            </Label>
                             <Input
                                 id="subject"
                                 name="subject"
@@ -208,11 +278,15 @@ export function SendMessageForm({ to }: { to: string }) {
                                 placeholder="Enter subject..."
                                 value={subject}
                                 onChange={(e) => setSubject(e.target.value)}
+                                className="focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
 
                         <div>
-                            <Label htmlFor="message">Message</Label>
+                            <Label htmlFor="message" className="flex items-center gap-2 mb-2">
+                                <Mail className="h-4 w-4" />
+                                Message
+                            </Label>
                             <Textarea
                                 id="message"
                                 name="message"
@@ -221,11 +295,26 @@ export function SendMessageForm({ to }: { to: string }) {
                                 placeholder="Type your message..."
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
+                                className="focus:ring-2 focus:ring-blue-500 resize-vertical"
                             />
                         </div>
 
-                        <Button disabled={loading} type="submit" className="w-full">
-                            {loading ? 'Sending...' : 'Send Message'}
+                        <Button 
+                            disabled={loading} 
+                            type="submit" 
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5"
+                        >
+                            {loading ? (
+                                <div className="flex items-center gap-2">
+                                    <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    Sending...
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <Mail className="h-4 w-4" />
+                                    Send Message
+                                </div>
+                            )}
                         </Button>
                     </form>
                 )}
@@ -234,25 +323,25 @@ export function SendMessageForm({ to }: { to: string }) {
     );
 }
 
-
-
-
-
-
-
-
 export function SendMessageDialogue({ to }: { to: string }) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="default" className="bg-blue-600 hover:bg-blue-500 cursor-pointer">
-                    <Mail />
+                <Button 
+                    variant="default" 
+                    className="bg-blue-600 hover:bg-blue-500 cursor-pointer flex items-center gap-2"
+                >
+                    <Mail className="h-4 w-4" />
+                    Message
                 </Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Send A Message</DialogTitle>
+                    <DialogTitle className="flex items-center gap-2">
+                        <Mail className="h-5 w-5" />
+                        Send A Message
+                    </DialogTitle>
                 </DialogHeader>
                 <SendMessageForm to={to} />
             </DialogContent>

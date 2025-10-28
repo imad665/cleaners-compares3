@@ -29,6 +29,7 @@ import { clearAllEngineerEmbeddings, reembedAllEngineers, reembedAllProducts } f
 import { seedUsers2 } from "@/lib/data-old-website/add-users2";
 import { seedCategories, seedMachines, seedParts, seedSubcategories, seedSundries, updateUserRoles } from "@/lib/data-old-website/seed-categories";
 import { encryptPassword } from "@/lib/crypto";
+import { ReturnToAdminButton } from "@/components/ReturnToAdminButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -279,6 +280,11 @@ export default async function RootLayout({
         <HomeProvider user={session?.user}>
           {children}
           <ChatPage className='fixed bottom-2 right-2' />
+          {/* <ChatPage className='fixed bottom-2 left-2' /> */}
+          
+           <ReturnToAdminButton />
+          {/* Admin Return Button - Only show if admin is impersonating a seller */}
+         
           {/* <InitData/> */}
 
         </HomeProvider>

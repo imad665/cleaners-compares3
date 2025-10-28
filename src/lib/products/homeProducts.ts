@@ -7,6 +7,7 @@ import { getCategoriesHome } from "./homeCategories"
 import { Notable } from "next/font/google"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth"
+import { equal } from "assert"
 
 type GetProductsParams = {
     page?: number
@@ -24,6 +25,14 @@ const excludeAdminSeller = {
         },
     },
 };
+
+export const excludeSuspendedSeller = {
+    seller: {
+        status: {
+            not: 'SUSPENDED',
+        },
+    },
+}
 
 
 export const getDealCountdown = (dealEndDate: any) => {
@@ -47,6 +56,8 @@ export const getDealCountdown = (dealEndDate: any) => {
 
 
 function getFeaturedProductsChunk(where: any, skip: number, pageSize: number) {
+
+
     const featuredProducts = prisma.product.findMany({
         where: where,
         select: {
@@ -64,7 +75,7 @@ function getFeaturedProductsChunk(where: any, skip: number, pageSize: number) {
             dealEndDate: true,
             createdAt: true,
             stock: true,
-            isIncVAT:true,
+            isIncVAT: true,
             ratings: {
                 select: {
                     stars: true,
@@ -91,18 +102,18 @@ function getFeaturedProductsChunk(where: any, skip: number, pageSize: number) {
 }
 
 export async function getFeaturedProducts({ page = 1, pageSize = 10, isFeatured = true, isRandom = false }: GetProductsParams) {
-
+    
     try {
         const where = isFeatured ? {
             isFeatured: isFeatured,
-            ...excludeAdminSeller,
+            ...excludeSuspendedSeller,
             featuredStartDate: {
                 lte: new Date(),
             },
             featuredEndDate: {
                 gte: new Date(),
             },
-        } : { isFeatured, ...excludeAdminSeller, }
+        } : { isFeatured, ...excludeSuspendedSeller, }
         let skip = (page - 1) * pageSize
         if (isRandom) {
             const totalProducts = await prisma.product.count({
@@ -116,6 +127,7 @@ export async function getFeaturedProducts({ page = 1, pageSize = 10, isFeatured 
             getFeaturedProductsChunk(where, skip, pageSize),
             prisma.product.count({
                 where: {
+                    ...excludeSuspendedSeller,
                     isFeatured: true,
                     featuredStartDate: {
                         lte: new Date(),
@@ -155,7 +167,7 @@ export async function getFeaturedProducts({ page = 1, pageSize = 10, isFeatured 
                 image: p.imagesUrl[0],
                 stock: p.stock,
                 title: p.title,
-                isIncVAT:p.isIncVAT,
+                isIncVAT: p.isIncVAT,
                 isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
             }
         })
@@ -197,13 +209,13 @@ function getRandomInt(min: number, max: number) {
 }
 async function mockDeals() {
     const total = await prisma.product.count({
-        where: { ...excludeAdminSeller, }
+        where: { ...excludeSuspendedSeller }
     });
 
     const randomSkip = Math.max(0, getRandomInt(0, total - 20)); // Ensure no overflow
 
     const products = await prisma.product.findMany({
-        where: { ...excludeAdminSeller, },
+        where: { ...excludeSuspendedSeller, },
         skip: randomSkip,
         take: 20,
         include: {
@@ -245,7 +257,7 @@ async function mockDeals() {
             title: p.title,
             endDeal: getDealCountdown(dealEndDate),
             stock: p.stock,
-            isIncVAT:p.isIncVAT,
+            isIncVAT: p.isIncVAT,
             discountPercentage: discount,
             isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
         }
@@ -265,7 +277,7 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
                 isDealActive: true,
                 dealStartDate: { lte: now },
                 dealEndDate: { gte: now },
-                ...excludeAdminSeller
+                ...excludeSuspendedSeller
             }
         })
         skip = Math.max(0, getRandomInt(0, totalProducts - pageSize));
@@ -278,7 +290,7 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
                 isDealActive: true,
                 dealStartDate: { lte: now },
                 dealEndDate: { gte: now },
-                ...excludeAdminSeller,
+                ...excludeSuspendedSeller,
             },
             select: {
                 id: true,
@@ -295,7 +307,7 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
                 dealEndDate: true,
                 stock: true,
                 createdAt: true,
-                isIncVAT:true,
+                isIncVAT: true,
                 ratings: {
                     select: {
                         stars: true,
@@ -321,7 +333,7 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
         }),
         prisma.product.count({
             where: {
-                ...excludeAdminSeller,
+                ...excludeSuspendedSeller,
                 isDealActive: true,
                 dealStartDate: { lte: now },
                 dealEndDate: { gte: now },
@@ -364,11 +376,11 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
             image: p.imagesUrl[0],
             title: p.title,
             endDeal: getDealCountdown(p.dealEndDate),
-            dealEndDate:getDealCountdown(p.dealEndDate),
+            dealEndDate: getDealCountdown(p.dealEndDate),
             dealCountdown: isDealActive ? getDealCountdown(p.dealEndDate) : null,
             stock: p.stock,
             discountPercentage: p.discountPercentage,
-            isIncVAT:p.isIncVAT,
+            isIncVAT: p.isIncVAT,
             isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
         }
     }
@@ -418,7 +430,7 @@ export async function getPartsAndAccessoirsProducts({ page = 1, pageSize = 10, i
     if (isRandom) {
         const totalProducts = await prisma.product.count({
             where: {
-                ...excludeAdminSeller,
+                ...excludeSuspendedSeller,
                 category: {
                     parent: {
                         name: {
@@ -436,7 +448,7 @@ export async function getPartsAndAccessoirsProducts({ page = 1, pageSize = 10, i
     const [products, total] = await Promise.all([
         prisma.product.findMany({
             where: {
-                ...excludeAdminSeller,
+                ...excludeSuspendedSeller,
                 category: {
                     parent: {
                         name: {
@@ -485,7 +497,7 @@ export async function getPartsAndAccessoirsProducts({ page = 1, pageSize = 10, i
         }),
         prisma.product.count({
             where: {
-                ...excludeAdminSeller,
+                ...excludeSuspendedSeller,
                 category: {
                     parent: {
                         name: {

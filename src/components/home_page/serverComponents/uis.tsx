@@ -4,6 +4,14 @@ import StarsUi from "../startUi";
 import { AddCartButton } from "../clientComponents/uis";
 import Image from "next/image";
 
+// Helper function to format prices
+const formatPrice = (price: number | string): string => {
+  const num = typeof price === 'string' ? parseFloat(price) : price;
+  const fixed = num.toFixed(3);
+  // Remove trailing zeros and the decimal point if not needed
+  return fixed.replace(/\.?0+$/, '');
+};
+
 export const settingsSlider = {
     autoplay: true,
     autoplaySpeed: 20000,
@@ -114,11 +122,11 @@ export function ItemFeaturedProduct({
                 </div>
                 <div className='mb-3 px-4 space-y-2 mt-3'>
                     {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Units:</span><span className='font-bold'>{units}</span></p>}
-                    {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{parseFloat(unitPrice).toFixed(3)}</span></p>}
+                    {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{formatPrice(unitPrice)}</span></p>}
                     <div>
                         <p className="flex justify-between text-sm">
                             <span className="text-muted-foreground">{vatLabel}</span>
-                            <span className='text-lg font-bold'>£{parseFloat(priceExcVat).toFixed(3)}</span>
+                            <span className='text-lg font-bold'>£{formatPrice(priceExcVat)}</span>
                         </p>
 
 
@@ -130,7 +138,7 @@ export function ItemFeaturedProduct({
                                     <span className="mr-1">Deal ends in:</span>
                                     <span className="font-semibold text-red-600">{dealCountdown}</span>
                                 </span>
-                                {price != priceExcVat && <p className="line-through mr-2 text-sm ml-5">  £{price}</p>}
+                                {price != priceExcVat && <p className="line-through mr-2 text-sm ml-5">  £{formatPrice(price || 0)}</p>}
                             </div>
                         )}
                     </div>
@@ -197,8 +205,8 @@ export function ProductViewerForSubCategory({
                 </div>
                 <div className='mb-3 space-y-2 mt-3'>
                     <p className="flex justify-between text-sm"><span className="text-black">Units:</span><span className='font-bold'>{units}</span></p>
-                    <p className="flex justify-between text-sm"><span className="text-black">Unit Price:</span><span className='font-bold'>£{unitPrice}</span></p>
-                    <p className="flex justify-between text-sm"><span className="text-black">Price Exc Vat:</span> <span className='text-lg font-bold'>£{priceExcVat}</span></p>
+                    <p className="flex justify-between text-sm"><span className="text-black">Unit Price:</span><span className='font-bold'>£{formatPrice(unitPrice)}</span></p>
+                    <p className="flex justify-between text-sm"><span className="text-black">Price Exc Vat:</span> <span className='text-lg font-bold'>£{formatPrice(priceExcVat)}</span></p>
                 </div>
                 <AddCartButton className="w-fit" stock={stock || -1} productId={productId} />
             </div>
@@ -286,19 +294,19 @@ export function ItemLimitedTimeDeals({
                     </div>}
                     {isUnits && <div className="flex gap-8 items-center">
                         <span>Unit Price:</span>
-                        <span>£{parseFloat(unitPrice).toFixed(3)}</span>
+                        <span>£{formatPrice(unitPrice)}</span>
                     </div>}
                     <div className='mb-3 flex gap-8 items-center'>
                         <span>Price Exc Vat:</span>
                         <div className="relative">
-                            <span className='text-lg font-bold'>£{parseFloat(discountPrice).toFixed(3)}</span>
+                            <span className='text-lg font-bold'>£{formatPrice(discountPrice)}</span>
                             <span
                                 className="
                             absolute
                             text-sm text-gray-500
                             line-through ml-2
                             left-0 bottom-[-18px]">
-                                £{parseFloat(priceExcVat).toFixed(3)}</span>
+                                £{formatPrice(priceExcVat)}</span>
                         </div>
                     </div>
                 </div>
@@ -317,59 +325,3 @@ export function ItemLimitedTimeDeals({
         </div>
     )
 }
-
-
-/* type ItemPropsPartAndAccessories = {
-    title: string
-    price: string
-    image: string
-    href: string
-    isNew?: boolean
-    isFeatured?: boolean
-    stars?: number
-    starsCount?: number
-    productId: string
-}
-
-export function ItemPartAndAccessories({
-    title,
-    price,
-    image,
-    href,
-    isNew,
-    isFeatured,
-    stars = 0,
-    starsCount = 0,
-    productId
-
-}: ItemPropsPartAndAccessories) {
-    return (
-        <div className="min-w-[210px] max-w-[210px]  h-[400px] mx-2">
-            <div className='border-1 relative p-4 flex flex-col gap-1 rounded-md h-full bg-white'>
-
-                <div className={`mb-2 flex space-x-2 ${!isNew && !isFeatured ? ' opacity-0' : ''}`}>
-                    <span className='text-white bg-blue-400 text-xs p-1 px-3 rounded-sm'>New</span>
-                    <span className='text-white bg-yellow-600 text-xs p-1  px-3 rounded-sm'>Featured</span>
-                </div>
-                <Link href="/" className='relative mb-3 h-40 overflow-hidden'>
-                    <img src={image} className='w-full h-full object-cover transition-transform duration-300 hover:scale-105' />
-                </Link>
-                <Link href="/" className='font-medium text-sm mb-1 line-clamp-2 hover:text-red-400' >{title}</Link>
-                <div className='flex gap-1 items-center'>
-                    <StarsUi stars={stars} />
-                    <span className='text-xs text-gray-500 ml-1'>({starsCount})</span>
-                </div>
-                <div className='mb-3 mt-2'>
-                    <span className='text-lg font-bold'>$7999.99</span>
-                </div>
-                <AddCartButton productId={productId} />
-            </div>
-
-        </div>
-    )
-} */
-
-
-
-
-

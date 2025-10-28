@@ -18,14 +18,20 @@ import { ShowContactInfo } from '@/components/inboxBuyer/orders/OrderItem';
 import { SignInUpModal } from '@/components/header/header';
 import { useHomeContext } from '@/providers/homePageProvider';
 
+// Helper function to format prices
+const formatPrice = (price: number | string): string => {
+  const num = typeof price === 'string' ? parseFloat(price) : price;
+  const fixed = num.toFixed(3);
+  // Remove trailing zeros and the decimal point if not needed
+  return fixed.replace(/\.?0+$/, '');
+};
+
 interface ProductInfoProps {
   product: Product;
-
 }
 
 export default function ProductInfo({
   product,
-
 }: ProductInfoProps) {
   const [openSignUp, setOpenSignUp] = useState(false);
   const [openSignIn, setOpenSignIn] = useState(false);
@@ -79,11 +85,11 @@ export default function ProductInfo({
       {/* Units */}
       <div className='mb-3 space-y-2 mt-3'>
         {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Units:</span><span className='font-bold'>{product.units}</span></p>}
-        {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{parseFloat(product.unitPrice).toFixed(3)}</span></p>}
+        {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{formatPrice(product.unitPrice)}</span></p>}
         <div>
           <p className="flex justify-between text-sm">
             <span className="text-muted-foreground">{isIncVAT?"Price Inc Vat:":"Price Exc Vat:"}</span>
-            <span className='text-lg font-bold'>£{parseFloat(product.priceExcVat).toFixed(3)}</span>
+            <span className='text-lg font-bold'>£{formatPrice(product.priceExcVat)}</span>
           </p>
 
 
@@ -95,7 +101,7 @@ export default function ProductInfo({
                 <span className="mr-1">Deal ends in:</span>
                 <span className="font-semibold text-red-600">{product.dealCountdown}</span>
               </span>
-              {product.price != product.priceExcVat && <p className="line-through mr-2 text-sm ml-5">  £{product.price}</p>}
+              {product.price != product.priceExcVat && <p className="line-through mr-2 text-sm ml-5">  £{formatPrice(product.price || 0)}</p>}
             </div>
           )}
         </div>

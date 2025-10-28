@@ -97,7 +97,6 @@ import MyCarousel from "./clientComponents/myCarousel";
     contactInfo: "Email: bhamlinen@example.co.uk | Phone: 0121 567 3456",
   },
 ]; */
-
 export default function WantedItemAndBusiness(
   {
     wantedItems,
@@ -108,7 +107,7 @@ export default function WantedItemAndBusiness(
       businessesForSale: any
     }
 ) {
-  const [selectedTab, setSelectedTab] = useState("wanted");
+  const [selectedTab, setSelectedTab] = useState("business");
   //const { wantedItems, businessesForSale } = useHomeProductContext()
   const [openSellerDialog, setOpenSellerDialog] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -156,7 +155,8 @@ export default function WantedItemAndBusiness(
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto mt-0 p-4">
-        <Tabs defaultValue="wanted" className="w-full" onValueChange={setSelectedTab}>
+        {/* Change defaultValue from "wanted" to "business" */}
+        <Tabs defaultValue="business" className="w-full" onValueChange={setSelectedTab}>
           <div className="flex justify-between flex-wrap items-center mb-4">
             <TabsList className="grid grid-cols-2 gap-2">
               <TabsTrigger value="wanted"  className="flex gap-2 items-center">Wanted Items <span title="People want these items"><AlertCircle size={18} color="blue" className="rotate-180"/></span></TabsTrigger>
