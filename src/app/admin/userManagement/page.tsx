@@ -8,6 +8,8 @@ import { toast } from 'sonner';
 import { SellerInfoDialog } from './SellerInfoDialog';
 import { SendBuyerMessageDialog } from './send-buyer-message-dialog';
 import { SendSellerMessageDialog } from './send-seller-message-dialogue';
+import DownloadCSVButton from './DownloadCSVButton';
+import { EditUserDialog } from './EditUserDialog';
 
 
 interface User {
@@ -30,106 +32,7 @@ interface User {
 const UserManagement = () => {
   // Mock users data
   let [usersData, setUsersData] = useState<User[]>([
-    {
-      id: '1',
-      name: 'John Smith',
-      email: 'john.smith@example.com',
-      role: 'seller',
-      status: 'active',
-      joined: '2023-01-15',
-      lastLogin: '2023-05-18',
-      verified: true
-    },
-    {
-      id: '2',
-      name: 'Emma Johnson',
-      email: 'emma.j@example.com',
-      role: 'buyer',
-      status: 'active',
-      joined: '2023-02-22',
-      lastLogin: '2023-05-16',
-      verified: true
-    },
-    {
-      id: '3',
-      name: 'Michael Davis',
-      email: 'michael.d@example.com',
-      role: 'seller',
-      status: 'suspended',
-      joined: '2023-03-10',
-      lastLogin: '2023-04-28',
-      verified: true
-    },
-    {
-      id: '4',
-      name: 'Sarah Wilson',
-      email: 'sarah.w@example.com',
-      role: 'buyer',
-      status: 'active',
-      joined: '2023-03-15',
-      lastLogin: '2023-05-17',
-      verified: true
-    },
-    {
-      id: '5',
-      name: 'David Moore',
-      email: 'david.m@example.com',
-      role: 'seller',
-      status: 'active',
-      joined: '2023-04-02',
-      lastLogin: '2023-05-10',
-      verified: true
-    },
-    {
-      id: '6',
-      name: 'Jennifer Lee',
-      email: 'jennifer.l@example.com',
-      role: 'buyer',
-      status: 'inactive',
-      joined: '2023-04-18',
-      lastLogin: '2023-04-20',
-      verified: false
-    },
-    {
-      id: '7',
-      name: 'Robert Taylor',
-      email: 'robert.t@example.com',
-      role: 'seller',
-      status: 'active',
-      joined: '2023-04-25',
-      lastLogin: '2023-05-15',
-      verified: true
-    },
-    {
-      id: '8',
-      name: 'Lisa Brown',
-      email: 'lisa.b@example.com',
-      role: 'seller',
-      status: 'pending',
-      joined: '2023-05-05',
-      lastLogin: 'Never',
-      verified: false
-    },
-    {
-      id: '9',
-      name: 'James Wilson',
-      email: 'james.w@example.com',
-      role: 'buyer',
-      status: 'active',
-      joined: '2023-05-12',
-      lastLogin: '2023-05-17',
-      verified: true
-    },
-    {
-      id: '10',
-      name: 'Patricia Miller',
-      email: 'patricia.m@example.com',
-      role: 'buyer',
-      status: 'inactive',
-      joined: '2023-05-14',
-      lastLogin: '2023-05-14',
-      verified: true
-    },
+
   ]);
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -141,6 +44,8 @@ const UserManagement = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [selectedUserForEdit, setSelectedUserForEdit] = useState<User | null>(null)
   const [searchTerm, setSearchTerm] = useState('');
   useEffect(() => {
     setLoading(true);
@@ -202,6 +107,12 @@ const UserManagement = () => {
     setSearchTerm('');
     setFilteredUsers(usersData);
   };
+
+
+
+  const handleUserUpdated = () => {
+    setRefresh(v => !v)
+  }
 
   // Table columns configuration 
 
@@ -292,9 +203,9 @@ const UserManagement = () => {
   };
 
   const handleEditUser = (user: User) => {
-    console.log('Edit user:', user);
-    // Navigate to edit user form
-  };
+    setSelectedUserForEdit(user)
+    setEditDialogOpen(true)
+  }
 
   const openActionModal = (user: User, actionType: 'delete' | 'suspend' | 'activate') => {
     setSelectedUser(user);
@@ -375,10 +286,14 @@ const UserManagement = () => {
             Manage users registered on your marketplace.
           </p>
           <div className='flex items-center gap-2'>
-            <SendBuyerMessageDialog/>
-            <SendSellerMessageDialog/>
+            <SendBuyerMessageDialog />
+            <SendSellerMessageDialog />
           </div>
         </div>
+        <DownloadCSVButton
+          users={filteredUsers}
+          filename="filtered_users"
+        />
       </div>
 
       {/* Filters */}
@@ -476,26 +391,16 @@ const UserManagement = () => {
               <SellerInfoDialog
                 seller={{ ...user, ...user.sellerProfile }}
               />
-              {/* <button
+              <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleSendEmail(user);
+                  handleEditUser(user);
                 }}
                 className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
-                title="Send Email"
+                title="Edit User"
               >
-                <Mail size={18} />
-              </button> */}
-              {/* <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              handleResetPassword(user);
-            }} 
-            className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
-            title="Reset Password"
-          > 
-            <Lock size={18} />
-          </button> */}
+                <Edit2 size={18} />
+              </button>
               {user.status !== 'suspended' ? (
                 <button
                   onClick={(e) => {
@@ -570,6 +475,12 @@ const UserManagement = () => {
         </div>
       )}
       <div className='w-[100vw] h-30'> </div>
+      <EditUserDialog
+        user={selectedUserForEdit}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onUserUpdated={handleUserUpdated}
+      />
     </div>
   );
 };

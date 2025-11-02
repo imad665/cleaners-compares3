@@ -7,9 +7,9 @@ import Image from "next/image";
 // Helper function to format prices
 const formatPrice = (price: number | string): string => {
   const num = typeof price === 'string' ? parseFloat(price) : price;
-  const fixed = num.toFixed(3);
-  // Remove trailing zeros and the decimal point if not needed
-  return fixed.replace(/\.?0+$/, '');
+  // Check if the number has more than 2 decimal places
+  const hasThreeDecimals = Math.round(num * 1000) / 1000 !== Math.round(num * 100) / 100;
+  return hasThreeDecimals ? num.toFixed(3) : num.toFixed(2);
 };
 
 export const settingsSlider = {

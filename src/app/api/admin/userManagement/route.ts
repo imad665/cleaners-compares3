@@ -1,5 +1,5 @@
 import { authOptions } from "@/lib/auth";
-import { decryptPassword } from "@/lib/crypto";
+import { decryptPassword, encryptPassword } from "@/lib/crypto";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -115,4 +115,40 @@ export async function DELETE(req: NextRequest) {
     } catch (error) {
         return NextResponse.json({ success: false }, { status: 500 });
     }
+}
+
+// Add this to your existing route.ts file
+export async function PUT(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user || !(session.user.role === 'ADMIN'))
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+
+    const { id, name, email, password, role, status } = await req.json();
+
+    // Build update data object
+    const updateData: any = {
+      name,
+      email,
+      role: role?.toUpperCase(),
+      status: status?.toUpperCase(),
+    }
+
+    // Only update password if provided and not empty
+    if (password && password.trim() !== '') {
+      // You might want to encrypt the password here if needed
+      // updateData.password = encryptPassword(password);
+      updateData.password = encryptPassword(password); // For now, store as plain text (update based on your encryption)
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: updateData
+    })
+
+    return NextResponse.json({ success: true, user: updatedUser }, { status: 200 });
+  } catch (error) {
+    console.error('Failed to update user:', error);
+    return NextResponse.json({ success: false, error: 'Failed to update user' }, { status: 500 });
+  }
 }

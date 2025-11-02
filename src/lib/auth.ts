@@ -59,6 +59,15 @@ export const authOptions: NextAuthOptions = {
          
         
         if (isValid2) {
+          await prisma.user.update({
+            where:{
+              id:user.id
+            },
+            data:{
+              status:'ACTIVE',
+              lastLogin:new Date(),
+            }
+          })
           return user
         }
         else {
