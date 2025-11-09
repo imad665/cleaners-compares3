@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model SecondaryEmail
+ * 
+ */
+export type SecondaryEmail = $Result.DefaultSelection<Prisma.$SecondaryEmailPayload>
+/**
  * Model Service
  * 
  */
@@ -442,6 +447,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.secondaryEmail`: Exposes CRUD operations for the **SecondaryEmail** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SecondaryEmails
+    * const secondaryEmails = await prisma.secondaryEmail.findMany()
+    * ```
+    */
+  get secondaryEmail(): Prisma.SecondaryEmailDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.service`: Exposes CRUD operations for the **Service** model.
@@ -1093,6 +1108,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    SecondaryEmail: 'SecondaryEmail',
     Service: 'Service',
     WantedItem: 'WantedItem',
     BusinessForSale: 'BusinessForSale',
@@ -1132,7 +1148,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "service" | "wantedItem" | "businessForSale" | "contactInfo" | "sellerProfile" | "sellerBankInfo" | "adminSetting" | "product" | "orderPayment" | "order" | "notificationOrder" | "message" | "orderItem" | "category" | "video" | "inquiry" | "rating" | "account" | "session" | "verificationToken" | "documents"
+      modelProps: "user" | "secondaryEmail" | "service" | "wantedItem" | "businessForSale" | "contactInfo" | "sellerProfile" | "sellerBankInfo" | "adminSetting" | "product" | "orderPayment" | "order" | "notificationOrder" | "message" | "orderItem" | "category" | "video" | "inquiry" | "rating" | "account" | "session" | "verificationToken" | "documents"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1207,6 +1223,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      SecondaryEmail: {
+        payload: Prisma.$SecondaryEmailPayload<ExtArgs>
+        fields: Prisma.SecondaryEmailFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SecondaryEmailFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SecondaryEmailFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload>
+          }
+          findFirst: {
+            args: Prisma.SecondaryEmailFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SecondaryEmailFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload>
+          }
+          findMany: {
+            args: Prisma.SecondaryEmailFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload>[]
+          }
+          create: {
+            args: Prisma.SecondaryEmailCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload>
+          }
+          createMany: {
+            args: Prisma.SecondaryEmailCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SecondaryEmailCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload>[]
+          }
+          delete: {
+            args: Prisma.SecondaryEmailDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload>
+          }
+          update: {
+            args: Prisma.SecondaryEmailUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload>
+          }
+          deleteMany: {
+            args: Prisma.SecondaryEmailDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SecondaryEmailUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SecondaryEmailUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload>[]
+          }
+          upsert: {
+            args: Prisma.SecondaryEmailUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecondaryEmailPayload>
+          }
+          aggregate: {
+            args: Prisma.SecondaryEmailAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSecondaryEmail>
+          }
+          groupBy: {
+            args: Prisma.SecondaryEmailGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SecondaryEmailGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SecondaryEmailCountArgs<ExtArgs>
+            result: $Utils.Optional<SecondaryEmailCountAggregateOutputType> | number
           }
         }
       }
@@ -2849,6 +2939,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    secondaryEmail?: SecondaryEmailOmit
     service?: ServiceOmit
     wantedItem?: WantedItemOmit
     businessForSale?: BusinessForSaleOmit
@@ -2980,6 +3071,7 @@ export namespace Prisma {
     sessions: number
     wantedItems: number
     favorites: number
+    secondaryEmails: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2999,6 +3091,7 @@ export namespace Prisma {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     wantedItems?: boolean | UserCountOutputTypeCountWantedItemsArgs
     favorites?: boolean | UserCountOutputTypeCountFavoritesArgs
+    secondaryEmails?: boolean | UserCountOutputTypeCountSecondaryEmailsArgs
   }
 
   // Custom InputTypes
@@ -3122,6 +3215,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountFavoritesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProductWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSecondaryEmailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SecondaryEmailWhereInput
   }
 
 
@@ -3530,6 +3630,7 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     wantedItems?: boolean | User$wantedItemsArgs<ExtArgs>
     favorites?: boolean | User$favoritesArgs<ExtArgs>
+    secondaryEmails?: boolean | User$secondaryEmailsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3604,6 +3705,7 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     wantedItems?: boolean | User$wantedItemsArgs<ExtArgs>
     favorites?: boolean | User$favoritesArgs<ExtArgs>
+    secondaryEmails?: boolean | User$secondaryEmailsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3630,6 +3732,7 @@ export namespace Prisma {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       wantedItems: Prisma.$WantedItemPayload<ExtArgs>[]
       favorites: Prisma.$ProductPayload<ExtArgs>[]
+      secondaryEmails: Prisma.$SecondaryEmailPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4058,6 +4161,7 @@ export namespace Prisma {
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     wantedItems<T extends User$wantedItemsArgs<ExtArgs> = {}>(args?: Subset<T, User$wantedItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WantedItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     favorites<T extends User$favoritesArgs<ExtArgs> = {}>(args?: Subset<T, User$favoritesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    secondaryEmails<T extends User$secondaryEmailsArgs<ExtArgs> = {}>(args?: Subset<T, User$secondaryEmailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4911,6 +5015,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.secondaryEmails
+   */
+  export type User$secondaryEmailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
+    where?: SecondaryEmailWhereInput
+    orderBy?: SecondaryEmailOrderByWithRelationInput | SecondaryEmailOrderByWithRelationInput[]
+    cursor?: SecondaryEmailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SecondaryEmailScalarFieldEnum | SecondaryEmailScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4926,6 +5054,1051 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SecondaryEmail
+   */
+
+  export type AggregateSecondaryEmail = {
+    _count: SecondaryEmailCountAggregateOutputType | null
+    _min: SecondaryEmailMinAggregateOutputType | null
+    _max: SecondaryEmailMaxAggregateOutputType | null
+  }
+
+  export type SecondaryEmailMinAggregateOutputType = {
+    id: string | null
+    email: string | null
+    password: string | null
+    userId: string | null
+  }
+
+  export type SecondaryEmailMaxAggregateOutputType = {
+    id: string | null
+    email: string | null
+    password: string | null
+    userId: string | null
+  }
+
+  export type SecondaryEmailCountAggregateOutputType = {
+    id: number
+    email: number
+    password: number
+    userId: number
+    _all: number
+  }
+
+
+  export type SecondaryEmailMinAggregateInputType = {
+    id?: true
+    email?: true
+    password?: true
+    userId?: true
+  }
+
+  export type SecondaryEmailMaxAggregateInputType = {
+    id?: true
+    email?: true
+    password?: true
+    userId?: true
+  }
+
+  export type SecondaryEmailCountAggregateInputType = {
+    id?: true
+    email?: true
+    password?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type SecondaryEmailAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SecondaryEmail to aggregate.
+     */
+    where?: SecondaryEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecondaryEmails to fetch.
+     */
+    orderBy?: SecondaryEmailOrderByWithRelationInput | SecondaryEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SecondaryEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecondaryEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecondaryEmails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SecondaryEmails
+    **/
+    _count?: true | SecondaryEmailCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SecondaryEmailMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SecondaryEmailMaxAggregateInputType
+  }
+
+  export type GetSecondaryEmailAggregateType<T extends SecondaryEmailAggregateArgs> = {
+        [P in keyof T & keyof AggregateSecondaryEmail]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSecondaryEmail[P]>
+      : GetScalarType<T[P], AggregateSecondaryEmail[P]>
+  }
+
+
+
+
+  export type SecondaryEmailGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SecondaryEmailWhereInput
+    orderBy?: SecondaryEmailOrderByWithAggregationInput | SecondaryEmailOrderByWithAggregationInput[]
+    by: SecondaryEmailScalarFieldEnum[] | SecondaryEmailScalarFieldEnum
+    having?: SecondaryEmailScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SecondaryEmailCountAggregateInputType | true
+    _min?: SecondaryEmailMinAggregateInputType
+    _max?: SecondaryEmailMaxAggregateInputType
+  }
+
+  export type SecondaryEmailGroupByOutputType = {
+    id: string
+    email: string
+    password: string | null
+    userId: string
+    _count: SecondaryEmailCountAggregateOutputType | null
+    _min: SecondaryEmailMinAggregateOutputType | null
+    _max: SecondaryEmailMaxAggregateOutputType | null
+  }
+
+  type GetSecondaryEmailGroupByPayload<T extends SecondaryEmailGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SecondaryEmailGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SecondaryEmailGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SecondaryEmailGroupByOutputType[P]>
+            : GetScalarType<T[P], SecondaryEmailGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SecondaryEmailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    password?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["secondaryEmail"]>
+
+  export type SecondaryEmailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    password?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["secondaryEmail"]>
+
+  export type SecondaryEmailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    password?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["secondaryEmail"]>
+
+  export type SecondaryEmailSelectScalar = {
+    id?: boolean
+    email?: boolean
+    password?: boolean
+    userId?: boolean
+  }
+
+  export type SecondaryEmailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "userId", ExtArgs["result"]["secondaryEmail"]>
+  export type SecondaryEmailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SecondaryEmailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SecondaryEmailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SecondaryEmailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SecondaryEmail"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      email: string
+      password: string | null
+      userId: string
+    }, ExtArgs["result"]["secondaryEmail"]>
+    composites: {}
+  }
+
+  type SecondaryEmailGetPayload<S extends boolean | null | undefined | SecondaryEmailDefaultArgs> = $Result.GetResult<Prisma.$SecondaryEmailPayload, S>
+
+  type SecondaryEmailCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SecondaryEmailFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SecondaryEmailCountAggregateInputType | true
+    }
+
+  export interface SecondaryEmailDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SecondaryEmail'], meta: { name: 'SecondaryEmail' } }
+    /**
+     * Find zero or one SecondaryEmail that matches the filter.
+     * @param {SecondaryEmailFindUniqueArgs} args - Arguments to find a SecondaryEmail
+     * @example
+     * // Get one SecondaryEmail
+     * const secondaryEmail = await prisma.secondaryEmail.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SecondaryEmailFindUniqueArgs>(args: SelectSubset<T, SecondaryEmailFindUniqueArgs<ExtArgs>>): Prisma__SecondaryEmailClient<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SecondaryEmail that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SecondaryEmailFindUniqueOrThrowArgs} args - Arguments to find a SecondaryEmail
+     * @example
+     * // Get one SecondaryEmail
+     * const secondaryEmail = await prisma.secondaryEmail.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SecondaryEmailFindUniqueOrThrowArgs>(args: SelectSubset<T, SecondaryEmailFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SecondaryEmailClient<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SecondaryEmail that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecondaryEmailFindFirstArgs} args - Arguments to find a SecondaryEmail
+     * @example
+     * // Get one SecondaryEmail
+     * const secondaryEmail = await prisma.secondaryEmail.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SecondaryEmailFindFirstArgs>(args?: SelectSubset<T, SecondaryEmailFindFirstArgs<ExtArgs>>): Prisma__SecondaryEmailClient<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SecondaryEmail that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecondaryEmailFindFirstOrThrowArgs} args - Arguments to find a SecondaryEmail
+     * @example
+     * // Get one SecondaryEmail
+     * const secondaryEmail = await prisma.secondaryEmail.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SecondaryEmailFindFirstOrThrowArgs>(args?: SelectSubset<T, SecondaryEmailFindFirstOrThrowArgs<ExtArgs>>): Prisma__SecondaryEmailClient<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SecondaryEmails that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecondaryEmailFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SecondaryEmails
+     * const secondaryEmails = await prisma.secondaryEmail.findMany()
+     * 
+     * // Get first 10 SecondaryEmails
+     * const secondaryEmails = await prisma.secondaryEmail.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const secondaryEmailWithIdOnly = await prisma.secondaryEmail.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SecondaryEmailFindManyArgs>(args?: SelectSubset<T, SecondaryEmailFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SecondaryEmail.
+     * @param {SecondaryEmailCreateArgs} args - Arguments to create a SecondaryEmail.
+     * @example
+     * // Create one SecondaryEmail
+     * const SecondaryEmail = await prisma.secondaryEmail.create({
+     *   data: {
+     *     // ... data to create a SecondaryEmail
+     *   }
+     * })
+     * 
+     */
+    create<T extends SecondaryEmailCreateArgs>(args: SelectSubset<T, SecondaryEmailCreateArgs<ExtArgs>>): Prisma__SecondaryEmailClient<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SecondaryEmails.
+     * @param {SecondaryEmailCreateManyArgs} args - Arguments to create many SecondaryEmails.
+     * @example
+     * // Create many SecondaryEmails
+     * const secondaryEmail = await prisma.secondaryEmail.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SecondaryEmailCreateManyArgs>(args?: SelectSubset<T, SecondaryEmailCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SecondaryEmails and returns the data saved in the database.
+     * @param {SecondaryEmailCreateManyAndReturnArgs} args - Arguments to create many SecondaryEmails.
+     * @example
+     * // Create many SecondaryEmails
+     * const secondaryEmail = await prisma.secondaryEmail.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SecondaryEmails and only return the `id`
+     * const secondaryEmailWithIdOnly = await prisma.secondaryEmail.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SecondaryEmailCreateManyAndReturnArgs>(args?: SelectSubset<T, SecondaryEmailCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SecondaryEmail.
+     * @param {SecondaryEmailDeleteArgs} args - Arguments to delete one SecondaryEmail.
+     * @example
+     * // Delete one SecondaryEmail
+     * const SecondaryEmail = await prisma.secondaryEmail.delete({
+     *   where: {
+     *     // ... filter to delete one SecondaryEmail
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SecondaryEmailDeleteArgs>(args: SelectSubset<T, SecondaryEmailDeleteArgs<ExtArgs>>): Prisma__SecondaryEmailClient<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SecondaryEmail.
+     * @param {SecondaryEmailUpdateArgs} args - Arguments to update one SecondaryEmail.
+     * @example
+     * // Update one SecondaryEmail
+     * const secondaryEmail = await prisma.secondaryEmail.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SecondaryEmailUpdateArgs>(args: SelectSubset<T, SecondaryEmailUpdateArgs<ExtArgs>>): Prisma__SecondaryEmailClient<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SecondaryEmails.
+     * @param {SecondaryEmailDeleteManyArgs} args - Arguments to filter SecondaryEmails to delete.
+     * @example
+     * // Delete a few SecondaryEmails
+     * const { count } = await prisma.secondaryEmail.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SecondaryEmailDeleteManyArgs>(args?: SelectSubset<T, SecondaryEmailDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SecondaryEmails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecondaryEmailUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SecondaryEmails
+     * const secondaryEmail = await prisma.secondaryEmail.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SecondaryEmailUpdateManyArgs>(args: SelectSubset<T, SecondaryEmailUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SecondaryEmails and returns the data updated in the database.
+     * @param {SecondaryEmailUpdateManyAndReturnArgs} args - Arguments to update many SecondaryEmails.
+     * @example
+     * // Update many SecondaryEmails
+     * const secondaryEmail = await prisma.secondaryEmail.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SecondaryEmails and only return the `id`
+     * const secondaryEmailWithIdOnly = await prisma.secondaryEmail.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SecondaryEmailUpdateManyAndReturnArgs>(args: SelectSubset<T, SecondaryEmailUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SecondaryEmail.
+     * @param {SecondaryEmailUpsertArgs} args - Arguments to update or create a SecondaryEmail.
+     * @example
+     * // Update or create a SecondaryEmail
+     * const secondaryEmail = await prisma.secondaryEmail.upsert({
+     *   create: {
+     *     // ... data to create a SecondaryEmail
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SecondaryEmail we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SecondaryEmailUpsertArgs>(args: SelectSubset<T, SecondaryEmailUpsertArgs<ExtArgs>>): Prisma__SecondaryEmailClient<$Result.GetResult<Prisma.$SecondaryEmailPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SecondaryEmails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecondaryEmailCountArgs} args - Arguments to filter SecondaryEmails to count.
+     * @example
+     * // Count the number of SecondaryEmails
+     * const count = await prisma.secondaryEmail.count({
+     *   where: {
+     *     // ... the filter for the SecondaryEmails we want to count
+     *   }
+     * })
+    **/
+    count<T extends SecondaryEmailCountArgs>(
+      args?: Subset<T, SecondaryEmailCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SecondaryEmailCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SecondaryEmail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecondaryEmailAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SecondaryEmailAggregateArgs>(args: Subset<T, SecondaryEmailAggregateArgs>): Prisma.PrismaPromise<GetSecondaryEmailAggregateType<T>>
+
+    /**
+     * Group by SecondaryEmail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecondaryEmailGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SecondaryEmailGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SecondaryEmailGroupByArgs['orderBy'] }
+        : { orderBy?: SecondaryEmailGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SecondaryEmailGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSecondaryEmailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SecondaryEmail model
+   */
+  readonly fields: SecondaryEmailFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SecondaryEmail.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SecondaryEmailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SecondaryEmail model
+   */
+  interface SecondaryEmailFieldRefs {
+    readonly id: FieldRef<"SecondaryEmail", 'String'>
+    readonly email: FieldRef<"SecondaryEmail", 'String'>
+    readonly password: FieldRef<"SecondaryEmail", 'String'>
+    readonly userId: FieldRef<"SecondaryEmail", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SecondaryEmail findUnique
+   */
+  export type SecondaryEmailFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which SecondaryEmail to fetch.
+     */
+    where: SecondaryEmailWhereUniqueInput
+  }
+
+  /**
+   * SecondaryEmail findUniqueOrThrow
+   */
+  export type SecondaryEmailFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which SecondaryEmail to fetch.
+     */
+    where: SecondaryEmailWhereUniqueInput
+  }
+
+  /**
+   * SecondaryEmail findFirst
+   */
+  export type SecondaryEmailFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which SecondaryEmail to fetch.
+     */
+    where?: SecondaryEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecondaryEmails to fetch.
+     */
+    orderBy?: SecondaryEmailOrderByWithRelationInput | SecondaryEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SecondaryEmails.
+     */
+    cursor?: SecondaryEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecondaryEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecondaryEmails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SecondaryEmails.
+     */
+    distinct?: SecondaryEmailScalarFieldEnum | SecondaryEmailScalarFieldEnum[]
+  }
+
+  /**
+   * SecondaryEmail findFirstOrThrow
+   */
+  export type SecondaryEmailFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which SecondaryEmail to fetch.
+     */
+    where?: SecondaryEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecondaryEmails to fetch.
+     */
+    orderBy?: SecondaryEmailOrderByWithRelationInput | SecondaryEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SecondaryEmails.
+     */
+    cursor?: SecondaryEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecondaryEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecondaryEmails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SecondaryEmails.
+     */
+    distinct?: SecondaryEmailScalarFieldEnum | SecondaryEmailScalarFieldEnum[]
+  }
+
+  /**
+   * SecondaryEmail findMany
+   */
+  export type SecondaryEmailFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which SecondaryEmails to fetch.
+     */
+    where?: SecondaryEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SecondaryEmails to fetch.
+     */
+    orderBy?: SecondaryEmailOrderByWithRelationInput | SecondaryEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SecondaryEmails.
+     */
+    cursor?: SecondaryEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SecondaryEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SecondaryEmails.
+     */
+    skip?: number
+    distinct?: SecondaryEmailScalarFieldEnum | SecondaryEmailScalarFieldEnum[]
+  }
+
+  /**
+   * SecondaryEmail create
+   */
+  export type SecondaryEmailCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SecondaryEmail.
+     */
+    data: XOR<SecondaryEmailCreateInput, SecondaryEmailUncheckedCreateInput>
+  }
+
+  /**
+   * SecondaryEmail createMany
+   */
+  export type SecondaryEmailCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SecondaryEmails.
+     */
+    data: SecondaryEmailCreateManyInput | SecondaryEmailCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SecondaryEmail createManyAndReturn
+   */
+  export type SecondaryEmailCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * The data used to create many SecondaryEmails.
+     */
+    data: SecondaryEmailCreateManyInput | SecondaryEmailCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SecondaryEmail update
+   */
+  export type SecondaryEmailUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SecondaryEmail.
+     */
+    data: XOR<SecondaryEmailUpdateInput, SecondaryEmailUncheckedUpdateInput>
+    /**
+     * Choose, which SecondaryEmail to update.
+     */
+    where: SecondaryEmailWhereUniqueInput
+  }
+
+  /**
+   * SecondaryEmail updateMany
+   */
+  export type SecondaryEmailUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SecondaryEmails.
+     */
+    data: XOR<SecondaryEmailUpdateManyMutationInput, SecondaryEmailUncheckedUpdateManyInput>
+    /**
+     * Filter which SecondaryEmails to update
+     */
+    where?: SecondaryEmailWhereInput
+    /**
+     * Limit how many SecondaryEmails to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SecondaryEmail updateManyAndReturn
+   */
+  export type SecondaryEmailUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * The data used to update SecondaryEmails.
+     */
+    data: XOR<SecondaryEmailUpdateManyMutationInput, SecondaryEmailUncheckedUpdateManyInput>
+    /**
+     * Filter which SecondaryEmails to update
+     */
+    where?: SecondaryEmailWhereInput
+    /**
+     * Limit how many SecondaryEmails to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SecondaryEmail upsert
+   */
+  export type SecondaryEmailUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SecondaryEmail to update in case it exists.
+     */
+    where: SecondaryEmailWhereUniqueInput
+    /**
+     * In case the SecondaryEmail found by the `where` argument doesn't exist, create a new SecondaryEmail with this data.
+     */
+    create: XOR<SecondaryEmailCreateInput, SecondaryEmailUncheckedCreateInput>
+    /**
+     * In case the SecondaryEmail was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SecondaryEmailUpdateInput, SecondaryEmailUncheckedUpdateInput>
+  }
+
+  /**
+   * SecondaryEmail delete
+   */
+  export type SecondaryEmailDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
+    /**
+     * Filter which SecondaryEmail to delete.
+     */
+    where: SecondaryEmailWhereUniqueInput
+  }
+
+  /**
+   * SecondaryEmail deleteMany
+   */
+  export type SecondaryEmailDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SecondaryEmails to delete
+     */
+    where?: SecondaryEmailWhereInput
+    /**
+     * Limit how many SecondaryEmails to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SecondaryEmail without action
+   */
+  export type SecondaryEmailDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SecondaryEmail
+     */
+    select?: SecondaryEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SecondaryEmail
+     */
+    omit?: SecondaryEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SecondaryEmailInclude<ExtArgs> | null
   }
 
 
@@ -29173,6 +30346,16 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const SecondaryEmailScalarFieldEnum: {
+    id: 'id',
+    email: 'email',
+    password: 'password',
+    userId: 'userId'
+  };
+
+  export type SecondaryEmailScalarFieldEnum = (typeof SecondaryEmailScalarFieldEnum)[keyof typeof SecondaryEmailScalarFieldEnum]
+
+
   export const ServiceScalarFieldEnum: {
     id: 'id',
     title: 'title',
@@ -29858,6 +31041,7 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     wantedItems?: WantedItemListRelationFilter
     favorites?: ProductListRelationFilter
+    secondaryEmails?: SecondaryEmailListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -29893,6 +31077,7 @@ export namespace Prisma {
     sessions?: SessionOrderByRelationAggregateInput
     wantedItems?: WantedItemOrderByRelationAggregateInput
     favorites?: ProductOrderByRelationAggregateInput
+    secondaryEmails?: SecondaryEmailOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -29931,6 +31116,7 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     wantedItems?: WantedItemListRelationFilter
     favorites?: ProductListRelationFilter
+    secondaryEmails?: SecondaryEmailListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -29971,6 +31157,56 @@ export namespace Prisma {
     isSigninSuccess?: BoolNullableWithAggregatesFilter<"User"> | boolean | null
     resetToken?: StringNullableWithAggregatesFilter<"User"> | string | null
     resetTokenExpiry?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  }
+
+  export type SecondaryEmailWhereInput = {
+    AND?: SecondaryEmailWhereInput | SecondaryEmailWhereInput[]
+    OR?: SecondaryEmailWhereInput[]
+    NOT?: SecondaryEmailWhereInput | SecondaryEmailWhereInput[]
+    id?: StringFilter<"SecondaryEmail"> | string
+    email?: StringFilter<"SecondaryEmail"> | string
+    password?: StringNullableFilter<"SecondaryEmail"> | string | null
+    userId?: StringFilter<"SecondaryEmail"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type SecondaryEmailOrderByWithRelationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    password?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type SecondaryEmailWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    email?: string
+    AND?: SecondaryEmailWhereInput | SecondaryEmailWhereInput[]
+    OR?: SecondaryEmailWhereInput[]
+    NOT?: SecondaryEmailWhereInput | SecondaryEmailWhereInput[]
+    password?: StringNullableFilter<"SecondaryEmail"> | string | null
+    userId?: StringFilter<"SecondaryEmail"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "email">
+
+  export type SecondaryEmailOrderByWithAggregationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    password?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    _count?: SecondaryEmailCountOrderByAggregateInput
+    _max?: SecondaryEmailMaxOrderByAggregateInput
+    _min?: SecondaryEmailMinOrderByAggregateInput
+  }
+
+  export type SecondaryEmailScalarWhereWithAggregatesInput = {
+    AND?: SecondaryEmailScalarWhereWithAggregatesInput | SecondaryEmailScalarWhereWithAggregatesInput[]
+    OR?: SecondaryEmailScalarWhereWithAggregatesInput[]
+    NOT?: SecondaryEmailScalarWhereWithAggregatesInput | SecondaryEmailScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SecondaryEmail"> | string
+    email?: StringWithAggregatesFilter<"SecondaryEmail"> | string
+    password?: StringNullableWithAggregatesFilter<"SecondaryEmail"> | string | null
+    userId?: StringWithAggregatesFilter<"SecondaryEmail"> | string
   }
 
   export type ServiceWhereInput = {
@@ -31788,6 +33024,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -31823,6 +33060,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -31858,6 +33096,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -31893,6 +33132,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -31944,6 +33184,54 @@ export namespace Prisma {
     isSigninSuccess?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SecondaryEmailCreateInput = {
+    id?: string
+    email: string
+    password?: string | null
+    user: UserCreateNestedOneWithoutSecondaryEmailsInput
+  }
+
+  export type SecondaryEmailUncheckedCreateInput = {
+    id?: string
+    email: string
+    password?: string | null
+    userId: string
+  }
+
+  export type SecondaryEmailUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutSecondaryEmailsNestedInput
+  }
+
+  export type SecondaryEmailUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SecondaryEmailCreateManyInput = {
+    id?: string
+    email: string
+    password?: string | null
+    userId: string
+  }
+
+  export type SecondaryEmailUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SecondaryEmailUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ServiceCreateInput = {
@@ -34062,6 +35350,12 @@ export namespace Prisma {
     none?: WantedItemWhereInput
   }
 
+  export type SecondaryEmailListRelationFilter = {
+    every?: SecondaryEmailWhereInput
+    some?: SecondaryEmailWhereInput
+    none?: SecondaryEmailWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -34112,6 +35406,10 @@ export namespace Prisma {
   }
 
   export type WantedItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SecondaryEmailOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -34258,6 +35556,32 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type SecondaryEmailCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    password?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type SecondaryEmailMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    password?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type SecondaryEmailMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    password?: SortOrder
+    userId?: SortOrder
+  }
+
   export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -34286,11 +35610,6 @@ export namespace Prisma {
     in?: $Enums.ServiceCategory[] | ListEnumServiceCategoryFieldRefInput<$PrismaModel>
     notIn?: $Enums.ServiceCategory[] | ListEnumServiceCategoryFieldRefInput<$PrismaModel>
     not?: NestedEnumServiceCategoryFilter<$PrismaModel> | $Enums.ServiceCategory
-  }
-
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
   }
 
   export type ServiceCountOrderByAggregateInput = {
@@ -35755,6 +37074,13 @@ export namespace Prisma {
     connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
   }
 
+  export type SecondaryEmailCreateNestedManyWithoutUserInput = {
+    create?: XOR<SecondaryEmailCreateWithoutUserInput, SecondaryEmailUncheckedCreateWithoutUserInput> | SecondaryEmailCreateWithoutUserInput[] | SecondaryEmailUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SecondaryEmailCreateOrConnectWithoutUserInput | SecondaryEmailCreateOrConnectWithoutUserInput[]
+    createMany?: SecondaryEmailCreateManyUserInputEnvelope
+    connect?: SecondaryEmailWhereUniqueInput | SecondaryEmailWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -35876,6 +37202,13 @@ export namespace Prisma {
     create?: XOR<ProductCreateWithoutFavoritedByInput, ProductUncheckedCreateWithoutFavoritedByInput> | ProductCreateWithoutFavoritedByInput[] | ProductUncheckedCreateWithoutFavoritedByInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutFavoritedByInput | ProductCreateOrConnectWithoutFavoritedByInput[]
     connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type SecondaryEmailUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SecondaryEmailCreateWithoutUserInput, SecondaryEmailUncheckedCreateWithoutUserInput> | SecondaryEmailCreateWithoutUserInput[] | SecondaryEmailUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SecondaryEmailCreateOrConnectWithoutUserInput | SecondaryEmailCreateOrConnectWithoutUserInput[]
+    createMany?: SecondaryEmailCreateManyUserInputEnvelope
+    connect?: SecondaryEmailWhereUniqueInput | SecondaryEmailWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -36149,6 +37482,20 @@ export namespace Prisma {
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
   }
 
+  export type SecondaryEmailUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SecondaryEmailCreateWithoutUserInput, SecondaryEmailUncheckedCreateWithoutUserInput> | SecondaryEmailCreateWithoutUserInput[] | SecondaryEmailUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SecondaryEmailCreateOrConnectWithoutUserInput | SecondaryEmailCreateOrConnectWithoutUserInput[]
+    upsert?: SecondaryEmailUpsertWithWhereUniqueWithoutUserInput | SecondaryEmailUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SecondaryEmailCreateManyUserInputEnvelope
+    set?: SecondaryEmailWhereUniqueInput | SecondaryEmailWhereUniqueInput[]
+    disconnect?: SecondaryEmailWhereUniqueInput | SecondaryEmailWhereUniqueInput[]
+    delete?: SecondaryEmailWhereUniqueInput | SecondaryEmailWhereUniqueInput[]
+    connect?: SecondaryEmailWhereUniqueInput | SecondaryEmailWhereUniqueInput[]
+    update?: SecondaryEmailUpdateWithWhereUniqueWithoutUserInput | SecondaryEmailUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SecondaryEmailUpdateManyWithWhereWithoutUserInput | SecondaryEmailUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SecondaryEmailScalarWhereInput | SecondaryEmailScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -36390,6 +37737,34 @@ export namespace Prisma {
     update?: ProductUpdateWithWhereUniqueWithoutFavoritedByInput | ProductUpdateWithWhereUniqueWithoutFavoritedByInput[]
     updateMany?: ProductUpdateManyWithWhereWithoutFavoritedByInput | ProductUpdateManyWithWhereWithoutFavoritedByInput[]
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SecondaryEmailCreateWithoutUserInput, SecondaryEmailUncheckedCreateWithoutUserInput> | SecondaryEmailCreateWithoutUserInput[] | SecondaryEmailUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SecondaryEmailCreateOrConnectWithoutUserInput | SecondaryEmailCreateOrConnectWithoutUserInput[]
+    upsert?: SecondaryEmailUpsertWithWhereUniqueWithoutUserInput | SecondaryEmailUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SecondaryEmailCreateManyUserInputEnvelope
+    set?: SecondaryEmailWhereUniqueInput | SecondaryEmailWhereUniqueInput[]
+    disconnect?: SecondaryEmailWhereUniqueInput | SecondaryEmailWhereUniqueInput[]
+    delete?: SecondaryEmailWhereUniqueInput | SecondaryEmailWhereUniqueInput[]
+    connect?: SecondaryEmailWhereUniqueInput | SecondaryEmailWhereUniqueInput[]
+    update?: SecondaryEmailUpdateWithWhereUniqueWithoutUserInput | SecondaryEmailUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SecondaryEmailUpdateManyWithWhereWithoutUserInput | SecondaryEmailUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SecondaryEmailScalarWhereInput | SecondaryEmailScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutSecondaryEmailsInput = {
+    create?: XOR<UserCreateWithoutSecondaryEmailsInput, UserUncheckedCreateWithoutSecondaryEmailsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSecondaryEmailsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSecondaryEmailsNestedInput = {
+    create?: XOR<UserCreateWithoutSecondaryEmailsInput, UserUncheckedCreateWithoutSecondaryEmailsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSecondaryEmailsInput
+    upsert?: UserUpsertWithoutSecondaryEmailsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSecondaryEmailsInput, UserUpdateWithoutSecondaryEmailsInput>, UserUncheckedUpdateWithoutSecondaryEmailsInput>
   }
 
   export type UserCreateNestedOneWithoutServiceInput = {
@@ -38576,6 +39951,28 @@ export namespace Prisma {
     create: XOR<ProductCreateWithoutFavoritedByInput, ProductUncheckedCreateWithoutFavoritedByInput>
   }
 
+  export type SecondaryEmailCreateWithoutUserInput = {
+    id?: string
+    email: string
+    password?: string | null
+  }
+
+  export type SecondaryEmailUncheckedCreateWithoutUserInput = {
+    id?: string
+    email: string
+    password?: string | null
+  }
+
+  export type SecondaryEmailCreateOrConnectWithoutUserInput = {
+    where: SecondaryEmailWhereUniqueInput
+    create: XOR<SecondaryEmailCreateWithoutUserInput, SecondaryEmailUncheckedCreateWithoutUserInput>
+  }
+
+  export type SecondaryEmailCreateManyUserInputEnvelope = {
+    data: SecondaryEmailCreateManyUserInput | SecondaryEmailCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
     where: AccountWhereUniqueInput
     update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
@@ -39131,6 +40528,188 @@ export namespace Prisma {
     data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutFavoritedByInput>
   }
 
+  export type SecondaryEmailUpsertWithWhereUniqueWithoutUserInput = {
+    where: SecondaryEmailWhereUniqueInput
+    update: XOR<SecondaryEmailUpdateWithoutUserInput, SecondaryEmailUncheckedUpdateWithoutUserInput>
+    create: XOR<SecondaryEmailCreateWithoutUserInput, SecondaryEmailUncheckedCreateWithoutUserInput>
+  }
+
+  export type SecondaryEmailUpdateWithWhereUniqueWithoutUserInput = {
+    where: SecondaryEmailWhereUniqueInput
+    data: XOR<SecondaryEmailUpdateWithoutUserInput, SecondaryEmailUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SecondaryEmailUpdateManyWithWhereWithoutUserInput = {
+    where: SecondaryEmailScalarWhereInput
+    data: XOR<SecondaryEmailUpdateManyMutationInput, SecondaryEmailUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SecondaryEmailScalarWhereInput = {
+    AND?: SecondaryEmailScalarWhereInput | SecondaryEmailScalarWhereInput[]
+    OR?: SecondaryEmailScalarWhereInput[]
+    NOT?: SecondaryEmailScalarWhereInput | SecondaryEmailScalarWhereInput[]
+    id?: StringFilter<"SecondaryEmail"> | string
+    email?: StringFilter<"SecondaryEmail"> | string
+    password?: StringNullableFilter<"SecondaryEmail"> | string | null
+    userId?: StringFilter<"SecondaryEmail"> | string
+  }
+
+  export type UserCreateWithoutSecondaryEmailsInput = {
+    id?: string
+    name: string
+    userIdOld?: string | null
+    email: string
+    password?: string | null
+    role?: $Enums.Role
+    createdAt?: Date | string
+    image?: string | null
+    emailVerified?: Date | string | null
+    lastLogin?: Date | string
+    status?: $Enums.UserStatus
+    isSigninSuccess?: boolean | null
+    resetToken?: string | null
+    resetTokenExpiry?: Date | string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    BusinessForSale?: BusinessForSaleCreateNestedManyWithoutUserInput
+    inquiries?: InquiryCreateNestedManyWithoutBuyerInput
+    inquiriesSeller?: InquiryCreateNestedManyWithoutSellerInput
+    messageReceived?: MessageCreateNestedManyWithoutReceiverUserInput
+    messageSent?: MessageCreateNestedManyWithoutSenderUserInput
+    Message?: MessageCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    OrderItem?: OrderItemCreateNestedManyWithoutSellerInput
+    OrderPayment?: OrderPaymentCreateNestedManyWithoutSellerInput
+    products?: ProductCreateNestedManyWithoutSellerInput
+    ratings?: RatingCreateNestedManyWithoutUserInput
+    sellerBankInfo?: SellerBankInfoCreateNestedOneWithoutUserInput
+    sellerProfile?: SellerProfileCreateNestedOneWithoutUserInput
+    Service?: ServiceCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    wantedItems?: WantedItemCreateNestedManyWithoutUserInput
+    favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSecondaryEmailsInput = {
+    id?: string
+    name: string
+    userIdOld?: string | null
+    email: string
+    password?: string | null
+    role?: $Enums.Role
+    createdAt?: Date | string
+    image?: string | null
+    emailVerified?: Date | string | null
+    lastLogin?: Date | string
+    status?: $Enums.UserStatus
+    isSigninSuccess?: boolean | null
+    resetToken?: string | null
+    resetTokenExpiry?: Date | string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    BusinessForSale?: BusinessForSaleUncheckedCreateNestedManyWithoutUserInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutBuyerInput
+    inquiriesSeller?: InquiryUncheckedCreateNestedManyWithoutSellerInput
+    messageReceived?: MessageUncheckedCreateNestedManyWithoutReceiverUserInput
+    messageSent?: MessageUncheckedCreateNestedManyWithoutSenderUserInput
+    Message?: MessageUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    OrderItem?: OrderItemUncheckedCreateNestedManyWithoutSellerInput
+    OrderPayment?: OrderPaymentUncheckedCreateNestedManyWithoutSellerInput
+    products?: ProductUncheckedCreateNestedManyWithoutSellerInput
+    ratings?: RatingUncheckedCreateNestedManyWithoutUserInput
+    sellerBankInfo?: SellerBankInfoUncheckedCreateNestedOneWithoutUserInput
+    sellerProfile?: SellerProfileUncheckedCreateNestedOneWithoutUserInput
+    Service?: ServiceUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
+    favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSecondaryEmailsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSecondaryEmailsInput, UserUncheckedCreateWithoutSecondaryEmailsInput>
+  }
+
+  export type UserUpsertWithoutSecondaryEmailsInput = {
+    update: XOR<UserUpdateWithoutSecondaryEmailsInput, UserUncheckedUpdateWithoutSecondaryEmailsInput>
+    create: XOR<UserCreateWithoutSecondaryEmailsInput, UserUncheckedCreateWithoutSecondaryEmailsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSecondaryEmailsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSecondaryEmailsInput, UserUncheckedUpdateWithoutSecondaryEmailsInput>
+  }
+
+  export type UserUpdateWithoutSecondaryEmailsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userIdOld?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLogin?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    isSigninSuccess?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    BusinessForSale?: BusinessForSaleUpdateManyWithoutUserNestedInput
+    inquiries?: InquiryUpdateManyWithoutBuyerNestedInput
+    inquiriesSeller?: InquiryUpdateManyWithoutSellerNestedInput
+    messageReceived?: MessageUpdateManyWithoutReceiverUserNestedInput
+    messageSent?: MessageUpdateManyWithoutSenderUserNestedInput
+    Message?: MessageUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    OrderItem?: OrderItemUpdateManyWithoutSellerNestedInput
+    OrderPayment?: OrderPaymentUpdateManyWithoutSellerNestedInput
+    products?: ProductUpdateManyWithoutSellerNestedInput
+    ratings?: RatingUpdateManyWithoutUserNestedInput
+    sellerBankInfo?: SellerBankInfoUpdateOneWithoutUserNestedInput
+    sellerProfile?: SellerProfileUpdateOneWithoutUserNestedInput
+    Service?: ServiceUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
+    favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSecondaryEmailsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userIdOld?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLogin?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    isSigninSuccess?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    BusinessForSale?: BusinessForSaleUncheckedUpdateManyWithoutUserNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutBuyerNestedInput
+    inquiriesSeller?: InquiryUncheckedUpdateManyWithoutSellerNestedInput
+    messageReceived?: MessageUncheckedUpdateManyWithoutReceiverUserNestedInput
+    messageSent?: MessageUncheckedUpdateManyWithoutSenderUserNestedInput
+    Message?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    OrderItem?: OrderItemUncheckedUpdateManyWithoutSellerNestedInput
+    OrderPayment?: OrderPaymentUncheckedUpdateManyWithoutSellerNestedInput
+    products?: ProductUncheckedUpdateManyWithoutSellerNestedInput
+    ratings?: RatingUncheckedUpdateManyWithoutUserNestedInput
+    sellerBankInfo?: SellerBankInfoUncheckedUpdateOneWithoutUserNestedInput
+    sellerProfile?: SellerProfileUncheckedUpdateOneWithoutUserNestedInput
+    Service?: ServiceUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
+    favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+  }
+
   export type UserCreateWithoutServiceInput = {
     id?: string
     name: string
@@ -39163,6 +40742,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutServiceInput = {
@@ -39197,6 +40777,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutServiceInput = {
@@ -39247,6 +40828,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutServiceInput = {
@@ -39281,6 +40863,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactInfoCreateWithoutWantedItemInput = {
@@ -39340,6 +40923,7 @@ export namespace Prisma {
     Service?: ServiceCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWantedItemsInput = {
@@ -39374,6 +40958,7 @@ export namespace Prisma {
     Service?: ServiceUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWantedItemsInput = {
@@ -39455,6 +41040,7 @@ export namespace Prisma {
     Service?: ServiceUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWantedItemsInput = {
@@ -39489,6 +41075,7 @@ export namespace Prisma {
     Service?: ServiceUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutBusinessForSaleInput = {
@@ -39523,6 +41110,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBusinessForSaleInput = {
@@ -39557,6 +41145,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBusinessForSaleInput = {
@@ -39632,6 +41221,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBusinessForSaleInput = {
@@ -39666,6 +41256,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactInfoUpsertWithoutBusinessForSaleInput = {
@@ -39863,6 +41454,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSellerProfileInput = {
@@ -39897,6 +41489,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSellerProfileInput = {
@@ -39947,6 +41540,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSellerProfileInput = {
@@ -39981,6 +41575,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSellerBankInfoInput = {
@@ -40015,6 +41610,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSellerBankInfoInput = {
@@ -40049,6 +41645,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSellerBankInfoInput = {
@@ -40099,6 +41696,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSellerBankInfoInput = {
@@ -40133,6 +41731,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type InquiryCreateWithoutProductInput = {
@@ -40286,6 +41885,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProductsInput = {
@@ -40320,6 +41920,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProductsInput = {
@@ -40385,6 +41986,7 @@ export namespace Prisma {
     Service?: ServiceCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFavoritesInput = {
@@ -40419,6 +42021,7 @@ export namespace Prisma {
     Service?: ServiceUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFavoritesInput = {
@@ -40542,6 +42145,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProductsInput = {
@@ -40576,6 +42180,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RatingUpsertWithWhereUniqueWithoutProductInput = {
@@ -40703,6 +42308,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrderPaymentInput = {
@@ -40737,6 +42343,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrderPaymentInput = {
@@ -40834,6 +42441,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrderPaymentInput = {
@@ -40868,6 +42476,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MessageCreateWithoutOrderInput = {
@@ -40949,6 +42558,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -40983,6 +42593,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -41150,6 +42761,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -41184,6 +42796,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -41379,6 +42992,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessageReceivedInput = {
@@ -41413,6 +43027,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessageReceivedInput = {
@@ -41452,6 +43067,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessageSentInput = {
@@ -41486,6 +43102,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessageSentInput = {
@@ -41525,6 +43142,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessageInput = {
@@ -41559,6 +43177,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessageInput = {
@@ -41656,6 +43275,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessageReceivedInput = {
@@ -41690,6 +43310,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutMessageSentInput = {
@@ -41735,6 +43356,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessageSentInput = {
@@ -41769,6 +43391,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutMessageInput = {
@@ -41814,6 +43437,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessageInput = {
@@ -41848,6 +43472,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutOrderItemsInput = {
@@ -41996,6 +43621,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrderItemInput = {
@@ -42030,6 +43656,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrderItemInput = {
@@ -42206,6 +43833,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrderItemInput = {
@@ -42240,6 +43868,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CategoryCreateWithoutChildrenInput = {
@@ -42517,6 +44146,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInquiriesInput = {
@@ -42551,6 +44181,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInquiriesInput = {
@@ -42663,6 +44294,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInquiriesSellerInput = {
@@ -42697,6 +44329,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInquiriesSellerInput = {
@@ -42747,6 +44380,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInquiriesInput = {
@@ -42781,6 +44415,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutInquiryInput = {
@@ -42905,6 +44540,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInquiriesSellerInput = {
@@ -42939,6 +44575,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductCreateWithoutRatingsInput = {
@@ -43046,6 +44683,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRatingsInput = {
@@ -43080,6 +44718,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRatingsInput = {
@@ -43209,6 +44848,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRatingsInput = {
@@ -43243,6 +44883,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -43277,6 +44918,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -43311,6 +44953,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -43361,6 +45004,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -43395,6 +45039,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -43429,6 +45074,7 @@ export namespace Prisma {
     Service?: ServiceCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemCreateNestedManyWithoutUserInput
     favorites?: ProductCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -43463,6 +45109,7 @@ export namespace Prisma {
     Service?: ServiceUncheckedCreateNestedManyWithoutUserInput
     wantedItems?: WantedItemUncheckedCreateNestedManyWithoutUserInput
     favorites?: ProductUncheckedCreateNestedManyWithoutFavoritedByInput
+    secondaryEmails?: SecondaryEmailUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -43513,6 +45160,7 @@ export namespace Prisma {
     Service?: ServiceUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
     favorites?: ProductUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -43547,6 +45195,7 @@ export namespace Prisma {
     Service?: ServiceUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
     favorites?: ProductUncheckedUpdateManyWithoutFavoritedByNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -43760,6 +45409,12 @@ export namespace Prisma {
     imageUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type SecondaryEmailCreateManyUserInput = {
+    id?: string
+    email: string
+    password?: string | null
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -44520,6 +46175,24 @@ export namespace Prisma {
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type SecondaryEmailUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SecondaryEmailUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SecondaryEmailUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type InquiryCreateManyProductInput = {
     id?: string
     message: string
@@ -44712,6 +46385,7 @@ export namespace Prisma {
     Service?: ServiceUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUpdateManyWithoutUserNestedInput
+    secondaryEmails?: SecondaryEmailUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFavoritesInput = {
@@ -44746,6 +46420,7 @@ export namespace Prisma {
     Service?: ServiceUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     wantedItems?: WantedItemUncheckedUpdateManyWithoutUserNestedInput
+    secondaryEmails?: SecondaryEmailUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutFavoritesInput = {

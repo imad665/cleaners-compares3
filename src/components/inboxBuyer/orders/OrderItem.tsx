@@ -49,7 +49,6 @@ export function ShowContactInfo({ email, phone, signIn, isSignIn }: { email: str
     </div>
   )
 }
-
 const OrderItem: React.FC<OrderItemProps> = ({
   order,
   onContactSeller,
@@ -60,11 +59,19 @@ const OrderItem: React.FC<OrderItemProps> = ({
   console.log(order, ';;;;;;;;;;############;;;;;');
   const [openSignUp, setOpenSignUp] = useState(false);
   const [openSignIn, setOpenSignIn] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  
   const isUnits = order.units > 0;
+  const hasLongDescription = order.description && order.description.length > 150;
+  const displayDescription = hasLongDescription && !isExpanded 
+    ? `${order.description.substring(0, 150)}...` 
+    : order.description;
+
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md border border-gray-100">
       <div className="p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row gap-4">
+          {/* Product Image */}
           <div className="w-full sm:w-32 h-32 flex-shrink-0">
             <img
               src={order.image || '/logo-1.png'}
@@ -73,65 +80,107 @@ const OrderItem: React.FC<OrderItemProps> = ({
             />
           </div>
 
+          {/* Product Details */}
           <div className="flex-1 min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between">
-              <div className="flex-1">
-                <h3 className="text-lg max-w-[280px] text-wrap font-medium text-gray-900 truncate">{order.title}</h3>
-                <div className="mt-1 flex items-center">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+              {/* Left Column - Product Info */}
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-medium text-gray-900 break-words">
+                  {order.title}
+                </h3>
+                
+                <div className="mt-2 flex items-center">
                   <img
                     src={order.sellerAvatar || '/logo-1.png'}
                     alt={'img'}
-                    className="w-6 h-6 rounded-full mr-2"
+                    className="w-6 h-6 rounded-full mr-2 flex-shrink-0"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/logo-1.png';
                       target.alt = 'fallback logo';
                     }}
                   />
-                  <p className="text-sm text-gray-500 ">{order.sellerName || 'Unknown Seller'}</p>
+                  <p className="text-sm text-gray-500 truncate">
+                    {order.sellerName || 'Unknown Seller'}
+                  </p>
                 </div>
-                <p className='text-sm text-gray-600 py-2'>{order.description}</p>
-                <div className="mt-1 flex items-center flex-wrap gap-2 text-sm text-gray-600">
 
+                {/* Description with expand/collapse */}
+                {order.description && (
+                  <div className="mt-3">
+                    <p className="text-sm text-gray-600 break-words">
+                      {displayDescription}
+                    </p>
+                    {hasLongDescription && (
+                      <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="text-sm text-blue-600 hover:text-blue-800 mt-1 font-medium"
+                      >
+                        {isExpanded ? 'Show less' : 'Show more'}
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                <div className="mt-3 flex items-center flex-wrap gap-2 text-sm text-gray-600">
                   <StarsUi stars={order.stars || 0} />
-
-                  {/* {order.dealEndDate && (
-                    <>
-                      <span>{formatDate(order.dealEndDate)}</span>
-                      <span className="text-gray-300">•</span>
-                    </>
-                  )} */}
-
                   {order.status && <StatusBadge status={order.status} />}
                 </div>
-                <div className='mb-3 space-y-2 mt-3'>
-                  {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Units:</span><span className='font-bold'>{order.units}</span></p>}
-                  {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{parseFloat(order.unitPrice).toFixed(2)}</span></p>}
-                  <div>
-                    <p className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">{order.isIncVAT?"Price Inc Vat:":"Price Exc Vat:"}</span>
-                      <span className='text-lg font-bold'>£{order.priceExcVat}</span>
-                    </p>
+              </div>
 
-
-                    {order.dealCountdown && (
-                      <div className="flex items-center text-sm text-gray-700">
-
-                        <Clock className="h-4 w-4 text-red-500 mr-1" />
-                        <span>
-                          <span className="mr-1">Deal ends in:</span>
-                          <span className="font-semibold text-red-600">{order.dealCountdown}</span>
+              {/* Right Column - Pricing Info */}
+              <div className="lg:w-48 flex-shrink-0">
+                <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                  {isUnits && (
+                    <>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Units:</span>
+                        <span className="text-sm font-semibold">{order.units}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Unit Price:</span>
+                        <span className="text-sm font-semibold">
+                          £{parseFloat(order.unitPrice).toFixed(2)}
                         </span>
-                        {order.price != order.priceExcVat && <p className="line-through mr-2 text-sm ml-5">  £{order.price}</p>}
+                      </div>
+                    </>
+                  )}
+                  
+                  <div className="border-t pt-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">
+                        {order.isIncVAT ? "Inc VAT:" : "Exc VAT:"}
+                      </span>
+                      <span className="text-lg font-bold text-gray-900">
+                        £{order.priceExcVat}
+                      </span>
+                    </div>
+
+                    {/* Deal Countdown and Original Price */}
+                    {order.dealCountdown && (
+                      <div className="mt-2 space-y-1">
+                        <div className="flex items-center text-xs text-red-600">
+                          <Clock className="h-3 w-3 mr-1 flex-shrink-0" />
+                          <span className="truncate">
+                            Ends in: <span className="font-semibold">{order.dealCountdown}</span>
+                          </span>
+                        </div>
+                        {order.price != order.priceExcVat && (
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-500">Original:</span>
+                            <span className="text-xs text-gray-500 line-through">
+                              £{order.price}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
                 </div>
               </div>
-
-
             </div>
 
+            {/* Action Buttons */}
             {isContactSeller ? (
               <div className="mt-4 flex flex-col sm:flex-row sm:justify-end gap-2">
                 <button
@@ -154,11 +203,13 @@ const OrderItem: React.FC<OrderItemProps> = ({
               </div>
             ) : (
               <div className="mt-4 flex flex-col sm:flex-row sm:justify-end gap-2">
-                <AddCartButton isFromCart={true} stock={order.stock} isOldProduct={order.isOldProduct} className="relative top-0 w-fit" productId={order.productId} />
-                {/* <ShowContactInfo
-                  signIn={setOpenSignIn}
-                  isSignIn={isSignIn}
-                  email={order.sellerEmail} phone='-' /> */}
+                <AddCartButton 
+                  isFromCart={true} 
+                  stock={order.stock} 
+                  isOldProduct={order.isOldProduct} 
+                  className="relative top-0 w-fit" 
+                  productId={order.productId} 
+                />
               </div>
             )}
           </div>
@@ -168,7 +219,8 @@ const OrderItem: React.FC<OrderItemProps> = ({
         openSignIn={openSignIn}
         openSignUp={openSignUp}
         setOpenSignIn={setOpenSignIn}
-        setOpenSignUp={setOpenSignUp} />
+        setOpenSignUp={setOpenSignUp} 
+      />
     </div>
   );
 };

@@ -134,6 +134,13 @@ exports.Prisma.UserScalarFieldEnum = {
   resetTokenExpiry: 'resetTokenExpiry'
 };
 
+exports.Prisma.SecondaryEmailScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  password: 'password',
+  userId: 'userId'
+};
+
 exports.Prisma.ServiceScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -527,6 +534,7 @@ exports.CategrySatuts = exports.$Enums.CategrySatuts = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  SecondaryEmail: 'SecondaryEmail',
   Service: 'Service',
   WantedItem: 'WantedItem',
   BusinessForSale: 'BusinessForSale',

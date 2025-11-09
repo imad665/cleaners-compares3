@@ -41,6 +41,16 @@ model User {
   sessions         Session[]
   wantedItems      WantedItem[]
   favorites        Product[]         @relation("UserFavorites")
+
+  secondaryEmails SecondaryEmail[]
+}
+
+model SecondaryEmail {
+  id       String @id @default(cuid())
+  email    String @unique // Add this line
+  password String?
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade) // Add onDelete Cascade
 }
 
 model Service {

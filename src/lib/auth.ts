@@ -1,20 +1,34 @@
 // lib/auth.ts
 'server only'
+
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import { compare } from "bcryptjs"
 
-import { getServerSession, type NextAuthOptions } from "next-auth"
+import { type NextAuthOptions } from "next-auth"
 
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { redirect } from "next/navigation"
 import { prisma } from "./prisma"
 import { sendWelcomMessage } from "./payement/sendMessage"
 import { decryptPassword } from "./crypto"
 
+async function activateUser(userId: string) {
+  await prisma.user.update({
+    where: {
+      id: userId
+    },
+    data: {
+      status: 'ACTIVE',
+      lastLogin: new Date(),
+    }
+  })
+}
+
 export const authOptions: NextAuthOptions = {
+
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
+
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -29,45 +43,63 @@ export const authOptions: NextAuthOptions = {
       },
       allowDangerousEmailAccountLinking: true,
     }),
+
     CredentialsProvider({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
+
       async authorize(credentials) {
         //console.log(credentials,'*******************');
 
-        if (!credentials?.email || !credentials?.password) return null
+        const email = credentials?.email;
+        const password = credentials?.password;
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+        if (!email || !password) return null
+
+        let user = await prisma.user.findUnique({
+          where: { email: email },
         })
 
-        if (!user || !user.password) return null
+        let isValid2 = false;
+        //console.log(user,'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+        if (!user) {
+          const secondaryEmail = await prisma.secondaryEmail.findUnique({
+            where: { email: email },
+            select: {
+              password: true,
+              user: true
+            },
+          })
+
+          if (!secondaryEmail || !secondaryEmail.password) { return null };
+          isValid2 = decryptPassword(secondaryEmail.password) === password;
+          //console.log(secondaryEmail,isValid2,'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+          
+          user = secondaryEmail.user;
+
+        }
+
+        if (!user  ) return null
         //console.log(user,'iiiiiiiiiii');
 
         if (user.status === 'SUSPENDED') {
           throw new Error('SUSPENDED');
         }
+
         if (user.password === credentials.password) {
+          await activateUser(user.id);
           return user
         }
 
 
-        const isValid2 = decryptPassword(user.password) === credentials.password;
-         
-        
+        isValid2 = isValid2 || decryptPassword(user.password) === credentials.password;
+
+
         if (isValid2) {
-          await prisma.user.update({
-            where:{
-              id:user.id
-            },
-            data:{
-              status:'ACTIVE',
-              lastLogin:new Date(),
-            }
-          })
+          await activateUser(user.id);
           return user
         }
         else {
