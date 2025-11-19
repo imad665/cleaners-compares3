@@ -45,7 +45,7 @@ export function Logo({ width = 100, height = 20 }: { width?: number, height?: nu
 
 const productsData = [
     'Machines', 'Parts', 'Sundries',
-    'Engineers', "More",
+    'Engineers', "More",'Blog'
 ];
 
 function NavProducts() {
@@ -98,7 +98,7 @@ function NavProducts() {
                         <div className="hidden md:block font-bold ">
                             {p.toLowerCase().replace(' ', '-') !== 'engineers' &&
                                 p.toLowerCase().replace(' ', '-') !== 'sundries' &&
-                                p.toLowerCase().replace(' ', '-') !== 'more' ? (
+                                p.toLowerCase().replace(' ', '-') !== 'more' && p.toLowerCase()!='blog'? (
                                 <Link
                                     href={`/products/${p.toLowerCase().replace(' ', '-')}`}
                                     className='text-black-400 hover:text-blue-500 transition-all'

@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useHomeContext } from "@/providers/homePageProvider";
-import { Bell, Box, ChevronDown, ChevronLeft, ChevronRight, Currency, FilePlus, FoldersIcon, Kanban, LayoutDashboard, ListOrdered, LogOut, LucideIcon, Menu, MessageSquare, Search, Settings, ShoppingCart, User, UserCog, Users2, Video } from "lucide-react";
+import { Bell, Box, ChevronDown, ChevronLeft, ChevronRight, Currency, FilePlus, FileText, FoldersIcon, Kanban, LayoutDashboard, ListOrdered, LogOut, LucideIcon, Menu, MessageSquare, Search, Settings, ShoppingCart, User, UserCog, Users2, Video } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -33,6 +33,7 @@ function getUserMenu(user, cart) {
     if (user.role === 'ADMIN') {
         return [
             { Icon: LayoutDashboard, title: 'Dashboard', href: '/admin' },
+            { Icon: FileText, title: 'Blog Management', href: '/admin/blog' }, 
            /*  { Icon: ListOrdered, title: 'Orders', href: '/admin/orders' }, */
             { Icon: Currency, title: 'Payouts to Sellers', href: '/admin/payouts' },
             { Icon: FoldersIcon, title: 'Manage Categories', href: '/admin/manageCategories' },
@@ -46,6 +47,7 @@ function getUserMenu(user, cart) {
             { Icon: MessageSquare, title: 'Messages', href: '/admin/myMessages' },
             { Icon: Settings, title: 'Settings', href: '/admin/settings' },
             { Icon: User, title: 'Profile', href: '/admin/profile' },
+            
 
         ]
     } else if (user.role === 'SELLER') {

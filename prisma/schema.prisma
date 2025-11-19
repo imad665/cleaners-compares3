@@ -43,14 +43,15 @@ model User {
   favorites        Product[]         @relation("UserFavorites")
 
   secondaryEmails SecondaryEmail[]
+  blogPosts       BlogPost[]
 }
 
 model SecondaryEmail {
-  id       String @id @default(cuid())
-  email    String @unique // Add this line
+  id       String  @id @default(cuid())
+  email    String  @unique // Add this line
   password String?
   userId   String
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade) // Add onDelete Cascade
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Add onDelete Cascade
 }
 
 model Service {
@@ -378,6 +379,47 @@ model documents {
   text      String?
   metadata  Json?
   embedding Unsupported("vector")?
+}
+
+model BlogPost {
+  id             String            @id @default(cuid())
+  title          String
+  slug           String            @unique
+  content        String            @db.Text
+  excerpt        String?           @db.Text
+  featuredImage  String?
+  images         String[]
+  status         BlogPostStatus    @default(DRAFT)
+  authorId       String
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  publishedAt    DateTime?
+  category       BlogPostCategory? // Use the enum here, remove the relation
+  tags           String[]
+  seoTitle       String?
+  seoDescription String?           @db.Text
+  viewCount      Int               @default(0)
+
+  author User @relation(fields: [authorId], references: [id])
+
+  @@map("blog_posts")
+}
+
+// Remove the BlogCategory model entirely and rename the enum
+enum BlogPostCategory {
+  INDUSTRY_NEWS
+  PRODUCT_REVIEWS
+  MAINTENANCE_TIPS
+  BUSINESS_ADVICE
+  TECHNOLOGY
+  SUSTAINABILITY
+}
+
+enum BlogPostStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+  ARCHIVED
 }
 
 enum OrderItemStatus {

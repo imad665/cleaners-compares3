@@ -419,6 +419,26 @@ exports.Prisma.DocumentsScalarFieldEnum = {
   metadata: 'metadata'
 };
 
+exports.Prisma.BlogPostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  content: 'content',
+  excerpt: 'excerpt',
+  featuredImage: 'featuredImage',
+  images: 'images',
+  status: 'status',
+  authorId: 'authorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  publishedAt: 'publishedAt',
+  category: 'category',
+  tags: 'tags',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
+  viewCount: 'viewCount'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -532,6 +552,22 @@ exports.CategrySatuts = exports.$Enums.CategrySatuts = {
   DELETING: 'DELETING'
 };
 
+exports.BlogPostStatus = exports.$Enums.BlogPostStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  SCHEDULED: 'SCHEDULED',
+  ARCHIVED: 'ARCHIVED'
+};
+
+exports.BlogPostCategory = exports.$Enums.BlogPostCategory = {
+  INDUSTRY_NEWS: 'INDUSTRY_NEWS',
+  PRODUCT_REVIEWS: 'PRODUCT_REVIEWS',
+  MAINTENANCE_TIPS: 'MAINTENANCE_TIPS',
+  BUSINESS_ADVICE: 'BUSINESS_ADVICE',
+  TECHNOLOGY: 'TECHNOLOGY',
+  SUSTAINABILITY: 'SUSTAINABILITY'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   SecondaryEmail: 'SecondaryEmail',
@@ -555,7 +591,8 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
-  documents: 'documents'
+  documents: 'documents',
+  BlogPost: 'BlogPost'
 };
 
 /**
