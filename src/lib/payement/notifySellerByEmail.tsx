@@ -67,7 +67,7 @@ export async function sentToSeller(itemsBySeller: any, order: any, adminEmail?: 
 }
 
 export function getAdminCompanyEmails() {
-  return ['info@exclusivecleaners.co.uk', 'accounts@exclusivecleaners.co.uk']
+  return ['info@exclusivecleaners.co.uk', 'accounts@exclusivecleaners.co.uk','amirshahz77@yahoo.co.uk']
 }
 
 export async function notifySellerByEmail(order: any) {
