@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "3": "^2.1.0",
+    "@browserbasehq/stagehand": "^1.14.0",
     "@hookform/resolvers": "^5.0.1",
     "@langchain/community": "^0.3.55",
     "@langchain/core": "^0.3.61",
