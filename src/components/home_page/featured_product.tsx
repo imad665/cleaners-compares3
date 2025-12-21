@@ -71,7 +71,7 @@ export function FeaturedAndProducts({ initFeaturedProducts }: { initFeaturedProd
      
     //console.log(featuredProducts,';;;;;;;;;;');
     return (
-        <section className="w-full px-4 md:px-8 py-10 mb-5 ">
+        <section className="w-full px-4 md:px-8 py-10 mb-5 bg-blue-50">
             <div className="w-full container mx-auto">
                 <div className='flex justify-between items-center mb-3'>
                     <h2 className="text-2xl font-bold text-left">Featured Products</h2>

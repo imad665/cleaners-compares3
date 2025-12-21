@@ -9,8 +9,30 @@ const formatPrice = (price: number | string): string => {
   const num = typeof price === 'string' ? parseFloat(price) : price;
   // Check if the number has more than 2 decimal places
   const hasThreeDecimals = Math.round(num * 1000) / 1000 !== Math.round(num * 100) / 100;
-  return hasThreeDecimals ? num.toFixed(3) : num.toFixed(2);
+  return hasThreeDecimals ? num.toFixed(2) : num.toFixed(2);
 };
+
+/* const formatPrice = (price: number | string): string => {
+  const num = typeof price === 'string' ? parseFloat(price) : price;
+  
+  // Check if the number is an integer (no decimal part)
+  const isInteger = Number.isInteger(num);
+  
+  if (isInteger) {
+    // For integers, just return without decimals
+    return num.toString();
+  } else {
+    // For non-integers, check if it ends with .00
+    const fixed = num.toFixed(2);
+    // Check if it ends with .00
+    if (fixed.endsWith('.00')) {
+      // Remove .00 for whole numbers
+      return num.toFixed(0);
+    }
+    // Otherwise return with 2 decimal places
+    return fixed;
+  }
+}; */
 
 export const settingsSlider = {
     autoplay: true,
@@ -103,56 +125,87 @@ export function ItemFeaturedProduct({
     discountPercentage,
 }: ItemProps) {
     const isUnits = units > 0;
-    console.log(isIncVAT+';;;;;==================; ;;;;;')
-    const vatLabel = !isIncVAT?"Price Exc Vat:":"Price Inc Vat:"
+    const vatLabel = !isIncVAT ? "Price Exc Vat:" : "Price Inc Vat:"
+    
+    // Check if image matches the specific Cloudinary URL
+    const specificImageUrl = "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg";
+    
+    // Use fallback image if it matches the specific URL
+    const finalImage = image === specificImageUrl ? '/logo-1.png' : image;
+    
     return (
         <div className={`md:min-w-[300px] w-[75vw] grow flex flex-col justify-between md:max-w-[300px] border-1 shadow-md pb-4 rounded-md bg-white min-h-[430px] mx-2 ${className}`}>
-            <div className=' relative  flex flex-col gap-1 grow  '>
-                <Link href={href} className='relative mb-3 h-50 overflow-hidden  not-[]:'>
+            <div className='relative flex flex-col gap-1 grow'>
+                <Link href={href} className='relative mb-3 h-50 overflow-hidden not-[]:'>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                    <Image width={300} height={300} alt="product image" src={image}
-                        className='w-full h-full object-contain   transition-transform duration-300 hover:scale-105' />
-
+                    <Image 
+                        width={300} 
+                        height={300} 
+                        alt="product image" 
+                        src={finalImage}
+                        className='w-full h-full object-contain transition-transform duration-300 hover:scale-105' 
+                    />
                 </Link>
-                <Link href={href} className='font-medium px-4 text-sm mb-1 line-clamp-1 hover:text-red-400' >{title}</Link>
-                {discountPercentage && <p className="absolute px-6 py-1   rounded-tr-md font-bold bg-red-400 text-white right-0 top-0">{discountPercentage}% OFF</p>}
+                <Link href={href} className='font-medium px-4 text-sm mb-1 line-clamp-1 hover:text-red-400'>{title}</Link>
+                
+                {discountPercentage && (
+                    <p className="absolute px-6 py-1 rounded-tr-md font-bold bg-red-400 text-white right-0 top-0">
+                        {discountPercentage}% OFF
+                    </p>
+                )}
+                
                 <div className='flex px-4 gap-1 items-center'>
                     <StarsUi stars={stars || 0} />
                     <span className='text-xs text-gray-500 ml-1'>({starsCount})</span>
                 </div>
+                
                 <div className='mb-3 px-4 space-y-2 mt-3'>
-                    {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Units:</span><span className='font-bold'>{units}</span></p>}
-                    {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{formatPrice(unitPrice)}</span></p>}
+                    {isUnits && (
+                        <p className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Units:</span>
+                            <span className='font-bold'>{units}</span>
+                        </p>
+                    )}
+                    
+                    {isUnits && (
+                        <p className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Unit Price:</span>
+                            <span className='font-bold'>£{formatPrice(unitPrice)}</span>
+                        </p>
+                    )}
+                    
                     <div>
                         <p className="flex justify-between text-sm">
                             <span className="text-muted-foreground">{vatLabel}</span>
                             <span className='text-lg font-bold'>£{formatPrice(priceExcVat)}</span>
                         </p>
 
-
                         {dealCountdown && (
                             <div className="flex items-center text-sm text-gray-700">
-
                                 <Clock className="h-4 w-4 text-red-500 mr-1" />
                                 <span>
                                     <span className="mr-1">Deal ends in:</span>
                                     <span className="font-semibold text-red-600">{dealCountdown}</span>
                                 </span>
-                                {price != priceExcVat && <p className="line-through mr-2 text-sm ml-5">  £{formatPrice(price || 0)}</p>}
+                                {price != priceExcVat && (
+                                    <p className="line-through mr-2 text-sm ml-5">
+                                        £{formatPrice(price || 0)}
+                                    </p>
+                                )}
                             </div>
                         )}
                     </div>
                 </div>
             </div>
+            
             <div className="px-4">
                 <AddCartButton
                     className="w-fit"
                     stock={stock}
                     isOldProduct={isOldProduct}
-                    productId={productId} />
-
+                    productId={productId} 
+                />
             </div>
-
         </div>
     )
 }

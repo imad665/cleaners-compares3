@@ -13,7 +13,7 @@ export function LimitedTimeDeals({ initDealsProducts }: { initDealsProducts: any
     /* const {dealsProducts} = useHomeProductContext(); */
     const dealsProducts = initDealsProducts;
     return (
-        <section className="w-full px-4 md:px-8 py-10 bg-gray-100 max-h-[600px]">
+        <section className="w-full px-4 md:px-8 py-10 bg-white max-h-[600px]">
             <div className="  container mx-auto ">
                 <div className='flex justify-between items-center mb-6'>
                     <h2 className="text-2xl font-bold  text-left">Limited-Time Deals</h2>

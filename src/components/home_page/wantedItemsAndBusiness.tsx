@@ -153,7 +153,7 @@ export default function WantedItemAndBusiness(
   }
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-white-50">
       <div className="container mx-auto mt-0 p-4">
         {/* Change defaultValue from "wanted" to "business" */}
         <Tabs defaultValue="business" className="w-full" onValueChange={setSelectedTab}>

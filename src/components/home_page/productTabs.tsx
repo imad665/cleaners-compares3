@@ -30,7 +30,7 @@ export default function CategoryTabs({ allCategories }: { allCategories: any[] }
   };
 
   return (
-    <div className="bg-gradient-to-b from-gray-50 to-white py-5  ">
+    <div className="bg-gradient-to-b from-blue-200 to-blue-50 py-5  ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-5 sm:mb-12">

@@ -30,6 +30,7 @@ import { seedUsers2 } from "@/lib/data-old-website/add-users2";
 import { seedCategories, seedMachines, seedParts, seedSubcategories, seedSundries, updateUserRoles } from "@/lib/data-old-website/seed-categories";
 import { encryptPassword } from "@/lib/crypto";
 import { ReturnToAdminButton } from "@/components/ReturnToAdminButton";
+import { copyProductsToFile, removeNonRealProducts } from "@/lib/productsCache";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -270,6 +271,9 @@ export default async function RootLayout({
     'ddqdeqd@gmail.com','seller1@gmail.com','vic1dayinsh7777@gmail.com','srtechsolutions03@gmail.com'
   ]) */
   //await deleteUserTested()
+
+   //const allProductNames = await copyProductsToFile();
+  //await removeNonRealProducts();
    
   return (
     <html lang="en" className="scroll-smooth">

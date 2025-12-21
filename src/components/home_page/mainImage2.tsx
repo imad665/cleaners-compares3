@@ -4,7 +4,8 @@ import { ProductSearchBar } from "../header/productSearchBar";
 import styles from "./mainImage2.module.css"
 import { Button } from "../ui/button";
 import { motion } from 'framer-motion';
-import { Plus } from "lucide-react";
+import { ArrowRight, Plus } from "lucide-react";
+import Link from "next/link";
 
 export function BigButton({ text, onClick, disabled }: { text: string, onClick: () => void, disabled?: boolean }) {
   return (
@@ -65,7 +66,7 @@ export function MainImage() {
         </div>
 
         {/* Image Section */}
-        <div className="w-full lg:w-1/2 flex justify-center relative">
+        <div className="w-full lg:w-1/2 flex flex-col items-center justify-center relative">
           <Image
             width={680}
             height={680}
@@ -73,6 +74,24 @@ export function MainImage() {
             alt="Cleaners Compare Image"
             className="w-full max-w-[500px] h-auto object-contain relative z-30"
           />
+          
+          {/* Read More Link Below Image */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="mt-8 lg:mt-10"
+          >
+            <Link 
+              href="/about-platform" 
+              className="group inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold text-lg transition-colors duration-300"
+            >
+              <span className="border-b-2 border-transparent group-hover:border-blue-600 transition-all duration-300">
+                Learn more about our platform
+              </span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
+            </Link>
+          </motion.div>
         </div>
       </div>
 
