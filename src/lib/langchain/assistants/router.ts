@@ -3,7 +3,7 @@
 import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { Pool } from "pg";
-import { ReadableStream } from "web-streams-polyfill/ponyfill";
+import { WritableStream, ReadableStream } from 'web-streams-polyfill';
 
 import { askProductBotStream } from "./chatbotProducts";
 import { askMessageBotStream } from "./chatbotMessages";

@@ -1,9 +1,10 @@
 'use server';
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { ChatOpenAI, ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { StringOutputParser } from "@langchain/core/output_parsers";
-import { ReadableStream } from "web-streams-polyfill/ponyfill";
+import { WritableStream, ReadableStream } from 'web-streams-polyfill';
 import { prisma } from "@/lib/prisma";
+import { ChatOpenAI } from "@langchain/openai";
 
 export const askEngineerBotStream = async (
   userQuestion: string,

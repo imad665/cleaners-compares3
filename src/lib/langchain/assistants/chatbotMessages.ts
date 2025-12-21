@@ -4,7 +4,7 @@
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI } from "@langchain/openai";
-import { ReadableStream } from "web-streams-polyfill/ponyfill";
+import { WritableStream, ReadableStream } from 'web-streams-polyfill';
 
 /**
  * Chatbot for CleanersCompare.com store assistant.

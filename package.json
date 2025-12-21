@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-     
-    "@browserbasehq/stagehand": "^1.14.0",
     "@hookform/resolvers": "^5.0.1",
     "@langchain/community": "^0.3.55",
     "@langchain/core": "^0.3.61",
@@ -51,7 +49,7 @@
     "next-cloudinary": "^6.16.0",
     "next-pwa": "^5.6.0",
     "node-fetch": "^3.3.2",
-    "openai": "^5.7.0",
+    "openai": "^4.62.1",
     "pdf-parse": "^1.1.1",
     "pg": "^8.16.3",
     "react": "^18.3.1",
