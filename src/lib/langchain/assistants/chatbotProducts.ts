@@ -2,7 +2,6 @@
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI } from "@langchain/openai";
 import { StringOutputParser } from "@langchain/core/output_parsers";
-import { WritableStream, ReadableStream } from 'web-streams-polyfill';
 import { prisma } from "@/lib/prisma";
 
 export const askProductBotStream = async (

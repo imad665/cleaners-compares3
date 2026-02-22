@@ -1,4 +1,5 @@
 import { ChatOpenAI } from "@langchain/openai";
+ 
 import { z } from "zod";
 
 export async function classifyIntent(userQuestion: string, apiKey: string) {
@@ -15,6 +16,7 @@ export async function classifyIntent(userQuestion: string, apiKey: string) {
     apiKey: apiKey,
   }).withStructuredOutput(IntentSchema);
 
+  
   const prompt = `
       You are an intent classifier for a chatbot. 
       Classify the following user input into one of these categories:
@@ -33,7 +35,10 @@ export async function classifyIntent(userQuestion: string, apiKey: string) {
 
       User: "${userQuestion}"
       `;
-
+  console.log(prompt);
+  
   const res = await llm_with_structured.invoke(prompt);
+  console.log(res);
+
   return res;
 }

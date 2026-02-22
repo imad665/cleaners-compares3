@@ -3,7 +3,6 @@
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";  // ✅ Gemini wrapper
 import { StringOutputParser } from "@langchain/core/output_parsers";
-import { WritableStream, ReadableStream } from 'web-streams-polyfill';
 import { prisma } from "@/lib/prisma";
 import { ChatOpenAI } from "@langchain/openai";
 

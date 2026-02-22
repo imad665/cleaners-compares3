@@ -4,8 +4,7 @@
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI } from "@langchain/openai";
-import { WritableStream, ReadableStream } from 'web-streams-polyfill';
-
+ 
 /**
  * Chatbot for CleanersCompare.com store assistant.
  * Responds directly to user input without embedding search.

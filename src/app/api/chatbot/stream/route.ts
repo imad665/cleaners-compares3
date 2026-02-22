@@ -1,7 +1,11 @@
+ 
 import { askRouterBotStream } from "@/lib/langchain/assistants/router";
 import getLLmApiKey from "@/lib/langchain/embeding/llm_api_key";
-import { prisma } from "@/lib/prisma";
-import { NextRequest } from "next/server";
+
+import { NextRequest, NextResponse } from "next/server";
+
+import { ChatOpenAI } from "@langchain/openai";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 export async function POST(req: NextRequest) {
     const { question } = await req.json();
@@ -14,14 +18,11 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        /* const settings = await prisma.adminSetting.findMany({where:{key:{in:['openai','gemini']}}}) 
-        //console.log(settings,'ooooooooooooooooooooooooooooo');
-        const apikey = settings.find((s)=>s.key==='openai')?.value || '' 
-        const geminiApiKey = settings.find((s)=>s.key === 'gemini')?.value || ''; */
-        const {apikey,geminiApiKey}=await getLLmApiKey()
 
-        
-        const innerStream = await askRouterBotStream(question,apikey,geminiApiKey);
+        const { apikey, geminiApiKey } = await getLLmApiKey()
+         
+
+        const innerStream = await askRouterBotStream(question, apikey, geminiApiKey);
 
         if (!innerStream) {
             return new Response("Sorry, no matching documents found.", {

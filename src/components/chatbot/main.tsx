@@ -80,6 +80,7 @@ export default function ChatWidget() {
     }, [isOpen]);
 
     const askBot = async () => {
+         
         if (!question.trim()) return;
 
         const userQuestion = question;
@@ -87,7 +88,7 @@ export default function ChatWidget() {
         setMessages(prev => [...prev, { type: "user", content: userQuestion }]);
         setLoading(true);
         setShowWelcomeMessage(false);
-
+        
         try {
             const res = await fetch("/api/chatbot/stream", {
                 method: "POST",
