@@ -452,7 +452,7 @@ export function NavMobile({ user, cart, setOpenDialog,   recentOrderCount,notifi
 
 export function Header({ className = '', recentOrderCount,notificationData }: { className?: string, recentOrderCount?: any,notificationData?:any }) {
     const { cart, user } = useHomeContext();
-    //console.log(cart, ';;;;;;;;;;;;;;;;;;');
+    console.log(notificationData,recentOrderCount, ';;;;;;;;;;;;;ddddddddddd;;;;;');
     const [openDialog, setOpenDialog] = useState(false);
     return (
 

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bell, MessageSquare, ShoppingBag, AlertCircle, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { isEmptyObject } from '@/lib/payement/data';
 
 type Notification = {
   id: string;
@@ -20,7 +21,7 @@ export function NotificationDropdown({ notificationData }: { notificationData: a
   const dropdownRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const router = useRouter();
-
+  notificationData = isEmptyObject(notificationData) ? null : notificationData
   // Sample notifications data
   const notifications: Notification[] = [
     /* your notifications data */
@@ -30,7 +31,7 @@ export function NotificationDropdown({ notificationData }: { notificationData: a
   useEffect(() => {
     audioRef.current = new Audio('/beep_notification.mp3'); // Update extension if needed
     audioRef.current.volume = 0.3;
-    
+
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -42,7 +43,7 @@ export function NotificationDropdown({ notificationData }: { notificationData: a
   // Play sound on first user interaction if there are notifications
   const handleButtonClick = () => {
     setIsOpen(!isOpen);
-    
+
     // Play sound only on first interaction when there are notifications
     if (notifications.length > 0 && !hasPlayedSound && !hasUserInteracted) {
       try {
@@ -56,7 +57,7 @@ export function NotificationDropdown({ notificationData }: { notificationData: a
         console.error('Error playing notification sound:', error);
       }
     }
-    
+
     setHasUserInteracted(true);
   };
 

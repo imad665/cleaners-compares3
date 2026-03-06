@@ -143,7 +143,7 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
+                        <div className="flex flex-col gap-2">
                             <Label htmlFor="name">Name</Label>
                             <Input
                                 disabled={isLoading}
@@ -155,7 +155,7 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
                             />
                         </div>
 
-                        <div>
+                        <div className="flex flex-col gap-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
                                 disabled={isLoading}
@@ -169,7 +169,7 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
                             />
                         </div>
 
-                        <div>
+                        <div className="flex flex-col gap-2">
                             <Label htmlFor="password">Password</Label>
                             <Input
                                 disabled={isLoading}
@@ -185,7 +185,7 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
                             </p>
                         </div>
 
-                        <div>
+                        <div className="flex flex-col gap-2">
                             <Label htmlFor="confirmPassword">Confirm Password</Label>
                             <Input
                                 disabled={isLoading}

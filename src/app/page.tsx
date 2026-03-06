@@ -21,6 +21,11 @@ import { getAllHomeProducts, getRecentOrdersCount } from "@/lib/products/homePro
 import { FormProvider } from "react-hook-form";
 import AddressSearchUK from "@/components/address-search";
 import { getNotifications } from "@/lib/payement/get-notification-for-icon";
+import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { v4 as uuidv4 } from "uuid";
+import { formatDistanceToNow } from "date-fns";
 
 
 export default async function Home() {
@@ -41,12 +46,79 @@ export default async function Home() {
 
   const recentOrderCount = await getRecentOrdersCount();
   const messages = await getNotifications();
+  const session = await getServerSession(authOptions);
+  const user = session?.user;
+  const role =  user?.role;
+  let sellerInquiries: any = []
+  let buyerInquiries: any = [];
+  if (role=== 'SELLER') {
+    sellerInquiries = (await prisma.inquiry.findMany({
+      where: {
+        sellerId: user.id,
+        sellerRead: false
+      },
+      select: {
+        buyer: {
+          select: {
+            name: true,
+            id: true,
+          }
+        },
+        id:true,
+        message: true,
+        response: true,
+        productId: true,
+        createdAt: true,
+      }
+    })).map((c) => ({
+      id: uuidv4(),
+      type: 'message',
+      title: 'New Product Inquiry',
+      preview: `${c.message.substring(0, 20)}...`,
+      time: formatDistanceToNow(new Date(c.createdAt), { addSuffix: true }),
+      link: `/messages/${c.id}`
+    }))
+  } else if (role==='BUYER') {
+    buyerInquiries = (await prisma.inquiry.findMany({
+      where: {
+        buyerId: user.id,
+        buyerRead: false,
+
+      },
+      select: {
+        buyer: {
+          select: {
+            name: true,
+            id: true,
+          }
+        },
+        id:true,
+        message: true,
+        response: true,
+        productId: true,
+        createdAt: true,
+      }
+    })).filter((c)=>c.response!=undefined).map((c) => ({
+      id: uuidv4(),
+      type: 'message',
+      title: 'New Message',
+      preview: `${c.response?.substring(0, 20)}...`,
+      time: formatDistanceToNow(new Date(c.createdAt), { addSuffix: true }),
+      link: `/messages/${c.id}`
+    }))
+  }
+  //console.log(sellerInquiries, buyerInquiries, 'ddddddddddddddddddddduududididdidijfjfjf');
   //console.log(messages,'vvvvvvvvvvvvvv');
 
   //console.log(featuredProducts, 'mmmmmmmmmmmmmm');
+
   return (
     <div>
-      <Header recentOrderCount={recentOrderCount} notificationData={messages} />
+      <Header recentOrderCount={recentOrderCount} notificationData={[
+        ...(messages || []),
+        ...sellerInquiries,
+        ...buyerInquiries
+      ]} />
 
       <main className="">
         <MainImage />

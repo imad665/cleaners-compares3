@@ -1,15 +1,21 @@
-import { ChevronLeft, ChevronRight, Clock, LucideIcon, Play } from "lucide-react";
+'use client'
+import { ChevronLeft, ChevronRight, Clock, LucideIcon, MessageCircle, Play } from "lucide-react";
 import Link from "next/link";
 import StarsUi from "../startUi";
 import { AddCartButton } from "../clientComponents/uis";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { MessageSellerDialog } from "@/components/productInfo/product/MessageSellerDialog";
+import { useState } from "react";
+import { useHomeContext } from "@/providers/homePageProvider";
+import { SignInUpModal } from "@/components/header/header";
 
 // Helper function to format prices
 const formatPrice = (price: number | string): string => {
-  const num = typeof price === 'string' ? parseFloat(price) : price;
-  // Check if the number has more than 2 decimal places
-  const hasThreeDecimals = Math.round(num * 1000) / 1000 !== Math.round(num * 100) / 100;
-  return hasThreeDecimals ? num.toFixed(2) : num.toFixed(2);
+    const num = typeof price === 'string' ? parseFloat(price) : price;
+    // Check if the number has more than 2 decimal places
+    const hasThreeDecimals = Math.round(num * 1000) / 1000 !== Math.round(num * 100) / 100;
+    return hasThreeDecimals ? num.toFixed(2) : num.toFixed(2);
 };
 
 /* const formatPrice = (price: number | string): string => {
@@ -88,6 +94,7 @@ export function ItemShopByCategory({ Icon, text }: { Icon: LucideIcon, text: str
 }
 
 export type ItemProps = {
+    id: string;
     title: string
     units: number
     unitPrice: number
@@ -102,11 +109,12 @@ export type ItemProps = {
     stock?: number,
     className?: string,
     isOldProduct: boolean,
-    discountPercentage:number,
-    isIncVAT:boolean
+    discountPercentage: number,
+    isIncVAT: boolean
 }
 
 export function ItemFeaturedProduct({
+    id,
     title,
     image,
     href,
@@ -126,39 +134,50 @@ export function ItemFeaturedProduct({
 }: ItemProps) {
     const isUnits = units > 0;
     const vatLabel = !isIncVAT ? "Price Exc Vat:" : "Price Inc Vat:"
-    
+    const [openSignUp, setOpenSignUp] = useState(false);
+    const [openSignIn, setOpenSignIn] = useState(false);
+    const [openMessageDialog, setOpenMessageDialog] = useState(false);
+    const { user } = useHomeContext();
     // Check if image matches the specific Cloudinary URL
     const specificImageUrl = "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg";
-    
+
     // Use fallback image if it matches the specific URL
     const finalImage = image === specificImageUrl ? '/logo-1.png' : image;
-    
+    const handleMessageSeller = () => {
+        if (!user) {
+            // If user is not logged in, show sign in/up modal
+            setOpenSignIn(true);
+        } else {
+            // If logged in, open message dialog
+            setOpenMessageDialog(true);
+        }
+    };
     return (
-        <div className={`md:min-w-[300px] w-[75vw] grow flex flex-col justify-between md:max-w-[300px] border-1 shadow-md pb-4 rounded-md bg-white min-h-[430px] mx-2 ${className}`}>
+        <div className={`md:min-w-[200px]   w-[75vw] grow flex flex-col justify-between md:max-w-[300px] border-1 shadow-md pb-4 rounded-md bg-white min-h-[430px] mx-2 ${className}`}>
             <div className='relative flex flex-col gap-1 grow'>
                 <Link href={href} className='relative mb-3 h-50 overflow-hidden not-[]:'>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                    <Image 
-                        width={300} 
-                        height={300} 
-                        alt="product image" 
+                    <Image
+                        width={300}
+                        height={300}
+                        alt="product image"
                         src={finalImage}
-                        className='w-full h-full object-contain transition-transform duration-300 hover:scale-105' 
+                        className='w-full h-full object-contain transition-transform duration-300 hover:scale-105'
                     />
                 </Link>
                 <Link href={href} className='font-medium px-4 text-sm mb-1 line-clamp-1 hover:text-red-400'>{title}</Link>
-                
+
                 {discountPercentage && (
                     <p className="absolute px-6 py-1 rounded-tr-md font-bold bg-red-400 text-white right-0 top-0">
                         {discountPercentage}% OFF
                     </p>
                 )}
-                
+
                 <div className='flex px-4 gap-1 items-center'>
                     <StarsUi stars={stars || 0} />
                     <span className='text-xs text-gray-500 ml-1'>({starsCount})</span>
                 </div>
-                
+
                 <div className='mb-3 px-4 space-y-2 mt-3'>
                     {isUnits && (
                         <p className="flex justify-between text-sm">
@@ -166,14 +185,14 @@ export function ItemFeaturedProduct({
                             <span className='font-bold'>{units}</span>
                         </p>
                     )}
-                    
+
                     {isUnits && (
                         <p className="flex justify-between text-sm">
                             <span className="text-muted-foreground">Unit Price:</span>
                             <span className='font-bold'>£{formatPrice(unitPrice)}</span>
                         </p>
                     )}
-                    
+
                     <div>
                         <p className="flex justify-between text-sm">
                             <span className="text-muted-foreground">{vatLabel}</span>
@@ -197,15 +216,40 @@ export function ItemFeaturedProduct({
                     </div>
                 </div>
             </div>
-            
-            <div className="px-4">
+
+            <div className="px-4 flex gap-3">
                 <AddCartButton
                     className="w-fit"
                     stock={stock}
                     isOldProduct={isOldProduct}
-                    productId={productId} 
+                    productId={productId}
                 />
+                <Button
+                    variant="outline"
+                    size="default"
+                    onClick={handleMessageSeller}
+                    className="gap-2 text-xs"
+                >
+                    <MessageCircle className="h-4 w-4" />
+                    Contact Seller
+                </Button>
             </div>
+            {openMessageDialog && <MessageSellerDialog
+                product={{
+                    id:productId,
+                    image:image,
+                    name:title,
+                    url:href,
+                    }}
+                open={openMessageDialog}
+                onOpenChange={setOpenMessageDialog}
+            />}
+            {(openSignIn || openSignUp) && <SignInUpModal
+                openSignIn={openSignIn}
+                openSignUp={openSignUp}
+                setOpenSignIn={setOpenSignIn}
+                setOpenSignUp={setOpenSignUp}
+            />}
         </div>
     )
 }
@@ -308,7 +352,7 @@ type ItemPropsTimeDeal = {
     productId: string,
     stock?: number
     className?: string
-    isOldProduct:boolean
+    isOldProduct: boolean
 }
 
 export function ItemLimitedTimeDeals({

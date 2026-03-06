@@ -23,6 +23,16 @@ export interface Product {
   variants: ProductVariant[];
 }
 
+export type ProductMessageType = {
+    id:string;
+    name:string;
+    image:string;
+    sellerEmail:string;
+    sellerName:string;
+    sellerId:string;
+    url?:string;
+}
+
 export interface Review {
   id: string;
   userName: string;

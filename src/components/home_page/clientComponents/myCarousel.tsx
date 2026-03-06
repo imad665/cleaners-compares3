@@ -35,7 +35,7 @@ const CustomNextArrow = (props: any) => {
     );
 };
 
-export default function MyCarousel({ children }: { children: React.ReactNode }) {
+export default function MyCarousel({ children,sliderToShow=4 }: { children: React.ReactNode,sliderToShow?:number }) {
     const items = Array.isArray(children) ? children : [children];
     const [isClient, setIsClient] = useState(false);
     const [shouldUseSimpleCarousel, setShouldUseSimpleCarousel] = useState(false);
@@ -96,7 +96,7 @@ export default function MyCarousel({ children }: { children: React.ReactNode }) 
         dots: false,
         infinite: slideCount > 1,
         speed: 800,
-        slidesToShow: Math.min(4, slideCount),
+        slidesToShow: Math.min(sliderToShow, slideCount),
         slidesToScroll: 1,
         autoplay: slideCount > 1,
         autoplaySpeed: 3000,

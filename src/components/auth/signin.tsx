@@ -26,7 +26,7 @@ function InputPassword({ pending, password, setPassWord }: { pending: boolean, p
     const [isCloseEye, setIsCloseEye] = useState(false);
 
     return (
-        <div className="relative">
+        <div className="relative flex flex-col gap-2">
             <Label htmlFor="password">Password</Label>
             <Input
                 disabled={pending}
@@ -236,7 +236,7 @@ export default function SignInComp({ onSignUpClick, setOpen }:
                     ) : (
                         <>
                             <form onSubmit={handleSubmit} className="space-y-4">
-                                <div>
+                                <div  className="flex flex-col gap-2">
                                     <Label htmlFor="email">Email</Label>
                                     <Input
                                         disabled={pending}
@@ -252,7 +252,7 @@ export default function SignInComp({ onSignUpClick, setOpen }:
 
                                 <InputPassword pending={pending} password={password} setPassWord={setPassword} />
 
-                                <div className="text-right">
+                                <div className="text-right ">
                                     <button
                                         type="button"
                                         onClick={() => setShowForgotPassword(true)}

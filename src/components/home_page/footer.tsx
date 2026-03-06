@@ -30,7 +30,7 @@ const data = [
         data: [
             { name: "youtube", href: "https://www.youtube.com/@amirshahz77" },
             { name: "facebook", href: "/notfound" },
-            { name: "twitter", href: "/notfound" },
+           /*  { name: "twitter", href: "/notfound" }, */
             { name: "linkedin", href: "/notfound" }, 
         ]
     }
@@ -69,7 +69,7 @@ export default function Footer({
     const termAndCondition = /* footerData.find(f=>f.key==='termAndCondition')?.href ||  */'/terms-and-conditions';
     const youtube = footerData.find(f=>f.key==='youtube')?.href || '/notfound';
     const facebook = footerData.find(f=>f.key==='facebook')?.href || '/notfound';
-    const twitter = footerData.find(f=>f.key ==='twitter')?.href || '/notfound';
+    /* const twitter = footerData.find(f=>f.key ==='twitter')?.href || '/notfound'; */
     const linkedin = footerData.find(f=>f.key==='linkedin')?.href || '/notfound';
 
     data[1].data[0].href = privacyPolicy;
@@ -77,8 +77,8 @@ export default function Footer({
 
     data[2].data[0].href = youtube;
     data[2].data[1].href = facebook;
-    data[2].data[2].href = twitter;
-    data[2].data[3].href = linkedin;
+    /* data[2].data[2].href = twitter; */
+    data[2].data[2].href = linkedin;
 
     //console.log(data);
     

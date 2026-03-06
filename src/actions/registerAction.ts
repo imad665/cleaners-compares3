@@ -1,6 +1,7 @@
 'use server'
 
 import { decryptPassword, encryptPassword } from "@/lib/crypto";
+import { sendWelcomMessage } from "@/lib/payement/sendMessage";
 import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 
@@ -38,6 +39,7 @@ export async function registerAction(prev: any, formData: FormData) {
                 role: "BUYER"
             }
         })
+        await sendWelcomMessage(user.email);
         return { success: true, email, password, userId: user.id }
     } catch (err) {
         console.error('Register error:', err);

@@ -92,13 +92,13 @@ function CheckoutForm({
 
       // 2. Create payment intents on server if all amounts are valid
       const result = await holdCustomerCheckout(totalPrice, selectedCart, shippingInfo);
-
+    
       if (!result?.success) {
         throw new Error(result?.error || 'Checkout failed');
       }
 
       // 3. Process payments sequentially
-      for (const [index, payment] of result.paymentIntents.entries()) {
+      for (const [index, payment] of result.paymentIntents!.entries()) {
         setCurrentPaymentIndex(index + 1);
 
         const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(

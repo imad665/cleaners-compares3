@@ -20,8 +20,6 @@ export async function POST(req: NextRequest) {
     try {
 
         const { apikey, geminiApiKey } = await getLLmApiKey()
-         
-
         const innerStream = await askRouterBotStream(question, apikey, geminiApiKey);
 
         if (!innerStream) {

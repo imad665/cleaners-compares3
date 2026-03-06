@@ -36,9 +36,11 @@ export async function GET(req: NextRequest) {
                         user: true
                     }
                 },
-                seller:{
-                    select:{
-                        email:true,
+                seller: {
+                    select: {
+                        email: true,
+                        name:true,
+                        id: true,
 
                     }
                 }
@@ -68,14 +70,16 @@ export async function GET(req: NextRequest) {
             images: product.imagesUrl,
             isFeatured: product.isFeatured,
             units: product.units,
-            unitPrice: (!product.isDealActive ? product.price : (product.discountPrice || productp.price)) / (product.units || 1),
+            unitPrice: (!product.isDealActive ? product.price : (product.discountPrice || product.price)) / (product.units || 1),
             priceExcVat: !product.isDealActive ? product.price : product.discountPrice,
             price: product.price,
-            stock:product.stock,
+            stock: product.stock,
             dealCountdown: product.isDealActive ? getDealCountdown(product.dealEndDate) : null,
-            sellerEmail:product.seller?.email,
-            isIncVAT:product.isIncVAT,
-            isOldProduct:false//new Date(product.createdAt)<new Date('2025-07-18')
+            sellerEmail: product.seller?.email,
+            sellerName:product.seller.name,
+            sellerId: product.seller.id,
+            isIncVAT: product.isIncVAT,
+            isOldProduct: false//new Date(product.createdAt)<new Date('2025-07-18')
         };
 
         const reviews = product.ratings.map((r) => ({

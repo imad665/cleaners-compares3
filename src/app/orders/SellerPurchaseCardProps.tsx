@@ -172,7 +172,7 @@ export function SellerPurchaseCard({
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant={statusVariantMap[order.overallStatus] || "default"}>
-                  {order.overallStatus}
+                  {order.overallStatus === 'DELIVERED'?'dispatched'.toUpperCase():order.overallStatus}
                 </Badge>
                 {order.orderStatus === 'PAID' && (
                   <Badge variant="secondary">

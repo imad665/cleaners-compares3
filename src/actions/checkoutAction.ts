@@ -295,20 +295,16 @@ export async function updateSellerPaymentStatus(
 
 export async function captureSellerPayment(orderId: string, sellerId: string) {
   try {
-    // 1. Get the payment intent for this seller
-
-    
-
     const orderPayment = await prisma.orderPayment.findFirst({
       where: {
         orderId,
         sellerId,
-        status: { in: ['REQUIRE_CAPTURE', 'PAID'] } // Only capture if not already captured
+        status: { in: ['REQUIRE_CAPTURE', 'PAID'] }
       },
       include: {
         order: {
           select: {
-            userId: true
+            userId: true,
           }
         }
       }
@@ -318,38 +314,40 @@ export async function captureSellerPayment(orderId: string, sellerId: string) {
       return { success: false, error: "Payment not found or already captured" };
     }
 
-    // 2. Capture the payment with Stripe
     const paymentIntent = await stripe.paymentIntents.capture(
       orderPayment.paymentIntentId
     );
 
-    // 3. Update database status
     await prisma.$transaction([
       prisma.orderPayment.update({
         where: { id: orderPayment.id },
         data: {
           status: 'PAID',
-          updatedAt: new Date()
+          updatedAt: new Date(),
         }
       }),
       prisma.orderItem.updateMany({
         where: {
           orderId,
           sellerId,
-          paymentIntentId: orderPayment.paymentIntentId
+          paymentIntentId: orderPayment.paymentIntentId,
         },
         data: {
-          status: 'DELIVERED'
+          status: 'DELIVERED',
+          isReadBuyer: false
         }
       })
     ]);
 
     return {
       success: true,
-      paymentIntent
+      paymentIntentId: paymentIntent.id,
+      status: paymentIntent.status
     };
+
   } catch (error) {
     console.error('Failed to capture payment:', error);
+
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to capture payment'

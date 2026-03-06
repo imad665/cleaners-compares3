@@ -172,7 +172,7 @@ export default function SellerOrdersPage() {
       case 'SHIPPED':
         return <Badge variant="outline">Shipped</Badge>;
       case 'DELIVERED':
-        return <Badge className="bg-green-500">Delivered</Badge>;
+        return <Badge className="bg-green-500">{'Dispatched' }</Badge>;
       case 'CANCELLED':
         return <Badge variant="destructive">Cancelled</Badge>;
       default:
@@ -367,7 +367,7 @@ export default function SellerOrdersPage() {
                               ) : (
                                 <>
                                   <Truck className="h-4 w-4 mr-2" />
-                                  Confirm Order
+                                  Dispatch Order 
                                 </>
                               )}
                             </Button>
@@ -395,7 +395,7 @@ export default function SellerOrdersPage() {
 
                           {!canShip && !canCancel && (
                             <Button variant="outline" size="sm" disabled>
-                              {firstItem.status.toLowerCase()}
+                              {firstItem.status.toLowerCase()==='delivered'?"Dispatched":firstItem.status.toLowerCase()}
                             </Button>
                           )}
                         </div>

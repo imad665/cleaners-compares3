@@ -78,7 +78,7 @@ export function AddCartButton({ productId, className = '', stock = -1, isOldProd
           {isTherMore && <button disabled={!isTherMore} onClick={() => handleCount(1)} className='cursor-pointer'>
             <Plus size={16} />
           </button>}
-          {!isTherMore && <span className="text-xs text-muted-foreground">Only {stock} items left in stock.</span>}
+          {!isTherMore && <span className="text-xs text-muted-foreground"> {stock} items left in stock.</span>}
         </div>}
     </div>
   )

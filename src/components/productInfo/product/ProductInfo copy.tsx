@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Minus, Plus, Check, Shield, Truck, RotateCcw, Clock, MessageCircle } from 'lucide-react';
+import { Minus, Plus, Check, Shield, Truck, RotateCcw, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -17,7 +17,6 @@ import { AddCartButton } from '@/components/home_page/clientComponents/uis';
 import { ShowContactInfo } from '@/components/inboxBuyer/orders/OrderItem';
 import { SignInUpModal } from '@/components/header/header';
 import { useHomeContext } from '@/providers/homePageProvider';
-import { MessageSellerDialog } from './MessageSellerDialog';
 
 // Helper function to format prices
 const formatPrice = (price: number | string): string => {
@@ -36,22 +35,10 @@ export default function ProductInfo({
 }: ProductInfoProps) {
   const [openSignUp, setOpenSignUp] = useState(false);
   const [openSignIn, setOpenSignIn] = useState(false);
-  const [openMessageDialog, setOpenMessageDialog] = useState(false);
-  const { user } = useHomeContext();
+  //const {user} = useHomeContext();
   const isUnits = product.units > 0;
   const isIncVAT = product.isIncVAT;
 
-  const handleMessageSeller = () => {
-    if (!user) {
-      // If user is not logged in, show sign in/up modal
-      setOpenSignIn(true);
-    } else {
-      // If logged in, open message dialog
-      setOpenMessageDialog(true);
-    }
-  };
-  console.log(product,'sssssssssssssssssjjdjdjkkfkfkf');
-  
   return (
     <div className="flex flex-col space-y-6">
       {/* Product badges */}
@@ -130,23 +117,10 @@ export default function ProductInfo({
 
 
       <div className="flex flex-col sm:flex-row gap-4">
-        <AddCartButton 
-          isOldProduct={product.isOldProduct}  
-          className="w-fit" 
-          stock={product.stock} 
-          productId={product.id} 
-        />
 
-        {/* Message Seller Button */}
-        <Button
-          variant="outline"
-          size="default"
-          onClick={handleMessageSeller}
-          className="gap-2"
-        >
-          <MessageCircle className="h-4 w-4" />
-          Contact Seller
-        </Button>
+        <AddCartButton isOldProduct={product.isOldProduct}  className="w-fit" stock={product.stock} productId={product.id} />
+
+ 
       </div>
 
       <Separator className="my-2" />
@@ -155,22 +129,7 @@ export default function ProductInfo({
         openSignIn={openSignIn}
         openSignUp={openSignUp}
         setOpenSignIn={setOpenSignIn}
-        setOpenSignUp={setOpenSignUp} 
-      />
-
-      {/* Message Seller Dialog */}
-      <MessageSellerDialog
-        product={{
-          id:product.id,
-          image:product.images?.[0],
-          name:product.name,
-          sellerEmail:product.sellerEmail,
-          sellerId:product.sellerId,
-          sellerName:product.sellerName,
-        }}
-        open={openMessageDialog}
-        onOpenChange={setOpenMessageDialog}
-      />
+        setOpenSignUp={setOpenSignUp} />
     </div>
   );
 }

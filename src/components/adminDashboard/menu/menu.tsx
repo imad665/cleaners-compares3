@@ -54,10 +54,10 @@ function getUserMenu(user, cart) {
         return [
             { Icon: LayoutDashboard, title: 'Dashboard', href: '/admin' },
             { Icon: ListOrdered, title: 'Orders', href: '/admin/orders' },
-            { Icon: ShoppingCart, title: 'All Products', href: '/admin/allProducts' },
-            { Icon: Box, title: 'My Wanted Items', href: '/admin/myWantedItems' },
-            { Icon: UserCog, title: 'My Enginners', href: '/admin/myServices' },
-            { Icon: Box, title: 'My Businesses for Sale', href: '/admin/myBusinessesForSale' },
+            { Icon: ShoppingCart, title: 'Add Products', href: '/admin/allProducts' },
+            { Icon: Box, title: 'Add Wanted Items', href: '/admin/myWantedItems' },
+            { Icon: UserCog, title: 'Add Enginners', href: '/admin/myServices' },
+            { Icon: Box, title: 'Add Businesses for Sale', href: '/admin/myBusinessesForSale' },
             { Icon: User, title: 'Profile', href: '/admin/profile' },
             { Icon: MessageSquare, title: 'Messages', href: '/admin/myMessages/seller' },
 

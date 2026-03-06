@@ -19,9 +19,9 @@ export function LimitedTimeDeals({ initDealsProducts }: { initDealsProducts: any
                     <h2 className="text-2xl font-bold  text-left">Limited-Time Deals</h2>
                     <Link href="/products?type=deals" className=' text-blue-400 font-medium text-sm hover:underline'>View all</Link>
                 </div>
-                <MyCarousel >
+                <MyCarousel sliderToShow={5} >
                     {dealsProducts?.map((slide, i) => (
-                        <div key={i} className="px-2">
+                        <div key={i} className="px-2 py-5">
                             {/* <ItemLimitedTimeDeals {...slide} /> */}
                             <ItemFeaturedProduct  {...slide} />
                         </div>

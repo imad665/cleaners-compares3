@@ -13,10 +13,11 @@ export function BigButton({ text, onClick, disabled }: { text: string, onClick: 
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+      className="text-center"
     >
       <Button
         disabled={disabled}
-        className="font-extrabold bg-blue-600 hover:bg-blue-700 cursor-pointer relative overflow-hidden group"
+        className="font-extrabold w-[170px] bg-blue-600 hover:bg-blue-700 cursor-pointer relative overflow-hidden group"
         onClick={onClick}
       >
         <Plus/>

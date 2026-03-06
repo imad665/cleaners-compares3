@@ -90,9 +90,9 @@ export async function getNotifications(): Promise<Notification[] | null> {
     const unreadBuyerOrders = await prisma.order.findMany({
         where: {
             userId,
-            orderItems: { some: { isReadBuyer: false, status: { in: ['SHIPPED', 'CANCELLED', 'PROCESSING'] } } }
+            orderItems: { some: { isReadBuyer: false, status: { in: ['SHIPPED', 'CANCELLED', 'PROCESSING','DELIVERED'] } } }
         },
-        select: { id: true, orderItems:{where:{status:{in:['SHIPPED','CANCELLED','PROCESSING']}}} , createdAt: true, status: true, orderPayments: { select: { amount: true } } }
+        select: { id: true, orderItems:{where:{status:{in:['SHIPPED','CANCELLED','PROCESSING','DELIVERED']}}} , createdAt: true, status: true, orderPayments: { select: { amount: true } } }
     });
 
     const buyerNotifications = unreadBuyerOrders.map((order, index) => {
@@ -121,7 +121,7 @@ export async function getNotifications(): Promise<Notification[] | null> {
             title,
             preview,
             time: formatDistanceToNow(new Date(order.createdAt), { addSuffix: true }),
-            link: `/admin/orders/`/* ${order.id} */
+            link: order.orderItems[0].status === 'DELIVERED'?"/orders":`/admin/orders/`/* ${order.id} */
         };
     });
 

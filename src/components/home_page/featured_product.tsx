@@ -78,9 +78,12 @@ export function FeaturedAndProducts({ initFeaturedProducts }: { initFeaturedProd
                     <Link href="/products?type=featured-products" className='text-blue-400 font-medium text-sm hover:underline'>View all</Link>
                 </div>
 
-                <MyCarousel>
+                <MyCarousel sliderToShow={5}>
                     {featuredProducts.map((slide, i) => (
-                        <ItemFeaturedProduct key={i} {...slide} />
+                        <div key={i} className="px-2 py-5">
+
+                            <ItemFeaturedProduct key={i} {...slide} />
+                        </div>
                     ))}
                 </MyCarousel>
             </div>
