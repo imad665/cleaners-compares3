@@ -105,6 +105,12 @@ export default function MyCarousel({ children,sliderToShow=4 }: { children: Reac
         prevArrow: <CustomPrevArrow />,
         responsive: [
             {
+                breakpoint: 1580,
+                settings: {
+                    slidesToShow: Math.min(4, slideCount)
+                }
+            },
+            {
                 breakpoint: 1280,
                 settings: {
                     slidesToShow: Math.min(3, slideCount)

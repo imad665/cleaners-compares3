@@ -59,7 +59,7 @@ function getUserMenu(user, cart,sellerStats2) {
   } else if (user.role === 'SELLER') {
     return [
       { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
-      { label: "My Products", icon: Box, path: "/admin/allProducts" },
+      { label: "Add Products", icon: Box, path: "/admin/allProducts" },
       { 
         label: "Orders Placed", 
         icon: CheckCircle, 
@@ -72,9 +72,9 @@ function getUserMenu(user, cart,sellerStats2) {
         path: "/admin/orders",
         badge: sellerStats.pendingOrders 
       },
-      { label: "My Wanted Items", icon: Heart, path: "/admin/myWantedItems" },
-      { label: "My Engineers", icon: ServerIcon, path: "/admin/myServices" },
-      { label: "My Businesses for Sale", icon: ShoppingCart, path: "/admin/myBusinessesForSale" },
+      { label: "Add Wanted Items", icon: Heart, path: "/admin/myWantedItems" },
+      { label: "Add Engineers", icon: ServerIcon, path: "/admin/myServices" },
+      { label: "Add Businesses for Sale", icon: ShoppingCart, path: "/admin/myBusinessesForSale" },
     ];
   } else {
     const cartCount = cart.reduce((sum, prev) => sum + prev.quantity, 0);

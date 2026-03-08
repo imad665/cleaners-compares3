@@ -23,8 +23,8 @@ export function renderLLMResponse(xmlString: string, showIcon: boolean = false):
       <div className="w-full">
         <div className="flex justify-start items-end gap-2 mb-3">
           {showIcon && (
-            <div className="flex-shrink-0 rounded-full p-2 bg-purple-100 text-purple-600">
-              <Bot className="h-4 w-4" />
+            <div className="flex-shrink-0 rounded-full p-0 bg-purple-100 text-purple-600">
+              <img src="logo-1.png" className="w-7 h-7 rounded-2xl"/>
             </div>
           )}
           <div className="max-w-[80%]">

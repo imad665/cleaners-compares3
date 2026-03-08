@@ -275,8 +275,9 @@ export default function ChatWidget() {
                     {/* Header */}
                     <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 text-white flex justify-between items-center">
                         <div className="flex items-center space-x-3">
-                            <div className="p-2 rounded-full bg-indigo-700">
-                                <Bot className="h-5 w-5" />
+                            <div className="p-1 rounded-full bg-indigo-700">
+                                <img src="logo-1.png" className="w-7 h-7 rounded-2xl"/>
+                                {/* <Bot className="h-5 w-5" /> */}
                             </div>
                             <div>
                                 <h1 className="text-lg font-bold">CleanersCompare Assistant</h1>
@@ -310,7 +311,7 @@ export default function ChatWidget() {
                     >
                         {messages.length === 0 && false ? (
                             <div className="flex flex-col items-center justify-center h-full text-gray-400 p-4 text-center">
-                                <Bot className="h-12 w-12 mb-3 opacity-50" />
+                                <img src="logo-1.png" className="w-7 h-7 rounded-2xl"/>
                                 <h3 className="font-medium text-lg mb-1">Welcome to CleanersCompare</h3>
                                 <p className="text-sm max-w-xs mb-4">I can help you find equipment or connect you with expert engineers!</p>
 
@@ -393,8 +394,8 @@ export default function ChatWidget() {
                                 {showWelcomeMessage && (
                                     <div className="flex justify-start">
                                         <div className="flex items-end gap-2 max-w-[90%]">
-                                            <div className="flex-shrink-0 rounded-full p-2 bg-purple-100 text-purple-600">
-                                                <Bot className="h-4 w-4" />
+                                            <div className="flex-shrink-0 rounded-full p-1 bg-purple-100 text-purple-600">
+                                                <img src="logo-1.png" className="w-7 h-7 rounded-2xl"/>
                                             </div>
                                             <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
                                                 <p className="text-sm text-gray-700">
@@ -409,8 +410,8 @@ export default function ChatWidget() {
                                 {loading && (
                                     <div className="flex justify-start">
                                         <div className="flex items-end gap-2 max-w-[90%]">
-                                            <div className="flex-shrink-0 rounded-full p-2 bg-purple-100 text-purple-600">
-                                                <Bot className="h-4 w-4" />
+                                            <div className="flex-shrink-0 rounded-full p-1 bg-purple-100 text-purple-600">
+                                                <img src="logo-1.png" className="w-7 h-7 rounded-2xl"/>
                                             </div>
                                             <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
                                                 <div className="flex space-x-2">
