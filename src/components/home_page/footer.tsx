@@ -65,7 +65,7 @@ export default function Footer({
 }) {
     /* const {footerData} = useHomeProductContext(); */
     //console.log(footerData,'uuuuuuuuuuuuuuuuuuu');
-    const privacyPolicy = footerData.find((f)=>f.key==='privacyPolicy')?.href || '/privacy-policy';
+    const privacyPolicy = footerData.find((f)=>f.key==='privacy-policy')?.href || '/privacy-policy';
     const termAndCondition = /* footerData.find(f=>f.key==='termAndCondition')?.href ||  */'/terms-and-conditions';
     const youtube = footerData.find(f=>f.key==='youtube')?.href || '/notfound';
     const facebook = footerData.find(f=>f.key==='facebook')?.href || '/notfound';

@@ -1,232 +1,322 @@
-// app/terms-and-conditions/page.tsx
+// app/page/terms-and-conditions/page.tsx (for App Router)
+// or pages/page/terms-and-conditions.tsx (for Pages Router)
+
 import React from 'react';
-import Link from 'next/link';
 
-export default function TermsAndConditions() {
+const TermsAndConditionsPage = () => {
+  // You can replace this with actual logic to get the last updated date dynamically if needed
+  const lastUpdatedDate = "13/03/26";
+
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6">Terms and Conditions</h1>
-      <p className="text-sm text-gray-600 mb-6">Last updated: {new Date().toLocaleDateString()}</p>
+    <div className="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="px-6 py-8 sm:p-10">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Terms and Conditions
+          </h1>
+          <p className="text-xl text-gray-600 mb-1">CleanersCompare.com</p>
+          <p className="text-sm text-gray-500 mb-6">Last Updated: [{lastUpdatedDate}]</p>
 
-      <div className="space-y-6">
-        <section>
-          <h2 className="text-xl font-semibold mb-3">1. Acceptance of Terms</h2>
-          <p>
-            By accessing and using Cleaners Compare (&quot;the Platform&quot;) at https://www.cleanerscompare.com/, 
-            you agree to be bound by these Terms and Conditions and our <Link href="/privacy-policy" className="text-blue-600 hover:underline">Privacy Policy</Link>. 
-            If you disagree with any part of these terms, you may not access our services.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">2. Definitions</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>&quot;Platform&quot;</strong>: Cleaners Compare website and services</li>
-            <li><strong>&quot;User&quot;</strong>: Any person or entity accessing the Platform</li>
-            <li><strong>&quot;Buyer&quot;</strong>: User seeking to purchase machines, parts, or services</li>
-            <li><strong>&quot;Seller&quot;</strong>: User listing machines, parts, sundries, or engineering services</li>
-            <li><strong>&quot;Content&quot;</strong>: Listings, descriptions, images, videos, and other materials</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">3. Account Registration</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>You must be at least 18 years old to create an account</li>
-            <li>Provide accurate and complete business information</li>
-            <li>Maintain the security of your login credentials</li>
-            <li>Notify us immediately of any unauthorized account use</li>
-            <li>We reserve the right to suspend or terminate accounts that violate these terms</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">4. Platform Services</h2>
-          <p className="mb-3">Cleaners Compare operates as a comparison and marketplace platform for:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>New and used laundry/dry cleaning machines</li>
-            <li>Parts and components</li>
-            <li>Sundries and supplies</li>
-            <li>Engineering and maintenance services</li>
-            <li>Educational content and industry information</li>
-          </ul>
-          <p className="mt-3 text-sm bg-yellow-50 p-3 rounded">
-            <strong>Note:</strong> We are a platform connecting buyers and sellers. We are not party to transactions 
-            and do not guarantee the quality, safety, or legality of listed items.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">5. Seller Terms</h2>
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-semibold mb-2">Listing Requirements:</h3>
-              <ul className="list-disc pl-6 space-y-1">
-                <li>Provide accurate and complete product descriptions</li>
-                <li>Use clear, recent photos of actual items</li>
-                <li>Disclose any defects or issues with used equipment</li>
-                <li>Maintain reasonable response times to buyer inquiries</li>
-                <li>Honor listed prices and availability</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-2">Prohibited Listings:</h3>
-              <ul className="list-disc pl-6 space-y-1">
-                <li>Counterfeit or stolen equipment</li>
-                <li>Items that violate intellectual property rights</li>
-                <li>Hazardous materials or recalled equipment</li>
-                <li>Misrepresented or fraudulent listings</li>
-                <li>Items not related to laundry/dry cleaning industry</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">6. Buyer Terms</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Conduct due diligence before purchasing equipment</li>
-            <li>Verify seller credentials and item condition</li>
-            <li>Use secure payment methods for transactions</li>
-            <li>Inspect items upon delivery and report issues promptly</li>
-            <li>Understand that prices and availability are set by sellers</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">7. Transactions and Payments</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>All transactions are between buyers and sellers directly</li>
-            <li>We may facilitate payment processing through third-party providers</li>
-            <li>Sellers are responsible for pricing, taxes, and shipping costs</li>
-            <li>Buyers are responsible for import duties and customs fees where applicable</li>
-            <li>Disputes should be resolved directly between parties initially</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">8. Intellectual Property</h2>
-          <div className="space-y-3">
-            <p><strong>Platform Content:</strong> All website content, logos, and design elements are owned by Cleaners Compare and protected by copyright.</p>
-            <p><strong>User Content:</strong> By listing items, you grant us license to display your content on our platform.</p>
-            <p><strong>Educational Videos:</strong> Content in our educational section is for personal use and may not be redistributed without permission.</p>
-            <p><strong>Brand Logos:</strong> Trusted brand logos are used with permission or under fair use principles.</p>
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">9. User Conduct</h2>
-          <p>Prohibited activities include:</p>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Misrepresenting your identity or business</li>
-            <li>Circumventing platform fees or communication systems</li>
-            <li>Harassing other users or platform staff</li>
-            <li>Posting false or misleading reviews</li>
-            <li>Using automated systems to scrape data or listings</li>
-            <li>Interfering with platform security or performance</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">10. Limited-Time Deals and Featured Products</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Deal prices and availability are subject to change</li>
-            <li>Quantities may be limited for special offers</li>
-            <li>We reserve the right to modify or cancel deals at any time</li>
-            <li>Featured product placement may be promotional or paid</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">11. Disclaimer of Warranties</h2>
-          <p className="mb-3">The platform is provided &quot;as is&quot; without warranties of any kind:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>We do not guarantee uninterrupted or error-free service</li>
-            <li>We do not warrant the accuracy of listings or user content</li>
-            <li>We are not responsible for the quality or safety of listed items</li>
-            <li>We do not endorse any specific sellers or products</li>
-            <li>Users assume all risk in transactions</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">12. Limitation of Liability</h2>
-          <p>
-            To the fullest extent permitted by law, Cleaners Compare shall not be liable for any 
-            indirect, incidental, special, or consequential damages arising from:
-          </p>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Transactions between users</li>
-            <li>Use or inability to use the platform</li>
-            <li>Unauthorized access to user information</li>
-            <li>Errors or omissions in listings or content</li>
-            <li>Equipment failure or business losses</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">13. Indemnification</h2>
-          <p>
-            You agree to indemnify and hold harmless Cleaners Compare, its directors, employees, 
-            and affiliates from any claims, damages, or expenses arising from:
-          </p>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Your use of the platform</li>
-            <li>Your violation of these terms</li>
-            <li>Your listings or transactions</li>
-            <li>Any content you post or transmit</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">14. Termination</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>We may suspend or terminate your account for violations of these terms</li>
-            <li>You may terminate your account at any time</li>
-            <li>Termination does not affect rights or obligations that accrued prior</li>
-            <li>Listings may remain visible for a reasonable period after termination</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">15. Governing Law and Dispute Resolution</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>These terms are governed by the laws of [Your Jurisdiction]</li>
-            <li>Disputes should first be addressed through our customer service</li>
-            <li>Mediation or arbitration may be required before litigation</li>
-            <li>Legal actions must be filed within one year of the claim arising</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">16. Changes to Terms</h2>
-          <p>
-            We reserve the right to modify these terms at any time. Continued use of the platform 
-            after changes constitutes acceptance of the modified terms. We will notify users of 
-            significant changes via email or platform notifications.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold mb-3">17. Contact Information</h2>
-          <div className="p-4 bg-gray-50 rounded">
-            <p>For questions about these Terms and Conditions:</p>
-            <p className="mt-2">
-              Email: legal@cleanerscompare.com<br />
-              Website: <Link href="/contact" className="text-blue-600 hover:underline">Contact Form</Link><br />
-              Address: [Your Company Address]
+          <div className="prose prose-blue max-w-none text-gray-700 space-y-6">
+            <p>
+              These Terms and Conditions (“Terms”) govern your use of the CleanersCompare.com website and platform (the “Platform”) operated by Cleaners Compare (“Cleaners Compare”, “we”, “our”, or “us”).
+              By accessing or using the Platform you agree to be legally bound by these Terms together with our Privacy Policy and any other policies referenced on the Platform.
+              If you do not agree to these Terms you must not use the Platform.
             </p>
-          </div>
-        </section>
 
-        <div className="border-t pt-6 mt-6">
-          <p className="text-sm text-gray-600">
-            These Terms and Conditions were last updated on {new Date().toLocaleDateString()} and 
-            replace all previous versions.
-          </p>
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">1. About the Platform</h2>
+              <p>
+                Cleaners Compare operates an online marketplace connecting buyers and suppliers within the laundry, dry cleaning, and textile care industries.
+                The Platform allows users to:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>search and compare products and services</li>
+                <li>communicate with suppliers</li>
+                <li>list equipment and services</li>
+                <li>purchase products or services where such functionality is available.</li>
+              </ul>
+              <p className="mt-2">
+                Cleaners Compare acts solely as an intermediary technology platform facilitating connections between buyers and suppliers.
+                Cleaners Compare is not the manufacturer, seller, distributor, or service provider of any products or services listed on the Platform.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">2. User Accounts</h2>
+              <p>
+                To access certain features of the Platform, users may be required to create an account.
+                By creating an account you agree that:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>the information you provide is accurate and complete</li>
+                <li>you will maintain the confidentiality of your login credentials</li>
+                <li>you are responsible for activities conducted through your account.</li>
+              </ul>
+              <p className="mt-2">
+                Cleaners Compare reserves the right to suspend or terminate accounts that violate these Terms.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">3. Buyers Using the Platform</h2>
+              <p>
+                Buyers may use the Platform to:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>search for equipment or services</li>
+                <li>contact suppliers</li>
+                <li>purchase products where available.</li>
+              </ul>
+              <p className="mt-2">
+                Buyers are responsible for conducting their own due diligence before purchasing any product or service.
+                Cleaners Compare does not guarantee:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>supplier reliability</li>
+                <li>product quality</li>
+                <li>delivery performance</li>
+                <li>service outcomes.</li>
+              </ul>
+              <p>All purchases are made at the buyer’s own risk.</p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">4. Supplier / Seller Agreement</h2>
+              <p>Suppliers who list products or services on the Platform agree to the following obligations.</p>
+              
+              <h3 className="text-xl font-medium text-gray-800 mt-4 mb-2">Supplier Responsibilities</h3>
+              <p>Suppliers must:</p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>provide accurate and truthful listings</li>
+                <li>ensure they have the legal right to sell or promote listed products or services</li>
+                <li>comply with all applicable laws and regulations</li>
+                <li>honour warranties and commitments made to buyers</li>
+                <li>respond to customer enquiries in a professional manner.</li>
+              </ul>
+              <p>Suppliers remain fully responsible for the products or services they offer.</p>
+
+              <h3 className="text-xl font-medium text-gray-800 mt-4 mb-2">Used Equipment Disclosure</h3>
+              <p>Where suppliers list used or refurbished equipment, they must clearly disclose:</p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>equipment condition</li>
+                <li>approximate age</li>
+                <li>usage history where known</li>
+                <li>any known defects or limitations.</li>
+              </ul>
+              <p>Failure to accurately disclose equipment condition may result in removal of listings or suspension of supplier accounts.</p>
+
+              <h3 className="text-xl font-medium text-gray-800 mt-4 mb-2">Supplier Conduct</h3>
+              <p>Suppliers must not:</p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>publish misleading or fraudulent listings</li>
+                <li>misrepresent product specifications or capabilities</li>
+                <li>advertise illegal or restricted items</li>
+                <li>infringe intellectual property rights</li>
+                <li>engage in deceptive sales practices.</li>
+              </ul>
+              <p>Cleaners Compare reserves the right to remove listings that violate these rules.</p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">5. Listings and Content</h2>
+              <p>
+                Suppliers are solely responsible for the accuracy of the content they publish on the Platform including:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>product descriptions</li>
+                <li>specifications</li>
+                <li>pricing</li>
+                <li>images and marketing materials.</li>
+              </ul>
+              <p className="mt-2">
+                By posting listings on the Platform, suppliers grant Cleaners Compare a non-exclusive, worldwide, royalty-free licence to display, promote, and distribute their listings.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">6. Commission and Platform Fees</h2>
+              <p>
+                Where products or services are sold through the Platform, Cleaners Compare may charge a commission on transactions.
+                The commission rate may vary depending on supplier agreements or product categories.
+                Typical commission rates range between:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>1% and 10% of the total transaction value.</li>
+              </ul>
+              <p className="mt-2">
+                Cleaners Compare reserves the right to modify commission structures from time to time.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">7. Payment Processing Fees</h2>
+              <p>
+                Where payments are processed through the Platform using credit cards, debit cards, or other electronic payment methods, payment processing charges may apply.
+                These charges are imposed by financial institutions or payment processors and typically range between:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>1% and 3.5% of the transaction value.</li>
+              </ul>
+              <p className="mt-2">
+                Such fees may be charged to buyers or suppliers depending on the payment structure.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">8. Subscription Services</h2>
+              <p>
+                Certain platform services may require a paid subscription.
+                Subscription pricing and features are displayed on the Platform.
+                Subscription fees:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>are payable in advance</li>
+                <li>may renew automatically depending on the subscription plan</li>
+                <li>are generally non-refundable unless otherwise stated.</li>
+              </ul>
+              <p className="mt-2">
+                Users may cancel subscriptions through the payment provider used.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">9. Platform Role</h2>
+              <p>
+                Cleaners Compare acts solely as a platform connecting buyers and suppliers.
+                Cleaners Compare does not:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>manufacture products</li>
+                <li>guarantee supplier performance</li>
+                <li>guarantee product quality</li>
+                <li>provide warranties on products sold by suppliers.</li>
+              </ul>
+              <p>All transactions are conducted directly between buyers and suppliers.</p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">10. Disputes Between Buyers and Suppliers</h2>
+              <p>
+                Cleaners Compare is not responsible for disputes between users.
+                In the event of a dispute relating to:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>delivery</li>
+                <li>product condition</li>
+                <li>payment</li>
+                <li>warranties</li>
+                <li>services</li>
+              </ul>
+              <p>the buyer and supplier must resolve the matter directly.</p>
+              <p className="mt-2">Cleaners Compare does not mediate disputes between users.</p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">11. Limitation of Liability</h2>
+              <p>To the maximum extent permitted by law, Cleaners Compare shall not be liable for:</p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>loss of profits</li>
+                <li>loss of revenue</li>
+                <li>loss of business opportunities</li>
+                <li>loss of data</li>
+                <li>indirect or consequential damages.</li>
+              </ul>
+              <p className="mt-2">
+                Cleaners Compare's total liability shall not exceed the total amount of fees paid by the user to Cleaners Compare during the previous 12 months.
+                Nothing in these Terms excludes liability for:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>death or personal injury caused by negligence</li>
+                <li>fraud or fraudulent misrepresentation</li>
+                <li>liability that cannot be excluded under UK law.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">12. Indemnification</h2>
+              <p>
+                Users agree to indemnify and hold harmless Cleaners Compare and its affiliates from any claims, damages, losses, or legal expenses arising from:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>their use of the Platform</li>
+                <li>transactions conducted through the Platform</li>
+                <li>violation of these Terms</li>
+                <li>violation of applicable laws.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">13. Platform Abuse</h2>
+              <p>Users must not misuse the Platform. Prohibited activities include:</p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>posting false or misleading listings</li>
+                <li>uploading malicious software</li>
+                <li>scraping or extracting data without permission</li>
+                <li>sending spam or unsolicited communications</li>
+                <li>attempting to gain unauthorised access to the Platform.</li>
+              </ul>
+              <p className="mt-2">Cleaners Compare may suspend or terminate accounts engaging in such activities.</p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">14. Platform Availability</h2>
+              <p>
+                Cleaners Compare aims to maintain uninterrupted access to the Platform but does not guarantee continuous availability.
+                Access may be interrupted due to:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>maintenance</li>
+                <li>system upgrades</li>
+                <li>technical issues</li>
+                <li>external service disruptions.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">15. Force Majeure</h2>
+              <p>
+                Cleaners Compare shall not be liable for delays or failures caused by events beyond its reasonable control including:
+              </p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>natural disasters</li>
+                <li>cyber attacks</li>
+                <li>internet outages</li>
+                <li>government actions</li>
+                <li>strikes or industrial disputes.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">16. Changes to These Terms</h2>
+              <p>
+                Cleaners Compare reserves the right to update these Terms at any time.
+                Updated Terms will be published on the Platform.
+                Continued use of the Platform constitutes acceptance of the updated Terms.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">17. Governing Law</h2>
+              <p>
+                These Terms are governed by the laws of England and Wales.
+                Any disputes arising from these Terms shall be subject to the exclusive jurisdiction of the courts of England and Wales.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">18. Contact Information</h2>
+              <p>For questions regarding these Terms please contact:</p>
+              <p>
+                CleanersCompare.com<br />
+                Email: info@cleanerscompare.com
+              </p>
+            </section>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default TermsAndConditionsPage;
