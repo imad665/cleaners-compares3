@@ -111,7 +111,7 @@ const ManageSubcategories = () => {
 
         setCategories(notTrashed);
         setSubCategoryTrashed(trashed);
-        console.log(trashed, 'kkkkkkkkkkkkkk');
+        //console.log(trashed, 'kkkkkkkkkkkkkk');
 
       } catch (error) {
         console.error('[CLIENT_FETCH_ERROR]', error);
@@ -303,7 +303,7 @@ const ManageSubcategories = () => {
 
       // Optionally get the updated subcategory info from the server
       const { category: deletedCategory, message } = await res.json();
-      console.log(categories, subcategoryToDelete, '!!!!!!!');
+      //console.log(categories, subcategoryToDelete, '!!!!!!!');
 
       /* setSubCategoryTrashed(subCategoryTrashed.map((category: any) =>
         category.id === subcategoryToDelete.categoryId
@@ -372,7 +372,7 @@ const ManageSubcategories = () => {
     }
   }
 
-  console.log(newSubcategory, ';;;;;;;;;;;;;;;');
+  //console.log(newSubcategory, ';;;;;;;;;;;;;;;');
 
   return (
     <div className="space-y-6">

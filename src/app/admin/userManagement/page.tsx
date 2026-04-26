@@ -58,7 +58,7 @@ const UserManagement = () => {
           return;
         }
         const { users } = await res.json();
-        console.log(users);
+        //console.log(users);
         //setUsersData(users)
 
         setFilteredUsers(users);
@@ -198,7 +198,7 @@ const UserManagement = () => {
 
   // Handle user actions
   const handleViewUser = (user: User) => {
-    console.log('View user:', user);
+    //console.log('View user:', user);
     // Navigate to user detail view
   };
 
@@ -215,7 +215,7 @@ const UserManagement = () => {
 
   const confirmAction = async () => {
     if (selectedUser && userActionType) {
-      console.log(`${userActionType} user:`, selectedUser);
+      //console.log(`${userActionType} user:`, selectedUser);
       // Perform action based on userActionType
 
       if (userActionType === 'delete') {
@@ -265,12 +265,12 @@ const UserManagement = () => {
   };
 
   const handleSendEmail = (user: User) => {
-    console.log('Send email to user:', user);
+    //console.log('Send email to user:', user);
     // Open email composition interface
   };
 
   const handleResetPassword = (user: User) => {
-    console.log('Reset password for user:', user);
+    //console.log('Reset password for user:', user);
     // Trigger password reset email
   };
 

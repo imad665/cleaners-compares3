@@ -50,7 +50,7 @@ export async function GET(request: Request) {
     //console.log(featuredBusinessForSales, ';;;;;;;;;;;;;;;;;;;;;;');
     totalServiceFeaturedRevenu = featuredBusinessForSales.reduce((sum, s) => {
       const featured = dataFeatureService.find((d) => d.key === s.featureDays?.replace('$', '£'));
-      console.log(featured, s.featureDays);
+      // console.log(featured, s.featureDays);
 
       const amount = featured?.amount;
       return sum + amount / 100
@@ -76,8 +76,8 @@ export async function GET(request: Request) {
         }
       }
     })
-    console.log(ordersData.map((o)=>o.order.stripCommission),'###################');
-    
+    //console.log(ordersData.map((o)=>o.order.stripCommission),'###################');
+
     totalRevenueFromSellerPurchase = ordersData
       .reduce((sum, order) => {
         const totalPrice = order.unitPrice;

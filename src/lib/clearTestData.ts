@@ -4,16 +4,16 @@ import { prisma } from "./prisma";
 
 
 export async function updatePasswordUsers() {
-    await prisma.user.updateMany({
-        where:{
-            createdAt:{
-                lt:new Date("2025-07-16")
-            }
-        },
-        data:{
-            password:bcrypt.hashSync('123456789')
-        }
-    })
+  await prisma.user.updateMany({
+    where: {
+      createdAt: {
+        lt: new Date("2025-07-16")
+      }
+    },
+    data: {
+      password: bcrypt.hashSync('123456789')
+    }
+  })
 }
 
 export async function clearOrders() {
@@ -78,7 +78,7 @@ export async function clearOrders() {
       });
     });
 
-    console.log("Orders and all related data cleared successfully.");
+    //console.log("Orders and all related data cleared successfully.");
   } catch (error) {
     console.error("Error clearing orders:", error);
     throw error; // Re-throw the error so calling code knows it failed
@@ -88,13 +88,13 @@ export async function clearOrders() {
 }
 
 
-export async function deleteUserByEmail(userEmail:string) {
+export async function deleteUserByEmail(userEmail: string) {
 
-    const products = await prisma.product.findMany({where:{seller:{email:userEmail}}}) 
+  const products = await prisma.product.findMany({ where: { seller: { email: userEmail } } })
 
-    const users = await prisma.user.findMany({where:{email:userEmail}})
-    console.log({products,users});
-    
+  const users = await prisma.user.findMany({ where: { email: userEmail } })
+  //console.log({products,users});
+
 
 
 }

@@ -9,9 +9,9 @@ function cleanHtmlContent(content: string): string {
         return '';
     }
 
-    console.log('Original content type:', typeof content);
-    console.log('Original content length:', content.length);
-    console.log('First 200 chars of original:', content.substring(0, 200));
+    //console.log('Original content type:', typeof content);
+    //console.log('Original content length:', content.length);
+    //console.log('First 200 chars of original:', content.substring(0, 200));
 
     // Remove JavaScript string concatenation artifacts
     let cleanedContent = content
@@ -24,8 +24,8 @@ function cleanHtmlContent(content: string): string {
         // Trim whitespace
         .trim();
 
-    console.log('Cleaned content length:', cleanedContent.length);
-    console.log('First 200 chars of cleaned:', cleanedContent.substring(0, 200));
+    //console.log('Cleaned content length:', cleanedContent.length);
+    //console.log('First 200 chars of cleaned:', cleanedContent.substring(0, 200));
 
     return cleanedContent;
 }
@@ -63,13 +63,13 @@ export async function POST(request: NextRequest) {
             seoDescription
         } = body;
 
-        console.log('=== DEBUG: RAW CONTENT ANALYSIS ===');
+        /* console.log('=== DEBUG: RAW CONTENT ANALYSIS ===');
         console.log('Content type:', typeof content);
         console.log('Content length:', content?.length);
         console.log('Content sample:', content);
         console.log('Has newlines:', content?.includes('\n'));
         console.log('Has plus signs:', content?.includes('+'));
-        console.log('=== END DEBUG ===');
+        console.log('=== END DEBUG ==='); */
 
         // Validate category is a valid enum value
         const validCategories = [
@@ -103,10 +103,10 @@ export async function POST(request: NextRequest) {
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/(^-|-$)+/g, '');
 
-        console.log('=== DEBUG: FINAL CONTENT BEFORE SAVE ===');
+        /* console.log('=== DEBUG: FINAL CONTENT BEFORE SAVE ===');
         console.log('Cleaned content length:', cleanedContent.length);
         console.log('Cleaned content preview:', cleanedContent.substring(0, 200));
-        console.log('=== END DEBUG ===');
+        console.log('=== END DEBUG ==='); */
 
         const blogPost = await prisma.blogPost.create({
             data: {
@@ -126,11 +126,11 @@ export async function POST(request: NextRequest) {
             },
         });
 
-        console.log('=== DEBUG: SAVED CONTENT ===');
+        /* console.log('=== DEBUG: SAVED CONTENT ===');
         console.log('Saved content length:', blogPost.content?.length);
         console.log('Saved content preview:', blogPost.content?.substring(0, 200));
         console.log('=== END DEBUG ===');
-
+ */
         return NextResponse.json(blogPost);
     } catch (error) {
         console.error('Error creating blog post:', error);

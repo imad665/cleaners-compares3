@@ -58,14 +58,14 @@ export async function GET() {
     reasonForSelling : string`
 export async function POST(req: NextRequest) {
     try {
-        const session = await getServerSession(authOptions); 
-        if(!session || !session.user) redirect('/login'); 
+        const session = await getServerSession(authOptions);
+        if (!session || !session.user) redirect('/login');
 
         const userId = session.user.id;
 
         const formData = await req.formData();
         //console.log(formData);
-         
+
         const title = formData.get('title')?.toString() || "";
         const location = formData.get('location')?.toString() || "";
         const fullName = formData.get('fullName')?.toString() || "";
@@ -77,14 +77,14 @@ export async function POST(req: NextRequest) {
         const reasonForSelling = formData.get('reasonForSelling')?.toString() || "";
         const imageFile = formData.get('imageFile') as File || null;
         let imageUrl = formData.get('imageUrl')?.toString() || "";
-        
-        
-        if(imageFile && imageFile.size > 0){
-            const {url,public_id} = await uploadFileToCloud(imageFile);
-            imageUrl = url;    
+
+
+        if (imageFile && imageFile.size > 0) {
+            const { url, public_id } = await uploadFileToCloud(imageFile);
+            imageUrl = url;
 
         }
-  
+
         const newBusiness = await prisma.businessForSale.create({
             data: {
                 title,
@@ -116,11 +116,11 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
     try {
-        const session = await getServerSession(authOptions); 
-        if(!session || !session.user) redirect('/login'); 
+        const session = await getServerSession(authOptions);
+        if (!session || !session.user) redirect('/login');
 
         const formData = await req.formData();
-        console.log(formData);
+        //console.log(formData);
         const id = formData.get('id')?.toString() || "";
         const title = formData.get('title')?.toString() || "";
         const location = formData.get('location')?.toString() || "";
@@ -134,15 +134,15 @@ export async function PATCH(req: NextRequest) {
         const imageFile = formData.get('imageFile') as File || null;
         let imageUrl = formData.get('imageUrl')?.toString() || "";
 
-        if(imageFile && imageFile.size > 0){
-            const {url,public_id} = await uploadFileToCloud(imageFile);
-            imageUrl = url; 
-            
+        if (imageFile && imageFile.size > 0) {
+            const { url, public_id } = await uploadFileToCloud(imageFile);
+            imageUrl = url;
+
             const business = await prisma.businessForSale.findFirst({
-                where:{id},
-                select:{imageUrl:true}
+                where: { id },
+                select: { imageUrl: true }
             })
-            if(business?.imageUrl){
+            if (business?.imageUrl) {
                 deleteCloudinaryFileByUrl(business.imageUrl);
             }
         }
@@ -173,20 +173,20 @@ export async function PATCH(req: NextRequest) {
     }
 }
 
-export async function DELETE(req:NextRequest) {
-    try{
-        const session = await getServerSession(authOptions); 
-        if(!session || !session.user) redirect('/login'); 
+export async function DELETE(req: NextRequest) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session || !session.user) redirect('/login');
 
 
-        const {id} = await req.json();
-        
+        const { id } = await req.json();
+
         const deleted = await prisma.businessForSale.delete({
-            where:{id}
+            where: { id }
         })
 
-        return NextResponse.json({success:true,message:'item deleted successfuly.'},{status:200});
-    }catch(error){
-        return NextResponse.json({success:false,error:"failed to delete an item"});
+        return NextResponse.json({ success: true, message: 'item deleted successfuly.' }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ success: false, error: "failed to delete an item" });
     }
 }

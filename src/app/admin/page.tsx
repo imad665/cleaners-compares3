@@ -67,8 +67,8 @@ const Dashboard = () => {
         // Fetch order statistics
         try {
           const ordersRes = await fetch('/api/seller/orders?isMain=true');
-          
-          
+
+
           if (ordersRes.ok) {
             const {
               ordersData,
@@ -76,7 +76,7 @@ const Dashboard = () => {
               totalServiceFeaturedRevenu,
               totalRevenueFromSellerPurchase
             } = await ordersRes.json();
-            console.log(ordersData,'wwwwwwwwwwwwwww');
+            //console.log(ordersData,'wwwwwwwwwwwwwww');
             const totalOrders = ordersData.length;
             const pendingOrders = ordersData.filter((order: any) => order.status === 'PENDING').length;
             const shippedOrders = ordersData.filter((order: any) => order.status === 'SHIPPED').length;
@@ -85,7 +85,7 @@ const Dashboard = () => {
               .filter((order: any) => order.status === 'DELIVERED')
               .reduce((sum: number, order: any) => sum + (order.unitPrice), 0); */
             //console.log(ordersData, 'mmmmmmmmmmmmmmmmmmm');
-            
+
             const totalRevenue = ordersData
               .filter((order: any) => order.status === 'DELIVERED')
               .reduce((sum, order) => {
@@ -241,7 +241,7 @@ const Dashboard = () => {
             icon={<Package size={20} />}
           />
 
-          {user?.role === 'ADMIN' &&<Card
+          {user?.role === 'ADMIN' && <Card
             title="Service Featured Revenue"
             value={`£${orderStats?.totalServiceFeaturedRevenu?.toFixed(2) || '0.00'}`}
             trend={'down'}
@@ -249,7 +249,7 @@ const Dashboard = () => {
             icon={<Briefcase size={20} />}
             description="From engineers paying to feature their service listings"
           />}
-          {user?.role === 'ADMIN' &&<Card
+          {user?.role === 'ADMIN' && <Card
             title="Seller Commission Revenue"
             value={`£${orderStats?.totalRevenueFromSellerPurchase?.toFixed(2) || '0.00'}`}
             trend={'down'}
@@ -257,10 +257,10 @@ const Dashboard = () => {
             icon={<ShoppingCart size={20} />}
             description="Commission taken from successful seller product sales"
           />}
-          {user?.role === 'ADMIN' &&<Card
+          {user?.role === 'ADMIN' && <Card
             title="Product Featured Revenue"
             value={`£${orderStats?.totalProductFeaturedRevenu?.toFixed(2) || '0.00'}`}
-            trend={  'down'}
+            trend={'down'}
             trendValue={` from last month`}
             icon={<Star size={20} />}
             description="Revenue from sellers paying to feature products"
@@ -314,7 +314,7 @@ const Dashboard = () => {
             </div>
           </>
         )}
-   
+
         {/* Recent Products Table */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">

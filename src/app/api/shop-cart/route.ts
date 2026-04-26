@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         }
         const ep = body.filter((p) => p.productId.length > 8);
         const productIds = ep.map(item => item.productId);
-        console.log(productIds, ';;;;;;;;;;;;;;;;;;;;;;;;;');
+        //console.log(productIds, ';;;;;;;;;;;;;;;;;;;;;;;;;');
         `id: 'ord-001',
     productName: 'Eco-Friendly All-Purpose Cleaner',
     productImage: 'https://images.pexels.com/photos/4239013/pexels-photo-4239013.jpeg',
@@ -60,8 +60,8 @@ export async function POST(req: NextRequest) {
             description: p.description,
             sellerEmail: p.seller?.email,
             isIncVAT: p.isIncVAT,
-            delivery_charge:p.delivery_charge? p.delivery_charge: getDelveryChargeFromWight(p.weight || 0),
-            
+            delivery_charge: p.delivery_charge ? p.delivery_charge : getDelveryChargeFromWight(p.weight || 0),
+
             isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')    
 
         }));

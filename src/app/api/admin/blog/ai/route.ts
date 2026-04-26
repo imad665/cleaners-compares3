@@ -28,7 +28,7 @@ const BlogPostSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session || session.user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -43,9 +43,9 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const { prompt, images, tone = 'professional', length = 'medium', category = 'INDUSTRY_NEWS' } = body;
-    
-    console.log('Received images for AI generation:', images);
-    
+
+    //console.log('Received images for AI generation:', images);
+
     // Generate blog content using LangChain with structured output
     const aiResponse = await generateBlogContentWithLangChain({
       prompt,
@@ -85,7 +85,7 @@ async function generateBlogContentWithLangChain({
   category: string;
 }) {
   const { apikey, geminiApiKey } = await getLLmApiKey();
-  
+
   // Initialize the chat model
   const model = new ChatOpenAI({
     modelName: "gpt-4o-mini",
@@ -106,17 +106,17 @@ async function generateBlogContentWithLangChain({
     // Build the human message with multimodal content
     const humanMessage = buildHumanMessage(prompt, images);
 
-    console.log('Generating content with structured output and multimodal input...');
+    //console.log('Generating content with structured output and multimodal input...');
     const response = await structuredModel.invoke([systemMessage, humanMessage]);
 
     console.log('Structured output received successfully', response);
-    
+
     // Ensure all required fields have values
     return ensureRequiredFields(response, images);
 
   } catch (structuredError) {
     console.error('Structured output failed:', structuredError);
-    
+
     // Fallback: Use regular model invocation without structured output
     return await generateFallbackContent(model, prompt, images, tone, length, category);
   }
@@ -242,7 +242,7 @@ function buildHumanMessage(prompt: string, images: ImageData[]): HumanMessage {
           url: image.url
         }
       });
-      
+
       // Add image context as text with explicit URL instruction
       content.push({
         type: "text" as const,
@@ -273,7 +273,7 @@ function buildHumanMessage(prompt: string, images: ImageData[]): HumanMessage {
 function getWordCount(length: string): string {
   const counts = {
     short: "300-500 words",
-    medium: "500-800 words", 
+    medium: "500-800 words",
     long: "800-1200 words"
   };
   return counts[length as keyof typeof counts] || "500-800 words";
@@ -295,7 +295,7 @@ function ensureRequiredFields(response: any, images: ImageData[]) {
   // Ensure Tailwind classes are present in content
   if (!result.content.includes('class="') && !result.content.includes("class='")) {
     result.content = result.content.replace(
-      '<div>', 
+      '<div>',
       '<div class="prose prose-lg max-w-none">'
     );
   }
@@ -323,7 +323,7 @@ async function generateFallbackContent(
 ) {
   try {
     console.log('Using fallback content generation...');
-    
+
     const systemMessage = new SystemMessage(buildSystemPrompt({ tone, length, category, images }));
     const humanMessage = buildHumanMessage(prompt, images);
 
@@ -334,7 +334,7 @@ async function generateFallbackContent(
 
     // Try to extract JSON from the response
     const jsonMatch = content.match(/\{[\s\S]*\}/);
-    
+
     if (jsonMatch) {
       try {
         const parsed = JSON.parse(jsonMatch[0]);
@@ -346,7 +346,7 @@ async function generateFallbackContent(
 
     // If no JSON found, create structured data from text
     return createStructuredDataFromText(content, images, prompt);
-    
+
   } catch (error) {
     console.error('Fallback also failed:', error);
     return createDefaultStructuredData(images, prompt);
@@ -356,7 +356,7 @@ async function generateFallbackContent(
 function createStructuredDataFromText(content: string, images: ImageData[], prompt: string) {
   const title = extractTitle(content) || `AI Generated: ${prompt.slice(0, 50)}...`;
   const excerpt = extractExcerpt(content) || `Professional insights about ${prompt.slice(0, 100)}...`;
-  
+
   // Ensure images are included in the content with Tailwind CSS
   let formattedContent = content;
   if (images.length > 0 && !content.includes('<img')) {
@@ -367,10 +367,10 @@ function createStructuredDataFromText(content: string, images: ImageData[], prom
         ${image.description ? `<p class="text-sm text-gray-600 mt-2 text-center italic">${image.description}</p>` : ''}
       </div>
     `).join('\n');
-    
+
     formattedContent = formattedContent.replace('</div>', `${imageSections}</div>`);
   }
-  
+
   return {
     title,
     content: formatContent(formattedContent, images),
@@ -386,7 +386,7 @@ function createStructuredDataFromText(content: string, images: ImageData[], prom
 function extractTitle(content: string): string {
   const titleMatch = content.match(/<h1[^>]*>(.*?)<\/h1>/);
   if (titleMatch) return titleMatch[1].replace(/<[^>]*>/g, '').trim();
-  
+
   const titleLine = content.split('\n').find(line => line.trim().length > 0);
   return titleLine ? titleLine.replace(/<[^>]*>/g, '').slice(0, 60).trim() + '...' : '';
 }
@@ -401,20 +401,20 @@ function extractExcerpt(content: string): string {
 
 function formatContent(content: string, images: ImageData[]): string {
   let formattedContent = content;
-  
+
   // Ensure content is wrapped in proper Tailwind container
   if (!content.includes('class="prose')) {
     formattedContent = `<div class="prose prose-lg max-w-none">\n${content}\n</div>`;
   }
-  
+
   // Add Tailwind image styling if not present
   if (content.includes('<img') && !content.includes('class=')) {
     formattedContent = formattedContent.replace(
-      /<img([^>]*)>/g, 
+      /<img([^>]*)>/g,
       '<img$1 class="w-full h-auto rounded-lg shadow-md mx-auto my-6">'
     );
   }
-  
+
   // Ensure proper container for images with captions
   if (content.includes('<img') && !content.includes('flex flex-col')) {
     formattedContent = formattedContent.replace(
@@ -433,14 +433,14 @@ function formatContent(content: string, images: ImageData[]): string {
       }
     );
   }
-  
+
   return formattedContent;
 }
 
 function generateTags(content: string): string[] {
   const baseTags = ['ai-generated', 'industry-insights', 'professional-advice'];
   const contentLower = content.toLowerCase();
-  
+
   // Add relevant tags based on content
   if (contentLower.includes('laundry')) baseTags.push('laundry-equipment');
   if (contentLower.includes('dry clean')) baseTags.push('dry-cleaning');
@@ -448,7 +448,7 @@ function generateTags(content: string): string[] {
   if (contentLower.includes('business')) baseTags.push('business-advice');
   if (contentLower.includes('machine')) baseTags.push('machinery');
   if (contentLower.includes('sustainability')) baseTags.push('sustainability');
-  
+
   return baseTags;
 }
 
@@ -468,7 +468,7 @@ function generateImagePlacements(images: ImageData[], content: string): Array<{
 
 function createDefaultStructuredData(images: ImageData[], prompt: string) {
   const baseTitle = `AI Generated: ${prompt.slice(0, 50)}...`;
-  
+
   // Include images in default content with Tailwind CSS
   const imageContent = images.length > 0 ? images.map(image => `
     <div class="flex flex-col items-center my-8">
@@ -476,7 +476,7 @@ function createDefaultStructuredData(images: ImageData[], prompt: string) {
       ${image.description ? `<p class="text-sm text-gray-600 mt-2 text-center italic">${image.description}</p>` : ''}
     </div>
   `).join('\n') : '';
-  
+
   return {
     title: baseTitle,
     content: `<div class="prose prose-lg max-w-none">

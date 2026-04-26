@@ -17,25 +17,25 @@ export async function GET(req: NextRequest) {
     const sellerId = searchParams.get("sellerId");
     const orderId = searchParams.get("orderId");
 
-    console.log(sellerId,orderId,'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
-    
+    //console.log(sellerId,orderId,'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
 
-    if (!sellerId || ! orderId){
+
+    if (!sellerId || !orderId) {
         return NextResponse.json({ success: false, message: 'unauthorized' }, { status: 401 });
     }
 
     await prisma.message.updateMany({
-        where:{
+        where: {
             orderId,
-            receiverUserId:sellerId,
-            isReceiverRead:false,
+            receiverUserId: sellerId,
+            isReceiverRead: false,
         },
-        data:{
-            isReceiverRead:true
+        data: {
+            isReceiverRead: true
         }
 
     })
 
-    return NextResponse.json({success:true})
+    return NextResponse.json({ success: true })
 
 }

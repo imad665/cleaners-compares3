@@ -6,11 +6,11 @@ import { prisma } from '@/lib/prisma';
 
 export async function markPaymentAsPaid(orderPaymentId: string) {
   const session = await getServerSession(authOptions);
-  
+
   if (!session || session.user.role !== 'ADMIN') {
-      throw new Error('Unauthorized: Please login as admin');
-    }
-    console.log(orderPaymentId,'====================');
+    throw new Error('Unauthorized: Please login as admin');
+  }
+  //console.log(orderPaymentId,'====================');
 
   try {
     const updatedPayment = await prisma.orderPayment.update({
@@ -21,7 +21,7 @@ export async function markPaymentAsPaid(orderPaymentId: string) {
     return { success: true, payment: updatedPayment };
   } catch (error) {
     console.error('Error marking payment as paid:', error);
-    return {success:false,message:'Failed to mark payment as paid'}
-    
+    return { success: false, message: 'Failed to mark payment as paid' }
+
   }
 }

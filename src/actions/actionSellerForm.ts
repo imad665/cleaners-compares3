@@ -122,7 +122,7 @@ export async function updateFormSellerAction(id: string, sellerForm: {
   productPath?:string; */
 export async function notifySellerOfMessageAction(info: { productId: string, productName: string, productImage: string, productPath: string, sellerName: string; sellerEmail?: string; sellerId: string, customerMessage: string; customerId?: string; }) {
 
-  console.log(info, 'sssssssssssssnncncnnvmv');
+  //console.log(info, 'sssssssssssssnncncnnvmv');
 
   if (!info.sellerName) {
     const d = await prisma.product.findUnique({
@@ -149,14 +149,14 @@ export async function notifySellerOfMessageAction(info: { productId: string, pro
       info.sellerName = 'simo';
     }
   }
-  console.log(info, 'sssssssssssssssssssssslldldlddldldldl');
+  //console.log(info, 'sssssssssssssssssssssslldldlddldldldl');
 
   const inquiry = await prisma.inquiry.create({
     data: {
       message: info.customerMessage!,
       buyerId: info.customerId!,
       sellerId: info.sellerId!,
-      productId:info.productId,
+      productId: info.productId,
     }
   })
   info.productPath = `/messages/${inquiry.id}`

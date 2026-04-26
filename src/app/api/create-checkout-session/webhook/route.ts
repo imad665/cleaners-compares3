@@ -32,7 +32,7 @@ export async function POST(req) {
       const productId = metadata.productId;
       const days = parseInt(metadata.days);
       const type = metadata.type;
-      console.log(metadata);
+      //console.log(metadata);
 
       const startDate = new Date();
       const endDate = new Date();

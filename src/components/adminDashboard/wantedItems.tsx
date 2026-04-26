@@ -99,7 +99,7 @@ const WantedItemsPage = () => {
 
   // Handle edit item (you could open a dialog to edit the item here)
   const handleEdit = (item: any) => {
-    console.log('Editing item:', item);
+    //console.log('Editing item:', item);
     // Here, you would likely open a dialog to edit the item or navigate to a different page
   };
 

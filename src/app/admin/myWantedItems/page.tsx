@@ -100,14 +100,14 @@ const AllProducts = () => {
     const searchParams = useSearchParams();
     const pathname = usePathname();
 
-    useEffect(()=>{
+    useEffect(() => {
         const state = searchParams.get('state');
         //alert(state)
-        if(state === 'add') {
+        if (state === 'add') {
             router.replace(pathname)
             setAddWanted(true);
         }
-    },[])
+    }, [])
 
 
     useEffect(() => {
@@ -178,13 +178,13 @@ const AllProducts = () => {
 
     // Handle action buttons
     const handleView = (product: WantedItem) => {
-        console.log('View product:', product);
+        //console.log('View product:', product);
         // Navigate to product detail view
     };
 
     const handleEdit = (product: WantedItem) => {
         const p = productsData.find((p) => p.id === product.id);
-        console.log('Edit product:', p);
+        //console.log('Edit product:', p);
         setSelectedProduct(p);
         setIsEditing(true);
         // Navigate to edit product form
@@ -291,7 +291,7 @@ const AllProducts = () => {
                                 >
                                     <Trash2 size={18} />
                                 </button>
-                                
+
                             </div>
                         )}
                         onRowClick={handleView}

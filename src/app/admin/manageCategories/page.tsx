@@ -48,7 +48,7 @@ const ManageCategories = () => {
           throw new Error('Failed to fetch categories')
         }
         const data = await res.json();
-        console.log(data.data, 'datadaataffffff');
+        //console.log(data.data, 'datadaataffffff');
         const noTrashed = data.data.filter((d) => d.status != 'deleting');
         const trashed = data.data.filter(d => d.status === 'deleting');
         setTrashedCategories(trashed);
@@ -144,7 +144,7 @@ const ManageCategories = () => {
           return;
         }
         const { data: category } = await res.json();
-        console.log(category, '.........................');
+        //(category, '.........................');
 
         const newCategoryItem: Category = {
           id: category.id,

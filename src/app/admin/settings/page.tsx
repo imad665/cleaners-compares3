@@ -242,9 +242,9 @@ const Settings = () => {
   });
   const [commission, setCommission] = useState({
     commissionRate: '',
-    stripComission:''
+    stripComission: ''
   })
-  
+
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -293,18 +293,18 @@ const Settings = () => {
       for (const [key, value] of Object.entries(commission)) {
         newCommision[key] = allstg[key];
       }
-       
+
       //console.log(newCommision,';;;;;;;;;;;;');
 
       setEmail(newEmails);
       setPayment(newPayement);
       setCommission(newCommision);
-       
+
       setApiKeys(newApiKey);
       //console.log(allstg, ';;;;;===========;;;;;;');
       setGeneral(newGeneral);
       setPassword(newPass);
-      
+
       setLogoPreview('/uploads/logo.png')
     }
     fetchSettings()
@@ -338,7 +338,7 @@ const Settings = () => {
   };
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
-    console.log(name, checked);
+    //console.log(name, checked);
 
     setPassword({
       ...password,
@@ -356,7 +356,7 @@ const Settings = () => {
       [name]: value,
     })
   }
-   
+
   //console.log(commission,'++++++++++++++++=========');
 
   const handleSaveCommission = async (e: React.FormEvent) => {
@@ -460,7 +460,7 @@ const Settings = () => {
       passwordExpiryValue === 'on' ? 'on' : 'off'
     );
 
-    console.log(formData, '^^^^^^^^^^^^^');
+    //console.log(formData, '^^^^^^^^^^^^^');
 
     try {
       const res = await fetch('/api/admin/settings', {
@@ -484,7 +484,7 @@ const Settings = () => {
 
   const handleSavePayment = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Saving payment settings:', payment);
+    //console.log('Saving payment settings:', payment);
     const paymentTotal: { [key: string]: any } = {}; // Use 'any' or a more specific type if known
 
     for (const [key, value] of Object.entries(payment)) {
@@ -499,7 +499,7 @@ const Settings = () => {
       }
     }
 
-    console.log(paymentTotal, 'ooooooooooooo');
+    //console.log(paymentTotal, 'ooooooooooooo');
     const formData = new FormData();
     for (const [key, value] of Object.entries(paymentTotal)) {
       formData.append(key, value);
@@ -527,7 +527,7 @@ const Settings = () => {
 
   const handleSaveEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Saving email settings:', email);
+    //console.log('Saving email settings:', email);
     const formData = new FormData();
     for (const [key, value] of Object.entries(email)) {
       formData.append(key, typeof value === 'boolean' ? value ? 'on' : 'off' : value);
@@ -920,7 +920,7 @@ const Settings = () => {
                   This percentage will be deducted from each seller’s earnings after a buyer confirms delivery.
                 </p>
               </div>
-               <div>
+              <div>
                 <label htmlFor="stripComission" className="block text-sm font-medium text-gray-700">
                   Strip Commission Percentage (%)
                 </label>

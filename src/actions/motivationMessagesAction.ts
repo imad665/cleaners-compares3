@@ -65,7 +65,7 @@ const formatProductName = (name: string): string => {
  */
 export async function generateMotivationMessagesAction(count: number = 20): Promise<{ id: number; text: string }[]> {
     const productsData = (await getCachedProducts()).map(c => c.title);
-    console.log(productsData.length);
+    //console.log(productsData.length);
 
     const productList = productsData;  // your huge product array (import or define above)
     if (!productList.length) return [];

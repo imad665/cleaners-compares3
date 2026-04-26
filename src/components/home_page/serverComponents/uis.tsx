@@ -125,7 +125,7 @@ export function ItemFeaturedProduct({
     const [openMessageDialog, setOpenMessageDialog] = useState(false);
     const { user } = useHomeContext();
     unitPrice = Number(unitPrice)
-    console.log(unitPrice, 'sssssssssssssssssmcmdkcmdkmmmvmmv');
+    //console.log(unitPrice, 'sssssssssssssssssmcmdkcmdkmmmvmmv');
 
     const isUnits = units > 0;
     const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";

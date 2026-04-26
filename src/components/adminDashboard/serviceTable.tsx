@@ -122,7 +122,7 @@ export default function ServiceTable({ newService = null }: { newService?: Servi
       try {
         const res = await fetch("/api/admin/myServices");
         const data = await res.json();
-        console.log(data, ';;;;;;;;;;;;;;;');
+        //console.log(data, ';;;;;;;;;;;;;;;');
         setServices(data.services);
       } catch (error) {
         console.error("Failed to fetch services:", error);

@@ -125,7 +125,7 @@ export default function AICreateBlogPostPage() {
     formData.append('file', file);
     formData.append('folder', 'blog-posts');
 
-    console.log('Starting upload for file:', file.name, file.size, file.type);
+    //console.log('Starting upload for file:', file.name, file.size, file.type);
 
     try {
       const response = await fetch('/api/upload/direct', {
@@ -133,7 +133,7 @@ export default function AICreateBlogPostPage() {
         body: formData,
       });
 
-      console.log('Upload response status:', response.status, response.ok);
+      //console.log('Upload response status:', response.status, response.ok);
 
       if (!response.ok) {
         // Clone the response before reading it for error details
@@ -233,7 +233,7 @@ export default function AICreateBlogPostPage() {
     }
   };
 
-  const savePost = async (status:"DRAFT" | 'PUBLISHED') => {
+  const savePost = async (status: "DRAFT" | 'PUBLISHED') => {
     if (!generatedContent) return;
 
     setLoading(true);
@@ -605,7 +605,7 @@ export default function AICreateBlogPostPage() {
 
                 <div className='flex gap-2'>
                   <Button
-                    onClick={()=>savePost('PUBLISHED')}
+                    onClick={() => savePost('PUBLISHED')}
                     disabled={loading}
                     className='bg-blue-600 cursor-pointer hover:bg-blue-500'
                   >
@@ -613,7 +613,7 @@ export default function AICreateBlogPostPage() {
                     {loading ? 'Publishing...' : 'Publish Now'}
                   </Button>
                   <Button
-                    onClick={()=>savePost('DRAFT')}
+                    onClick={() => savePost('DRAFT')}
                     disabled={loading}
                     className='cursor-pointer'
                   >

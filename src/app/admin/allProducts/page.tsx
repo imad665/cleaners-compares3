@@ -23,10 +23,10 @@ interface Product {
     dealEndDate: string;
     featuredEndDate: string;
     subCategoryId: string;
-    isDealActive:boolean;
-    discountPrice:boolean;
-    stockCount:number;
-   
+    isDealActive: boolean;
+    discountPrice: boolean;
+    stockCount: number;
+
 }
 
 const AllProducts = () => {
@@ -235,8 +235,8 @@ const AllProducts = () => {
                     {product.discountPrice ? <p className="text-xs text-muted-foreground mt-2 flex flex-col gap-2">
                         <span className="line-through mr-2">£{product.price}</span>
                         <span>✅ New price £{product.discountPrice}</span>
-                    </p>:
-                    <p>£{product.price}</p>
+                    </p> :
+                        <p>£{product.price}</p>
                     }
                 </div>
             ),
@@ -264,13 +264,13 @@ const AllProducts = () => {
 
     // Handle action buttons
     const handleView = (product: Product) => {
-        console.log('View product:', product);
+        //console.log('View product:', product);
         // Navigate to product detail view
     };
 
     const handleEdit = (product: Product) => {
         const p = productsData.find((p) => p.id === product.id);
-        console.log('Edit product:', p);
+        //console.log('Edit product:', p);
         setSelectedProduct(p);
         setIsEditing(true);
         // Navigate to edit product form
@@ -295,7 +295,7 @@ const AllProducts = () => {
 
     const confirmDelete = async () => {
         if (selectedProduct) {
-            console.log('Deleting product:', selectedProduct);
+            //console.log('Deleting product:', selectedProduct);
             // Perform delete action
             try {
                 const res = await fetch('/api/admin/allProducts', {
@@ -323,7 +323,7 @@ const AllProducts = () => {
     };
 
     const handleFeature = (product: Product) => {
-        console.log('Toggle feature for product:', product);
+        //console.log('Toggle feature for product:', product);
         // Update featured status
     };
 
@@ -441,8 +441,8 @@ const AllProducts = () => {
                         onFailedEditing={onFailedEditing}
                         name={selectedProduct?.name}
                         productId={selectedProduct?.id}
-                        isIncVAT ={selectedProduct?.isIncVAT}
-                        machineDeliveryCharge = {selectedProduct?.delivery_charge}
+                        isIncVAT={selectedProduct?.isIncVAT}
+                        machineDeliveryCharge={selectedProduct?.delivery_charge}
                         // @ts-ignore
                         description={selectedProduct?.description}
                         discount={selectedProduct?.discountPercentage}

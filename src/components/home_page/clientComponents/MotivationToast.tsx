@@ -19,7 +19,7 @@ export default function MotivationToast() {
     const [messages, setMessages] = useState<Message[]>([]);
 
 
-    console.log(messages, 'cscscsvvv');
+    //console.log(messages, 'cscscsvvv');
 
     const [currentMessage, setCurrentMessage] = useState<Message | null>(null);
     const [isVisible, setIsVisible] = useState(false);

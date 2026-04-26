@@ -90,13 +90,13 @@ const MyBusinesses = () => {
     const pathName = usePathname();
     const router = useRouter()
 
-    useEffect(()=>{
+    useEffect(() => {
         const state = searchParams.get('state');
-        if(state === 'add'){
+        if (state === 'add') {
             router.replace(pathName);
             setAddWanted(true)
         }
-    },[])
+    }, [])
 
     //const router = useRouter();
     useEffect(() => {
@@ -111,14 +111,14 @@ const MyBusinesses = () => {
                 }
                 //setCategories(businessesForSale);
                 const { myBusinesses } = await res.json();
-                console.log(myBusinesses[0]);
+                //console.log(myBusinesses[0]);
 
                 setProductsData(myBusinesses);
             } catch (error) {
                 console.error('failes to fetch all product ', error);
                 toast.error('failed to fetched all products');
             } finally {
-               setLoading(false)
+                setLoading(false)
             }
 
         }
@@ -172,13 +172,13 @@ const MyBusinesses = () => {
 
     // Handle action buttons
     const handleView = (product: BusinessType) => {
-        console.log('View product:', product);
+        // console.log('View product:', product);
         // Navigate to product detail view
     };
 
     const handleEdit = (product: BusinessType) => {
         const p = productsData.find((p) => p.id === product.id);
-        console.log('Edit product:', p);
+        // console.log('Edit product:', p);
         setSelectedProduct(p);
         setIsEditing(true);
         // Navigate to edit product form
@@ -246,43 +246,43 @@ const MyBusinesses = () => {
                     </div>
                 </div>
 
-               {loading ?<div className="flex justify-center mt-10">
+                {loading ? <div className="flex justify-center mt-10">
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
                 </div> :
-               
-               <Table
-               columns={columns}
-               data={productsData}
-               keyField="id"
-               searchable={true}
-               filterable={true}
-               pagination={true}
-               itemsPerPage={7}
-               actions={(product: BusinessType) => (
-                   <div className="flex space-x-2 justify-end">
 
-                       <button
-                           onClick={(e) => {
-                               e.stopPropagation();
-                               handleEdit(product);
-                               setOpenWanted(true)
-                           }}
-                           className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
-                           title="Edit Product"
-                       >
-                           <Edit2 size={18} />
-                       </button>
-                       <button
-                           onClick={(e) => {
-                               e.stopPropagation();
-                               handleDelete(product);
-                           }}
-                           className="p-1 text-gray-500 hover:text-red-600 transition-colors"
-                           title="Delete Product"
-                       >
-                           <Trash2 size={18} />
-                       </button>
-                       {/* <button
+                    <Table
+                        columns={columns}
+                        data={productsData}
+                        keyField="id"
+                        searchable={true}
+                        filterable={true}
+                        pagination={true}
+                        itemsPerPage={7}
+                        actions={(product: BusinessType) => (
+                            <div className="flex space-x-2 justify-end">
+
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleEdit(product);
+                                        setOpenWanted(true)
+                                    }}
+                                    className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
+                                    title="Edit Product"
+                                >
+                                    <Edit2 size={18} />
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete(product);
+                                    }}
+                                    className="p-1 text-gray-500 hover:text-red-600 transition-colors"
+                                    title="Delete Product"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
+                                {/* <button
                            onClick={(e) => {
                                e.stopPropagation();
                                handleFeature(product);
@@ -292,10 +292,10 @@ const MyBusinesses = () => {
                        >
                            <Star size={18} className={product.featured ? "fill-yellow-500" : ""} />
                        </button> */}
-                   </div>
-               )}
-               onRowClick={handleView}
-           />}
+                            </div>
+                        )}
+                        onRowClick={handleView}
+                    />}
 
                 {/* Delete Confirmation Modal */}
                 {showDeleteModal && (
@@ -348,7 +348,7 @@ const MyBusinesses = () => {
                         key={selectedProduct?.id}
                         id={selectedProduct?.id}
                         open={openWanted}
-                        setOpen={(v)=>{
+                        setOpen={(v) => {
                             setOpenWanted(v);
                             setIsEditing(v);
                             setSelectedProduct(null);

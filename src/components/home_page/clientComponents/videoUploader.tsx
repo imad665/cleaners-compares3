@@ -31,7 +31,7 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ videoUrl, onChange }) => 
       setVideoPreview(videoUrl.url)
     }
   }, [videoUrl])
-  console.log(videoPreview, videoUrl, ';;;;;;;;;bbbbbbbbbbb');
+  //console.log(videoPreview, videoUrl, ';;;;;;;;;bbbbbbbbbbb');
   const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
