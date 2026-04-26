@@ -50,12 +50,12 @@ export default function ServiceForm({ onSubmitSuccess, editItem }: {
 
     });
     //console.log(editItem,';;;;;;;;;;;;;;;;;');
-    
+
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(editItem?.pictureUrl || undefined);
     const [isFeatured, setIsFeatured] = useState(formData.featured);
     const [featuredDuration, setFeaturedDuration] = useState(editItem?.featureDays?.toString());
-    const [loading,setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type, checked } = e.target;
@@ -101,14 +101,14 @@ export default function ServiceForm({ onSubmitSuccess, editItem }: {
                 router.push(url);
                 //window.open(url);
             } else {
-                toast.success(`new service ${!isUpdate? 'added':'updated'} successfuly!`);
+                toast.success(`new service ${!isUpdate ? 'added' : 'updated'} successfuly!`);
                 if (onSubmitSuccess) onSubmitSuccess(service)
             }
 
         } catch (error) {
             //console.error("Submit error:", error);
             toast.error('failed to add new service')
-        } finally{
+        } finally {
             setLoading(false);
         }
     };
@@ -165,8 +165,8 @@ export default function ServiceForm({ onSubmitSuccess, editItem }: {
                     </div>
                 </div>
 
-                <Textarea name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
-                <Textarea name="description" placeholder="Description" value={formData.description} onChange={handleChange} />
+                {/* <Textarea name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
+                <Textarea name="description" placeholder="Description" value={formData.description} onChange={handleChange} /> */}
 
                 {/* <div className="flex items-center space-x-6">
                     <div className="flex items-center space-x-2">
@@ -178,7 +178,7 @@ export default function ServiceForm({ onSubmitSuccess, editItem }: {
                         <label htmlFor="enabled" className="text-sm">Enabled</label>
                     </div>
                 </div> */}
-               { !formData.featured && <div className="pt-4 space-y-2 border-t mt-4">
+                {!formData.featured && <div className="pt-4 space-y-2 border-t mt-4">
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="featured"
@@ -189,7 +189,7 @@ export default function ServiceForm({ onSubmitSuccess, editItem }: {
                             }}
                         />
                         <Label htmlFor="featured" className="text-base font-medium">
-                            Mark as Featured Product
+                            Mark as Featured Service
                         </Label>
                     </div>
                     <Separator />
@@ -222,9 +222,9 @@ export default function ServiceForm({ onSubmitSuccess, editItem }: {
                         </div>
                     )}
                 </div>}
-                {formData.featured && <Badge  className='bg-green-300 border-1 rounded-xl text-center text-black'>featured</Badge>}
+                {formData.featured && <Badge className='bg-green-300 border-1 rounded-xl text-center text-black'>featured</Badge>}
 
-                <Button disabled={loading} type="submit">{loading?"Submit...":"Submit"}</Button>
+                <Button disabled={loading} type="submit">{loading ? "Submit..." : "Submit"}</Button>
             </div>
         </form>
     );

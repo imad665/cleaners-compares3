@@ -5,15 +5,17 @@ import WantedItem from "./serverComponents/wantedItem";
 import BusinessForSale from "./serverComponents/businessForSale";
 import Link from "next/link";
 /* import { useHomeProductContext } from "@/providers/homeProductsProvider"; */
- 
+
 import { useState } from "react";
 import { BigButton } from "./mainImage2";
 import SellerFormDialog from "../forms/sellerForm";
 import SellerFormDialog2 from "../forms/sellerForm2";
 import { useHomeContext } from "@/providers/homePageProvider";
 import { useRouter } from "next/navigation";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ArrowRight, Building2, Search } from "lucide-react";
 import MyCarousel from "./clientComponents/myCarousel";
+import { Button } from "../ui/button";
+import { AnimatePresence, motion } from "framer-motion";
 /* const wantedItems = [
   {
     title: "Used Dry Cleaning Machine",
@@ -97,107 +99,133 @@ import MyCarousel from "./clientComponents/myCarousel";
     contactInfo: "Email: bhamlinen@example.co.uk | Phone: 0121 567 3456",
   },
 ]; */
-export default function WantedItemAndBusiness(
-  {
-    wantedItems,
-    businessesForSale
-  }:
-    {
-      wantedItems: any,
-      businessesForSale: any
-    }
-) {
+export default function WantedItemAndBusiness({ wantedItems, businessesForSale }: any) {
   const [selectedTab, setSelectedTab] = useState("business");
-  //const { wantedItems, businessesForSale } = useHomeProductContext()
-  const [openSellerDialog, setOpenSellerDialog] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [buttonLoading, setButtonLoading] = useState(false);
   const { user } = useHomeContext();
   const router = useRouter();
-  const [callback,setCallback] = useState('/')
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const [callback, setCallback] = useState('/');
 
-  //console.log(user,';.,,,,,,,,,,,,,');
-   
-  function handleClickBigButton(type:'myWantedItems'|'myBusinessesForSale') {
+  // Modal States
+  const [openSellerDialog, setOpenSellerDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  function handleClickBigButton(type: 'myWantedItems' | 'myBusinessesForSale') {
     setCallback(`/admin/${type}?state=add`);
     if (user) {
-      if (user.role.toLocaleLowerCase() === 'seller' || user.role.toLocaleLowerCase() === 'admin') {
+      if (user.role.toLowerCase() === 'seller' || user.role.toLowerCase() === 'admin') {
         setButtonLoading(true);
-        router.push(`/admin/${type}?state=add`)
+        router.push(`/admin/${type}?state=add`);
       } else {
         setOpenSellerDialog(true);
       }
     } else {
-      setOpenDialog(true); 
+      setOpenDialog(true);
     }
   }
 
-
-  const getViewMoreLink = () => {
-    return selectedTab === "wanted" ? "/wanted-items" : "/businesses-for-sale";
-  };
-
-  const getViewMoreText = () => {
-    return selectedTab === "wanted"
-      ? "View More Wanted Items →"
-      : "View More Businesses for Sale →";
-  };
-  const getButtonSeller = () => {
-    return (
-      <div className="flex gap-2 mt-2">
-        <BigButton onClick={()=>handleClickBigButton('myWantedItems')} text="ADD WANTED ITEM" disabled={buttonLoading} />
-        <BigButton onClick={()=>handleClickBigButton('myBusinessesForSale')} text="SELL BUSINESS" disabled={buttonLoading} />
-      
-      </div>
-    )
-  }
-
   return (
-    <div className="bg-white-50">
-      <div className="container mx-auto mt-0 p-4">
-        {/* Change defaultValue from "wanted" to "business" */}
-        <Tabs defaultValue="business" className="w-full" onValueChange={setSelectedTab}>
-          <div className="flex justify-between flex-wrap items-center mb-4">
-            <TabsList className="grid grid-cols-2 gap-2">
-              <TabsTrigger value="wanted"  className="flex gap-2 items-center">Wanted Items <span title="People want these items"><AlertCircle size={18} color="blue" className="rotate-180"/></span></TabsTrigger>
-              <TabsTrigger value="business" className="flex gap-2 items-center">Businesses for Sale <span title="List your business for sale"><AlertCircle size={18} color="blue" className="rotate-180"/></span></TabsTrigger>
+    <div className="bg-white py-12    ">
+      <div className="container mx-auto px-4">
+
+        {/* Header with Integrated Actions */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
+          <div className="space-y-1">
+            <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">
+              Community <span className="text-blue-600">Marketplace</span>
+            </h2>
+            <p className="text-slate-500 text-sm">Find specific equipment or your next business venture.</p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <Button
+              onClick={() => handleClickBigButton('myWantedItems')}
+              variant="outline"
+              disabled={buttonLoading}
+              className="h-10 rounded-full border-blue-200 text-blue-700 font-bold text-xs hover:bg-blue-50 shadow-sm"
+            >
+              <Search className="w-3.5 h-3.5 mr-2" /> POST WANTED ITEM
+            </Button>
+            <Button
+              onClick={() => handleClickBigButton('myBusinessesForSale')}
+              disabled={buttonLoading}
+              className="h-10 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm"
+            >
+              <Building2 className="w-3.5 h-3.5 mr-2" /> SELL A BUSINESS
+            </Button>
+          </div>
+        </div>
+
+        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
+          <div className="flex items-center justify-between mb-6 border-b border-slate-200">
+            <TabsList className="bg-transparent h-auto p-0 gap-8">
+              <TabsTrigger
+                value="business"
+                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 rounded-none px-0 pb-3 text-sm font-bold text-slate-500 data-[state=active]:text-slate-900"
+              >
+                Businesses for Sale
+              </TabsTrigger>
+              <TabsTrigger
+                value="wanted"
+                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 rounded-none px-0 pb-3 text-sm font-bold text-slate-500 data-[state=active]:text-slate-900"
+              >
+                Wanted Items
+              </TabsTrigger>
             </TabsList>
 
+            <Link
+              href={selectedTab === "wanted" ? "/wanted-items" : "/businesses-for-sale"}
+              className="hidden sm:flex items-center text-blue-600 font-bold text-xs hover:gap-2 transition-all"
+            >
+              VIEW ALL <ArrowRight className="ml-1 w-3.5 h-3.5" />
+            </Link>
           </div>
-          
-          <Link
-            href={getViewMoreLink()}
-            className="text-blue-600 hover:underline text-sm ml-4"
-          >
-            {getViewMoreText()}
-          </Link>
-          {getButtonSeller()}
-          <TabsContent value="wanted" className="mt-0">
-            <MyCarousel>
-              {wantedItems.map((item, index) => (
-                <div key={index} className="flex-shrink-0 px-2">
-                  
-                  <WantedItem {...item} />
-                </div>
-              ))}
-            </MyCarousel>
 
-          </TabsContent>
-
-          <TabsContent value="business" className="mt-0">
-
-            <MyCarousel>
-              {businessesForSale.map((business, index) => (
-                <div key={index} className="flex-shrink-0 px-2">
-                  <BusinessForSale {...business} />
-                </div>
-              ))}
-            </MyCarousel>
-
-          </TabsContent>
+          <AnimatePresence mode="wait">
+            <TabsContent key={selectedTab} value={selectedTab} className="mt-0 focus-visible:outline-none">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <MyCarousel sliderToShow={4} breackpoints={[
+                  { breakpoint: 1280, slidesToShow: 3 },
+                  { breakpoint: 1023, slidesToShow: 2 },
+                  { breakpoint: 518, slidesToShow: 1 },
+                ]}>
+                  {selectedTab === "wanted"
+                    ? wantedItems.map((item: any, i: number) => (
+                      <div key={i} className="px-2">
+                        <WantedItem {...item} />
+                      </div>
+                    ))
+                    : businessesForSale.map((business: any, i: number) => (
+                      <BusinessForSale {...business} />
+                    ))
+                  }
+                </MyCarousel>
+              </motion.div>
+            </TabsContent>
+          </AnimatePresence>
         </Tabs>
-        {openSellerDialog && <SellerFormDialog callback={callback} open={openSellerDialog} setOpen={setOpenSellerDialog} />}
-        {openDialog && <SellerFormDialog2 callback={callback} text="" open={openDialog} setOpen={setOpenDialog} />}
+
+        {/* --- DIALOGS KEPT AS REQUESTED --- */}
+        {openSellerDialog && (
+          <SellerFormDialog
+            callback={callback}
+            open={openSellerDialog}
+            setOpen={setOpenSellerDialog}
+          />
+        )}
+        {openDialog && (
+          <SellerFormDialog2
+            callback={callback}
+            text=""
+            open={openDialog}
+            setOpen={setOpenDialog}
+          />
+        )}
       </div>
     </div>
   );

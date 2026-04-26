@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { SignInUpModal } from "@/components/header/header";
 import { useHomeContext } from "@/providers/homePageProvider";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 interface BusinessForSaleProps {
   title: string;
@@ -40,7 +41,7 @@ export default function BusinessForSale({
   const parseContactInfo = (info: string) => {
     const emailMatch = info.match(/Email:\s*([^\s|]+)/i);
     const phoneMatch = info.match(/Phone:\s*([^|]+)/i);
-    
+
     return {
       email: emailMatch ? emailMatch[1].trim() : null,
       phone: phoneMatch ? phoneMatch[1].trim().replace(/\s/g, '') : null // Remove spaces for tel: link
@@ -70,7 +71,7 @@ export default function BusinessForSale({
   };
 
   return (
-    <Card className={`md:!min-w-[300px] my-1 h-full mx-auto overflow-hidden rounded-2xl shadow-lg border border-gray-200 bg-white flex flex-col ${className}`}>
+    <Card className={` min-h-[550px] my-1 h-full mx-auto overflow-hidden rounded-2xl  border  bg-white flex flex-col ${className}`}>
       {/* Image - Fixed Height */}
       <div className="relative w-full h-48 flex-shrink-0">
         <Image
@@ -93,12 +94,15 @@ export default function BusinessForSale({
         </div>
 
         {/* Short Description - Fixed height */}
-        <p title={description} className="text-gray-600 text-sm line-clamp-2 min-h-[2.5rem]">
+        <p
+          title={description}
+          className="text-gray-600 text-xs line-clamp-2"
+        >
           {description}
         </p>
 
         {/* Business Details - Fixed height container */}
-        <div className="flex flex-col gap-2 text-sm text-gray-700 min-h-[6rem]">
+        <div className="flex flex-col gap-2 text-xs text-gray-700 min-h-[6rem]">
           <div className="flex items-center gap-2">
             <MapPin className="h-4 w-4 text-gray-500 flex-shrink-0" />
             <span className="font-medium flex-shrink-0">Location:</span>
@@ -113,7 +117,7 @@ export default function BusinessForSale({
 
           <div className="flex items-start gap-2">
             <HelpCircle className="h-4 w-4 text-gray-500 flex-shrink-0 mt-0.5" />
-            <div className="min-h-[1.25rem]">
+            <div className="min-h-[1.25rem] flex gap-2 items-center">
               <span className="font-medium">Reason: </span>
               <span className="line-clamp-1">{reason}</span>
             </div>
@@ -126,7 +130,10 @@ export default function BusinessForSale({
           <Button
             onClick={handleContactClick}
             variant={showContact ? "outline" : "default"}
-            className="w-full cursor-pointer h-9 text-sm flex items-center gap-2"
+            className={cn(
+              "w-full cursor-pointer h-9 text-sm flex items-center gap-2",
+              showContact ? '' : 'bg-blue-600 hover:to-blue-700'
+            )}
           >
             <Mail className="h-4 w-4" />
             {showContact ? "Hide Contact Info" : "Contact Seller"}
@@ -136,7 +143,7 @@ export default function BusinessForSale({
           {showContact && (
             <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg space-y-3">
               <p className="font-semibold text-sm text-gray-900 mb-2">Seller Contact:</p>
-              
+
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-2">
                 {phone && (
@@ -149,7 +156,7 @@ export default function BusinessForSale({
                     Call Seller
                   </Button>
                 )}
-                
+
                 {email && (
                   <Button
                     onClick={handleEmail}

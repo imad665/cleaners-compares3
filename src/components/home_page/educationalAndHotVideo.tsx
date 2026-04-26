@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick-theme.css" */
 import { useHomeProductContext } from "@/providers/homeProductsProvider"; */
 import { VideoItem } from "./clientComponents/uis";
 import MyCarousel from "./clientComponents/myCarousel";
- 
+
 
 
 /* const slides = [
@@ -53,15 +53,15 @@ export function EducationalAndVideos(
     {
         initYoutubVideos
     }:
-    {
-        initYoutubVideos:any
-    }
+        {
+            initYoutubVideos: any
+        }
 ) {
     //const { youtubeVideos } = useHomeProductContext();
     //console.log(youtubeVideos,'yyyyyyyyyyyyyyooooooooooooottttttt');
-    const youtubeVideos=initYoutubVideos;
+    const youtubeVideos = initYoutubVideos;
     return (
-        <section className="w-full px-4 md:px-8 py-10  bg-gray-100">
+        <section className="w-full px-4 md:px-8 py-10  bg-white">
             <div className="  container mx-auto">
                 <div className='flex justify-between items-center mb-6'>
                     <h2 className="text-2xl font-bold  text-left">
@@ -69,7 +69,12 @@ export function EducationalAndVideos(
                     </h2>
                     <Link href="/videos" className=' text-blue-400 font-medium text-sm hover:underline'>View all videos</Link>
                 </div>
-                <MyCarousel>
+                <MyCarousel sliderToShow={5} breackpoints={[
+                    { breakpoint: 1565, slidesToShow: 4 },
+                    { breakpoint: 1300, slidesToShow: 3 },
+                    { breakpoint: 1025, slidesToShow: 2 },
+                    { breakpoint: 640, slidesToShow: 1 },
+                ]}>
                     {youtubeVideos?.map((slide, i) => (
                         <VideoItem key={i} {...slide} />
                     ))}

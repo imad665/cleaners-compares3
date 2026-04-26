@@ -35,7 +35,12 @@ const CustomNextArrow = (props: any) => {
     );
 };
 
-export default function MyCarousel({ children,sliderToShow=4 }: { children: React.ReactNode,sliderToShow?:number }) {
+type BreakPointType = {
+    breakpoint: number;
+    slidesToShow: number;
+}
+
+export default function MyCarousel({ children, sliderToShow = 4, breackpoints }: { children: React.ReactNode, sliderToShow?: number, breackpoints?: BreakPointType[] }) {
     const items = Array.isArray(children) ? children : [children];
     const [isClient, setIsClient] = useState(false);
     const [shouldUseSimpleCarousel, setShouldUseSimpleCarousel] = useState(false);
@@ -95,19 +100,25 @@ export default function MyCarousel({ children,sliderToShow=4 }: { children: Reac
     const settings = {
         dots: false,
         infinite: slideCount > 1,
-        speed: 800,
+        speed: 3800,
         slidesToShow: Math.min(sliderToShow, slideCount),
         slidesToScroll: 1,
         autoplay: slideCount > 1,
         autoplaySpeed: 3000,
-        pauseOnHover: true,
+        pauseOnHover: false,
         nextArrow: <CustomNextArrow />,
         prevArrow: <CustomPrevArrow />,
-        responsive: [
+        responsive: breackpoints?.map(c => ({
+            breakpoint: c.breakpoint,
+            settings: {
+                slidesToShow: c.slidesToShow
+            }
+        })) /* [
             {
                 breakpoint: 1580,
                 settings: {
-                    slidesToShow: Math.min(4, slideCount)
+                    slidesToShow: Math.min(6, slideCount),
+
                 }
             },
             {
@@ -128,7 +139,7 @@ export default function MyCarousel({ children,sliderToShow=4 }: { children: Reac
                     slidesToShow: 1
                 }
             }
-        ]
+        ] */
     };
 
     return (
@@ -140,7 +151,7 @@ export default function MyCarousel({ children,sliderToShow=4 }: { children: Reac
                 style={{ visibility: 'hidden' }}
             >
                 {items.map((item, idx) => (
-                    <div key={`measure-${idx}`} className="px-2">
+                    <div key={`measure-${idx}`} className="px-1">
                         {item}
                     </div>
                 ))}
@@ -151,13 +162,13 @@ export default function MyCarousel({ children,sliderToShow=4 }: { children: Reac
             ) : shouldUseSimpleCarousel ? (
                 <MyCarousel2>
                     {items.map((item, idx) => (
-                        <div key={idx} className="px-2">{item}</div>
+                        <div key={idx} className="px-[2px]">{item}</div>
                     ))}
                 </MyCarousel2>
             ) : (
                 <Slider {...settings}>
                     {items.map((item, idx) => (
-                        <div key={idx} className="px-2">{item}</div>
+                        <div key={idx} className="px-[2px]">{item}</div>
                     ))}
                 </Slider>
             )}

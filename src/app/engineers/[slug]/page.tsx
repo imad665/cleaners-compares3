@@ -10,9 +10,9 @@ import { getFeaturedProducts, getFooterData, getRecentOrdersCount } from "@/lib/
 import type { Metadata } from 'next';
 
 export async function generateMetadata(
-    { params }: {params: Promise<{ slug: string }>}
+    { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
-    const {slug:rawSlug} = await params;
+    const { slug: rawSlug } = await params;
     const name = rawSlug.charAt(0).toUpperCase() + rawSlug.slice(1).replace('-', ' ');
 
     return {
@@ -83,7 +83,7 @@ async function getServices(name: string) {
 
 
 
-export default async function Page({ params }: {params: Promise<{ category: string }>}
+export default async function Page({ params }: { params: Promise<{ category: string }> }
 ) {
 
     const { slug } = await params;
@@ -105,7 +105,7 @@ export default async function Page({ params }: {params: Promise<{ category: stri
     const messages = await getNotifications();
     return (
         <div>
-            <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
+            <Header recentOrderCount={recentOrderCount} notificationData={messages} />
             <main className="container max-w-7xl m-auto space-y-8 mt-5">
                 <div className="flex justify-center mt-4">
                     <ProductBreadcrumb

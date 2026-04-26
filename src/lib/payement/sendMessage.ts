@@ -5,12 +5,12 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendWelcomMessage(to: string) {
-  try {
-    await resend.emails.send({
-      from: 'CleanersCompare <noreply@cleanerscompare.com>',
-      to,
-      subject: 'Welcome to CleanersCompare – The Laundry Marketplace Built for You',
-      html: `
+    try {
+        await resend.emails.send({
+            from: 'CleanersCompare <noreply@cleanerscompare.com>',
+            to,
+            subject: 'Welcome to CleanersCompare – The Laundry Marketplace Built for You',
+            html: `
         <div style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333;">
           <h2 style="color: #004080;">Welcome to CleanersCompare!</h2>
           <p>
@@ -32,26 +32,26 @@ export async function sendWelcomMessage(to: string) {
             Ready to get started? Visit us anytime at 
             <a href="https://www.cleanerscompare.com" target="_blank" style="color: #0066cc;">CleanersCompare.com</a>.
           </p>
-          <p>Welcome aboard, and happy comparing!</p>
+          <p>Welcome aboard, and enjoy comparing and selling!</p>
           <p>Warm regards,<br/>The CleanersCompare Team</p>
         </div>
       `,
-    });
+        });
 
-    console.log('Welcome email sent via Resend!');
-  } catch (error) {
-    console.error('Error sending welcome email:', error);
-  }
+        console.log('Welcome email sent via Resend!');
+    } catch (error) {
+        console.error('Error sending welcome email:', error);
+    }
 }
 
 
 export async function sendContactReply(to: string, name: string, response: string) {
-  try {
-    await resend.emails.send({
-      from: 'CleanersCompare <noreply@cleanerscompare.com>',
-      to,
-      subject: 'Re: Your Message to CleanersCompare',
-      html: `
+    try {
+        await resend.emails.send({
+            from: 'CleanersCompare <noreply@cleanerscompare.com>',
+            to,
+            subject: 'Re: Your Message to CleanersCompare',
+            html: `
         <div style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333;">
           <h2 style="color: #004080;">Hi ${name || 'there'},</h2>
           <p>Thank you for reaching out to <strong>CleanersCompare</strong>.</p>
@@ -70,68 +70,68 @@ export async function sendContactReply(to: string, name: string, response: strin
           <p>Warm regards,<br/>The CleanersCompare Team</p>
         </div>
       `,
-    });
+        });
 
-    console.log('Contact reply email sent successfully!');
-  } catch (error) {
-    console.error('Error sending contact reply email:', error);
-  }
+        console.log('Contact reply email sent successfully!');
+    } catch (error) {
+        console.error('Error sending contact reply email:', error);
+    }
 }
 
 
 export async function sendAdminMessage(to: string, subject: string, message: string) {
-  try {
-    await resend.emails.send({
-      from: 'YummyMeat Admin <noreply@cleanerscompare.com>',
-      to,
-      subject,
-      html: `
+    try {
+        await resend.emails.send({
+            from: 'YummyMeat Admin <noreply@cleanerscompare.com>',
+            to,
+            subject,
+            html: `
         <div style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333;">
           <p>${message}</p>
           <p style="margin-top: 2em;">Best regards,<br/>YummyMeat Admin Team</p>
         </div>
       `,
-    });
+        });
 
-    console.log('Admin message sent successfully to:', to);
-  } catch (error) {
-    console.error('Error sending admin message:', error);
-  }
+        console.log('Admin message sent successfully to:', to);
+    } catch (error) {
+        console.error('Error sending admin message:', error);
+    }
 }
 
 
- 
- 
+
+
 export interface ContactToAdminParams {
-  fromEmail: string;
-  fromName: string;
-  subject: string;
-  message: string;
-  phone?: string;
-  company?: string;
-  inquiryType?: string;
-  to:string
+    fromEmail: string;
+    fromName: string;
+    subject: string;
+    message: string;
+    phone?: string;
+    company?: string;
+    inquiryType?: string;
+    to: string
 }
 
 export async function sendContactToAdmin(params: ContactToAdminParams) {
-  try {
-    const {
-      fromEmail,
-      fromName,
-      subject,
-      message,
-      phone,
-      company,
-      inquiryType = 'General Inquiry',
-      to,
-    } = params;
+    try {
+        const {
+            fromEmail,
+            fromName,
+            subject,
+            message,
+            phone,
+            company,
+            inquiryType = 'General Inquiry',
+            to,
+        } = params;
 
-    await resend.emails.send({
-      from: 'CleanersCompare Contact <noreply@cleanerscompare.com>',
-      to: to,//'admin@cleanerscompare.com', // Replace with your admin email
-      //reply_to: fromEmail,
-      subject: `New Contact: ${subject}`,
-      html: `
+        await resend.emails.send({
+            from: 'CleanersCompare Contact <noreply@cleanerscompare.com>',
+            to: to,//'admin@cleanerscompare.com', // Replace with your admin email
+            //reply_to: fromEmail,
+            subject: `New Contact: ${subject}`,
+            html: `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -329,16 +329,16 @@ export async function sendContactToAdmin(params: ContactToAdminParams) {
                                     <td align="right" style="vertical-align: top;">
                                         <div style="color: #9ca3af; text-align: right;">
                                             <div style="font-weight: 600; color: #d1d5db; margin-bottom: 4px;">Received</div>
-                                            <div>${new Date().toLocaleDateString('en-US', { 
-                                                year: 'numeric', 
-                                                month: 'short', 
-                                                day: 'numeric'
-                                            })}</div>
+                                            <div>${new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            })}</div>
                                             <div>${new Date().toLocaleTimeString('en-US', {
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                                hour12: true
-                                            })}</div>
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            })}</div>
                                         </div>
                                     </td>
                                 </tr>
@@ -352,12 +352,12 @@ export async function sendContactToAdmin(params: ContactToAdminParams) {
 </body>
 </html>
       `,
-    });
+        });
 
-    console.log('Contact message sent to admin successfully!');
-    return { success: true };
-  } catch (error) {
-    console.error('Error sending contact message to admin:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-  }
+        console.log('Contact message sent to admin successfully!');
+        return { success: true };
+    } catch (error) {
+        console.error('Error sending contact message to admin:', error);
+        return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
 }

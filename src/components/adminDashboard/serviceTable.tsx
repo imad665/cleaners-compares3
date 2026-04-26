@@ -140,7 +140,7 @@ export default function ServiceTable({ newService = null }: { newService?: Servi
   };
 
   return (
-    <div className="p-6 w-fit m-aut overflow-auto bg-white rounded-2xl shadow-md ">
+    <div className="p-6 w-fit m-auto w-full overflow-auto bg-white rounded-2xl shadow-md ">
       <h2 className="text-xl font-semibold mb-4">Submitted Services</h2>
       <ScrollArea className="rounded-md border h-[500px]">
         {loading ? <div className="flex justify-center mt-10">
@@ -201,7 +201,7 @@ export default function ServiceTable({ newService = null }: { newService?: Servi
                     </Badge>
 
                     <br />
-                    {service.featuredEndDate&&<Badge variant='default' className="bg-green-200 text-black text-xs">featured until:{service.featuredEndDate.split('T')[0]}</Badge> }
+                    {service.featuredEndDate && <Badge variant='default' className="bg-green-200 text-black text-xs">featured until:{service.featuredEndDate.split('T')[0]}</Badge>}
                   </TableCell>
                   <TableCell className="space-x-2">
                     <Button

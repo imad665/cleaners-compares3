@@ -7,9 +7,10 @@ import Link from 'next/link'
 import "slick-carousel/slick/slick-theme.css" */
 import { ItemFeaturedProduct } from './serverComponents/uis'
 import MyCarousel from './clientComponents/myCarousel';
+import ServiceCard from '../serviceEnginner';
 /* import { useEffect, useState } from 'react' */
 /* import { useHomeProductContext } from '@/providers/homeProductsProvider' */
- 
+
 
 /* const Slider = dynamic(()=>import('react-slick'),{ssr:false}); */
 
@@ -68,7 +69,7 @@ import MyCarousel from './clientComponents/myCarousel';
 export function FeaturedAndProducts({ initFeaturedProducts }: { initFeaturedProducts: any }) {
     /* const [isClient, setIsClient] = useState(false) */
     const featuredProducts = initFeaturedProducts;//useHomeProductContext();
-     
+
     //console.log(featuredProducts,';;;;;;;;;;');
     return (
         <section className="w-full px-4 md:px-8 py-10 mb-5 bg-blue-50">
@@ -78,15 +79,42 @@ export function FeaturedAndProducts({ initFeaturedProducts }: { initFeaturedProd
                     <Link href="/products?type=featured-products" className='text-blue-400 font-medium text-sm hover:underline'>View all</Link>
                 </div>
 
-                <MyCarousel sliderToShow={5}>
+                <MyCarousel sliderToShow={6} breackpoints={[
+                    { breakpoint: 1580, slidesToShow: 6 },
+                    { breakpoint: 1280, slidesToShow: 5 },
+                    { breakpoint: 1100, slidesToShow: 4 },
+                    { breakpoint: 1020, slidesToShow: 3 },
+                    { breakpoint: 770, slidesToShow: 2 },
+                ]}>
                     {featuredProducts.map((slide, i) => (
-                        <div key={i} className="px-2 py-5">
-
-                            <ItemFeaturedProduct key={i} {...slide} />
-                        </div>
+                        <ItemFeaturedProduct key={i} {...slide} />
                     ))}
                 </MyCarousel>
             </div>
         </section>
     )
+}
+
+
+export function FeaturedEnginners({ services }: { services: any }) {
+
+    return (
+        <section className="w-full px-4 md:px-8   mb-5 bg-white">
+            <div className="w-full container mx-auto">
+                <div className='flex justify-between items-center '>
+                    <h2 className="text-2xl font-bold text-left">Featured Enginners</h2>
+                    <Link href="/engineers" className='text-blue-400 font-medium text-sm hover:underline'>View all</Link>
+                </div>
+
+                <MyCarousel sliderToShow={5}>
+                    {services.map((service, i) => (
+                        <div key={i}  >
+                            <ServiceCard
+                                service={service}
+                            />
+                        </div>
+                    ))}
+                </MyCarousel>
+            </div>
+        </section>)
 }

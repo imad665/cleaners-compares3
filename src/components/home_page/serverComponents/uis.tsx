@@ -9,6 +9,7 @@ import { MessageSellerDialog } from "@/components/productInfo/product/MessageSel
 import { useState } from "react";
 import { useHomeContext } from "@/providers/homePageProvider";
 import { SignInUpModal } from "@/components/header/header";
+import { Badge } from "@/components/ui/badge";
 
 // Helper function to format prices
 const formatPrice = (price: number | string): string => {
@@ -114,144 +115,131 @@ export type ItemProps = {
 }
 
 export function ItemFeaturedProduct({
-    id,
-    title,
-    image,
-    href,
-    stars = 0,
-    starsCount = 0,
-    productId,
-    unitPrice,
-    units,
-    priceExcVat,
-    price,
-    dealCountdown,
-    stock,
-    className,
-    isOldProduct,
-    isIncVAT,
-    discountPercentage,
+    id, title, image, href, stars = 0, starsCount = 0,
+    productId, unitPrice, units, priceExcVat, price,
+    dealCountdown, stock, className, isOldProduct,
+    isIncVAT, discountPercentage,
 }: ItemProps) {
-    const isUnits = units > 0;
-    const vatLabel = !isIncVAT ? "Price Exc Vat:" : "Price Inc Vat:"
-    const [openSignUp, setOpenSignUp] = useState(false);
     const [openSignIn, setOpenSignIn] = useState(false);
+    const [openSignUp, setOpenSignUp] = useState(false);
     const [openMessageDialog, setOpenMessageDialog] = useState(false);
     const { user } = useHomeContext();
-    // Check if image matches the specific Cloudinary URL
-    const specificImageUrl = "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg";
 
-    // Use fallback image if it matches the specific URL
-    const finalImage = image === specificImageUrl ? '/logo-1.png' : image;
+    const isUnits = units > 0;
+    const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";
+    const finalImage = image === "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg" ? '/logo-1.png' : image;
+
     const handleMessageSeller = () => {
-        if (!user) {
-            // If user is not logged in, show sign in/up modal
-            setOpenSignIn(true);
-        } else {
-            // If logged in, open message dialog
-            setOpenMessageDialog(true);
-        }
+        if (!user) setOpenSignIn(true);
+        else setOpenMessageDialog(true);
     };
+
     return (
-        <div className={`md:min-w-[200px]   w-[75vw] grow flex flex-col justify-between md:max-w-[300px] border-1 shadow-md pb-4 rounded-md bg-white min-h-[430px] mx-2 ${className}`}>
-            <div className='relative flex flex-col gap-1 grow'>
-                <Link href={href} className='relative mb-3 h-50 overflow-hidden not-[]:'>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        <div className={`group flex flex-col w-full max-w-[280px] min-h-[400px] bg-white border border-slate-200 rounded-md overflow-hidden   hover:shadow-md transition-all duration-200 ${className}`}>
+
+            {/* Image Section */}
+            <div className="relative h-40 w-full bg-slate-50 p-4 overflow-hidden">
+                <Link href={href}>
                     <Image
                         width={300}
                         height={300}
-                        alt="product image"
+                        alt={title}
                         src={finalImage}
-                        className='w-full h-full object-contain transition-transform duration-300 hover:scale-105'
+                        className="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
                     />
                 </Link>
-                <Link href={href} className='font-medium px-4 text-sm mb-1 line-clamp-1 hover:text-red-400'>{title}</Link>
 
-                {discountPercentage && (
-                    <p className="absolute px-6 py-1 rounded-tr-md font-bold bg-red-400 text-white right-0 top-0">
-                        {discountPercentage}% OFF
-                    </p>
+                {discountPercentage > 0 && (
+                    <Badge className="absolute top-2 right-2 bg-red-600 hover:bg-red-600 border-none text-md px-2 py-0">
+                        -{discountPercentage}%
+                    </Badge>
                 )}
 
-                <div className='flex px-4 gap-1 items-center'>
-                    <StarsUi stars={stars || 0} />
-                    <span className='text-xs text-gray-500 ml-1'>({starsCount})</span>
-                </div>
-
-                <div className='mb-3 px-4 space-y-2 mt-3'>
-                    {isUnits && (
-                        <p className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Units:</span>
-                            <span className='font-bold'>{units}</span>
-                        </p>
-                    )}
-
-                    {isUnits && (
-                        <p className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Unit Price:</span>
-                            <span className='font-bold'>£{formatPrice(unitPrice)}</span>
-                        </p>
-                    )}
-
-                    <div>
-                        <p className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">{vatLabel}</span>
-                            <span className='text-lg font-bold'>£{formatPrice(priceExcVat)}</span>
-                        </p>
-
-                        {dealCountdown && (
-                            <div className="flex items-center text-sm text-gray-700">
-                                <Clock className="h-4 w-4 text-red-500 mr-1" />
-                                <span>
-                                    <span className="mr-1">Deal ends in:</span>
-                                    <span className="font-semibold text-red-600">{dealCountdown}</span>
-                                </span>
-                                {price != priceExcVat && (
-                                    <p className="line-through mr-2 text-sm ml-5">
-                                        £{formatPrice(price || 0)}
-                                    </p>
-                                )}
-                            </div>
-                        )}
+                {stock && stock < 5 && stock > 0 && (
+                    <div className="absolute bottom-2 left-2 bg-orange-100 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-orange-200">
+                        Low Stock: {stock}
                     </div>
+                )}
+            </div>
+
+            {/* Content Section */}
+            <div className="p-3 flex flex-col grow flex-1">
+                {/* Rating & Title */}
+                <div className="flex items-center gap-2 mb-1">
+                    <StarsUi stars={stars} />
+                    <span className="text-[10px] text-slate-400 font-medium">({starsCount})</span>
+                </div>
+
+                <Link href={href} className="text-sm font-semibold text-slate-800 line-clamp-2 hover:text-blue-600 transition-colors leading-tight h-9 mb-2">
+                    {title}
+                </Link>
+
+                {/* Specs Grid */}
+                <div className="grid grid-cols-2 gap-2 py-2 border-y border-slate-50 mb-3 text-[11px]">
+                    {isUnits && (
+                        <div className="flex flex-col">
+                            <span className="text-slate-400 uppercase text-[9px]">Pack Size</span>
+                            <span className="font-bold text-slate-700">{units} Units</span>
+                        </div>
+                    )}
+                    {isUnits && (
+                        <div className="flex flex-col border-l pl-2">
+                            <span className="text-slate-400 uppercase text-[9px]">Per Unit</span>
+                            <span className="font-bold text-slate-700">£{unitPrice.toFixed(2)}</span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Pricing Area */}
+                <div className="mt-auto">
+                    <div className="flex items-baseline gap-1.5">
+                        <span className="text-xl font-black text-slate-900">£{priceExcVat.toFixed(2)}</span>
+                        <span className="text-[10px] text-slate-500 font-medium uppercase">{vatLabel}</span>
+                    </div>
+
+                    {dealCountdown && (
+                        <div className="flex items-center gap-1 text-[10px] font-bold text-red-600 mt-0.5">
+                            <Clock className="h-3 w-3" />
+                            <span>Ends: {dealCountdown}</span>
+                            {price !== priceExcVat && (
+                                <span className="line-through text-slate-400 ml-auto">£{price?.toFixed(2)}</span>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 mt-4">
+                    <AddCartButton
+                        className="flex-1"
+                        stock={stock}
+                        isOldProduct={isOldProduct}
+                        productId={productId}
+                    />
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={handleMessageSeller}
+                        className="shrink-0 h-9 w-9 rounded-full border-slate-200 hover:bg-slate-50 text-slate-600"
+                        title="Contact Seller"
+                    >
+                        <MessageCircle className="h-4 w-4" />
+                    </Button>
                 </div>
             </div>
 
-            <div className="px-4 flex gap-3">
-                <AddCartButton
-                    className="w-fit"
-                    stock={stock}
-                    isOldProduct={isOldProduct}
-                    productId={productId}
-                />
-                <Button
-                    variant="outline"
-                    size="default"
-                    onClick={handleMessageSeller}
-                    className="gap-2 text-xs"
-                >
-                    <MessageCircle className="h-4 w-4" />
-                    Contact Seller
-                </Button>
-            </div>
+            {/* Modals - same logic as before */}
             {openMessageDialog && <MessageSellerDialog
-                product={{
-                    id:productId,
-                    image:image,
-                    name:title,
-                    url:href,
-                    }}
+                product={{ id: productId, image, name: title, url: href }}
                 open={openMessageDialog}
                 onOpenChange={setOpenMessageDialog}
             />}
             {(openSignIn || openSignUp) && <SignInUpModal
-                openSignIn={openSignIn}
-                openSignUp={openSignUp}
-                setOpenSignIn={setOpenSignIn}
-                setOpenSignUp={setOpenSignUp}
+                openSignIn={openSignIn} openSignUp={openSignUp}
+                setOpenSignIn={setOpenSignIn} setOpenSignUp={setOpenSignUp}
             />}
         </div>
-    )
+    );
 }
 
 export type ItemProductProps = {

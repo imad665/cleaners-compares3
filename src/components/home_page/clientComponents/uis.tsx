@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button"
 import { useHomeContext } from "@/providers/homePageProvider";
-import { CheckCircle, Minus, Pause, Play, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import { CheckCircle, ChevronRight, Minus, Pause, Play, Plus, ShoppingCart, Trash2, Youtube } from "lucide-react";
 import { signOut } from "next-auth/react"
 import { useEffect, useRef, useState } from "react";
-
+import { motion } from 'framer-motion'
 
 export function ButtonSignOut() {
   return (
@@ -13,75 +13,49 @@ export function ButtonSignOut() {
   )
 }
 
-export function AddCartButton({ productId, className = '', stock = -1, isOldProduct, isFromCart = false }: { productId: string, className?: string, stock?: number, isOldProduct: boolean, isFromCart?: boolean }) {
-
+export function AddCartButton({ productId, className = '', stock = -1, isOldProduct, isFromCart = false }: any) {
   const [count, setCount] = useState(0);
-  const { cart, addProduct, removeProduct } = useHomeContext();
+  const { cart, addProduct } = useHomeContext();
 
   useEffect(() => {
-    setCount(cart?.find((c) => c.productId === productId)?.quantity || 0)
-  }, [cart])
-  //console.log(count,productId,';;;;;;;;;;;;;;;;;;;;llllllllll');
+    setCount(cart?.find((c: any) => c.productId === productId)?.quantity || 0);
+  }, [cart, productId]);
 
-  const handleCount = (quantity: 1 | -1) => {
-    if (count === 0 && quantity === -1) return
-    setCount(v => v + quantity);
+  const handleCount = (quantity: number) => {
+    if (count === 0 && quantity === -1) return;
     addProduct(productId, quantity, isFromCart);
+  };
+
+  const isTherMore = (count < stock && stock !== -1) || (isFromCart && count < stock);
+
+  if (count === 0) {
+    return (
+      <Button
+        onClick={() => handleCount(1)}
+        disabled={!isTherMore}
+        className={`h-9 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-xs font-bold gap-2 ${className}`}
+      >
+        <ShoppingCart className="w-3.5 h-3.5" />
+        Add to Cart
+      </Button>
+    );
   }
-  const isTherMore = count < stock && stock != -1 || isFromCart && count < stock && stock != -1;
 
   return (
-    <div className={` bottom-2 left-1 ${className}`}>
-      {count === 0 &&
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={() => handleCount(1)}
-            disabled={!isTherMore}
-            className='flex items-center cursor-pointer bg-yellow-400 text-black rounded-2xl hover:bg-yellow-500 w-fit px-6 text-xs'>
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            <span> Add to cart</span>
-          </Button>
-
-          {isFromCart && <Button onClick={() => removeProduct(productId)} className="flex items-center cursor-pointer bg-orange-400/50 text-black rounded-2xl hover:bg-red-500/50 w-fit px-5 text-xs">
-            <Trash2 size={16} />
-          </Button>}
-        </div>
-      }
-      {isOldProduct && count > 0 &&
-        <div className="flex items-center gap-2">
-          <span
-
-            className='flex items-center    text-black rounded-2xl   w-fit text-xs'
-          >
-            <CheckCircle className="w-4 h-4 mr-2" />
-
-            <span>Added</span>
-          </span>
-          <Button onClick={() => handleCount(-1)} className="flex items-center cursor-pointer bg-orange-400/50 text-black rounded-2xl hover:bg-red-500/50 w-fit px-5 text-xs">
-            <span>Remove</span>
-          </Button>
-
-        </div>
-
-      }
-
-      {count > 0 && !isOldProduct &&
-        <div className='flex gap-2 items-center border-1 rounded-2xl justify-between min-w-25 border-yellow-400 p-3 py-1'>
-          {count > 1 ?
-            <button onClick={() => handleCount(-1)} className='cursor-pointer'>
-              <Minus size={16} />
-            </button> :
-            <button onClick={() => handleCount(-1)} className='cursor-pointer'>
-              <Trash2 size={16} />
-            </button>}
-          <span className='text-sm'>{count}</span>
-          {isTherMore && <button disabled={!isTherMore} onClick={() => handleCount(1)} className='cursor-pointer'>
-            <Plus size={16} />
-          </button>}
-          {!isTherMore && <span className="text-xs text-muted-foreground"> {stock} items left in stock.</span>}
-        </div>}
+    <div className={`flex items-center justify-between h-9 bg-slate-100 rounded-full px-1 border border-slate-200 ${className}`}>
+      <button onClick={() => handleCount(-1)} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white transition-colors text-slate-600">
+        {count === 1 ? <Trash2 size={14} /> : <Minus size={14} />}
+      </button>
+      <span className="text-xs font-bold px-2">{count}</span>
+      <button
+        onClick={() => handleCount(1)}
+        disabled={!isTherMore}
+        className="w-7 h-7 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:bg-slate-300 transition-colors"
+      >
+        <Plus size={14} />
+      </button>
     </div>
-  )
+  );
 }
 
 
@@ -97,90 +71,81 @@ export type ItemVideoItemProps = {
   onClick?: (videoUrl: string) => void;
 };
 
-export function VideoItem({ title, videoUrl, thumbnail, description, onClick }: ItemVideoItemProps) {
+export function VideoItem({ title, videoUrl, thumbnail, description }: ItemVideoItemProps) {
   const [open, setOpen] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-
-  // Function to send play/pause commands to YouTube iframe
-  const togglePlayPause = () => {
-    if (iframeRef.current) {
-      const message = JSON.stringify({
-        event: 'command',
-        func: isPlaying ? 'pauseVideo' : 'playVideo',
-        args: ''
-      });
-      iframeRef.current.contentWindow?.postMessage(message, '*');
-      setIsPlaying(!isPlaying);
-    }
-  };
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => {
-      setOpen(isOpen);
-      if (!isOpen) setIsPlaying(false); // Reset play state when dialog closes
-    }}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div
-          className="cursor-pointer w-[85vw] min-w-[280px] md:max-w-[320px] h-[320px] mx-3 border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white"
-          onClick={() => setOpen(true)}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="group cursor-pointer min-w-[300px]  flex-shrink-0 bg-white rounded-xl overflow-hidden border border-slate-200  hover:shadow-xl transition-all duration-300"
         >
-          <div className="relative h-[180px] overflow-hidden">
-            <Image 
-              src={thumbnail} 
-              alt={title} 
+          {/* Thumbnail Container */}
+          <div className="relative aspect-video overflow-hidden bg-slate-900">
+            <Image
+              src={thumbnail}
+              alt={title}
               fill
-              className="object-cover transition-transform duration-300 hover:scale-105"
+              className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100"
             />
-            <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-              <div className="bg-red-600 text-white p-3 rounded-full">
-                <Play size={24} fill="white" />
+
+            {/* Play Overlay */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/40 text-white transition-all duration-300 group-hover:bg-red-600 group-hover:border-red-600 group-hover:scale-110 shadow-xl">
+                <Play size={20} fill="currentColor" className="ml-1" />
               </div>
             </div>
+
+            {/* Content Type Badge */}
+            <div className="absolute bottom-2 left-2">
+              <span className="bg-black/60 backdrop-blur-sm text-[9px] font-black text-white px-2 py-0.5 rounded uppercase tracking-widest border border-white/10">
+                Tutorial
+              </span>
+            </div>
           </div>
-          <div className="p-4 h-[140px] flex flex-col">
-            <h3 className="text-lg font-semibold line-clamp-2 mb-2">{title}</h3>
-            <p className="text-sm text-muted-foreground line-clamp-3 flex-grow">{description}</p>
+
+          {/* Text Content */}
+          <div className="p-4">
+            <h3 className="text-sm font-bold text-slate-900 line-clamp-1 group-hover:text-blue-600 transition-colors mb-1">
+              {title}
+            </h3>
+            <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed h-8">
+              {description}
+            </p>
+
+            <div className="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between">
+              <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase">
+                <Youtube className="w-3 h-3 mr-1 text-red-500" />
+                Watch Video
+              </div>
+              <ChevronRight className="w-3 h-3 text-slate-300 group-hover:text-blue-600 transition-all" />
+            </div>
           </div>
-        </div>
+        </motion.div>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-4xl lg:max-w-6xl p-0 overflow-hidden bg-black border-none">
-        <div className="relative w-full aspect-video bg-black">
-          {videoUrl ? (
-            <>
-              <iframe
-                ref={iframeRef}
-                width="100%"
-                height="100%"
-                src={videoUrl}
-                title={title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0"
-              />
-              <div className="absolute bottom-4 right-4 z-10">
-                <button
-                  onClick={togglePlayPause}
-                  className="bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
-                  aria-label={isPlaying ? 'Pause video' : 'Play video'}
-                >
-                  {isPlaying ? <Pause size={20} /> : <Play size={20} fill="white" />}
-                </button>
-              </div>
-            </>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-white">
-              <p className="text-red-500">Invalid YouTube URL</p>
-            </div>
-          )}
+
+      {/* Theater Mode Dialog */}
+      <DialogContent className="max-w-5xl p-0 bg-black border-none overflow-hidden rounded-2xl shadow-2xl">
+        <div className="relative aspect-video w-full">
+          <iframe
+            width="100%"
+            height="100%"
+            src={`${videoUrl}?autoplay=1`}
+            title={title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute inset-0"
+          />
         </div>
-        <div className="p-4 bg-white">
-          <DialogTitle className="text-xl mb-2">{title}</DialogTitle>
-          <p className="text-gray-600">{description}</p>
+        <div className="p-6 bg-white">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded">YOUTUBE</span>
+            <span className="text-slate-400 text-xs">•</span>
+            <span className="text-slate-500 text-xs font-medium">Educational Resource</span>
+          </div>
+          <DialogTitle className="text-2xl font-black text-slate-900 mb-2">{title}</DialogTitle>
+          <p className="text-slate-600 text-sm leading-relaxed">{description}</p>
         </div>
       </DialogContent>
     </Dialog>

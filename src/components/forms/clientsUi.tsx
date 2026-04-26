@@ -9,10 +9,10 @@ export function ProducImageAndMedia({
     setImages,
     setVideo,
     images,
-    video 
-}){
-    console.log(images,'ooooooooooooooooooo');
-    
+    video
+}: any) {
+    console.log(images, 'ooooooooooooooooooo');
+
     return (
         <div className="rounded-md bg-white shadow-sm m-2 p-6 space-y-3 px-5 border-1">
             <h3 className="tracking-tight text-xl font-medium text-gray-800">Product Images & Media</h3>

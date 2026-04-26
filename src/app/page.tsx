@@ -5,7 +5,7 @@ export const revalidate = 18000; // revalidate at most every 5 hours
 
 import { Header } from "@/components/header/header";
 import { EducationalAndVideos } from "@/components/home_page/educationalAndHotVideo";
-import { FeaturedAndProducts } from "@/components/home_page/featured_product";
+import { FeaturedAndProducts, FeaturedEnginners } from "@/components/home_page/featured_product";
 import Footer from "@/components/home_page/footer";
 import { LimitedTimeDeals } from "@/components/home_page/limitedTimeDeals";
 import { MainImage } from "@/components/home_page/mainImage2";
@@ -15,7 +15,7 @@ import ProductTabs from "@/components/home_page/productTabs";
 import WantedItemAndBusiness from "@/components/home_page/wantedItemsAndBusiness";
 import { BrandingSlider } from "@/components/home_page/brandingSlider";
 import { HomeProductsProvider } from "@/providers/homeProductsProvider";
-import { getCategoriesHome } from "@/lib/products/homeCategories";
+import { getCategoriesHome, getGeneralInquiries, getServices } from "@/lib/products/homeCategories";
 import { Button } from "@/components/ui/button";
 import { getAllHomeProducts, getRecentOrdersCount } from "@/lib/products/homeProducts";
 import { FormProvider } from "react-hook-form";
@@ -26,6 +26,17 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { formatDistanceToNow } from "date-fns";
+import { unstable_cache } from "next/cache";
+
+const getHomePageCachedData = unstable_cache(
+  async () => {
+    return getAllHomeProducts()
+  },
+  ["products"],
+  {
+    revalidate: 60 * 60 * 24 * 3, // 3 days
+  }
+);
 
 
 export default async function Home() {
@@ -47,70 +58,10 @@ export default async function Home() {
   const recentOrderCount = await getRecentOrdersCount();
   const messages = await getNotifications();
   const session = await getServerSession(authOptions);
+  const services = await getServices(['DRY_CLEANING', 'FINISHING', 'LAUNDRY'])
   const user = session?.user;
-  const role =  user?.role;
-  let sellerInquiries: any = []
-  let buyerInquiries: any = [];
-  if (role=== 'SELLER') {
-    sellerInquiries = (await prisma.inquiry.findMany({
-      where: {
-        sellerId: user.id,
-        sellerRead: false
-      },
-      select: {
-        buyer: {
-          select: {
-            name: true,
-            id: true,
-          }
-        },
-        id:true,
-        message: true,
-        response: true,
-        productId: true,
-        createdAt: true,
-      }
-    })).map((c) => ({
-      id: uuidv4(),
-      type: 'message',
-      title: 'New Product Inquiry',
-      preview: `${c.message.substring(0, 20)}...`,
-      time: formatDistanceToNow(new Date(c.createdAt), { addSuffix: true }),
-      link: `/messages/${c.id}`
-    }))
-  } else if (role==='BUYER') {
-    buyerInquiries = (await prisma.inquiry.findMany({
-      where: {
-        buyerId: user.id,
-        buyerRead: false,
 
-      },
-      select: {
-        buyer: {
-          select: {
-            name: true,
-            id: true,
-          }
-        },
-        id:true,
-        message: true,
-        response: true,
-        productId: true,
-        createdAt: true,
-      }
-    })).filter((c)=>c.response!=undefined).map((c) => ({
-      id: uuidv4(),
-      type: 'message',
-      title: 'New Message',
-      preview: `${c.response?.substring(0, 20)}...`,
-      time: formatDistanceToNow(new Date(c.createdAt), { addSuffix: true }),
-      link: `/messages/${c.id}`
-    }))
-  }
-  //console.log(sellerInquiries, buyerInquiries, 'ddddddddddddddddddddduududididdidijfjfjf');
-  //console.log(messages,'vvvvvvvvvvvvvv');
-
-  //console.log(featuredProducts, 'mmmmmmmmmmmmmm');
+  const { buyerInquiries, sellerInquiries } = await getGeneralInquiries(user);
 
   return (
     <div>
@@ -130,6 +81,7 @@ export default async function Home() {
         />
         <FeaturedAndProducts
           initFeaturedProducts={featuredProducts.editProducts} />
+        <FeaturedEnginners services={services} />
         <LimitedTimeDeals initDealsProducts={dealsProducts.editProducts} />
         {/* <PartAndAccessoir initPartsAndAccessoirsProducts={partsAndAccessoirsProducts.editProducts} /> */}
         <EducationalAndVideos initYoutubVideos={youtubeVideos.videos} />

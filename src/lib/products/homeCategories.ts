@@ -1,5 +1,7 @@
 import { prisma } from "../prisma";
-
+import { v4 as uuidv4 } from "uuid";
+import { formatDistanceToNow } from "date-fns";
+import { ServiceCategory } from "@/generated/prisma";
 
 
 export async function getCategoriesHome() {
@@ -109,4 +111,95 @@ export async function getCategoriesHome() {
     })
     // Flatten the array to ensure it's a single level array (no nested arrays)
     return c;
+}
+export async function getGeneralInquiries(user: any) {
+    const role = user?.role;
+    let sellerInquiries: any = [];
+    let buyerInquiries: any = [];
+    if (!user) { return { buyerInquiries, sellerInquiries } }
+    if (role === 'SELLER') {
+        sellerInquiries = (await prisma.inquiry.findMany({
+            where: {
+                sellerId: user.id,
+                sellerRead: false
+            },
+            select: {
+                buyer: {
+                    select: {
+                        name: true,
+                        id: true,
+                    }
+                },
+                id: true,
+                message: true,
+                response: true,
+                productId: true,
+                createdAt: true,
+            }
+        })).map((c) => ({
+            id: uuidv4(),
+            type: 'message',
+            title: 'New Product Inquiry',
+            preview: `${c.message.substring(0, 20)}...`,
+            time: formatDistanceToNow(new Date(c.createdAt), { addSuffix: true }),
+            link: `/messages/${c.id}`
+        }))
+    }
+    buyerInquiries = (await prisma.inquiry.findMany({
+        where: {
+            buyerId: user.id,
+            buyerRead: false,
+
+        },
+        select: {
+            buyer: {
+                select: {
+                    name: true,
+                    id: true,
+                }
+            },
+            id: true,
+            message: true,
+            response: true,
+            productId: true,
+            createdAt: true,
+        }
+    })).filter((c) => c.response != undefined).map((c) => ({
+        id: uuidv4(),
+        type: 'message',
+        title: 'New Message',
+        preview: `${c.response?.substring(0, 20)}...`,
+        time: formatDistanceToNow(new Date(c.createdAt), { addSuffix: true }),
+        link: `/messages/${c.id}`
+    }))
+    return { buyerInquiries, sellerInquiries }
+}
+
+
+export async function getServices(category: ServiceCategory[]) {
+    const now = new Date();
+    await prisma.service.updateMany({
+        where: {
+            isFeatured: true,
+            featuredEndDate: {
+                lt: now,
+            },
+        },
+        data: {
+            isFeatured: false,
+            featuredEndDate: null,
+            featureDays: null,
+        },
+    })
+    const services = await prisma.service.findMany({
+        where: { category: { in: category } },
+        orderBy: [
+            { isFeatured: 'desc' },
+            { createdAt: 'desc' }
+        ],
+        take: 10
+    });
+    //console.log(services, 'uuuuuuuuiiiiiiooooooooo');
+
+    return services;
 }

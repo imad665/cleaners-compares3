@@ -24,13 +24,14 @@ import { categories } from "@/components/video_ui/data/videos";
 import { embedProductsToNeon } from "@/lib/langchain/embeding/embed-products";
 import PWAInstallButton from "@/components/PWAInstallButton";
 import { embedEngineersToNeon } from "@/lib/langchain/embeding/embed_enginner";
-import deleteUserTested from "@/lib/update-db";
+import deleteUserTested, { deleteProductWithOrder } from "@/lib/update-db";
 import { clearAllEngineerEmbeddings, reembedAllEngineers, reembedAllProducts } from "@/lib/langchain/embeding/utils/embed-handler";
 import { seedUsers2 } from "@/lib/data-old-website/add-users2";
 import { seedCategories, seedMachines, seedParts, seedSubcategories, seedSundries, updateUserRoles } from "@/lib/data-old-website/seed-categories";
 import { encryptPassword } from "@/lib/crypto";
 import { ReturnToAdminButton } from "@/components/ReturnToAdminButton";
 import { copyProductsToFile, removeNonRealProducts } from "@/lib/productsCache";
+import MotivationToast from "@/components/home_page/clientComponents/MotivationToast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -238,14 +239,14 @@ export default async function RootLayout({
   //await seedUsers2()
   //await seedCategories() 
   //await seedSubcategories()
- // await seedMachines()
+  // await seedMachines()
   //await seedSundries()
   //await seedParts() 
   //await updateUserRoles() 
 
   //await prisma.service.deleteMany()
 
-  
+
 
   /* 
   amirshahz777@gmail.com
@@ -265,16 +266,16 @@ export default async function RootLayout({
   //await deleteUserByEmail("amirshahz777@gmail.com")
   //await deleteUserByEmail("maz@exclusivecleaners.co.uk")
   //await deleteUserByEmail("maz@exclusivecleaners.co.uk")
-  
+
   /* await deleteUserTested(['amirshahz77@gmail.com','simo@email.com','amirshahz777@yahoo.co.uk',
     'asasa@gmail.com','amirshahz77@gmail.com','Amir@tlc.com','programmingi77i@gmail.com','med.hasnaoui92@gmail.com',
     'ddqdeqd@gmail.com','seller1@gmail.com','vic1dayinsh7777@gmail.com','srtechsolutions03@gmail.com'
   ]) */
   //await deleteUserTested()
 
-   //const allProductNames = await copyProductsToFile();
+  //const allProductNames = await copyProductsToFile();
   //await removeNonRealProducts();
-   
+  //await deleteProductWithOrder(['test products','test products3342','GOLD HANGERS'])
   return (
     <html lang="en" className="scroll-smooth">
       <body
@@ -285,10 +286,10 @@ export default async function RootLayout({
           {children}
           <ChatPage className='fixed bottom-2 right-2' />
           {/* <ChatPage className='fixed bottom-2 left-2' /> */}
-          
-           <ReturnToAdminButton />
+
+          <ReturnToAdminButton />
           {/* Admin Return Button - Only show if admin is impersonating a seller */}
-         
+
           {/* <InitData/> */}
 
         </HomeProvider>
@@ -299,6 +300,7 @@ export default async function RootLayout({
         {/* </HomeProductsProvider> */}
         <Toaster />
         <PWAInstallButton />
+        <MotivationToast />
       </body>
     </html>
   );

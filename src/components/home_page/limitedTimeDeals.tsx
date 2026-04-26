@@ -13,18 +13,21 @@ export function LimitedTimeDeals({ initDealsProducts }: { initDealsProducts: any
     /* const {dealsProducts} = useHomeProductContext(); */
     const dealsProducts = initDealsProducts;
     return (
-        <section className="w-full px-4 md:px-8 py-10 bg-white max-h-[600px]">
+        <section className="w-full px-4 md:px-8 py-10 bg-blue-50 max-h-[600px]">
             <div className="  container mx-auto ">
                 <div className='flex justify-between items-center mb-6'>
                     <h2 className="text-2xl font-bold  text-left">Limited-Time Deals</h2>
                     <Link href="/products?type=deals" className=' text-blue-400 font-medium text-sm hover:underline'>View all</Link>
                 </div>
-                <MyCarousel sliderToShow={5} >
+                <MyCarousel sliderToShow={6} breackpoints={[
+                    { breakpoint: 1580, slidesToShow: 6 },
+                    { breakpoint: 1280, slidesToShow: 5 },
+                    { breakpoint: 1100, slidesToShow: 4 },
+                    { breakpoint: 1020, slidesToShow: 3 },
+                    { breakpoint: 770, slidesToShow: 2 },
+                ]} >
                     {dealsProducts?.map((slide, i) => (
-                        <div key={i} className="px-2 py-5">
-                            {/* <ItemLimitedTimeDeals {...slide} /> */}
-                            <ItemFeaturedProduct  {...slide} />
-                        </div>
+                        <ItemFeaturedProduct key={i}  {...slide} />
                     ))}
                 </MyCarousel>
             </div>

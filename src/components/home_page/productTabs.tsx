@@ -30,7 +30,7 @@ export default function CategoryTabs({ allCategories }: { allCategories: any[] }
   };
 
   return (
-    <div className="bg-gradient-to-b from-blue-200 to-blue-50 py-5  ">
+    <div className="bg-gradient-to-b from-blue-200 to-white py-5  ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-5 sm:mb-12">
@@ -128,7 +128,7 @@ export function CategoryCard({ item, className }: {
   return (
     <Link href={item.href} className="cursor-pointer">
       <motion.div
-        className={`group relative flex-shrink-0 w-[90vw] md:w-fit mx-1 md:min-w-[280px] rounded-xl bg-white shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-100 ${className}`}
+        className={`group relative flex-shrink-0 w-[90vw] md:w-fit mx-1 md:min-w-[280px] rounded-xl bg-white  hover:shadow-lg transition-all duration-300 border   hover:border-blue-100 ${className}`}
         whileHover={{ y: -5 }}
       >
         <div className="relative aspect-video overflow-hidden flex items-center justify-center">
@@ -147,7 +147,7 @@ export function CategoryCard({ item, className }: {
               height={150}
             />
           </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+          <div className="absolute inset-0  " />
         </div>
         <div className="p-4">
           <h3 className="text-lg font-semibold text-gray-900 mb-1">{item.title}</h3>

@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-10-16',
 });
 
@@ -16,7 +16,7 @@ export async function POST(req) {
     event = stripe.webhooks.constructEvent(
       body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET
+      process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err) {
     console.error('Webhook Error:', err.message);
@@ -33,7 +33,7 @@ export async function POST(req) {
       const days = parseInt(metadata.days);
       const type = metadata.type;
       console.log(metadata);
-      
+
       const startDate = new Date();
       const endDate = new Date();
       endDate.setDate(startDate.getDate() + days);
@@ -48,7 +48,7 @@ export async function POST(req) {
           }
         })
         console.log(`✅ service ${productId} is now featured for ${days} days`);
-      
+
       } else {
         await prisma.product.update({
           where: { id: productId },

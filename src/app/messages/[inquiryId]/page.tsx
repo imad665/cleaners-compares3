@@ -7,25 +7,26 @@ import { notifySellerOfMessageAction } from "@/actions/actionSellerForm";
 export default async function InquiryPage({
     params,
 }: {
-    params: { inquiryId: string };
+    params: Promise<{ inquiryId: string }>;
 }) {
     const session = await getServerSession(authOptions);
     if (!session?.user) return null;
+    const { inquiryId } = await params;
 
     const inquiry = await prisma.inquiry.findUnique({
-        where: { id: params.inquiryId },
+        where: { id: inquiryId },
         include: {
             product: true,
             buyer: true,
             seller: true,
         },
-        
+
     });
 
     if (!inquiry) return <div>Not found</div>;
 
-    const isSeller =  session.user.role === "SELLER";
-    const isBuyer =  session.user.role === "BUYER";
+    const isSeller = session.user.role === "SELLER";
+    const isBuyer = session.user.role === "BUYER";
 
     // ✅ Fetch all inquiries with same buyerId + productId
     const conversation = await prisma.inquiry.findMany({
@@ -41,10 +42,10 @@ export default async function InquiryPage({
     });
     for (const c of conversation) {
         await prisma.inquiry.update({
-            where:{id:c.id},
-            data:{
-                sellerRead:c.sellerRead || isSeller,
-                buyerRead:c.buyerRead || isBuyer
+            where: { id: c.id },
+            data: {
+                sellerRead: c.sellerRead || isSeller,
+                buyerRead: c.buyerRead || isBuyer
             }
         })
     }
@@ -126,7 +127,7 @@ export default async function InquiryPage({
                         placeholder="Write your reply..."
                         type="text"
                         className="flex-1 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                        
+
                     />
                     <button
                         type="submit"

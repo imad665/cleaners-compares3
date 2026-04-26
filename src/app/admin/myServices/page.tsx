@@ -39,15 +39,15 @@ export default function ServicesPage() {
     }, [paymentSuccess, days, toastShown, router]);
 
     return (
-        <main className="py-10 px-4 bg-gray-50 min-h-screen">
-            <div className="max-w-full mx-auto overflow-auto">
-                <div className="flex justify-between items-center mb-6">
+        <main className="py-10 px-4 bg-gray-50 min-h-screen min-w-full">
+            <div className="min-w-full mx-auto overflow-auto">
+                <div className="flex justify-between items-center mb-6 w-full">
                     <h1 className="text-2xl font-semibold">My Enginners</h1>
                     <Dialog open={open} onOpenChange={setOpen}>
                         <DialogTrigger asChild>
                             <Button className="bg-blue-600 hover:bg-blue-500 cursor-pointer text-white ">+ Add New Enginner</Button>
                         </DialogTrigger>
-                        <DialogContent className=" min-w-fit">
+                        <DialogContent className=" min-w-full">
                             <DialogHeader>
                                 <DialogTitle>Add New Enginner</DialogTitle>
                             </DialogHeader>

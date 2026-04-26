@@ -5,10 +5,7 @@ export default async function deleteUserTested(userEmails?: string[]) {
   try {
     // Find users created after July 19, 2025
 
-    
-
     const where = userEmails && userEmails.length > 0 ? {email:{in:userEmails}}:{createdAt: {gt: new Date('2025-10-1') }}
-
     const users = await prisma.user.findMany({
       where,
       select: {
@@ -17,7 +14,6 @@ export default async function deleteUserTested(userEmails?: string[]) {
     });
 
     console.log(users,'ffffffff');
-    
     
     const userIds = users.map(user => user.id);
 
@@ -215,4 +211,88 @@ export default async function deleteUserTested(userEmails?: string[]) {
     console.error('Error deleting users:', error);
     throw error;
   }
+}
+
+
+export async function deleteProductWithOrder(productsNames?: string[]) {
+  const where = productsNames && productsNames.length > 0 ? {title:{in:productsNames}}:{createdAt: {gt: new Date('2026-1-1') }}
+  const products = await prisma.product.findMany({
+    where,
+    select:{
+      id:true,
+      sellerId:true,
+      title:true
+    }
+  })
+     
+    const userIds = products.map(product => product.sellerId);
+
+  console.log(products,'ssssssssssssssssssldldldd');
+  
+  //return 
+  await prisma.$transaction([
+      // Delete order payments
+      prisma.message.deleteMany({
+        where: {
+          OR: [ 
+            { senderUserId: { in: userIds } },
+            { receiverUserId: { in: userIds } },
+            { userId: { in: userIds } }
+          ]
+        }
+      }),
+      prisma.orderPayment.deleteMany({
+        where: {
+          OR: [
+            { sellerId: { in: userIds } },
+            { order: { userId: { in: userIds } } }
+          ]
+        }
+      }),
+      // Delete order items
+      prisma.orderItem.deleteMany({
+        where: {
+          OR: [
+            { sellerId: { in: userIds } },
+            { order: { userId: { in: userIds } } }
+          ]
+        }
+      }),
+      // Delete notifications
+      prisma.notificationOrder.deleteMany({
+        where: {
+          order: { userId: { in: userIds } }
+        }
+      }),
+      // Delete orders
+      prisma.order.deleteMany({
+        where: {
+          userId: { in: userIds }
+        }
+      }),
+      // Delete ratings
+      prisma.rating.deleteMany({
+        where: {
+          OR: [
+            { userId: { in: userIds } },
+            { product: { sellerId: { in: userIds } } }
+          ]
+        }
+      }),
+      // Delete inquiries
+      prisma.inquiry.deleteMany({
+        where: {
+          OR: [
+            { buyerId: { in: userIds } },
+            { sellerId: { in: userIds } }
+          ]
+        }
+      }),
+      // Delete products
+      prisma.product.deleteMany({
+        where: {
+          sellerId: { in: userIds }
+        }
+      }),
+    ]);
 }

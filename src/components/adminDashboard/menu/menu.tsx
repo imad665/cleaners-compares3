@@ -1,6 +1,7 @@
 'use client'
 
 import { Logo } from "@/components/header/header";
+import { NotificationDropdown } from "@/components/header/notificationButton2";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -33,8 +34,8 @@ function getUserMenu(user, cart) {
     if (user.role === 'ADMIN') {
         return [
             { Icon: LayoutDashboard, title: 'Dashboard', href: '/admin' },
-            { Icon: FileText, title: 'Blog Management', href: '/admin/blog' }, 
-           /*  { Icon: ListOrdered, title: 'Orders', href: '/admin/orders' }, */
+            { Icon: FileText, title: 'Blog Management', href: '/admin/blog' },
+            /*  { Icon: ListOrdered, title: 'Orders', href: '/admin/orders' }, */
             { Icon: Currency, title: 'Payouts to Sellers', href: '/admin/payouts' },
             { Icon: FoldersIcon, title: 'Manage Categories', href: '/admin/manageCategories' },
             { Icon: Kanban, title: 'Manage Subcategories', href: '/admin/manageSubcategories' },
@@ -47,7 +48,7 @@ function getUserMenu(user, cart) {
             { Icon: MessageSquare, title: 'Messages', href: '/admin/myMessages' },
             { Icon: Settings, title: 'Settings', href: '/admin/settings' },
             { Icon: User, title: 'Profile', href: '/admin/profile' },
-            
+
 
         ]
     } else if (user.role === 'SELLER') {
@@ -180,7 +181,7 @@ export function SideBarMobile() {
 
     )
 }
-export function HeaderAdmin() {
+export function HeaderAdmin({ notificationData }: { notificationData: any }) {
     const { user } = useHomeContext();
     const email = user?.email || null;
     const img = user?.image || null;
@@ -195,7 +196,8 @@ export function HeaderAdmin() {
                 </div>
 
                 {/* Right side */}
-                <div className="flex items-center">
+                <div className="flex items-center gap-4">
+                    <NotificationDropdown notificationData={notificationData} />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <button className="flex items-center space-x-2 focus:outline-none">
