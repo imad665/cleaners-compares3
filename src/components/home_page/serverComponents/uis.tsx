@@ -124,6 +124,8 @@ export function ItemFeaturedProduct({
     const [openSignUp, setOpenSignUp] = useState(false);
     const [openMessageDialog, setOpenMessageDialog] = useState(false);
     const { user } = useHomeContext();
+    unitPrice = Number(unitPrice)
+    console.log(unitPrice, 'sssssssssssssssssmcmdkcmdkmmmvmmv');
 
     const isUnits = units > 0;
     const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";
@@ -133,7 +135,6 @@ export function ItemFeaturedProduct({
         if (!user) setOpenSignIn(true);
         else setOpenMessageDialog(true);
     };
-
     return (
         <div className={`group flex flex-col w-full max-w-[280px] min-h-[400px] bg-white border border-slate-200 rounded-md overflow-hidden   hover:shadow-md transition-all duration-200 ${className}`}>
 
@@ -185,7 +186,7 @@ export function ItemFeaturedProduct({
                     {isUnits && (
                         <div className="flex flex-col border-l pl-2">
                             <span className="text-slate-400 uppercase text-[9px]">Per Unit</span>
-                            <span className="font-bold text-slate-700">£{unitPrice.toFixed(2)}</span>
+                            <span className="font-bold text-slate-700">£{unitPrice?.toFixed(2)}</span>
                         </div>
                     )}
                 </div>
