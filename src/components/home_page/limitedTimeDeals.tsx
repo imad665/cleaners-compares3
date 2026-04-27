@@ -5,15 +5,16 @@ import Link from "next/link"
 /* import Slider from 'react-slick' */
 import { ItemFeaturedProduct, ItemLimitedTimeDeals } from "./serverComponents/uis"
 import MyCarousel from "./clientComponents/myCarousel";
+import { cn } from "@/lib/utils";
 
 /* import { useHomeProductContext } from "@/providers/homeProductsProvider" */
 
 
-export function LimitedTimeDeals({ initDealsProducts }: { initDealsProducts: any }) {
+export function LimitedTimeDeals({ initDealsProducts, className }: { initDealsProducts: any, className: string }) {
     /* const {dealsProducts} = useHomeProductContext(); */
     const dealsProducts = initDealsProducts;
     return (
-        <section className="w-full px-4 md:px-8 py-10 bg-blue-50 max-h-[600px]">
+        <section className={cn("w-full px-4 md:px-8 py-10 bg-blue-50 max-h-[600px]", className)}>
             <div className="  container mx-auto ">
                 <div className='flex justify-between items-center mb-6'>
                     <h2 className="text-2xl font-bold  text-left">Limited-Time Deals</h2>

@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick-theme.css" */
 import { useHomeProductContext } from "@/providers/homeProductsProvider"; */
 import { VideoItem } from "./clientComponents/uis";
 import MyCarousel from "./clientComponents/myCarousel";
+import { cn } from "@/lib/utils";
 
 
 
@@ -51,17 +52,19 @@ import MyCarousel from "./clientComponents/myCarousel";
 
 export function EducationalAndVideos(
     {
-        initYoutubVideos
+        initYoutubVideos,
+        className,
     }:
         {
-            initYoutubVideos: any
+            initYoutubVideos: any;
+            className?: string
         }
 ) {
     //const { youtubeVideos } = useHomeProductContext();
     //console.log(youtubeVideos,'yyyyyyyyyyyyyyooooooooooooottttttt');
     const youtubeVideos = initYoutubVideos;
     return (
-        <section className="w-full px-4 md:px-8 py-10  bg-white">
+        <section className={cn("w-full px-4 md:px-8 py-10  bg-white", className)}>
             <div className="  container mx-auto">
                 <div className='flex justify-between items-center mb-6'>
                     <h2 className="text-2xl font-bold  text-left">

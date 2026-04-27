@@ -27,6 +27,7 @@ import { authOptions } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { formatDistanceToNow } from "date-fns";
 import { unstable_cache } from "next/cache";
+import { cn } from "@/lib/utils";
 
 const getHomePageCachedData = unstable_cache(
   async () => {
@@ -81,10 +82,10 @@ export default async function Home() {
         />
         <FeaturedAndProducts
           initFeaturedProducts={featuredProducts.editProducts} />
-        <FeaturedEnginners services={services} />
-        <LimitedTimeDeals initDealsProducts={dealsProducts.editProducts} />
+        {services.length > 0 && <FeaturedEnginners services={services} />}
+        <LimitedTimeDeals initDealsProducts={dealsProducts.editProducts} className={services.length > 0 ? 'bg-blue-50' : 'bg-white'} />
         {/* <PartAndAccessoir initPartsAndAccessoirsProducts={partsAndAccessoirsProducts.editProducts} /> */}
-        <EducationalAndVideos initYoutubVideos={youtubeVideos.videos} />
+        <EducationalAndVideos initYoutubVideos={youtubeVideos.videos} className={services.length > 0 ? 'bg-white' : 'bg-blue-50'} />
         <BrandingSlider />
       </main>
       {/* <AddressSearchUK/> */}
