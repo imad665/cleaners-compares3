@@ -542,7 +542,7 @@ export function Header({ className = '', recentOrderCount, notificationData }: {
                     cart={cart} />
 
             </div>
-            <div className='lg:hidden mx-3'>
+            <div className='lg:hidden mx-3 mb-3'>
                 <ProductSearchBar />
             </div>
             <SiteNav />

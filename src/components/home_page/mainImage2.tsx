@@ -45,17 +45,7 @@ export function MainImage() {
       <div className="container mx-auto px-4 py-10 lg:py-16 grid lg:grid-cols-2 gap-10 items-center">
         <div>
           <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-900 leading-tight">
-            The World's{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-              First
-            </span>{' '}
-            Laundry &
-
-            Dry Cleaning{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-500 to-purple-600">
-              Comparison
-            </span>{' '}
-            Website
+            The Laundry & Dry Cleaning Industry Marketplace
           </h1>
           <p className="mt-5 text-base md:text-lg text-muted-foreground max-w-xl">
             Find machines, parts, sundries, engineers, services and businesses for sale — all in one dedicated industry platform.
