@@ -210,6 +210,7 @@ export default async function ProductsPageCondition(
         return (
             <div className="bg-gray-100 ">
                 <Header recentOrderCount={recentOrderCount} notificationData={messages} />
+
                 {!products ?
                     <div className="flex flex-col items-center">
                         <ProductBreadcrumb category={category}

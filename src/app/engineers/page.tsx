@@ -107,7 +107,16 @@ export default async function CategoryCards() {
     const messages = await getNotifications();
     return (
         <div className="min-h-screen w-full  flex flex-col">
-            <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
+            <Header recentOrderCount={recentOrderCount} notificationData={messages} />
+            <section className="bg-secondary/40 border-b">
+                <div className="container mx-auto px-4 py-12 text-center">
+                    <h1 className="text-3xl lg:text-5xl font-bold tracking-tight">Engineers & Services</h1>
+                    <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
+                        Connect with trusted engineers and service providers across the laundry, finishing and dry cleaning industries.
+                    </p>
+
+                </div>
+            </section>
             <div className=" flex flex-col m-auto">
                 <div className="flex  justify-center mt-4">
                     <ProductBreadcrumb
@@ -116,9 +125,9 @@ export default async function CategoryCards() {
                         name={undefined} />
                 </div>
 
-                <h2 className='text-2xl  ml-4 mt-12 font-bold'>
+                {/*  <h2 className='text-2xl  ml-4 mt-12 font-bold'>
                     Select a category
-                </h2>
+                </h2> */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6">
                     {categories.map((cat) => (
                         <EngineerLink

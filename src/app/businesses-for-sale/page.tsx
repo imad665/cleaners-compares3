@@ -9,7 +9,7 @@ import { getNotifications } from "@/lib/payement/get-notification-for-icon";
 import { getBusinesessForSale, getFeaturedProducts, getFooterData, getRecentOrdersCount } from "@/lib/products/homeProducts";
 
 import type { Metadata } from 'next';
- 
+
 export async function generateMetadata(): Promise<Metadata> {
     const { editedBusinessForSale } = await getBusinesessForSale({ page: 1, pageSize: 3 });
 
@@ -96,7 +96,16 @@ export default async function Page() {
     const messages = await getNotifications();
     return (
         <div>
-            <Header notificationData={messages} recentOrderCount={recentOrderCount}/>
+            <Header notificationData={messages} recentOrderCount={recentOrderCount} />
+            <section className="bg-secondary/40 border-b">
+                <div className="container mx-auto px-4 py-12 text-center">
+                    <h1 className="text-3xl lg:text-5xl font-bold tracking-tight">Businesses for Sale</h1>
+                    <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
+                        Browse established dry cleaning, laundry and finishing businesses currently available across the UK. Contact sellers directly to discuss the opportunity.
+                    </p>
+
+                </div>
+            </section>
             <main className="max-w-7xl m-auto space-y-8 mt-5">
                 <div className="flex justify-center mt-4">
                     <ProductBreadcrumb
@@ -110,12 +119,12 @@ export default async function Page() {
 
                     {editedBusinessForSale.editedBusinessForSale.map((business, index) => (
                         <div key={index} className="mx-3">
-                            <BusinessForSale 
+                            <BusinessForSale
                                 className="min-w-[90vw] m-auto md:!min-w-[40vw] lg:!min-w-[300px] lg:!max-w-[500px]"
                                 {...business} />
                         </div>
                     ))}
-                     
+
                 </div>
 
             </main>

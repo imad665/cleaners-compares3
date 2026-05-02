@@ -12,10 +12,11 @@ import SellerFormDialog from "../forms/sellerForm";
 import SellerFormDialog2 from "../forms/sellerForm2";
 import { useHomeContext } from "@/providers/homePageProvider";
 import { useRouter } from "next/navigation";
-import { AlertCircle, ArrowRight, Building2, Search } from "lucide-react";
+import { AlertCircle, ArrowRight, Building2, Search, Store } from "lucide-react";
 import MyCarousel from "./clientComponents/myCarousel";
 import { Button } from "../ui/button";
 import { AnimatePresence, motion } from "framer-motion";
+import { ButtonNeedSignIn } from "../header/productSearchBar";
 /* const wantedItems = [
   {
     title: "Used Dry Cleaning Machine",
@@ -105,6 +106,7 @@ export default function WantedItemAndBusiness({ wantedItems, businessesForSale }
   const router = useRouter();
   const [buttonLoading, setButtonLoading] = useState(false);
   const [callback, setCallback] = useState('/');
+  console.log(wantedItems, 'ssssssssssssssssssjdjdjdkkvvf');
 
   // Modal States
   const [openSellerDialog, setOpenSellerDialog] = useState(false);
@@ -134,7 +136,7 @@ export default function WantedItemAndBusiness({ wantedItems, businessesForSale }
             <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">
               Community <span className="text-blue-600">Marketplace</span>
             </h2>
-            <p className="text-slate-500 text-sm">Find specific equipment or your next business venture.</p>
+            <p className="text-slate-500 text-sm">Buy or sell a laundry business, or post wanted items.</p>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -189,22 +191,43 @@ export default function WantedItemAndBusiness({ wantedItems, businessesForSale }
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                <MyCarousel sliderToShow={4} breackpoints={[
-                  { breakpoint: 1280, slidesToShow: 3 },
-                  { breakpoint: 1023, slidesToShow: 2 },
-                  { breakpoint: 518, slidesToShow: 1 },
-                ]}>
-                  {selectedTab === "wanted"
-                    ? wantedItems.map((item: any, i: number) => (
-                      <div key={i} className="px-2">
-                        <WantedItem {...item} />
-                      </div>
-                    ))
-                    : businessesForSale.map((business: any, i: number) => (
-                      <BusinessForSale {...business} />
-                    ))
-                  }
-                </MyCarousel>
+                <div className="flex gap-2 max-[1050px]:flex-col">
+                  <MyCarousel
+                    className="w-[80%] -[1050px]:w-full"
+                    sliderToShow={4} breackpoints={[
+                      { breakpoint: 1280, slidesToShow: 3 },
+                      { breakpoint: 1023, slidesToShow: 2 },
+                      { breakpoint: 518, slidesToShow: 1 },
+                    ]}>
+                    {selectedTab === "wanted"
+                      ? wantedItems.map((item: any, i: number) => (
+                        <div key={i} className="px-2">
+                          <WantedItem {...item} />
+                        </div>
+                      ))
+                      : businessesForSale.map((business: any, i: number) => (
+                        <BusinessForSale {...business} />
+                      ))
+                    }
+                  </MyCarousel>
+                  <article className="rounded-xl border bg-buyer-soft p-5 flex flex-col items-center justify-center text-center">
+                    <Store className="h-10 w-10 text-primary mb-3" />
+                    <p className="text-sm font-semibold">List your business or equipment and connect with serious buyers.</p>
+                    <Button
+                      onClick={() => handleClickBigButton('myBusinessesForSale')}
+                      disabled={buttonLoading}
+                      variant={'link'}
+                      className="h-10 rounded-full  cursor-pointer "
+                    >
+                      <Building2 className="w-3.5 h-3.5 mr-2" /> Sell Your Business →
+                    </Button>
+
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      List your laundry business for sale or connect with serious buyers.
+                    </p>
+                  </article>
+                </div>
+
               </motion.div>
             </TabsContent>
           </AnimatePresence>

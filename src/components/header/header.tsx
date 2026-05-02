@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { LayoutDashboard, Loader, Menu, MenuIcon, Plus, ShoppingCart, UserCircle } from 'lucide-react'
+import { ChevronDown, LayoutDashboard, Loader, Menu, MenuIcon, Plus, ShoppingCart, UserCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { ProductSearchBar } from './productSearchBar'
@@ -19,6 +19,7 @@ import { ContactDialog } from '../home_page/contact'
 import NotificationBadge from './notificationIcon'
 import { NotificationDropdown } from './notificationButton2'
 import AutoSellerFormDialog from '../forms/autoSellerForm'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
 
 // Temporary state values — replace with auth/cart logic
 
@@ -45,7 +46,7 @@ export function Logo({ width = 100, height = 20 }: { width?: number, height?: nu
 
 const productsData = [
     'Machines', 'Parts', 'Sundries',
-    'Engineers', "More",'Blog'
+    'Engineers', "More", 'Blog'
 ];
 
 function NavProducts() {
@@ -98,7 +99,7 @@ function NavProducts() {
                         <div className="hidden md:block font-bold ">
                             {p.toLowerCase().replace(' ', '-') !== 'engineers' &&
                                 p.toLowerCase().replace(' ', '-') !== 'sundries' &&
-                                p.toLowerCase().replace(' ', '-') !== 'more' && p.toLowerCase()!='blog'? (
+                                p.toLowerCase().replace(' ', '-') !== 'more' && p.toLowerCase() != 'blog' ? (
                                 <Link
                                     href={`/products/${p.toLowerCase().replace(' ', '-')}`}
                                     className='text-black-400 hover:text-blue-500 transition-all'
@@ -220,7 +221,7 @@ interface Props {
     cart: { quantity: number, productId: string }[];
     setOpenDialog: (open: boolean) => void;
     recentOrderCount: any;
-    notificationData:any;
+    notificationData: any;
 }
 
 export function SignInUpModal(
@@ -253,8 +254,70 @@ export function SignInUpModal(
         </>
     )
 }
+type NavItem = {
+    label: string;
+    href: string;
+    children?: { label: string; href: string }[];
+};
 
-function NavDesktop({ user, cart, setOpenDialog, recentOrderCount,notificationData }: Props) {
+function SiteNav() {
+    const items: NavItem[] = [
+        {
+            label: "Machines",
+            href: "/products/machines",
+            /* children: [
+                { label: "New Machines", href: "/machines#new" },
+                { label: "Used Machines", href: "/machines#used" },
+            ], */
+        },
+        {
+            label: "Parts & Components",
+            href: "/products/parts",
+            /*  children: [
+                 { label: "New Parts", href: "/parts#new" },
+                 { label: "Used Parts", href: "/parts#used" },
+             ], */
+        },
+        { label: "Sundries & Supplies", href: "/products/sundries" },
+        { label: "Engineers & Services", href: "/engineers" },
+        { label: "Businesses for Sale", href: "/businesses-for-sale" },
+        { label: "Wanted Items", href: "/wanted-items" },
+        { label: "Buying Guides & Resources", href: "/videos" },
+        { label: "Blog", href: "/blog" },
+    ];
+    return (
+        <nav className="border-t flex items-center  bg-supplier text-white  ">
+            <div className="container mx-auto w-fit px-4">
+                <ul className="flex items-center gap-8 overflow-x-auto py-3 text-sm font-medium  ">
+                    {items.map((it) => (
+                        <li key={it.label} className="whitespace-nowrap">
+                            {it.children ? (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger className="inline-flex items-center gap-1 hover:text-white transition-colors focus:outline-none">
+                                        {it.label}
+                                        <ChevronDown className="h-3.5 w-3.5" />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="start" className="min-w-[12rem]">
+                                        {it.children.map((child) => (
+                                            <DropdownMenuItem key={child.label} asChild>
+                                                <a href={child.href}>{child.label}</a>
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            ) : (
+                                <a href={it.href} className="hover:text-white transition-colors">
+                                    {it.label}
+                                </a>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </nav>
+    );
+}
+function NavDesktop({ user, cart, setOpenDialog, recentOrderCount, notificationData }: Props) {
     const cartCount = cart.reduce((sum, prev) => sum + prev.quantity, 0);
     const [openSignUp, setOpenSignUp] = useState(false);
     const [openSignIn, setOpenSignIn] = useState(false);
@@ -272,7 +335,7 @@ function NavDesktop({ user, cart, setOpenDialog, recentOrderCount,notificationDa
                         Become a Seller
                     </Button>
                 }
-                { 
+                {
                     <ContactDialog textButton={'Report poblem'} />
                 }
                 {user &&
@@ -337,7 +400,7 @@ interface Props {
     setOpenDialog: (open: boolean) => void;
 }
 
-export function NavMobile({ user, cart, setOpenDialog,   recentOrderCount,notificationData  }: Props) {
+export function NavMobile({ user, cart, setOpenDialog, recentOrderCount, notificationData }: Props) {
     const [open, setOpen] = useState(false);
     const cartCount = cart.reduce((sum, prev) => sum + prev.quantity, 0);
     const [openSignUp, setOpenSignUp] = useState(false);
@@ -395,7 +458,7 @@ export function NavMobile({ user, cart, setOpenDialog,   recentOrderCount,notifi
                         >
                             Cart ({cartCount})
                         </Link>
-                         <ContactDialog textButton={'Report poblem'} />
+                        <ContactDialog textButton={'Report poblem'} />
 
                         {user ? (
                             <Link
@@ -450,9 +513,9 @@ export function NavMobile({ user, cart, setOpenDialog,   recentOrderCount,notifi
     );
 }
 
-export function Header({ className = '', recentOrderCount,notificationData }: { className?: string, recentOrderCount?: any,notificationData?:any }) {
+export function Header({ className = '', recentOrderCount, notificationData }: { className?: string, recentOrderCount?: any, notificationData?: any }) {
     const { cart, user } = useHomeContext();
-    console.log(notificationData,recentOrderCount, ';;;;;;;;;;;;;ddddddddddd;;;;;');
+    console.log(notificationData, recentOrderCount, ';;;;;;;;;;;;;ddddddddddd;;;;;');
     const [openDialog, setOpenDialog] = useState(false);
     return (
 
@@ -482,7 +545,8 @@ export function Header({ className = '', recentOrderCount,notificationData }: { 
             <div className='lg:hidden mx-3'>
                 <ProductSearchBar />
             </div>
-            <NavProducts />
+            <SiteNav />
+            {/* <NavProducts /> */}
             {/* {!user && <ContinueWithGoogleAlert />} */}
             {openDialog && <AutoSellerFormDialog open={openDialog} setOpen={setOpenDialog} />}
         </header>

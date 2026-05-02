@@ -131,7 +131,7 @@ export function CategoryCard({ item, className }: {
         className={`group relative flex-shrink-0 w-[90vw] md:w-fit mx-1 md:min-w-[280px] rounded-xl bg-white  hover:shadow-lg transition-all duration-300 border   hover:border-blue-100 ${className}`}
         whileHover={{ y: -5 }}
       >
-        <div className="relative aspect-video overflow-hidden flex items-center justify-center">
+        <div className="relative aspect-video bg-secondary/40 overflow-hidden flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0.9 }}
             whileHover={{ opacity: 1 }}

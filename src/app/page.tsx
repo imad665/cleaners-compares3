@@ -28,6 +28,9 @@ import { v4 as uuidv4 } from "uuid";
 import { formatDistanceToNow } from "date-fns";
 import { unstable_cache } from "next/cache";
 import { cn } from "@/lib/utils";
+import { BuyerSellerBlock } from "@/components/home_page/BuyerSellerBlock";
+import { CategoryGrid } from "@/components/home_page/CategoryGrid";
+import { FeaturedEngineers } from "@/components/home_page/FeaturedEngineers";
 
 const getHomePageCachedData = unstable_cache(
   async () => {
@@ -74,16 +77,23 @@ export default async function Home() {
 
       <main className="">
         <MainImage />
-        {/* <ShopByCategory /> */}
-        <ProductTabs allCategories={allCategories} />
+        <BuyerSellerBlock />
+        <CategoryGrid />
+        {services.length > 0 && <FeaturedEnginners services={services} />}
+        <LimitedTimeDeals initDealsProducts={dealsProducts.editProducts} className={services.length > 0 ? 'bg-blue-50' : 'bg-white'} />
+        <FeaturedAndProducts
+          initFeaturedProducts={featuredProducts.editProducts} />
         <WantedItemAndBusiness
           wantedItems={wantedItems.editedWantedItem}
           businessesForSale={businessesForSale.editedBusinessForSale}
         />
-        <FeaturedAndProducts
-          initFeaturedProducts={featuredProducts.editProducts} />
-        {services.length > 0 && <FeaturedEnginners services={services} />}
-        <LimitedTimeDeals initDealsProducts={dealsProducts.editProducts} className={services.length > 0 ? 'bg-blue-50' : 'bg-white'} />
+        {/* <FeaturedEngineers /> */}
+        {/* <ShopByCategory /> */}
+
+        {/* <ProductTabs allCategories={allCategories} />
+ */}
+
+        {/* <LimitedTimeDeals initDealsProducts={dealsProducts.editProducts} className={services.length > 0 ? 'bg-blue-50' : 'bg-white'} /> */}
         {/* <PartAndAccessoir initPartsAndAccessoirsProducts={partsAndAccessoirsProducts.editProducts} /> */}
         <EducationalAndVideos initYoutubVideos={youtubeVideos.videos} className={services.length > 0 ? 'bg-white' : 'bg-blue-50'} />
         <BrandingSlider />

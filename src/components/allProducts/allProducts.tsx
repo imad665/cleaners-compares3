@@ -95,7 +95,7 @@ export function PaginatedProducts({ initProducts, title = '', page = 1, pageSize
   return (
     <div className='flex flex-col gap-12 px-4 md:px-8 mb-12'>
       {/* Header */}
-      {showDescription && <div className='max-w-xl mx-auto text-center space-y-3'>
+      {showDescription && <div className='max-w-xl mt-3 space-y-3'>
         <h1 className='text-3xl font-semibold tracking-tight'>
           {condition && `${condition.charAt(0).toUpperCase() + condition.slice(1)} `}
           {subCategory?.name}
@@ -111,9 +111,9 @@ export function PaginatedProducts({ initProducts, title = '', page = 1, pageSize
       ) : (
         <div className='space-y-5'>
           {title != '' && <h2 className='font-bold text-2xl pl-3'>{title}</h2>}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:grid-cols-3">
+          <div className="grid grid-cols-1 min-[520px]:grid-cols-2 md:grid-cols-3 gap-3 lg:grid-cols-4">
             {subCategory.id != 'deals' && products.map((product) =>
-              <ItemFeaturedProduct isOldProduct={product.isOldProduct} className='m-auto w-[90vw] md:w-[50vw] md:!max-w-[320px] md:!min-w-[200px]' key={product.productId} {...product} />
+              <ItemFeaturedProduct isOldProduct={product.isOldProduct} className='m-auto min-w-[90vw]   min-[520px]:min-w-0 min-[520px]:max-w-[350px]  md:min-w-[230px] md:max-w-[400px]' key={product.productId} {...product} />
             )}
             {subCategory.id === 'deals' && products.map((product) =>
               <ItemLimitedTimeDeals className='!min-w-[90vw] !m-auto md:!max-w-[400px] md:!min-w-[0px] md:!w-[330px] lg:!w-[27vw] lg:!max-w-[300px] ' key={product.productId} {...product} />

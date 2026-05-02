@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search, X, ChevronRight, ChevronDown } from "lucide-react"
+import { Search, X, ChevronRight, ChevronDown, Plus } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -12,6 +12,7 @@ import { BigButton } from "../home_page/mainImage2"
 import { useHomeContext } from "@/providers/homePageProvider"
 import SellerFormDialog from "../forms/sellerForm"
 import SellerFormDialog2 from "../forms/sellerForm2"
+import { cn } from "@/lib/utils"
 
 interface SearchResult {
   id: string
@@ -90,7 +91,7 @@ export function ProductSearchBar({
       const response = await fetch(`/api/search?query=${encodeURIComponent(searchQuery)}`)
       const data = await response.json()
       //console.log(data,'dsssssssssssss');
-      
+
       setResults(data)
     } catch (error) {
       console.error("Search failed:", error)
@@ -162,7 +163,7 @@ export function ProductSearchBar({
               onKeyDown={handleKeyDown}
               onFocus={() => query && setIsDropdownOpen(true)}
               onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
-              className="pl-10 pr-10 h-12 rounded-lg border-gray-300 focus-visible:ring-2 focus-visible:ring-primary"
+              className="pl-10 pr-10 h-12 bg-muted rounded-[50px] border-gray-300 focus-visible:ring-2 focus-visible:ring-primary"
             />
 
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -365,12 +366,12 @@ export function ProductSearchBar({
       )}
       {isShowBrowser && (
         <div className="text-sm text-gray-600 ">
-          <div className="flex items-center space-x-2 mt-5 max-w-[100vw] overflow-x-auto overflow-y-hidden">
-            <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text="SELL ITEMS" />
+          <div className="flex items-center space-x-2   max-w-[100vw] overflow-x-auto overflow-y-hidden">
             <span className="text-gray-400">|</span>
-            <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text="SELL MACHINES" />
+            <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text="Sell Your Products" />
+            {/* <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text="SELL MACHINES" />
             <span className="text-gray-400">|</span>
-            <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text="SELL PARTS" />
+            <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text="SELL PARTS" /> */}
           </div>
           {/*  <span className="mr-2 text-gray-500">or browse:</span> */}
           <span className="space-x-2">
@@ -390,6 +391,54 @@ export function ProductSearchBar({
           {openDialog && <SellerFormDialog2 callback="/admin/addNewProduct" text="" open={openDialog} setOpen={setOpenDialog} />}
         </div>
       )}
+    </div>
+  )
+}
+
+/*  */
+export function ButtonNeedSignIn({
+  text,
+  className,
+  buttonClassName,
+  variant,
+}: {
+  text: string,
+  className?: string,
+  buttonClassName?: string
+  variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost"
+}) {
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const { user } = useHomeContext();
+  const router = useRouter()
+  const [openSellerDialog, setOpenSellerDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  function handleClickBigButton() {
+    if (user) {
+      if (user.role.toLocaleLowerCase() === 'seller' || user.role.toLocaleLowerCase() === 'admin') {
+        setButtonLoading(true);
+        router.push('/admin/addNewProduct')
+      } else {
+        setOpenSellerDialog(true);
+      }
+    } else {
+      setOpenDialog(true);
+    }
+  }
+  return (
+    <div className={className}>
+      <Button
+        disabled={buttonLoading}
+        onClick={handleClickBigButton}
+        variant={variant}
+        className={cn("cursor-pointer", buttonClassName)}
+      >
+        <Plus size={18} />
+        {text}
+      </Button>
+      {/* <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text={text} /> */}
+
+      {openSellerDialog && <SellerFormDialog callback="/admin/addNewProduct" open={openSellerDialog} setOpen={setOpenSellerDialog} />}
+      {openDialog && <SellerFormDialog2 callback="/admin/addNewProduct" text="" open={openDialog} setOpen={setOpenDialog} />}
     </div>
   )
 }

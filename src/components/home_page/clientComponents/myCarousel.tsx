@@ -6,6 +6,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { useEffect, useState, useRef } from 'react';
 import MyCarousel2 from './my-carousel';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const CustomPrevArrow = (props: any) => {
     const { className, onClick, style } = props;
@@ -40,7 +41,17 @@ type BreakPointType = {
     slidesToShow: number;
 }
 
-export default function MyCarousel({ children, sliderToShow = 4, breackpoints }: { children: React.ReactNode, sliderToShow?: number, breackpoints?: BreakPointType[] }) {
+export default function MyCarousel({
+    children,
+    sliderToShow = 4,
+    breackpoints,
+    className,
+}: {
+    children: React.ReactNode;
+    sliderToShow?: number;
+    breackpoints?: BreakPointType[];
+    className?: string;
+}) {
     const items = Array.isArray(children) ? children : [children];
     const [isClient, setIsClient] = useState(false);
     const [shouldUseSimpleCarousel, setShouldUseSimpleCarousel] = useState(false);
@@ -143,7 +154,7 @@ export default function MyCarousel({ children, sliderToShow = 4, breackpoints }:
     };
 
     return (
-        <div className="w-full" ref={containerRef}>
+        <div className={cn('w-full', className)} ref={containerRef}>
             {/* Hidden container for measuring item widths */}
             <div
                 ref={itemsContainerRef}

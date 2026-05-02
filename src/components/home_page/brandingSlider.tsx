@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import Slider from 'react-slick'
 import { Button } from '../ui/button'
- 
+
 const settingsSlider = {
   infinite: true,
   speed: 8000, // slow and smooth
@@ -59,7 +59,7 @@ const brandingImages: string[] = [
   '/goalwinners.png',
 ];
 
-function Item({i,src}:{i:number,src:string}) {
+function Item({ i, src }: { i: number, src: string }) {
   return (
     <div key={i} className="px-2 group" style={{ width: '180px' }}>
       <div className="bg-white rounded-xl p-5 h-36 flex items-center justify-center shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-100 transform hover:-translate-y-1">
@@ -68,7 +68,7 @@ function Item({i,src}:{i:number,src:string}) {
           height={200}
           src={`/brands${src}`}
           alt={`Brand ${i + 1}`}
-          className="max-h-16 w-auto object-contain object-center filter grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105"
+          className="max-h-16 w-auto object-contain object-center   group-hover:grayscale-0 transition-all duration-500 hover:scale-105"
           loading="lazy"
         />
       </div>
@@ -84,11 +84,11 @@ export function BrandingSlider() {
 
   ]
   const [isClient, setIsClient] = useState(false);
-  const {clearCart} = useHomeContext();
+  const { clearCart } = useHomeContext();
   useEffect(() => {
     setIsClient(true)
     const isVisitCart = localStorage.getItem('isVisitCart');
-    if(isVisitCart){
+    if (isVisitCart) {
       clearCart();
       localStorage.removeItem('isVisitCart')
     }
@@ -113,13 +113,13 @@ export function BrandingSlider() {
         </div>
         {isClient ? <Slider {...settingsSlider}>
           {duplicatedImages.map((src, i) => (
-           <Item i={i} src={src}/>
+            <Item i={i} src={src} />
           ))}
         </Slider> :
           <div className="flex gap-4 overflow-x-auto">
             {duplicatedImages.map((src, i) => (
               <div className="min-w-[250px]" key={i}>
-                 <Item i={i} src={src}/>
+                <Item i={i} src={src} />
               </div>
             ))}
           </div>

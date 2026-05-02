@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick-theme.css" */
 import { ItemFeaturedProduct } from './serverComponents/uis'
 import MyCarousel from './clientComponents/myCarousel';
 import ServiceCard from '../serviceEnginner';
+import { ArrowRight } from 'lucide-react';
 /* import { useEffect, useState } from 'react' */
 /* import { useHomeProductContext } from '@/providers/homeProductsProvider' */
 
@@ -72,11 +73,20 @@ export function FeaturedAndProducts({ initFeaturedProducts }: { initFeaturedProd
 
     //console.log(featuredProducts,';;;;;;;;;;');
     return (
-        <section className="w-full px-4 md:px-8 py-10   bg-blue-50">
+        <section className="w-full px-4 md:px-8 py-10  ">
             <div className="w-full container mx-auto">
-                <div className='flex justify-between items-center mb-3'>
+                {/* <div className='flex justify-between items-center mb-3'>
                     <h2 className="text-2xl font-bold text-left">Featured Products</h2>
                     <Link href="/products?type=featured-products" className='text-blue-400 font-medium text-sm hover:underline'>View all</Link>
+                </div> */}
+                <div className="flex items-end justify-between mb-6 gap-4">
+                    <div>
+                        <h2 className="text-2xl lg:text-3xl font-bold tracking-tight">Featured Industry Listings</h2>
+                        <p className="text-sm text-muted-foreground mt-1">Machines, parts and supplies currently listed by sellers on Cleaners Compare.</p>
+                    </div>
+                    <a href="/products?type=featured-products" className="text-sm font-semibold text-primary inline-flex items-center gap-1 whitespace-nowrap">
+                        Browse All Listings <ArrowRight className="h-4 w-4" />
+                    </a>
                 </div>
 
                 <MyCarousel sliderToShow={6} breackpoints={[
@@ -101,10 +111,18 @@ export function FeaturedEnginners({ services }: { services: any }) {
     return (
         <section className="w-full px-4 md:px-8   mb-5 bg-white">
             <div className="w-full container mx-auto">
-                <div className='flex justify-between items-center '>
-                    <h2 className="text-2xl font-bold text-left">Featured Enginners</h2>
-                    <Link href="/engineers" className='text-blue-400 font-medium text-sm hover:underline'>View all</Link>
+                <div className="flex items-end justify-between mb-6 gap-4">
+                    <div>
+                        <h2 className="text-2xl lg:text-3xl font-bold tracking-tight">Featured Engineers</h2>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            Trusted engineers and service providers ready to keep your equipment running.
+                        </p>
+                    </div>
+                    <a href="/engineers" className="text-sm font-semibold text-primary inline-flex items-center gap-1 whitespace-nowrap">
+                        View All Engineers <ArrowRight className="h-4 w-4" />
+                    </a>
                 </div>
+
 
                 <MyCarousel sliderToShow={5}>
                     {services.map((service, i) => (

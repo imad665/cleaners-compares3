@@ -4,13 +4,14 @@ import { FeaturedAndProducts } from '@/components/home_page/featured_product';
 import Footer from '@/components/home_page/footer';
 import { CategoryCard } from '@/components/home_page/productTabs';
 import ProductBreadcrumb from '@/components/productInfo/product/ProductBreadcrumb';
+import { Button } from '@/components/ui/button';
 import { getNotifications } from '@/lib/payement/get-notification-for-icon';
 import { prisma } from '@/lib/prisma';
 import { getFeaturedProducts, getFooterData, getRecentOrdersCount } from '@/lib/products/homeProducts';
 export const revalidate = 18000; // ISR every 5 hours
 import type { Metadata } from 'next';
- 
-export async function generateMetadata({ params }: { params: Promise<{ category: string }>}): Promise<Metadata> {
+
+export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
     const categorySlug = (await params).category;
 
     const category = await prisma.category.findFirst({
@@ -131,26 +132,57 @@ export default async function ProductPageInfo(
 
     const subcategories = categoryObj.subCategories;
     const subcategoriesUsed = categoryObj.subCategoriesUsed;
-    const tt = subcategories?.length === 3?"[@media(min-width:1298px)]:grid-cols-3":'[@media(min-width:1298px)]:grid-cols-4'
+    const tt = subcategories?.length === 3 ? "[@media(min-width:1298px)]:grid-cols-3" : '[@media(min-width:1298px)]:grid-cols-4'
     const [
-            featuredProducts,
-            footerData,
-        ] = await Promise.all([
-            getFeaturedProducts({ page: 1, pageSize: 10 }),
-            getFooterData(),
-        ]);
+        featuredProducts,
+        footerData,
+    ] = await Promise.all([
+        getFeaturedProducts({ page: 1, pageSize: 10 }),
+        getFooterData(),
+    ]);
 
     const isMachineOrParts = (subcategoriesUsed != undefined);
     const isParts = category === 'parts';
     const recentOrderCount = await getRecentOrdersCount();
     const messages = await getNotifications();
+
+    const title = categoryObj.name;
+    const description = title?.includes('Machines')
+        ? "Discover the right equipment for your business — from brand-new commercial machines to quality used options across every category."
+        : title?.includes('Parts')
+            ? "Find new and used spare parts for every type of laundry, dry cleaning and finishing equipment — sourced from trusted suppliers."
+            : title?.includes('Sundries')
+                ? "Everyday essentials for laundry and dry cleaning operations — hangers, tag cards, heat-seal labels and more, sourced from trusted suppliers."
+                : ""
+
     return (
 
         <div className="min-h-screen flex flex-col">
-            <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
+            <Header recentOrderCount={recentOrderCount} notificationData={messages} />
             <main >
                 <div className='m-auto'>
-                    <div className="flex-grow max-w-8xl m-auto mt-5  mx-3">
+                    <section className="bg-secondary/40 border-b">
+                        <div className="container mx-auto px-4 py-12 text-center">
+                            <h1 className="text-3xl lg:text-5xl font-bold tracking-tight">{
+                                title?.includes('Parts')
+                                    ? "Parts & Components"
+                                    : title?.includes('Sundries')
+                                        ? "Sundries & Supplies"
+                                        : title}</h1>
+                            <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
+                                {description}
+                            </p>
+                            {isMachineOrParts && <div className="flex justify-center gap-3 mt-6">
+                                <Button asChild>
+                                    <a href="#new">New {title}</a>
+                                </Button>
+                                <Button asChild variant="outline">
+                                    <a href="#used">Used {title}</a>
+                                </Button>
+                            </div>}
+                        </div>
+                    </section>
+                    <div className="flex-grow max-w-7xl mx-auto mt-5   ">
 
                         <ProductBreadcrumb
                             className='justify-center  '
@@ -161,12 +193,12 @@ export default async function ProductPageInfo(
                         {!isMachineOrParts &&
                             <div className=' container w-fit m-auto'>
                                 <div className='mt-12'>
-                                    <h2 className='text-2xl font-bold'>
+                                    {/* <h2 className='text-2xl font-bold'>
                                         Select a category
-                                    </h2>
+                                    </h2> */}
                                     <div className='grid grid-cols-1 md:grid-cols-2 gap-3 lg:grid-cols-4'>
                                         {subcategories?.map((sub, i) => (
-                                            <CategoryCard key={i} className='!grow !min-w-[90vw] md:!min-w-[35vw] lg:!min-w-[100px]'  item={sub} />
+                                            <CategoryCard key={i} className='!grow !min-w-[90vw] md:!min-w-[35vw] lg:!min-w-[100px]' item={sub} />
                                         ))}
                                         {/* {subcategories?.map((sub, i) => (
                                             <CategoryCard key={i} item={sub} />
@@ -177,10 +209,12 @@ export default async function ProductPageInfo(
 
                             </div>}
 
-                        {isMachineOrParts && <div className='flex flex-col gap-12 mt-12'>
+                        {isMachineOrParts && <div className='flex flex-col gap-12 mt-1'>
+
                             {/* NEW IF MACHINES OR PARTS */}
-                            <div  className=' container  m-auto'>
-                                <h2 className='text-2xl font-bold' id='new'>New {categoryObj.name}</h2>
+                            <div className='mt-5'>
+                                {/* <h2 className='text-2xl font-bold' id='new'>New {categoryObj.name}</h2> */}
+                                <MachineSection eyebrow={`New ${categoryObj.name}`} condition="new" />
                                 <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${tt}`}>
                                     {subcategories?.map((sub, i) => (
                                         <CategoryCard key={i} className='!grow !min-w-[90vw] md:!min-w-[45vw] lg:!min-w-[100px]' item={sub} />
@@ -193,8 +227,9 @@ export default async function ProductPageInfo(
 
                             {/* USED IF MACHINES OR PARTS */}
                             {subcategoriesUsed &&
-                                <div  className=' container m-auto' >
-                                    <h2 className='text-2xl font-bold' id='used'>Used {categoryObj.name}</h2>
+                                <div className=' container m-auto border-t pt-5 ' >
+                                    {/* <h2 className='text-2xl font-bold' id='used'>Used {categoryObj.name}</h2> */}
+                                    <MachineSection eyebrow={`Used ${categoryObj.name}`} condition="used" />
                                     <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${tt}`}>
                                         {subcategoriesUsed.map((subc, i) => (
                                             <CategoryCard className='!grow !min-w-[90vw] md:!min-w-[45vw] lg:!min-w-[100px]' key={i} item={subc} />
@@ -218,5 +253,43 @@ export default async function ProductPageInfo(
             <Footer footerData={footerData} />
         </div>
 
+    );
+}
+
+function MachineSection({
+    eyebrow,
+    condition,
+}: {
+    eyebrow: string;
+    condition: "new" | "used";
+}) {
+
+    let title = '';
+    let subtitle = '';
+    let id = condition
+    if (eyebrow.includes('Machines')) {
+        title = condition === 'new' ? "Brand-New Commercial Machines" : "Quality Used Machines";
+        subtitle = condition === 'new'
+            ? "The latest models from leading manufacturers — built for performance, efficiency, and long-term reliability."
+            : "Inspected, refurbished and ready to work — a cost-effective way to grow your business."
+    } else if (eyebrow.includes("Part")) {
+        title = condition === 'new' ? "Brand-New Spare Parts" : "Quality Used Parts";
+        subtitle = condition === 'new'
+            ? "Genuine and OEM-quality components — covered by manufacturer warranty."
+            : "Tested and inspected pre-owned components — a cost-effective way to keep equipment running."
+    }
+
+
+    return (
+        <section id={id} className="container mx-auto px-4    ">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+                <span className="inline-block text-xs font-semibold uppercase tracking-wider text-primary mb-2">
+                    {eyebrow}
+                </span>
+                <h2 className="text-3xl lg:text-4xl font-bold tracking-tight">{title}</h2>
+                <p className="text-muted-foreground mt-3">{subtitle}</p>
+            </div>
+
+        </section>
     );
 }

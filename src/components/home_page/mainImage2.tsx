@@ -1,10 +1,10 @@
 'use client'
 import Image from "next/image";
-import { ProductSearchBar } from "../header/productSearchBar";
+import { ButtonNeedSignIn, ProductSearchBar } from "../header/productSearchBar";
 import styles from "./mainImage2.module.css"
 import { Button } from "../ui/button";
 import { motion } from 'framer-motion';
-import { ArrowRight, Plus } from "lucide-react";
+import { ArrowRight, Check, Plus, Youtube } from "lucide-react";
 import Link from "next/link";
 
 export function BigButton({ text, onClick, disabled }: { text: string, onClick: () => void, disabled?: boolean }) {
@@ -17,16 +17,16 @@ export function BigButton({ text, onClick, disabled }: { text: string, onClick: 
     >
       <Button
         disabled={disabled}
-        className="font-extrabold w-[170px] bg-blue-600 hover:bg-blue-700 cursor-pointer relative overflow-hidden group"
+        className=" w-[170px] font-bold bg-primary text-primary-foreground/80  p-5  hover:bg-primary/80 cursor-pointer relative overflow-hidden group"
         onClick={onClick}
       >
-        <Plus/>
+        <Plus />
         {/* Animated background on hover */}
         <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
 
         {/* Text with shine effect */}
         <span className="relative z-10">
-          {text}  
+          {text}
           <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"></span>
         </span>
 
@@ -41,144 +41,82 @@ export function BigButton({ text, onClick, disabled }: { text: string, onClick: 
 
 export function MainImage() {
   return (
-    <div className="relative w-full px-4 py-10 overflow-hidden bg-gradient-to-b from-blue-50 to-white">
-      <div className="flex flex-col-reverse lg:flex-row items-center container mx-auto justify-around gap-8 relative z-20">
-        {/* Text Section */}
-        <div
-          className={`flex flex-col gap-5 max-w-full lg:max-w-[600px] text-center lg:text-left ${styles.animate_fade_in}`}
-        >
+    <section className="bg-hero-bg">
+      <div className="container mx-auto px-4 py-10 lg:py-16 grid lg:grid-cols-2 gap-10 items-center">
+        <div>
           <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-900 leading-tight">
             The World's{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
               First
             </span>{' '}
             Laundry &
-            <br className="hidden md:block" />
+
             Dry Cleaning{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-500 to-purple-600">
               Comparison
             </span>{' '}
             Website
           </h1>
-          <p className="text-base sm:text-lg text-gray-700">
-            Search from thousands of new and used machines to everyday sundries for the laundry and dry cleaning industry.
+          <p className="mt-5 text-base md:text-lg text-muted-foreground max-w-xl">
+            Find machines, parts, sundries, engineers, services and businesses for sale — all in one dedicated industry platform.
           </p>
-          <ProductSearchBar isShowBrowser isShowSearch={false} />
+
+          <div className="mt-5 inline-flex items-center gap-2 rounded-lg bg-supplier-soft px-4 py-2 text-sm text-foreground">
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-supplier text-supplier-foreground text-[11px]">★</span>
+            We can list your products for you — no technical setup required.
+          </div>
+          <p className="mt-3 text-sm text-muted-foreground max-w-xl">
+            Connecting laundry businesses with trusted suppliers — all in one place.
+          </p>
+
+          <div className="mt-6 flex gap-3">
+            {/* Buyer primary CTA — links to product search */}
+            <Button asChild size="lg" className="bg-secondary text-secondary-foreground border hover:bg-secondary/80">
+              <a href="/about-platform">Learn more about our platform</a>
+            </Button>
+
+
+            <ButtonNeedSignIn text="Sell Your Products" />
+
+          </div>
+
+          <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
+            <Youtube className="h-6 w-6 text-youtube" />
+            <span>
+              Trusted by laundry and dry-cleaning professionals,<br className="hidden sm:block" />
+              supported by our Cleaners Compare YouTube channel with{" "}
+              <a href="https://www.youtube.com/@amirshahz77" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold underline-offset-2 hover:underline">
+                1K+ subscribers.
+              </a>
+            </span>
+          </div>
         </div>
 
-        {/* Image Section */}
-        <div className="w-full lg:w-1/2 flex flex-col items-center justify-center relative">
-          <Image
-            width={680}
-            height={680}
-            src="/homeImage.png"
-            alt="Cleaners Compare Image"
-            className="w-full max-w-[500px] h-auto object-contain relative z-30"
-          />
-          
-          {/* Read More Link Below Image */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="mt-8 lg:mt-10"
-          >
-            <Link 
-              href="/about-platform" 
-              className="group inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold text-lg transition-colors duration-300"
-            >
-              <span className="border-b-2 border-transparent group-hover:border-blue-600 transition-all duration-300">
-                Learn more about our platform
-              </span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
-            </Link>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Enhanced Animated Waves - Fixed Bars Issue */}
-      <div className="absolute z-22 inset-0 w-full h-full overflow-hidden  pointer-events-none">
-        {/* Base Blue Layer */}
-        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-blue-100 to-transparent opacity-30"></div>
-
-        {/* Wave Container with Overflow Hidden */}
-        <div className="absolute bottom-0 left-0 w-full h-[220px] overflow-hidden">
-          {/* Main Wave - More Visible */}
-          <svg
-            className="absolute bottom-0 left-0 w-[200%] h-full opacity-70"
-            viewBox="0 0 1440 320"
-            preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{
-              animation: `${styles.waveAnimation} 18s linear infinite`,
-            }}
-          >
-            <path
-              fill="url(#waveGradient1)"
-              fillOpacity="0.6"
-              d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            ></path>
-            <defs>
-              <linearGradient id="waveGradient1" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.7" />
-                <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.5" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-
-        {/* Wave Container with Overflow Hidden */}
-        <div className="absolute bottom-0 left-0 w-full h-[200px] overflow-hidden">
-          {/* Secondary Wave - Contrast */}
-          <svg
-            className="absolute bottom-0 left-0 w-[200%] h-full opacity-50"
-            viewBox="0 0 1440 320"
-            preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{
-              animation: `${styles.waveAnimation} 12s linear infinite reverse`,
-            }}
-          >
-            <path
-              fill="url(#waveGradient2)"
-              fillOpacity="0.5"
-              d="M0,256L48,261.3C96,267,192,277,288,277.3C384,277,480,267,576,245.3C672,224,768,192,864,181.3C960,171,1056,181,1152,192C1248,203,1344,213,1392,218.7L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            ></path>
-            <defs>
-              <linearGradient id="waveGradient2" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.6" />
-                <stop offset="100%" stopColor="#93c5fd" stopOpacity="0.4" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-
-        {/* Wave Container with Overflow Hidden */}
-        <div className="absolute bottom-0 left-0 w-full h-[180px] overflow-hidden">
-          {/* Light Accent Wave */}
-          <svg
-            className="absolute bottom-0 left-0 w-[200%] h-full opacity-40"
-            viewBox="0 0 1440 320"
-            preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{
-              animation: `${styles.waveAnimation} 15s linear infinite`,
-            }}
-          >
-            <path
-              fill="url(#waveGradient3)"
-              fillOpacity="0.4"
-              d="M0,160L48,170.7C96,181,192,203,288,202.7C384,203,480,181,576,186.7C672,192,768,224,864,218.7C960,213,1056,171,1152,165.3C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            ></path>
-            <defs>
-              <linearGradient id="waveGradient3" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#93c5fd" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#bfdbfe" stopOpacity="0.3" />
-              </linearGradient>
-            </defs>
-          </svg>
+        {/* Right column — product collage */}
+        <div className="relative aspect-square max-w-xl mx-auto w-full">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <img src='/assets/hero-washer.jpg' alt="Industrial commercial washer extractor" className="w-3/4 h-auto rounded-2xl shadow-xl" width={1024} height={1024} />
+          </div>
+          <div className="absolute top-4 left-0 bg-card border rounded-xl shadow-lg p-3 w-44">
+            <p className="text-xs font-semibold leading-tight">Girbau HS-6017 Washer Extractor</p>
+            <img src='/assets/hero-small-washer.jpg' alt="" className="my-2 rounded-md" width={512} height={512} loading="lazy" />
+            <p className="text-xs font-bold text-primary">£22,000.00</p>
+          </div>
+          <div className="absolute bottom-16 left-2 bg-card border rounded-xl shadow-lg p-3 w-44">
+            <p className="text-xs font-semibold leading-tight">Boiler Spare Parts Complete Range</p>
+            <img src='/assets/hero-boiler-part.jpg' alt="" className="mt-2 rounded-md" width={512} height={512} loading="lazy" />
+          </div>
+          <div className="absolute top-1/4 right-0 bg-card border rounded-xl shadow-lg p-3 w-44">
+            <p className="text-xs font-semibold leading-tight">Spotting Table with Vacuum</p>
+            <img src='/assets/hero-spotting-table.jpg' alt="" className="my-2 rounded-md" width={512} height={512} loading="lazy" />
+            <p className="text-xs font-bold text-primary">£1,450.00</p>
+          </div>
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-card border rounded-full shadow-md px-4 py-2 text-xs font-medium inline-flex items-center gap-2">
+            <Check className="h-3.5 w-3.5 text-primary" />
+            Done-for-you supplier onboarding
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

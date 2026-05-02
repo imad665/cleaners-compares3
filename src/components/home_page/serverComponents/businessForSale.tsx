@@ -129,10 +129,10 @@ export default function BusinessForSale({
           {/* Main Contact Button */}
           <Button
             onClick={handleContactClick}
-            variant={showContact ? "outline" : "default"}
+            variant={showContact ? "outline" : "outline"}
             className={cn(
-              "w-full cursor-pointer h-9 text-sm flex items-center gap-2",
-              showContact ? '' : 'bg-blue-600 hover:to-blue-700'
+              "w-full   gap-2",
+
             )}
           >
             <Mail className="h-4 w-4" />

@@ -124,9 +124,8 @@ export function ItemFeaturedProduct({
     const [openSignUp, setOpenSignUp] = useState(false);
     const [openMessageDialog, setOpenMessageDialog] = useState(false);
     const { user } = useHomeContext();
-    unitPrice = Number(unitPrice)
-    //console.log(unitPrice, 'sssssssssssssssssmcmdkcmdkmmmvmmv');
 
+    const parsedUnitPrice = Number(unitPrice);
     const isUnits = units > 0;
     const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";
     const finalImage = image === "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg" ? '/logo-1.png' : image;
@@ -135,61 +134,59 @@ export function ItemFeaturedProduct({
         if (!user) setOpenSignIn(true);
         else setOpenMessageDialog(true);
     };
-    return (
-        <div className={`group flex flex-col w-full max-w-[280px] min-h-[400px] bg-white border border-slate-200 rounded-md overflow-hidden   hover:shadow-md transition-all duration-200 ${className}`}>
 
-            {/* Image Section */}
-            <div className="relative h-40 w-full bg-slate-50 p-4 overflow-hidden">
+    return (
+        <div className={`group flex flex-col w-full max-w-[280px] min-h-[350px] bg-white border border-slate-200 rounded-md overflow-hidden hover:shadow-md transition-all duration-200 ${className}`}>
+
+            {/* Image Section - Height increased to h-64 */}
+            <div className="relative h-64 w-full bg-slate-50 overflow-hidden  ">
+
+                {/* Floating Units Info (Absolute) */}
+                {isUnits && (
+                    <div className="absolute bottom-0 left-0 right-2 z-10 flex gap-1.5 w-full pb-1 pt-5 justify-between bg-gradient-to-t   from-black/90 via-black/40 to-transparent">
+                        {stock && stock < 5 && stock > 0 && (
+                            <div className=" ml-1 flex items-center bg-orange-100/90 backdrop-blur-sm text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-orange-200">
+                                Low Stock: {stock}
+                            </div>
+                        )}
+                        <div className="flex justify-between items-center gap-1 pr-1">
+                            <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded px-1.5 py-0.5 shadow-sm">
+                                <p className="text-slate-400 uppercase text-[8px] font-bold leading-none">Pack Size</p>
+                                <p className="font-bold text-slate-700 text-[10px]">{units} Units</p>
+                            </div>
+                            <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded px-1.5 py-0.5 shadow-sm">
+                                <p className="text-slate-400 uppercase text-[8px] font-bold leading-none">Per Unit</p>
+                                <p className="font-bold text-slate-700 text-[10px]">£{parsedUnitPrice?.toFixed(2)}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                )}
+
                 <Link href={href}>
                     <Image
                         width={300}
                         height={300}
                         alt={title}
                         src={finalImage}
-                        className="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
+                        className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
                     />
                 </Link>
 
                 {discountPercentage > 0 && (
-                    <Badge className="absolute top-2 right-2 bg-red-600 hover:bg-red-600 border-none text-md px-2 py-0">
+                    <Badge className="absolute top-2 right-2 bg-red-600 hover:bg-red-600 border-none text-xs px-2 py-0.5">
                         -{discountPercentage}%
                     </Badge>
                 )}
 
-                {stock && stock < 5 && stock > 0 && (
-                    <div className="absolute bottom-2 left-2 bg-orange-100 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-orange-200">
-                        Low Stock: {stock}
-                    </div>
-                )}
+
             </div>
 
             {/* Content Section */}
-            <div className="p-3 flex flex-col grow flex-1">
-                {/* Rating & Title */}
-                <div className="flex items-center gap-2 mb-1">
-                    <StarsUi stars={stars} />
-                    <span className="text-[10px] text-slate-400 font-medium">({starsCount})</span>
-                </div>
-
-                <Link href={href} className="text-sm font-semibold text-slate-800 line-clamp-2 hover:text-blue-600 transition-colors leading-tight h-9 mb-2">
+            <div className="p-3 flex flex-col grow">
+                <Link href={href} className="text-sm font-semibold text-slate-800 line-clamp-2 hover:text-blue-600 transition-colors leading-tight h-9 mb-4">
                     {title}
                 </Link>
-
-                {/* Specs Grid */}
-                <div className="grid grid-cols-2 gap-2 py-2 border-y border-slate-50 mb-3 text-[11px]">
-                    {isUnits && (
-                        <div className="flex flex-col">
-                            <span className="text-slate-400 uppercase text-[9px]">Pack Size</span>
-                            <span className="font-bold text-slate-700">{units} Units</span>
-                        </div>
-                    )}
-                    {isUnits && (
-                        <div className="flex flex-col border-l pl-2">
-                            <span className="text-slate-400 uppercase text-[9px]">Per Unit</span>
-                            <span className="font-bold text-slate-700">£{unitPrice?.toFixed(2)}</span>
-                        </div>
-                    )}
-                </div>
 
                 {/* Pricing Area */}
                 <div className="mt-auto">
@@ -199,7 +196,7 @@ export function ItemFeaturedProduct({
                     </div>
 
                     {dealCountdown && (
-                        <div className="flex items-center gap-1 text-[10px] font-bold text-red-600 mt-0.5">
+                        <div className="flex items-center gap-1 text-[10px] font-bold text-red-600 mt-1">
                             <Clock className="h-3 w-3" />
                             <span>Ends: {dealCountdown}</span>
                             {price !== priceExcVat && (
@@ -229,7 +226,7 @@ export function ItemFeaturedProduct({
                 </div>
             </div>
 
-            {/* Modals - same logic as before */}
+            {/* Modals */}
             {openMessageDialog && <MessageSellerDialog
                 product={{ id: productId, image, name: title, url: href }}
                 open={openMessageDialog}

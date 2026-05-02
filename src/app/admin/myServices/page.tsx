@@ -47,7 +47,7 @@ export default function ServicesPage() {
                         <DialogTrigger asChild>
                             <Button className="bg-blue-600 hover:bg-blue-500 cursor-pointer text-white ">+ Add New Enginner</Button>
                         </DialogTrigger>
-                        <DialogContent className=" min-w-full">
+                        <DialogContent className=" max-w-full min-w-fit">
                             <DialogHeader>
                                 <DialogTitle>Add New Enginner</DialogTitle>
                             </DialogHeader>

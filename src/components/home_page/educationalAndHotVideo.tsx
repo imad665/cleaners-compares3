@@ -8,6 +8,8 @@ import { useHomeProductContext } from "@/providers/homeProductsProvider"; */
 import { VideoItem } from "./clientComponents/uis";
 import MyCarousel from "./clientComponents/myCarousel";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { Youtube } from "lucide-react";
 
 
 
@@ -72,16 +74,32 @@ export function EducationalAndVideos(
                     </h2>
                     <Link href="/videos" className=' text-blue-400 font-medium text-sm hover:underline'>View all videos</Link>
                 </div>
-                <MyCarousel sliderToShow={5} breackpoints={[
-                    { breakpoint: 1565, slidesToShow: 4 },
-                    { breakpoint: 1300, slidesToShow: 3 },
-                    { breakpoint: 1025, slidesToShow: 2 },
-                    { breakpoint: 640, slidesToShow: 1 },
-                ]}>
-                    {youtubeVideos?.map((slide, i) => (
-                        <VideoItem key={i} {...slide} />
-                    ))}
-                </MyCarousel>
+                <div className="flex gap-2 flex-col ">
+                    <div className="lg:col-span-1">
+                        <h2 className="text-xl font-bold tracking-tight">Industry Videos & Buying Guides</h2>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                            Practical tips, product demos and industry insights from the Cleaners Compare YouTube channel.
+                        </p>
+                        <p className="mt-3 text-sm font-semibold text-youtube">2,500+ industry subscribers</p>
+                        <p className="mt-1 text-xs text-muted-foreground">Suppliers can also be featured on our YouTube channel.</p>
+                        <Button asChild className="mt-3 bg-youtube hover:bg-youtube/90 text-youtube-foreground" size="sm">
+                            <a href="https://www.youtube.com/@amirshahz77" target="_blank" rel="noopener noreferrer">
+                                <Youtube className="h-4 w-4" /> Watch on YouTube
+                            </a>
+                        </Button>
+                    </div>
+                    <MyCarousel sliderToShow={5} breackpoints={[
+                        { breakpoint: 1565, slidesToShow: 4 },
+                        { breakpoint: 1300, slidesToShow: 3 },
+                        { breakpoint: 1025, slidesToShow: 2 },
+                        { breakpoint: 640, slidesToShow: 1 },
+                    ]}>
+                        {youtubeVideos?.map((slide, i) => (
+                            <VideoItem key={i} {...slide} />
+                        ))}
+                    </MyCarousel>
+                </div>
+
             </div>
         </section>
     )

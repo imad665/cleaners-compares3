@@ -8,7 +8,7 @@ import { useState } from "react";
 
 
 
-export default function EngineerLink({cat}:{cat:any}) {
+export default function EngineerLink({ cat }: { cat: any }) {
     const [selected, setSelected] = useState<string | null>(null);
 
     const handleSelect = (category: string) => {
@@ -29,7 +29,7 @@ export default function EngineerLink({cat}:{cat:any}) {
                         alt={cat.name}
                         width={200}
                         height={200}
-                        className="h-40 w-full object-cover rounded-t-lg"
+                        className="h-50 w-full object-cover rounded-t-lg"
                     />
                     <div className="p-4 text-center">
                         <h3 className="text-lg font-semibold">{cat.name}</h3>
