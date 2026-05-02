@@ -300,7 +300,7 @@ export default async function RootLayout({
         {/* </HomeProductsProvider> */}
         <Toaster />
         <PWAInstallButton />
-        <MotivationToast />
+        {/* <MotivationToast /> */}
       </body>
     </html>
   );
