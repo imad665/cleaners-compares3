@@ -193,7 +193,7 @@ export default function WantedItemAndBusiness({ wantedItems, businessesForSale }
               >
                 <div className="flex gap-2 max-[1050px]:flex-col">
                   <MyCarousel
-                    className="w-[80%] -[1050px]:w-full"
+                    className="w-[80%] max-[1050px]:w-full"
                     sliderToShow={4} breackpoints={[
                       { breakpoint: 1280, slidesToShow: 3 },
                       { breakpoint: 1023, slidesToShow: 2 },

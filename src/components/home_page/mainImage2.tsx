@@ -69,14 +69,13 @@ export function MainImage() {
             Connecting laundry businesses with trusted suppliers — all in one place.
           </p>
 
-          <div className="mt-6 flex gap-3">
+          <div className="mt-6  flex flex-col gap-3 md:flex-row">
             {/* Buyer primary CTA — links to product search */}
             <Button asChild size="lg" className="bg-secondary text-secondary-foreground border hover:bg-secondary/80">
               <a href="/about-platform">Learn more about our platform</a>
             </Button>
 
-
-            <ButtonNeedSignIn text="Sell Your Products" />
+            <ButtonNeedSignIn text="Sell Your Products" buttonClassName="w-full md:w-fit" />
 
           </div>
 

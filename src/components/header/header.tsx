@@ -286,7 +286,7 @@ function SiteNav() {
         { label: "Blog", href: "/blog" },
     ];
     return (
-        <nav className="border-t flex items-center  bg-supplier text-white  ">
+        <nav className="border-t flex items-center  bg-supplier text-white w-full overflow-scroll  ">
             <div className="container mx-auto w-fit px-4">
                 <ul className="flex items-center gap-8 overflow-x-auto py-3 text-sm font-medium  ">
                     {items.map((it) => (

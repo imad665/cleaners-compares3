@@ -41,9 +41,10 @@ export function LimitedTimeDeals({ initDealsProducts, className }: { initDealsPr
                     { breakpoint: 1100, slidesToShow: 4 },
                     { breakpoint: 1020, slidesToShow: 3 },
                     { breakpoint: 770, slidesToShow: 2 },
+                    { breakpoint: 460, slidesToShow: 1 },
                 ]} >
                     {dealsProducts?.map((slide, i) => (
-                        <ItemFeaturedProduct key={i}  {...slide} />
+                        <ItemFeaturedProduct key={i}  {...slide} className="min-w-[90vw] min-[460px]:min-w-0" />
                     ))}
                 </MyCarousel>
             </div>
