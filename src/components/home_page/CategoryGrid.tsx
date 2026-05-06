@@ -33,13 +33,16 @@ export function CategoryGrid() {
           </a>
         ))}
       </div>
-      <div className="mt-6 text-center text-sm text-muted-foreground flex items-center justify-center">
+      <div className="mt-6 text-center text-sm text-muted-foreground flex flex-col md:flex-row items-center justify-center">
         Supply these products? We'll list them for you —{" "}
-        <ButtonNeedSignIn
-          variant="link"
-          buttonClassName="font-bold"
-          text="Sell Your Products" />
-        <ArrowRight color="blue" className="h-3.5 w-3.5" />
+        <div className="flex gap-2 items-center">
+          <ButtonNeedSignIn
+            variant="link"
+            buttonClassName="font-bold"
+            text="Sell Your Products" />
+          <ArrowRight color="blue" className="h-3.5 w-3.5" />
+        </div>
+
         {/* <SupplierCtaButton variant="link" className="px-1 h-auto text-primary font-semibold">
           Sell Your Products <ArrowRight className="h-3.5 w-3.5" />
         </SupplierCtaButton> */}

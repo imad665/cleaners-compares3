@@ -111,7 +111,8 @@ export type ItemProps = {
     className?: string,
     isOldProduct: boolean,
     discountPercentage: number,
-    isIncVAT: boolean
+    isIncVAT: boolean,
+
 }
 
 export function ItemFeaturedProduct({
@@ -129,6 +130,7 @@ export function ItemFeaturedProduct({
     const isUnits = units > 0;
     const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";
     const finalImage = image === "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg" ? '/logo-1.png' : image;
+
 
     const handleMessageSeller = () => {
         if (!user) setOpenSignIn(true);

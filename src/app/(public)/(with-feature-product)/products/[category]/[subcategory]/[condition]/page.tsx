@@ -193,11 +193,11 @@ export default async function ProductsPageCondition(
 ) {
     const { category, subcategory, condition } = await params;
     const [
-        featuredProducts,
-        footerData,
+        /* featuredProducts, */
+        /* footerData, */
     ] = await Promise.all([
-        getFeaturedProducts({ page: 1, pageSize: 10 }),
-        getFooterData(),
+        /* getFeaturedProducts({ page: 1, pageSize: 10 }), */
+        /* getFooterData(), */
     ]);
 
     if (['new', 'used'].includes(condition)) {
@@ -205,11 +205,11 @@ export default async function ProductsPageCondition(
             category, subcategory, condition, 1, 20);
 
         //console.log(products, pagination, categoryP, newSubcategory, '||||||||||||');
-        const recentOrderCount = await getRecentOrdersCount();
-        const messages = await getNotifications();
+        /* const recentOrderCount = await getRecentOrdersCount();
+        const messages = await getNotifications(); */
         return (
             <div className="bg-gray-100 ">
-                <Header recentOrderCount={recentOrderCount} notificationData={messages} />
+                {/* <Header recentOrderCount={recentOrderCount} notificationData={messages} /> */}
 
                 {!products ?
                     <div className="flex flex-col items-center">
@@ -233,28 +233,28 @@ export default async function ProductsPageCondition(
                             pageSize={pagination.pageSize} />
                     </div>
                 }
-                <FeaturedAndProducts
+                {/* <FeaturedAndProducts
                     initFeaturedProducts={featuredProducts.editProducts}
-                />
-                <Footer footerData={footerData} />
+                /> */}
+                {/* <Footer footerData={footerData} /> */}
             </div>
         )
     } else {
-        const recentOrderCount = await getRecentOrdersCount();
-        const messages = await getNotifications();
+        /* const recentOrderCount = await getRecentOrdersCount();
+        const messages = await getNotifications(); */
         return (
             <div className="min-h-screen flex flex-col">
-                <Header recentOrderCount={recentOrderCount} notificationData={messages} />
+                {/* <Header recentOrderCount={recentOrderCount} notificationData={messages} /> */}
                 <main className="flex-grow">
                     <ProductDetailPage
                         categorySlug={category}
                         subcategorySlug={subcategory}
                         productSlug={condition}
                     />
-                    <FeaturedAndProducts
-                        initFeaturedProducts={featuredProducts.editProducts} />
+                    {/* <FeaturedAndProducts
+                        initFeaturedProducts={featuredProducts.editProducts} /> */}
                 </main>
-                <Footer footerData={footerData} />
+                {/* <Footer footerData={footerData} /> */}
             </div>
         );
     }

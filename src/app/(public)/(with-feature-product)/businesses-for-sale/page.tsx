@@ -83,20 +83,20 @@ const businessesForSale = [
 
 export default async function Page() {
     const [
-        featuredProducts,
-        footerData,
+        /* featuredProducts,
+        footerData, */
         editedBusinessForSale,
     ] = await Promise.all([
-        getFeaturedProducts({ page: 1, pageSize: 10 }),
-        getFooterData(),
+        /* getFeaturedProducts({ page: 1, pageSize: 10 }),
+        getFooterData(), */
         getBusinesessForSale({ page: 1, pageSize: 100 })
     ]);
     //console.log(editedBusinessForSale,'ooooooooooooooooooooooooppppppppppppppppp');
-    const recentOrderCount = await getRecentOrdersCount();
-    const messages = await getNotifications();
+    /* const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications(); */
     return (
         <div>
-            <Header notificationData={messages} recentOrderCount={recentOrderCount} />
+            {/* <Header notificationData={messages} recentOrderCount={recentOrderCount} /> */}
             <section className="bg-secondary/40 border-b">
                 <div className="container mx-auto px-4 py-12 text-center">
                     <h1 className="text-3xl lg:text-5xl font-bold tracking-tight">Businesses for Sale</h1>
@@ -128,10 +128,10 @@ export default async function Page() {
                 </div>
 
             </main>
-            <FeaturedAndProducts
+            {/* <FeaturedAndProducts
                 initFeaturedProducts={featuredProducts.editProducts}
             />
-            <Footer footerData={footerData} />
+            <Footer footerData={footerData} /> */}
         </div>
     )
 }

@@ -69,7 +69,7 @@ export function ContactUs() {
                     <p className="text-gray-600 text-center">
                         We're here to help. Choose how you'd like to contact us:
                     </p>
-                    
+
                     {/* Call Button Section */}
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
                         <div className="flex items-center gap-2">
@@ -77,7 +77,7 @@ export function ContactUs() {
                             <span className="text-gray-700">Call us at:</span>
                             <span className="font-semibold text-black">01702 597 067</span>
                         </div>
-                        <Button 
+                        <Button
                             onClick={handleCall}
                             className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
                             size="sm"
@@ -139,9 +139,9 @@ export function ContactUs() {
                             />
                         </div>
 
-                        <Button 
-                            disabled={loading} 
-                            type="submit" 
+                        <Button
+                            disabled={loading}
+                            type="submit"
                             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5"
                         >
                             {loading ? (
@@ -179,14 +179,13 @@ export function ContactDialog({ textButton }: { textButton?: string }) {
 
     return (
         <div>
-            <Button 
+            <Button
                 onClick={handleContactClick}
-                variant={textButton ? "destructive" : 'default'} 
-                className={`cursor-pointer flex items-center gap-2 ${
-                    textButton 
-                    ? "bg-red-600 hover:bg-red-500" 
+                variant={textButton ? "destructive" : 'default'}
+                className={`cursor-pointer w-full flex items-center gap-2 ${textButton
+                    ? "bg-red-600 hover:bg-red-500"
                     : "bg-blue-600 hover:bg-blue-500"
-                }`}
+                    }`}
             >
                 <MessageCircle className="h-4 w-4" />
                 {textButton ? textButton : "Contact Us"}
@@ -204,7 +203,7 @@ export function ContactDialog({ textButton }: { textButton?: string }) {
                     <ContactUs />
                 </DialogContent>
             </Dialog>
-            
+
             <SignInUpModal
                 openSignIn={openSignIn}
                 openSignUp={openSignUp}
@@ -299,9 +298,9 @@ export function SendMessageForm({ to }: { to: string }) {
                             />
                         </div>
 
-                        <Button 
-                            disabled={loading} 
-                            type="submit" 
+                        <Button
+                            disabled={loading}
+                            type="submit"
                             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5"
                         >
                             {loading ? (
@@ -327,8 +326,8 @@ export function SendMessageDialogue({ to }: { to: string }) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button 
-                    variant="default" 
+                <Button
+                    variant="default"
                     className="bg-blue-600 hover:bg-blue-500 cursor-pointer flex items-center gap-2"
                 >
                     <Mail className="h-4 w-4" />

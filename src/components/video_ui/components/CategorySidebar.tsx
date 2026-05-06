@@ -14,7 +14,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
   onSelectCategory,
 }) => {
   return (
-    <aside className="hidden md:block w-64 h-screen bg-white border-r border-slate-200 overflow-y-auto fixed left-0 top-33  pt-16">
+    <aside className="hidden md:block min-w-64 sticky top-0 h-screen bg-white border-r border-slate-200 overflow-y-auto ">
       <div className="py-4">
         <h2 className="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
           Categories

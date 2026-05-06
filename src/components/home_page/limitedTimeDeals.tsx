@@ -14,14 +14,16 @@ import { ArrowRight, Flame } from "lucide-react";
 export function LimitedTimeDeals({ initDealsProducts, className }: { initDealsProducts: any, className: string }) {
     /* const {dealsProducts} = useHomeProductContext(); */
     const dealsProducts = initDealsProducts;
+    /*  console.log(dealsProducts, 'ddddddddddddddkfkvkvkfvfvb'); */
+
     return (
-        <section className={cn("w-full px-4 md:px-8 py-10 bg-buyer-soft/40 border-y max-h-[600px]", className)}>
+        <section className={cn("w-full px-4 md:px-8 h-fit py-10 bg-buyer-soft/40 border-y ", className)}>
             <div className="  container mx-auto ">
                 {/* <div className='flex justify-between items-center mb-6'>
                     <h2 className="text-2xl font-bold  text-left">Limited-Time Deals</h2>
                     <Link href="/products?type=deals" className=' text-blue-400 font-medium text-sm hover:underline'>View all</Link>
                 </div> */}
-                <div className="flex items-end justify-between mb-6 gap-4">
+                <div className="flex flex-col mb-6 md:flex-row md:items-end justify-between md:mb-6 gap-4">
                     <div>
                         <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-destructive mb-1">
                             <Flame className="h-3.5 w-3.5" /> Limited-Time Deals

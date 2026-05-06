@@ -79,20 +79,20 @@ const wantedItems = [
 
 export default async function Page() {
     const [
-        featuredProducts,
-        footerData,
+        /* featuredProducts,
+        footerData, */
         editedWantedItem,
     ] = await Promise.all([
-        getFeaturedProducts({ page: 1, pageSize: 10 }),
-        getFooterData(),
+        /* getFeaturedProducts({ page: 1, pageSize: 10 }),
+        getFooterData(), */
         getWantedItems({ page: 1, pageSize: 100 })
     ]);
-    const recentOrderCount = await getRecentOrdersCount();
-    const messages = await getNotifications();
+    /* const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications(); */
 
     return (
         <div>
-            <Header notificationData={messages} recentOrderCount={recentOrderCount}/>
+            {/* <Header notificationData={messages} recentOrderCount={recentOrderCount}/> */}
             <main className="max-w-7xl m-auto space-y-8 mt-5">
                 <div className="flex justify-center mt-4">
                     <ProductBreadcrumb
@@ -112,12 +112,12 @@ export default async function Page() {
                 </div>
 
             </main>
-            <FeaturedAndProducts
+            {/* <FeaturedAndProducts
                 initFeaturedProducts={featuredProducts.editProducts}
             />
             <Footer
                 footerData={footerData}
-            />
+            /> */}
         </div>
     )
 }

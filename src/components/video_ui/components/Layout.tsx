@@ -20,14 +20,14 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className="min-h-screen bg-slate-50">
-      <Header />
-       
-        <CategorySidebar
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onSelectCategory={onSelectCategory}
-        />
-       
+      {/* <Header /> */}
+
+      <CategorySidebar
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onSelectCategory={onSelectCategory}
+      />
+
       <CategoryTabs
         categories={categories}
         selectedCategory={selectedCategory}

@@ -34,7 +34,7 @@ export default function ServiceCard({ service }: { service: Service }) {
   const { user } = useHomeContext();
 
   return (
-    <Card className="group max-w-md w-full border-none shadow-none  mb-3 mx-auto rounded-xl   bg-card overflow-hidden   hover:border-primary/50 transition-all flex flex-col cursor-pointer">
+    <Card className="group   w-full border-none shadow-none  mb-3 mx-auto rounded-xl   bg-card overflow-hidden   hover:border-primary/50 transition-all flex flex-col ">
 
       {/* Image Section - Height increased to h-[350px] */}
       <div className="h-[350px] w-full overflow-hidden bg-secondary/40 relative">
@@ -84,7 +84,7 @@ export default function ServiceCard({ service }: { service: Service }) {
                   if (user != undefined) setShowContact(!showContact);
                   else setOpenSignIn(true);
                 }}
-                className=" flex items-center gap-1 text-sm font-bold text-white hover:gap-2 transition-all w-fit"
+                className="cursor-pointer flex items-center gap-1 text-sm font-bold text-white hover:text-cyan-300 hover:gap-2 transition-all w-fit"
               >
                 {showContact ? "Hide contact info" : "View contact info"}
                 {showContact ? (

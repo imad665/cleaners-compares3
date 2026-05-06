@@ -127,24 +127,29 @@ export default async function ProductPageInfo(
             params: Promise<{ category: string }>
         }
 ) {
+
+
+
     const { category } = await params;
-    const categoryObj = await getCategory(category);
+    //const categoryObj = await getCategory(category);
+    const { category: categoryObj } = await (await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/need-cache/category?categoryslug=${category}`, { next: { tags: ['category-cache'] } })).json()
+
 
     const subcategories = categoryObj.subCategories;
     const subcategoriesUsed = categoryObj.subCategoriesUsed;
     const tt = subcategories?.length === 3 ? "[@media(min-width:1298px)]:grid-cols-3" : '[@media(min-width:1298px)]:grid-cols-4'
     const [
-        featuredProducts,
-        footerData,
+        /* featuredProducts, */
+        /* footerData, */
     ] = await Promise.all([
-        getFeaturedProducts({ page: 1, pageSize: 10 }),
-        getFooterData(),
+        /* getFeaturedProducts({ page: 1, pageSize: 10 }), */
+        /*  getFooterData(), */
     ]);
 
     const isMachineOrParts = (subcategoriesUsed != undefined);
     const isParts = category === 'parts';
-    const recentOrderCount = await getRecentOrdersCount();
-    const messages = await getNotifications();
+    /*  const recentOrderCount = await getRecentOrdersCount();
+     const messages = await getNotifications(); */
 
     const title = categoryObj.name;
     const description = title?.includes('Machines')
@@ -157,8 +162,8 @@ export default async function ProductPageInfo(
 
     return (
 
-        <div className="min-h-screen flex flex-col">
-            <Header recentOrderCount={recentOrderCount} notificationData={messages} />
+        <div className=" flex flex-col">
+            {/* <Header recentOrderCount={recentOrderCount} notificationData={messages} /> */}
             <main >
                 <div className='m-auto'>
                     <section className="bg-secondary/40 border-b">
@@ -247,10 +252,10 @@ export default async function ProductPageInfo(
                 </div>
 
 
-                <FeaturedAndProducts initFeaturedProducts={featuredProducts.editProducts} />
+                {/* <FeaturedAndProducts initFeaturedProducts={featuredProducts.editProducts} /> */}
             </main>
 
-            <Footer footerData={footerData} />
+            {/* <Footer footerData={footerData} /> */}
         </div>
 
     );

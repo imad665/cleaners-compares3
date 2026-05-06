@@ -112,12 +112,12 @@ export function PaginatedProducts({ initProducts, title = '', page = 1, pageSize
         <div className='space-y-5'>
           {title != '' && <h2 className='font-bold text-2xl pl-3'>{title}</h2>}
           <div className="grid grid-cols-1 min-[520px]:grid-cols-2 md:grid-cols-3 gap-3 lg:grid-cols-4">
-            {subCategory.id != 'deals' && products.map((product) =>
+            {products.map((product) =>
               <ItemFeaturedProduct isOldProduct={product.isOldProduct} className='m-auto min-w-[90vw]   min-[520px]:min-w-0 min-[520px]:max-w-[350px]  md:min-w-[230px] md:max-w-[400px]' key={product.productId} {...product} />
             )}
-            {subCategory.id === 'deals' && products.map((product) =>
+            {/* {subCategory.id === 'deals' && products.map((product) =>
               <ItemLimitedTimeDeals className='!min-w-[90vw] !m-auto md:!max-w-[400px] md:!min-w-[0px] md:!w-[330px] lg:!w-[27vw] lg:!max-w-[300px] ' key={product.productId} {...product} />
-            )}
+            )} */}
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-import { NoProductsFound } from "@/app/products/[category]/[subcategory]/[condition]/page";
+import { NoProductsFound } from "@/app/(public)/(with-feature-product)/products/[category]/[subcategory]/[condition]/page";
 import { Header } from "@/components/header/header";
 import { FeaturedAndProducts } from "@/components/home_page/featured_product";
 import Footer from "@/components/home_page/footer";
@@ -93,19 +93,19 @@ export default async function Page({ params }: { params: Promise<{ category: str
     //const services = await getServices(name);
     //console.log(services,'$$$$$$$$$$$$');
     const [
-        featuredProducts,
-        footerData,
+        /* featuredProducts,
+        footerData, */
         services,
     ] = await Promise.all([
-        getFeaturedProducts({ page: 1, pageSize: 10 }),
-        getFooterData(),
+        /* getFeaturedProducts({ page: 1, pageSize: 10 }),
+        getFooterData(), */
         getServices(name)
     ]);
-    const recentOrderCount = await getRecentOrdersCount();
-    const messages = await getNotifications();
+    /* const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications(); */
     return (
         <div>
-            <Header recentOrderCount={recentOrderCount} notificationData={messages} />
+            {/* <Header recentOrderCount={recentOrderCount} notificationData={messages} /> */}
             <main className="container max-w-7xl m-auto space-y-8 mt-5">
                 <div className="flex justify-center mt-4">
                     <ProductBreadcrumb
@@ -127,11 +127,11 @@ export default async function Page({ params }: { params: Promise<{ category: str
                     }
                 </div>
             </main>
-            <FeaturedAndProducts
+            {/* <FeaturedAndProducts
                 initFeaturedProducts={featuredProducts.editProducts} />
             <Footer
                 footerData={footerData}
-            />
+            /> */}
         </div>
     )
 }

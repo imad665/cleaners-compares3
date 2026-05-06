@@ -22,6 +22,8 @@ export default async function InquiryPage({
         },
 
     });
+    console.log(inquiryId, 'dddddddddddddddkkfkkfkdfg');
+
 
     if (!inquiry) return <div>Not found</div>;
 
@@ -49,6 +51,7 @@ export default async function InquiryPage({
             }
         })
     }
+    //await prisma.inquiry.deleteMany({ where: { id: inquiryId } })
 
     //console.log(conversation, 'fffffffffffffffffffffkkkgkgkggk');
 

@@ -13,15 +13,15 @@ export default function MyCarousel2({ children }: { children: React.ReactNode })
     const scroll = (direction: 'left' | 'right') => {
         const container = scrollRef.current;
         if (!container) return;
-        
+
         const scrollAmount = container.clientWidth * 0.8;
-        const newPosition = direction === 'left' 
+        const newPosition = direction === 'left'
             ? Math.max(0, container.scrollLeft - scrollAmount)
             : Math.min(
                 container.scrollWidth - container.clientWidth,
                 container.scrollLeft + scrollAmount
             );
-        
+
         container.scrollTo({
             left: newPosition,
             behavior: 'smooth',
@@ -37,11 +37,13 @@ export default function MyCarousel2({ children }: { children: React.ReactNode })
 
     const handleTouchMove = (e: React.TouchEvent) => {
         if (!scrollRef.current) return;
-        
+
         const touch = e.touches[0];
         const diff = touchStartX.current - touch.clientX;
         scrollRef.current.scrollLeft = touchStartScroll.current + diff;
     };
+
+
 
     return (
         <div

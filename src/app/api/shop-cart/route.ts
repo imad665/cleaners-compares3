@@ -65,16 +65,16 @@ export async function POST(req: NextRequest) {
             isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')    
 
         }));
-        const [
+        /* const [
             featuredProducts,
             footerData,
         ] = await Promise.all([
             getFeaturedProducts({ page: 1, pageSize: 10 }),
             getFooterData(),
-        ]);
-        const recentOrderCount = await getRecentOrdersCount();
-        const messages = await getNotifications();
-        return NextResponse.json({ products, featuredProducts, footerData, messages, recentOrderCount }, { status: 200 });
+        ]); */
+        /* const recentOrderCount = await getRecentOrdersCount();
+        const messages = await getNotifications(); */
+        return NextResponse.json({ products, /* featuredProducts, footerData, messages, recentOrderCount  */ }, { status: 200 });
 
     } catch (error) {
         console.error('Error fetching products:', error);

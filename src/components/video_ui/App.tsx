@@ -5,8 +5,10 @@ import VideoGrid from './components/VideoGrid';
 import { categories, DEFAULT_CATEGORY } from './data/videos';
 import { Category } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
- 
+
 import { toast } from 'sonner';
+import CategorySidebar from './components/CategorySidebar';
+import CategoryTabs from './components/CategoryTabs';
 
 
 
@@ -17,19 +19,19 @@ function App() {
     'selectedCategory',
     DEFAULT_CATEGORY
   );
-  const [newCategories,setNewCategories] = useState(categories);
-  const [loading,setLoading] = useState(true);
+  const [newCategories, setNewCategories] = useState(categories);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(true)
     const fetchVideos = async () => {
       try {
         const res = await fetch('/api/videos');
-        if(!res.ok){
-          const {error} = await res.json();
+        if (!res.ok) {
+          const { error } = await res.json();
           toast.error(error || 'failed to fetch videos')
-          return 
+          return
         }
-        const videosCategories = await res.json(); 
+        const videosCategories = await res.json();
         //console.log(videosCategories,';;;;;;;;;;;;;;;;');
         setLoading(false)
         setNewCategories(videosCategories);
@@ -51,8 +53,33 @@ function App() {
     // Scroll to top when changing categories
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+  console.log(categories, 'sdddddddddddddddkfkfkfdlfkdfk');
 
   return (
+    <div className='flex items-start min-h-screen relative border-b'>
+      <CategorySidebar
+        categories={newCategories}
+        selectedCategory={selectedCategoryId}
+        onSelectCategory={handleSelectCategory}
+      />
+      <div className='flex flex-1 flex-col'>
+        <CategoryTabs
+          categories={newCategories}
+          selectedCategory={selectedCategoryId}
+          onSelectCategory={handleSelectCategory}
+        />
+        <VideoGrid
+          videos={selectedCategory?.videos || []}
+          categoryName={selectedCategory?.name || ''}
+          loading={loading}
+        />
+      </div>
+
+
+    </div>
+  )
+
+  /* return (
     <Layout
       categories={newCategories}
       selectedCategory={selectedCategoryId}
@@ -64,7 +91,7 @@ function App() {
         loading={loading}
       />
     </Layout>
-  );
+  ); */
 }
 
 export default App;

@@ -27,13 +27,13 @@ export default function ProductGallery({ images, videoUrl }: ProductGalleryProps
       <div className="relative overflow-hidden rounded-lg bg-muted/30 aspect-square flex items-center justify-center">
         <Dialog open={showLightbox} onOpenChange={setShowLightbox}>
           <DialogTrigger asChild>
-            <div className="group cursor-zoom-in relative w-full h-full">
+            <div className="group   cursor-zoom-in relative w-full h-full">
               <img
                 src={images[currentImageIndex]}
                 alt="Product"
                 className="object-contain w-full h-full transition-all duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-5 transition-opacity"></div>
+              <div className="absolute inset-0 bg-black opacity-3 group-hover:opacity-5 transition-opacity"></div>
               <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button variant="secondary" size="icon">
                   <ZoomIn className="h-4 w-4" />
@@ -57,7 +57,7 @@ export default function ProductGallery({ images, videoUrl }: ProductGalleryProps
           <>
             <button
               onClick={handlePrevImage}
-              className="absolute z-2000 cursor-pointer left-4 top-1/2 -translate-y-1/2 bg-background/80 h-10 w-10 rounded-full flex items-center justify-center shadow-sm hover:bg-background transition-colors"
+              className="absolute z-2000  cursor-pointer left-4 top-1/2 -translate-y-1/2 bg-background/80 h-10 w-10 rounded-full flex items-center justify-center shadow-sm hover:bg-background transition-colors"
               aria-label="Previous image"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -77,7 +77,7 @@ export default function ProductGallery({ images, videoUrl }: ProductGalleryProps
           <div className="absolute inset-0  flex items-center justify-center">
             {/* Dark overlay for better button visibility */}
             <div className="absolute inset-0 bg-black/30"></div>
-            
+
             <Dialog>
               <DialogTrigger asChild>
                 <Button

@@ -2,6 +2,7 @@ import { authOptions } from "@/lib/auth";
 import { deleteCloudinaryFileByUrl, uploadFileToCloud } from "@/lib/cloudStorage";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest) {
         const fullName = formData.get('fullName') as string;
         let imageUrl = formData.get('imageUrl') as string;
 
-        if (!title || !location || !description   || !phone || !email) {
+        if (!title || !location || !description || !phone || !email) {
             return NextResponse.json({ error: "Missing fields" }, { status: 400 });
         }
 
@@ -71,10 +72,14 @@ export async function POST(req: NextRequest) {
             const { url, public_id } = await uploadFileToCloud(imageFile);
             imageUrl = url;
         }
-        if(!imageUrl){
+        if (!imageUrl) {
             imageUrl = '/uploads/ImageUnavailable.jpg'
         }
-
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
+        }
 
         const wantedItem = await prisma.wantedItem.create({
             data: {
@@ -155,6 +160,11 @@ export async function PATCH(req: NextRequest) {
                 },
             },
         });
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
+        }
 
         return NextResponse.json(wantedItem, { status: 200 });
 
@@ -174,6 +184,11 @@ export async function DELETE(req: NextRequest) {
         const deleted = await prisma.wantedItem.delete({
             where: { id }
         })
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
+        }
 
         return NextResponse.json({ success: true, message: 'the item deleted successfuly' }, { status: 200 });
     } catch (error) {

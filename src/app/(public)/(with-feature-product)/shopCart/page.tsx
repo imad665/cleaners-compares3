@@ -92,7 +92,7 @@ function CheckoutForm({
 
       // 2. Create payment intents on server if all amounts are valid
       const result = await holdCustomerCheckout(totalPrice, selectedCart, shippingInfo);
-    
+
       if (!result?.success) {
         throw new Error(result?.error || 'Checkout failed');
       }
@@ -515,7 +515,7 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
   onCheckoutSuccess: () => void
 }) {
   //console.log(selectedCart, 'selected cart debug');
-  
+
   // Memoize calculations to prevent unnecessary recalculations
   const { totalPrice, totalDliveryCharge, totalProducts, grandTotal } = useMemo(() => {
     const price = selectedCart.reduce((sum, product) => sum + product.priceExcVat, 0);
@@ -578,7 +578,7 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
 
           {/* Checkout Button */}
           {checkoutStep === 'cart' && (
-            <Button 
+            <Button
               disabled={selectedCart.length === 0}
               onClick={handleCheckoutClick}
               className="rounded-full py-3 px-6 bg-amber-500 hover:bg-amber-600 text-white cursor-pointer flex items-center gap-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -630,10 +630,10 @@ export default function Page() {
   const { cart, clearCart, removeProduct } = useHomeContext();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [featuredProducts, setFeaturedProducts] = useState(null);
-  const [footerData, setFooterData] = useState(null);
+  /* const [featuredProducts, setFeaturedProducts] = useState(null); */
+  /*  const [footerData, setFooterData] = useState(null); */
   const [isCheckoutSuccess, setIscheckoutSuccess] = useState(false);
-  const [headerData,setHeaderData] = useState({messages:null,recentOrderCoun:null})
+  /* const [headerData,setHeaderData] = useState({messages:null,recentOrderCoun:null}) */
   useEffect(() => {
     if (!cart || cart.length === 0) {
       setLoading(false);
@@ -655,10 +655,10 @@ export default function Page() {
           throw new Error('Failed to fetch cart items');
         }
 
-        const { products: products2, featuredProducts, footerData,messages,recentOrderCoun } = await res.json();
-        setFeaturedProducts(featuredProducts);
-        setHeaderData({messages,recentOrderCoun})
-        setFooterData(footerData);
+        const { products: products2, /* featuredProducts, footerData,messages,recentOrderCoun */ } = await res.json();
+        /* setFeaturedProducts(featuredProducts); */
+        /* setHeaderData({messages,recentOrderCoun}) */
+        /* setFooterData(footerData); */
         setProducts(products2);
         /* if(products2.length === 0) clearCart(); */
       } catch (error) {
@@ -675,13 +675,13 @@ export default function Page() {
   //console.log(existedProducts.length, products.length);
   //console.log(existedProducts, ';;;;;;;;;;;;', cart);
   //console.log(existedProducts,';;;;;;;;;...........');
-  
+
   const selectedCart = cart
     ?.filter(c => c.quantity != 0 && products.find((p) => p.productId === c.productId))
     .map((c) => ({
       ...c,
       priceExcVat: existedProducts?.find((p) => p.productId === c.productId)?.priceExcVat * c.quantity,
-      delivery_charge:existedProducts?.find((p)=>p.productId === c.productId)?.delivery_charge * c.quantity,
+      delivery_charge: existedProducts?.find((p) => p.productId === c.productId)?.delivery_charge * c.quantity,
       sellerId: existedProducts?.find((p) => p.productId === c.productId)?.sellerId,
     }));
   /* if (!loading && products.length != 0) {
@@ -698,8 +698,8 @@ export default function Page() {
     // Optionally redirect to order confirmation page
   };
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header  notificationData={headerData.messages} recentOrderCount={headerData.recentOrderCoun}/>
+    <div className=" flex flex-col ">
+      {/* <Header  notificationData={headerData.messages} recentOrderCount={headerData.recentOrderCoun}/> */}
 
       <main className="flex-grow p-4 space-y-5 max-w-6xl mx-auto">
         {loading ? (
@@ -709,7 +709,7 @@ export default function Page() {
           </div>
         ) : (
           <>
-            {existedProducts.length>0 ? (
+            {existedProducts.length > 0 ? (
               <>
                 {/* selectedCart && selectedCart.length > 0 && */ <SubTotal
                   selectedCart={selectedCart}
@@ -755,7 +755,7 @@ export default function Page() {
                     <p className="text-gray-600 mb-6">
                       Thank you for your purchase! Your order has been received and is being processed.
                     </p>
-                     
+
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <Button
                         onClick={() => window.location.href = '/'}
@@ -779,7 +779,7 @@ export default function Page() {
         )}
       </main>
 
-      {footerData && <Footer footerData={footerData} />}
+      {/* {footerData && <Footer footerData={footerData} />} */}
     </div>
   );
 }

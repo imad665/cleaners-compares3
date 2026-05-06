@@ -14,7 +14,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
   onSelectCategory,
 }) => {
   return (
-    <div className="md:hidden overflow-x-auto whitespace-nowrap pb-2 pt-16 px-4 border-b border-slate-200 sticky top-0 bg-white z-10">
+    <div className="md:hidden overflow-x-auto whitespace-nowrap pb-2  px-4 border-b border-slate-200 sticky top-0 bg-white z-10">
       <div className="inline-flex gap-2 pb-1">
         {categories.map((category) => (
           <button

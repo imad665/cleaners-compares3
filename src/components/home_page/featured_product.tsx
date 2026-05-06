@@ -79,7 +79,7 @@ export function FeaturedAndProducts({ initFeaturedProducts }: { initFeaturedProd
                     <h2 className="text-2xl font-bold text-left">Featured Products</h2>
                     <Link href="/products?type=featured-products" className='text-blue-400 font-medium text-sm hover:underline'>View all</Link>
                 </div> */}
-                <div className="flex items-end justify-between mb-6 gap-4">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
                     <div>
                         <h2 className="text-2xl lg:text-3xl font-bold tracking-tight">Featured Industry Listings</h2>
                         <p className="text-sm text-muted-foreground mt-1">Machines, parts and supplies currently listed by sellers on Cleaners Compare.</p>
@@ -112,7 +112,7 @@ export function FeaturedEnginners({ services }: { services: any }) {
     return (
         <section className="w-full px-4 md:px-8   mb-5 bg-white">
             <div className="w-full container mx-auto">
-                <div className="flex items-end justify-between mb-6 gap-4">
+                <div className="flex flex-col md:items-end justify-between md:mb-6 md:flex-row gap-4">
                     <div>
                         <h2 className="text-2xl lg:text-3xl font-bold tracking-tight">Featured Engineers</h2>
                         <p className="text-sm text-muted-foreground mt-1">

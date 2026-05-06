@@ -6,6 +6,7 @@ import { processPayement } from "@/lib/payement/servicePayement";
 import { prisma } from "@/lib/prisma";
 import { deleteImageFileAt, saveImageFileAt } from "@/lib/utils/saveImagesLocaly";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -133,7 +134,7 @@ export async function POST(req: NextRequest) {
         }
 
         //console.log(formData,'@@@@@@@@@@@@@@########');
-        
+
 
         const featureDays =
             formData.get("featureDays")?.toString() === "null" ||
@@ -161,6 +162,11 @@ export async function POST(req: NextRequest) {
                 userId: userId,
             },
         });
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
+        }
 
         // If featured, process payment
         if (featureDays?.toString()) {
@@ -173,6 +179,7 @@ export async function POST(req: NextRequest) {
         }
 
         await embedEngineersToNeon();
+
         return NextResponse.json({ success: true, service, pictureUrl });
     } catch (error) {
         console.error("Error creating service:", error);
@@ -239,6 +246,11 @@ export async function PATCH(req: NextRequest) {
                 pictureUrl: pictureUrl,
             },
         });
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
+        }
 
         if (featureDays?.toString() && !service.isFeatured) {
             const url = await processPayement(featureDays.toString(), {
@@ -285,6 +297,11 @@ export async function DELETE(req: NextRequest) {
         // 2. Delete from Cloudinary
         if (deletedService.pictureUrl) {
             await deleteCloudinaryFileByUrl(deletedService.pictureUrl);
+        }
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
         }
 
         // 3. Remove vector embedding

@@ -1,10 +1,11 @@
- 
+
 import { authOptions } from "@/lib/auth";
 import { deleteCloudinaryFileByUrl } from "@/lib/cloudStorage";
 import { getCategories } from "@/lib/functions";
 import { prisma } from "@/lib/prisma";
 import { updateExpiredAndDealsProducts } from "@/lib/updateExpiredProducts";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -27,15 +28,15 @@ export async function GET(req: NextRequest) {
         await updateExpiredAndDealsProducts() // 🔄 Auto-clean expired features/deals
 
         const session = await getServerSession(authOptions);
-        if(!session || !session.user) redirect('/auth/signin'); 
+        if (!session || !session.user) redirect('/auth/signin');
         const user = session.user;
-          
+
         const products = (await prisma.product.findMany({
-            where:{
-                sellerId:user.id
+            where: {
+                sellerId: user.id
             },
-            orderBy:{
-                createdAt:'desc'
+            orderBy: {
+                createdAt: 'desc'
             },
             select: {
                 id: true,
@@ -53,7 +54,7 @@ export async function GET(req: NextRequest) {
                 discountPrice: true,
                 dealEndDate: true,
                 featuredEndDate: true,
-                isDealActive:true,
+                isDealActive: true,
                 weight: true,
                 featureDays: true,
                 stock: true,
@@ -86,20 +87,20 @@ export async function GET(req: NextRequest) {
                 condition: p.condition,
                 imagesUrl: p.imagesUrl,
                 videoUrl: p.videoUrl,
-                isDealActive:p.isDealActive,
+                isDealActive: p.isDealActive,
                 discountPercentage: p.discountPercentage,
                 discountPrice: p.discountPrice,
-                dealEndDateFormate:p.dealEndDate?.toISOString().split('T')[0],
+                dealEndDateFormate: p.dealEndDate?.toISOString().split('T')[0],
                 dealEndDate: p.dealEndDate
-                ?new Date(p.dealEndDate).toLocaleString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                })
-                : null,
+                    ? new Date(p.dealEndDate).toLocaleString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    })
+                    : null,
                 featuredEndDate: p.featuredEndDate
                     ? new Date(p.featuredEndDate).toLocaleString('en-GB', {
                         day: '2-digit',
@@ -150,6 +151,11 @@ export async function DELETE(req: NextRequest) {
         });
         if (deletedProduct.videoUrl) {
             deleteCloudinaryFileByUrl(deletedProduct.videoUrl);
+        }
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
         }
 
 

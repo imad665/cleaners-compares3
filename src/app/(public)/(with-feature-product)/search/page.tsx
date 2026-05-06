@@ -63,7 +63,7 @@ export default async function SearchPage({
 
     return (
         <div>
-            <Header />
+            {/* <Header /> */}
             <div className="container mx-auto px-4 py-8">
                 {/* Search Bar */}
 

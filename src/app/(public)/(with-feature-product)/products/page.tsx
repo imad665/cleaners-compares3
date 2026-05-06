@@ -8,7 +8,7 @@ import Footer from "@/components/home_page/footer";
 import type { Metadata } from 'next';
 import { getNotifications } from "@/lib/payement/get-notification-for-icon";
 export const revalidate = 18000; // ISR every 5 hours
- 
+
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
@@ -97,21 +97,21 @@ export default async function Page({ searchParams }) {
     currentPage = result.currentPage;
     totalPage = result.totalPage;
 
-    console.log(total,currentPage,totalPage,';;;;;;;;;;;;;;;lbbbbbbb');
-    
+    console.log(total, currentPage, totalPage, ';;;;;;;;;;;;;;;lbbbbbbb');
+
   }
   const [
-    featuredProducts,
-    footerData,
+    /* featuredProducts, */
+    /* footerData, */
   ] = await Promise.all([
-    getFeaturedProducts({ page: 1, pageSize: 10 }),
-    getFooterData(),
+    /* getFeaturedProducts({ page: 1, pageSize: 10 }), */
+    /* getFooterData(), */
   ]);
-  const recentOrderCount = await getRecentOrdersCount();
-  const messages = await getNotifications();
+  /*  const recentOrderCount = await getRecentOrdersCount();
+   const messages = await getNotifications(); */
   return (
     <div>
-      <Header recentOrderCount={recentOrderCount} notificationData={messages}/>
+      {/* <Header recentOrderCount={recentOrderCount} notificationData={messages} /> */}
       {!editProducts ?
         <div className="flex flex-col items-center">
           <ProductBreadcrumb
@@ -142,10 +142,10 @@ export default async function Page({ searchParams }) {
             pageSize={pageSize} />
         </div>
       }
-      {type != 'featured-products'
-       && <FeaturedAndProducts
-        initFeaturedProducts={featuredProducts.editProducts}/>}
-      <Footer footerData={footerData}/>
+      {/* {type != 'featured-products'
+        && <FeaturedAndProducts
+          initFeaturedProducts={featuredProducts.editProducts} />}
+        */}
 
 
     </div>)

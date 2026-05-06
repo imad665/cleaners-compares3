@@ -14,7 +14,7 @@ const CustomPrevArrow = (props: any) => {
         <button
             aria-label="Scroll left"
             onClick={onClick}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg p-2 rounded-full hover:bg-gray-100 transition hidden md:flex"
+            className="absolute left-0 cursor-pointer top-1/2 -translate-y-1/2 z-10 bg-white/70 shadow-lg p-2 rounded-full hover:bg-gray-100 transition hidden md:flex"
             style={{ ...style }}
         >
             <ChevronLeft className="w-6 h-6" />
@@ -28,7 +28,7 @@ const CustomNextArrow = (props: any) => {
         <button
             aria-label="Scroll right"
             onClick={onClick}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg p-2 rounded-full hover:bg-gray-100 transition hidden md:flex"
+            className="absolute right-0 cursor-pointer top-1/2 -translate-y-1/2 z-10 bg-white/70 shadow-lg p-2 rounded-full hover:bg-gray-100 transition hidden md:flex"
             style={{ ...style }}
         >
             <ChevronRight className="w-6 h-6" />
@@ -111,12 +111,15 @@ export default function MyCarousel({
     const settings = {
         dots: false,
         infinite: slideCount > 1,
-        speed: 3800,
+        speed: 800,
+        /* cssEase: 'linear', */
         slidesToShow: Math.min(sliderToShow, slideCount),
         slidesToScroll: 1,
-        autoplay: slideCount > 1,
-        autoplaySpeed: 3000,
-        pauseOnHover: false,
+        autoplay: false /* slideCount > 1 */,
+        autoplaySpeed: 500,
+        pauseOnHover: true,
+        draggable: true,
+        swipe: false,
         nextArrow: <CustomNextArrow />,
         prevArrow: <CustomPrevArrow />,
         responsive: breackpoints?.map(c => ({
@@ -124,33 +127,7 @@ export default function MyCarousel({
             settings: {
                 slidesToShow: c.slidesToShow
             }
-        })) /* [
-            {
-                breakpoint: 1580,
-                settings: {
-                    slidesToShow: Math.min(6, slideCount),
-
-                }
-            },
-            {
-                breakpoint: 1280,
-                settings: {
-                    slidesToShow: Math.min(3, slideCount)
-                }
-            },
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: Math.min(2, slideCount)
-                }
-            },
-            {
-                breakpoint: 640,
-                settings: {
-                    slidesToShow: 1
-                }
-            }
-        ] */
+        }))
     };
 
     return (
@@ -167,8 +144,12 @@ export default function MyCarousel({
                     </div>
                 ))}
             </div>
-
-            {!isClient ? (
+            <Slider {...settings}>
+                {items.map((item, idx) => (
+                    <div key={idx} className="px-[2px]">{item}</div>
+                ))}
+            </Slider>
+            {/* {!isClient ? (
                 <MyCarousel2>{items}</MyCarousel2>
             ) : shouldUseSimpleCarousel ? (
                 <MyCarousel2>
@@ -182,7 +163,7 @@ export default function MyCarousel({
                         <div key={idx} className="px-[2px]">{item}</div>
                     ))}
                 </Slider>
-            )}
+            )} */}
         </div>
     );
 }

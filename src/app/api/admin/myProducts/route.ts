@@ -5,6 +5,7 @@ import { removeEmbeddingByRefId } from "@/lib/langchain/embeding/utils/embed-han
 import { prisma } from "@/lib/prisma";
 import { updateExpiredAndDealsProducts } from "@/lib/updateExpiredProducts";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -31,11 +32,11 @@ export async function GET(req: NextRequest) {
         const user = session.user;
 
         const products = (await prisma.product.findMany({
-            where:{
-                sellerId:user.id,
+            where: {
+                sellerId: user.id,
             },
-            orderBy:{
-                createdAt:'desc'
+            orderBy: {
+                createdAt: 'desc'
             },
             select: {
                 id: true,
@@ -55,9 +56,9 @@ export async function GET(req: NextRequest) {
                 featuredEndDate: true,
                 isDealActive: true,
                 weight: true,
-                isIncVAT:true,
+                isIncVAT: true,
                 featureDays: true,
-                delivery_charge:true,
+                delivery_charge: true,
                 stock: true,
                 category: {
                     select: {
@@ -90,9 +91,9 @@ export async function GET(req: NextRequest) {
                 videoUrl: p.videoUrl,
                 isDealActive: p.isDealActive,
                 discountPercentage: p.discountPercentage,
-                isIncVAT:p.isIncVAT,
+                isIncVAT: p.isIncVAT,
                 discountPrice: p.discountPrice,
-                delivery_charge:p.delivery_charge,
+                delivery_charge: p.delivery_charge,
                 dealEndDateFormate: p.dealEndDate?.toISOString().split('T')[0],
                 dealEndDate: p.dealEndDate
                     ? new Date(p.dealEndDate).toLocaleString('en-GB', {
@@ -122,7 +123,7 @@ export async function GET(req: NextRequest) {
         ));
 
         //console.log(products,user.id,user,'333333333333333');
-        
+
         const categories = await getCategories();
 
         return NextResponse.json({ success: true, products, categories }, { status: 200 });
@@ -150,7 +151,7 @@ export async function DELETE(req: NextRequest) {
             select: {
                 imagesUrl: true,
                 videoUrl: true,
-                id:true
+                id: true
             }
         });
         deletedProduct.imagesUrl.forEach(async (url) => {
@@ -159,9 +160,16 @@ export async function DELETE(req: NextRequest) {
         if (deletedProduct.videoUrl) {
             deleteCloudinaryFileByUrl(deletedProduct.videoUrl);
         }
-        if(deletedProduct){
+        if (deletedProduct) {
             await removeEmbeddingByRefId(deletedProduct.id)
         }
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
+        }
+        console.log('product deleted successfuly', 'dddddddddddkkfkfk');
+
 
 
         return NextResponse.json({ success: true, message: 'product deleted successfuly' }, { status: 200 });

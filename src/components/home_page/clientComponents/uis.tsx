@@ -13,65 +13,93 @@ export function ButtonSignOut() {
   )
 }
 
-export function AddCartButton({ productId, className = '', stock = -1, isOldProduct, isFromCart = false }: any) {
+export function AddCartButton({ productId, className = '', stock = -1, isOldProduct, isFromCart = false }: { productId: string, className?: string, stock?: number, isOldProduct: boolean, isFromCart?: boolean }) {
+
   const [count, setCount] = useState(0);
-  const { cart, addProduct } = useHomeContext();
+  const { cart, addProduct, removeProduct } = useHomeContext();
 
   useEffect(() => {
-    setCount(cart?.find((c: any) => c.productId === productId)?.quantity || 0);
-  }, [cart, productId]);
+    setCount(cart?.find((c) => c.productId === productId)?.quantity || 0)
+  }, [cart])
+  //console.log(count,productId,';;;;;;;;;;;;;;;;;;;;llllllllll');
 
-  const handleCount = (quantity: number) => {
-    if (count === 0 && quantity === -1) return;
+  const handleCount = (quantity: 1 | -1) => {
+    if (count === 0 && quantity === -1) return
+    setCount(v => v + quantity);
     addProduct(productId, quantity, isFromCart);
-  };
-
-  const isTherMore = (count < stock && stock !== -1) || (isFromCart && count < stock);
-
-  if (count === 0) {
-    return (
-      <Button
-        onClick={() => handleCount(1)}
-        disabled={!isTherMore}
-        className={`h-9 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-xs font-bold gap-2 ${className}`}
-      >
-        <ShoppingCart className="w-3.5 h-3.5" />
-        Add to Cart
-      </Button>
-    );
   }
+  const isTherMore = count < stock && stock != -1 || isFromCart && count < stock && stock != -1;
 
   return (
-    <div className={`flex items-center justify-between h-9 bg-slate-100 rounded-full px-1 border border-slate-200 ${className}`}>
-      <button onClick={() => handleCount(-1)} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white transition-colors text-slate-600">
-        {count === 1 ? <Trash2 size={14} /> : <Minus size={14} />}
-      </button>
-      <span className="text-xs font-bold px-2">{count}</span>
-      <button
-        onClick={() => handleCount(1)}
-        disabled={!isTherMore}
-        className="w-7 h-7 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:bg-slate-300 transition-colors"
-      >
-        <Plus size={14} />
-      </button>
+    <div className={` bottom-2 left-1 ${className}`}>
+      {count === 0 &&
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => handleCount(1)}
+            disabled={!isTherMore}
+            className='flex items-center cursor-pointer bg-yellow-400 text-black rounded-2xl hover:bg-yellow-500 w-fit px-6 text-xs'>
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            <span> Add to cart</span>
+          </Button>
+
+          {isFromCart && <Button onClick={() => removeProduct(productId)} className="flex items-center cursor-pointer bg-orange-400/50 text-black rounded-2xl hover:bg-red-500/50 w-fit px-5 text-xs">
+            <Trash2 size={16} />
+          </Button>}
+        </div>
+      }
+      {isOldProduct && count > 0 &&
+        <div className="flex items-center gap-2">
+          <span
+
+            className='flex items-center    text-black rounded-2xl   w-fit text-xs'
+          >
+            <CheckCircle className="w-4 h-4 mr-2" />
+
+            <span>Added</span>
+          </span>
+          <Button onClick={() => handleCount(-1)} className="flex items-center cursor-pointer bg-orange-400/50 text-black rounded-2xl hover:bg-red-500/50 w-fit px-5 text-xs">
+            <span>Remove</span>
+          </Button>
+
+        </div>
+
+      }
+
+      {count > 0 && !isOldProduct &&
+        <div className='flex gap-2 items-center border-1 rounded-2xl justify-between min-w-25 border-yellow-400 p-3 py-1'>
+          {count > 1 ?
+            <button onClick={() => handleCount(-1)} className='cursor-pointer'>
+              <Minus size={16} />
+            </button> :
+            <button onClick={() => handleCount(-1)} className='cursor-pointer'>
+              <Trash2 size={16} />
+            </button>}
+          <span className='text-sm'>{count}</span>
+          {isTherMore && <button disabled={!isTherMore} onClick={() => handleCount(1)} className='cursor-pointer'>
+            <Plus size={16} />
+          </button>}
+          {!isTherMore && <span className="text-xs text-muted-foreground"> {stock} items left in stock.</span>}
+        </div>}
     </div>
-  );
+  )
 }
 
 
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { cn } from "@/lib/utils";
 
 export type ItemVideoItemProps = {
   title: string;
   videoUrl: string;
   thumbnail: string;
   description: string;
+  className?: string
   onClick?: (videoUrl: string) => void;
 };
 
-export function VideoItem({ title, videoUrl, thumbnail, description }: ItemVideoItemProps) {
+export function VideoItem({ title, videoUrl, thumbnail, description, className }: ItemVideoItemProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -79,7 +107,10 @@ export function VideoItem({ title, videoUrl, thumbnail, description }: ItemVideo
       <DialogTrigger asChild>
         <motion.div
           whileHover={{ y: -4 }}
-          className="group cursor-pointer min-w-[300px]  flex-shrink-0 bg-white rounded-xl overflow-hidden border border-slate-200  hover:shadow-xl transition-all duration-300"
+          className={cn(
+            "group cursor-pointer min-w-[300px]  flex-shrink-0 bg-white rounded-xl overflow-hidden border border-slate-200  hover:shadow-xl transition-all duration-300",
+            className
+          )}
         >
           {/* Thumbnail Container */}
           <div className="relative aspect-video overflow-hidden bg-slate-900">

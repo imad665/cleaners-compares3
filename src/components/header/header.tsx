@@ -1,9 +1,9 @@
 'use client'
 import Link from 'next/link'
-import { ChevronDown, LayoutDashboard, Loader, Menu, MenuIcon, Plus, ShoppingCart, UserCircle } from 'lucide-react'
+import { ChevronDown, Home, LayoutDashboard, Loader, Menu, MenuIcon, Plus, ShoppingCart, UserCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { ProductSearchBar } from './productSearchBar'
+import { ButtonNeedSignIn, ProductSearchBar } from './productSearchBar'
 import { UserType } from '@/types/next-auth'
 import { ButtonSignOut } from '../home_page/clientComponents/uis'
 import { ContinueWithGoogleAlert } from '../ui/continueWithGoogleAlert'
@@ -38,7 +38,7 @@ export function Logo({ width = 100, height = 20 }: { width?: number, height?: nu
 
     return (
         <Link href="/" className="text-xl font-bold lg:pr-5 ">
-            <Image src={`/uploads/logo.png?v=${version}`} width={width} height={height} alt='logo' />
+            <Image src={`/assets/logo.png?v=${version}`} width={width} height={height} alt='logo' />
         </Link>
     )
 }
@@ -293,7 +293,7 @@ function SiteNav() {
                         <li key={it.label} className="whitespace-nowrap">
                             {it.children ? (
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger className="inline-flex items-center gap-1 hover:text-white transition-colors focus:outline-none">
+                                    <DropdownMenuTrigger className="inline-flex font-bold items-center gap-1 hover:text-white transition-colors focus:outline-none">
                                         {it.label}
                                         <ChevronDown className="h-3.5 w-3.5" />
                                     </DropdownMenuTrigger>
@@ -306,9 +306,9 @@ function SiteNav() {
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             ) : (
-                                <a href={it.href} className="hover:text-white transition-colors">
+                                <Link href={it.href} className="  hover:text-cyan-400 transition-colors font-bold">
                                     {it.label}
-                                </a>
+                                </Link>
                             )}
                         </li>
                     ))}
@@ -335,9 +335,9 @@ function NavDesktop({ user, cart, setOpenDialog, recentOrderCount, notificationD
                         Become a Seller
                     </Button>
                 }
-                {
-                    <ContactDialog textButton={'Report poblem'} />
-                }
+                <ButtonNeedSignIn text="Sell Your Products" buttonClassName="w-full md:w-fit" />
+                {/* <ContactDialog textButton={'Report poblem'} /> */}
+
                 {user &&
                     <NotificationDropdown notificationData={notificationData} />
                 }
@@ -445,20 +445,22 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount, notific
                     <nav className="mt-6 flex flex-col gap-4 text-gray-700">
                         <Link
                             href="/"
-                            className="text-base font-medium hover:text-blue-600 transition"
+                            className="text-base font-medium hover:text-blue-600 transition flex items-center gap-2"
                             onClick={handleLinkClick}
                         >
+                            <Home />
                             Home
                         </Link>
 
                         <Link
                             href="/shopCart"
-                            className="text-base font-medium hover:text-blue-600 transition"
+                            className="text-base font-medium hover:text-blue-600 transition flex items-center gap-2"
                             onClick={handleLinkClick}
                         >
+                            <ShoppingCart />
                             Cart ({cartCount})
                         </Link>
-                        <ContactDialog textButton={'Report poblem'} />
+
 
                         {user ? (
                             <Link
@@ -482,6 +484,7 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount, notific
                                 }} className=' cursor-pointer' variant="outline" size="sm">Sign In</Button>
                             </div>
                         )}
+                        {/* <ContactDialog textButton={'Report poblem'} /> */}
 
                         {user && user.role === 'BUYER' && (
                             <Button
@@ -515,7 +518,7 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount, notific
 
 export function Header({ className = '', recentOrderCount, notificationData }: { className?: string, recentOrderCount?: any, notificationData?: any }) {
     const { cart, user } = useHomeContext();
-    console.log(notificationData, recentOrderCount, ';;;;;;;;;;;;;ddddddddddd;;;;;');
+    /* console.log(notificationData, recentOrderCount, ';;;;;;;;;;;;;ddddddddddd;;;;;'); */
     const [openDialog, setOpenDialog] = useState(false);
     return (
 

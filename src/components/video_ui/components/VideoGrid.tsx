@@ -10,8 +10,8 @@ interface VideoGridProps {
 
 const VideoGrid: React.FC<VideoGridProps> = ({ videos, loading, categoryName }) => {
   return (
-    <div className="py-6 h-[75vh] overflow-auto">
-      <h1 className="text-2xl font-bold text-slate-800 mb-6">{categoryName}</h1>
+    <div className=" pt-8 px-3 overflow-auto">
+      <h1 className="text-2xl font-bold text-slate-800 mb-2">{categoryName}</h1>
       {videos.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-slate-500">
           {!loading ? (

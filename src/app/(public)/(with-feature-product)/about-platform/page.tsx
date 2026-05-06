@@ -13,13 +13,13 @@ export const metadata: Metadata = {
 }
 
 export default async function AboutPlatformPage() {
-    const recentOrderCount = await getRecentOrdersCount();
-    const messages = await getNotifications();
+    /* const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications(); */
 
     return (
         <div>
 
-            <Header recentOrderCount={recentOrderCount} notificationData={messages} />
+            {/* <Header recentOrderCount={recentOrderCount} notificationData={messages} /> */}
             <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
                 {/* Header and Return to Home */}
 

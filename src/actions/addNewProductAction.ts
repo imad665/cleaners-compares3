@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { generateSlug, generateUniqueSlug } from "@/lib/products/slugGen";
 import { deleteImageFileAt } from "@/lib/utils/saveImagesLocaly";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import slugify from "slugify";
 //import { uploadFileToCloud } from "@/lib/cloudStorage"; // You can implement this based on your file upload logic
 
@@ -33,7 +34,7 @@ export async function addNewProductAction(prev: any, formData: FormData) {
     let discountEnd = formData.get('discountEndDate')?.toString().trim();
     const units = parseInt(formData.get('units')?.toString().trim() || "0");
     const imagesFile = formData.getAll('imagesFile') as File[]; // this will be an array of files
-    const imageUrls: string[] = formData.getAll('imageUrls').map(i=>i.toString()); // this will be an array of files
+    const imageUrls: string[] = formData.getAll('imageUrls').map(i => i.toString()); // this will be an array of files
     const videoFile = formData.get('videoFile') as File; // this will be an array of files
     let videoUrl = formData.get('videoUrl'); // this will be an array of files
     const category = formData.get('category')?.toString().trim();
@@ -47,13 +48,13 @@ export async function addNewProductAction(prev: any, formData: FormData) {
     const isIncVAT = vat === 'inc';
 
     //console.log(machineDeliveryCharge,productWeight,isIncVAT,'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-    
+
     // Validate required fields
     /* console.log(submitType,productName,description,product_condition);
     console.log(price,discount,discountEnd,category,subCategory);
     console.log(imagesFile.length,imageUrls.length ,subcategoryId); */
-    
-    if (!submitType || !productName || !description || !product_condition  ||
+
+    if (!submitType || !productName || !description || !product_condition ||
         !price ||
         !category || !subCategory ||
         (imagesFile.length === 0 && imageUrls.length === 0) ||
@@ -87,7 +88,7 @@ export async function addNewProductAction(prev: any, formData: FormData) {
     }
 
 
-    if (!discountEnd && discount>0) {
+    if (!discountEnd && discount > 0) {
         const today = new Date();
         const futureDate = new Date(today);
         futureDate.setDate(today.getDate() + 30);
@@ -104,6 +105,14 @@ export async function addNewProductAction(prev: any, formData: FormData) {
 
     const discountAmount = price * (discount / 100);
     const discountedPrice = price - discountAmount;
+    try {
+        revalidateTag('home-cache')
+    } catch (e) {
+        console.log(e, 'dddddddddddkkfkfk');
+    }
+
+
+
     if (productId) {
         const product = await prisma.product.findFirst({
             where: { id: productId },
@@ -135,9 +144,9 @@ export async function addNewProductAction(prev: any, formData: FormData) {
                 dealEndDate: discountEnd ? new Date(discountEnd + "T00:00:00.000Z") : undefined,
                 dealStartDate: discountEnd ? new Date() : undefined,
                 units: units,
-                delivery_charge:parseFloat(machineDeliveryCharge),
+                delivery_charge: parseFloat(machineDeliveryCharge),
                 weight: parseFloat(productWeight!),
-                isIncVAT:isIncVAT,
+                isIncVAT: isIncVAT,
                 condition: (product_condition as 'USED' | 'NEW'),
                 imagesUrl: imageUrls,
                 videoUrl: videoUrl?.toString() || null, // Optional, it can be null
@@ -149,7 +158,7 @@ export async function addNewProductAction(prev: any, formData: FormData) {
             }
         });
         //console.log(updatedProduct,featuredDuration,';;;;;;;;;;;;');
-        
+
         if (featuredDuration?.toString() && !updatedProduct.isFeatured) {
             const url = await processPayement(featuredDuration.toString(), { productId: updatedProduct.id, type: 'product-feature' });
             await reembedByRefId(productId)
@@ -161,7 +170,7 @@ export async function addNewProductAction(prev: any, formData: FormData) {
     }
     else {
         //console.log(featuredDuration?.toString(),'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
-        
+
         const newProduct = await prisma.product.create({
             data: {
                 title: productName,
@@ -174,10 +183,10 @@ export async function addNewProductAction(prev: any, formData: FormData) {
                 dealStartDate: discountEnd ? new Date() : undefined,
                 units: units,
                 weight: parseFloat(productWeight!),
-                delivery_charge:parseFloat(machineDeliveryCharge),
+                delivery_charge: parseFloat(machineDeliveryCharge),
                 condition: (product_condition as 'USED' | 'NEW'),
                 imagesUrl: imageUrls,
-                isIncVAT:isIncVAT,
+                isIncVAT: isIncVAT,
                 videoUrl: videoUrl?.toString() || null, // Optional, it can be null
                 categoryId: subcategory.id,
                 slug,
@@ -187,13 +196,13 @@ export async function addNewProductAction(prev: any, formData: FormData) {
                 stock
             }
         });
-        
+
         if (featuredDuration?.toString()) {
             const url = await processPayement(featuredDuration.toString(), { productId: newProduct.id, type: 'product-feature' });
             await embedProductsToNeon();
             return { success: true, url, message: 'Product successfully created.' };
         }
-        await embedProductsToNeon(); 
+        await embedProductsToNeon();
         return { success: true, url: '/admin/allProducts', message: 'Product successfully created.' };
     }
 

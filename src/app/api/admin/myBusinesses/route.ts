@@ -2,6 +2,7 @@ import { authOptions } from "@/lib/auth";
 import { deleteCloudinaryFileByUrl, uploadFileToCloud } from "@/lib/cloudStorage";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -105,6 +106,11 @@ export async function POST(req: NextRequest) {
 
             }
         })
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
+        }
 
         return NextResponse.json({ success: true }, { status: 200 });
 
@@ -165,6 +171,11 @@ export async function PATCH(req: NextRequest) {
                 imageUrl,
             }
         })
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
+        }
 
         return NextResponse.json({ success: true }, { status: 200 });
 
@@ -184,7 +195,11 @@ export async function DELETE(req: NextRequest) {
         const deleted = await prisma.businessForSale.delete({
             where: { id }
         })
-
+        try {
+            revalidateTag('home-cache')
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
+        }
         return NextResponse.json({ success: true, message: 'item deleted successfuly.' }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ success: false, error: "failed to delete an item" });

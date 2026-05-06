@@ -1,4 +1,4 @@
- 
+
 import { ArrowUp } from "lucide-react"
 import Link from "next/link"
 import { Logo } from "../header/header"
@@ -30,14 +30,14 @@ const data = [
         data: [
             { name: "youtube", href: "https://www.youtube.com/@amirshahz77" },
             { name: "facebook", href: "/notfound" },
-           /*  { name: "twitter", href: "/notfound" }, */
-            { name: "linkedin", href: "/notfound" }, 
+            /*  { name: "twitter", href: "/notfound" }, */
+            { name: "linkedin", href: "/notfound" },
         ]
     }
 ]
 type ItemDataType = {
     title: string
-    data: {name:string,href:string}[]
+    data: { name: string, href: string }[]
 }
 
 function Item({ title, data }: ItemDataType) {
@@ -47,8 +47,11 @@ function Item({ title, data }: ItemDataType) {
             <ul className="space-y-2">
                 {data.map((d, key) => (
                     <li key={`key_${key}`}>
-                        {d.name === 'Contact Us' ? <ContactDialog /> : 
-                        <Link href={d.href} target="_blank" className="text-gray-300 hover:text-white text-sm">{d.name}</Link>
+                        {d.name === 'Contact Us' ? <div className=" space-y-2 w-full flex flex-col min-[438px]:flex-row gap-4 ">
+                            <ContactDialog />
+                            <ContactDialog textButton={'Report problem'} />
+                        </div> :
+                            <Link href={d.href} target="_blank" className="text-gray-300 hover:text-white text-sm">{d.name}</Link>
                         }
                     </li>
                 ))}
@@ -60,17 +63,17 @@ function Item({ title, data }: ItemDataType) {
 export default function Footer({
     footerData
 }:
-{
-    footerData:any
-}) {
+    {
+        footerData: any
+    }) {
     /* const {footerData} = useHomeProductContext(); */
     //console.log(footerData,'uuuuuuuuuuuuuuuuuuu');
-    const privacyPolicy = footerData.find((f)=>f.key==='privacy-policy')?.href || '/privacy-policy';
+    const privacyPolicy = footerData.find((f) => f.key === 'privacy-policy')?.href || '/privacy-policy';
     const termAndCondition = /* footerData.find(f=>f.key==='termAndCondition')?.href ||  */'/terms-and-conditions';
-    const youtube = footerData.find(f=>f.key==='youtube')?.href || '/notfound';
-    const facebook = footerData.find(f=>f.key==='facebook')?.href || '/notfound';
+    const youtube = footerData.find(f => f.key === 'youtube')?.href || '/notfound';
+    const facebook = footerData.find(f => f.key === 'facebook')?.href || '/notfound';
     /* const twitter = footerData.find(f=>f.key ==='twitter')?.href || '/notfound'; */
-    const linkedin = footerData.find(f=>f.key==='linkedin')?.href || '/notfound';
+    const linkedin = footerData.find(f => f.key === 'linkedin')?.href || '/notfound';
 
     data[1].data[0].href = privacyPolicy;
     data[1].data[1].href = termAndCondition;
@@ -81,7 +84,7 @@ export default function Footer({
     data[2].data[2].href = linkedin;
 
     //console.log(data);
-    
+
     return (
         <footer className="bg-gray-800 text-white">
             <a href="#searchBar" className="bg-gray-700 hover:bg-gray-600 block transition-colors cursor-pointer">
@@ -96,11 +99,11 @@ export default function Footer({
 
             <div className="container mx-auto px-4 py-8">
                 <div className="flex gap-3">
-                    <div className="grow ">
-                        <Logo width={140}/>
+                    <div className="  bg-white/80 h-fit rounded-2xl items-center flex md:mr-8 ">
+                        <Logo width={140} />
                     </div>
 
-                    <div className="grid grow grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
+                    <div className="grid grow grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8">
                         <Item data={data[0].data} title={data[0].title} />
                         <Item data={data[1].data} title={data[1].title} />
                         <Item data={data[2].data} title={data[2].title} />

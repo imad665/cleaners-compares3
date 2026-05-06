@@ -26,7 +26,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { formatDistanceToNow } from "date-fns";
-import { unstable_cache } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { cn } from "@/lib/utils";
 import { BuyerSellerBlock } from "@/components/home_page/BuyerSellerBlock";
 import { CategoryGrid } from "@/components/home_page/CategoryGrid";
@@ -46,41 +46,59 @@ const getHomePageCachedData = unstable_cache(
 export default async function Home() {
   //await prisma.sellerProfile.deleteMany();
   // await prisma.user.deleteMany();
-  const {
-    success,
+  /*  const {
+     //success,
+     //featuredProducts,
+     dealsProducts: deal,
+     //partsAndAccessoirsProducts,
+     //allCategories,
+     //wantedItems,
+     //businessesForSale,
+     //youtubeVideos,
+     //footerData,
+     //recentOrderCount,
+   } = await getAllHomeProducts(); */
+
+
+
+  /* const recentOrderCount = await getRecentOrdersCount();
+  const messages = await getNotifications(); */
+  /* const session = await getServerSession(authOptions);
+  const user = session?.user; */
+  //const services = await getServices(['DRY_CLEANING', 'FINISHING', 'LAUNDRY'])
+
+  const { success, dealsProducts,
+        /* allCategories, */ wantedItems,
     featuredProducts,
-    dealsProducts,
-    //partsAndAccessoirsProducts,
-    allCategories,
-    wantedItems,
-    businessesForSale,
-    youtubeVideos,
-    footerData,
-    //recentOrderCount,
-  } = await getAllHomeProducts();
+    businessesForSale, youtubeVideos,
+    services, } = await (await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/need-cache/homePage`,
+      {
+        next: {
+          revalidate: 3600,
+          tags: ['home-cache']
+        }
+      })).json()
 
-  const recentOrderCount = await getRecentOrdersCount();
-  const messages = await getNotifications();
-  const session = await getServerSession(authOptions);
-  const services = await getServices(['DRY_CLEANING', 'FINISHING', 'LAUNDRY'])
-  const user = session?.user;
 
-  const { buyerInquiries, sellerInquiries } = await getGeneralInquiries(user);
+
+  /* const { buyerInquiries, sellerInquiries } = await getGeneralInquiries(user); */
 
   return (
     <div>
-      <Header recentOrderCount={recentOrderCount} notificationData={[
+      {/* <Header recentOrderCount={recentOrderCount} notificationData={[
         ...(messages || []),
         ...sellerInquiries,
         ...buyerInquiries
-      ]} />
+      ]} /> */}
 
       <main className="">
         <MainImage />
         <BuyerSellerBlock />
         <CategoryGrid />
         {services.length > 0 && <FeaturedEnginners services={services} />}
-        <LimitedTimeDeals initDealsProducts={dealsProducts.editProducts} className={services.length > 0 ? 'bg-blue-50' : 'bg-white'} />
+        <LimitedTimeDeals
+          initDealsProducts={dealsProducts.editProducts}
+          className={services.length > 0 ? 'bg-blue-50' : 'bg-white'} />
         <FeaturedAndProducts
           initFeaturedProducts={featuredProducts.editProducts} />
         <WantedItemAndBusiness
@@ -99,7 +117,7 @@ export default async function Home() {
         <BrandingSlider />
       </main>
       {/* <AddressSearchUK/> */}
-      <Footer footerData={footerData} />
+      {/* <Footer footerData={footerData} /> */}
     </div>
 
   );

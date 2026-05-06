@@ -96,18 +96,18 @@ export const metadata: Metadata = {
 
 export default async function CategoryCards() {
 
-    const [
+    /* const [
         featuredProducts,
         footerData,
     ] = await Promise.all([
         getFeaturedProducts({ page: 1, pageSize: 10 }),
         getFooterData(),
-    ]);
-    const recentOrderCount = await getRecentOrdersCount();
-    const messages = await getNotifications();
+    ]); */
+    /* const recentOrderCount = await getRecentOrdersCount();
+    const messages = await getNotifications(); */
     return (
-        <div className="min-h-screen w-full  flex flex-col">
-            <Header recentOrderCount={recentOrderCount} notificationData={messages} />
+        <div className="w-full  flex flex-col">
+            {/* <Header recentOrderCount={recentOrderCount} notificationData={messages} /> */}
             <section className="bg-secondary/40 border-b">
                 <div className="container mx-auto px-4 py-12 text-center">
                     <h1 className="text-3xl lg:text-5xl font-bold tracking-tight">Engineers & Services</h1>
@@ -136,9 +136,9 @@ export default async function CategoryCards() {
                 </div>
             </div>
 
-            <FeaturedAndProducts
-                initFeaturedProducts={featuredProducts.editProducts} />
-            <Footer footerData={footerData} />
+            {/*  <FeaturedAndProducts
+                initFeaturedProducts={featuredProducts.editProducts} /> */}
+            {/* <Footer footerData={footerData} /> */}
         </div>
 
     );

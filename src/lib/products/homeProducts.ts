@@ -8,6 +8,7 @@ import { Notable } from "next/font/google"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth"
 import { equal } from "assert"
+import { revalidateTag } from "next/cache"
 
 type GetProductsParams = {
     page?: number
@@ -102,7 +103,7 @@ function getFeaturedProductsChunk(where: any, skip: number, pageSize: number) {
 }
 
 export async function getFeaturedProducts({ page = 1, pageSize = 10, isFeatured = true, isRandom = false }: GetProductsParams) {
-    
+
     try {
         const where = isFeatured ? {
             isFeatured: isFeatured,
@@ -251,11 +252,12 @@ async function mockDeals() {
             starsCount: p.ratings?.length,
             units: p.units,
             unitPrice: ((discountedPrice) / (p.units || 1)),
-            priceExcVat: price,
+            priceExcVat: discountedPrice,
+            price: price,
             discountPrice: discountedPrice,
             image: p.imagesUrl[0],
             title: p.title,
-            endDeal: getDealCountdown(dealEndDate),
+            dealCountdown: getDealCountdown(dealEndDate),
             stock: p.stock,
             isIncVAT: p.isIncVAT,
             discountPercentage: discount,
@@ -350,6 +352,8 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
         discountPercentage: 20,
         productId:'7777',
         slug:'/'`
+
+
 
     let editProducts = products.map((p) => {
         const dealCountdown = getDealCountdown(p.dealEndDate);
@@ -747,24 +751,24 @@ export async function getAllHomeProducts() {
         featuredProducts,
         dealsProducts,
         //partsAndAccessoirsProducts,
-        allCategories,
+        /* allCategories, */
     ] = await Promise.all([
         getFeaturedProducts({ page: 1, pageSize: 10, isRandom: true }),
         getDealsProducts({ page: 1, pageSize: 10, isRandom: true }),
         //getPartsAndAccessoirsProducts({ page: 1, pageSize: 10, isRandom: true }),
-        getCategoriesHome(),
+        /* getCategoriesHome(), */
     ])
 
     const [
         wantedItems,
         businessesForSale,
         youtubeVideos,
-        footerData,
+        /* footerData, */
     ] = await Promise.all([
         getWantedItems({ page: 1, pageSize: 10, isRandom: true }),
         getBusinesessForSale({ page: 1, pageSize: 10, isRandom: true }),
         getYoutubeVideos({ page: 1, pageSize: 10, isRandom: true }),
-        getFooterData(),
+        /* getFooterData(), */
     ])
 
 
@@ -773,11 +777,11 @@ export async function getAllHomeProducts() {
         featuredProducts,
         dealsProducts,
         //partsAndAccessoirsProducts,
-        allCategories,
+        /* allCategories, */
         wantedItems,
         businessesForSale,
         youtubeVideos,
-        footerData,
+        /* footerData, */
         //recentOrderCount,
     }
 }
