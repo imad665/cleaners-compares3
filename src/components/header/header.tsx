@@ -38,7 +38,7 @@ export function Logo({ width = 100, height = 20 }: { width?: number, height?: nu
 
     return (
         <Link href="/" className="text-xl font-bold lg:pr-5 ">
-            <Image src={`/assets/logo.png?v=${version}`} width={width} height={height} alt='logo' />
+            <Image src={`/uploads/logo.png?v=${version}`} width={width} height={height} alt='logo' />
         </Link>
     )
 }
@@ -286,7 +286,7 @@ function SiteNav() {
         { label: "Blog", href: "/blog" },
     ];
     return (
-        <nav className="border-t flex items-center  bg-supplier text-white w-full overflow-scroll  ">
+        <nav className="border-t flex items-center  bg-supplier text-white w-full overflow-auto  ">
             <div className="container mx-auto w-fit px-4">
                 <ul className="flex items-center gap-8 overflow-x-auto py-3 text-sm font-medium  ">
                     {items.map((it) => (

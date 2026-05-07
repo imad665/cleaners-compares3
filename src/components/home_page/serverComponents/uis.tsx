@@ -144,14 +144,14 @@ export function ItemFeaturedProduct({
             <div className="relative h-64 w-full bg-slate-50 overflow-hidden  ">
 
                 {/* Floating Units Info (Absolute) */}
-                {isUnits && (
+                {isUnits && false && (
                     <div className="absolute bottom-0 left-0 right-2 z-10 flex gap-1.5 w-full pb-1 pt-5 justify-between bg-gradient-to-t   from-black/90 via-black/40 to-transparent">
-                        {stock && stock < 5 && stock > 0 && (
+                        {/*  {stock && stock < 5 && stock > 0 && (
                             <div className=" ml-1 flex items-center bg-orange-100/90 backdrop-blur-sm text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-orange-200">
                                 Low Stock: {stock}
                             </div>
-                        )}
-                        <div className="flex justify-between items-center gap-1 pr-1">
+                        )} */}
+                        {/*  <div className="flex justify-between items-center gap-1 pr-1">
                             <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded px-1.5 py-0.5 shadow-sm">
                                 <p className="text-slate-400 uppercase text-[8px] font-bold leading-none">Pack Size</p>
                                 <p className="font-bold text-slate-700 text-[10px]">{units} Units</p>
@@ -160,7 +160,7 @@ export function ItemFeaturedProduct({
                                 <p className="text-slate-400 uppercase text-[8px] font-bold leading-none">Per Unit</p>
                                 <p className="font-bold text-slate-700 text-[10px]">£{parsedUnitPrice?.toFixed(2)}</p>
                             </div>
-                        </div>
+                        </div> */}
 
                     </div>
                 )}

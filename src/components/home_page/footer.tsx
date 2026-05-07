@@ -99,7 +99,7 @@ export default function Footer({
 
             <div className="container mx-auto px-4 py-8">
                 <div className="flex gap-3">
-                    <div className="  bg-white/80 h-fit rounded-2xl items-center flex md:mr-8 ">
+                    <div className="  bg-secondary/80 p-2 h-fit rounded-2xl items-center flex md:mr-8 ">
                         <Logo width={140} />
                     </div>
 
