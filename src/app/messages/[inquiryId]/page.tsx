@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { notifySellerOfMessageAction } from "@/actions/actionSellerForm";
+import { Button } from "@/components/ui/button";
+import { Send } from "lucide-react";
 
 export default async function InquiryPage({
     params,
@@ -123,8 +125,8 @@ export default async function InquiryPage({
             </div>
 
 
-            <form action={sendResponse} className="border-t pt-4">
-                <div className="flex gap-2">
+            <form action={sendResponse} className="border-t pt-4 ">
+                <div className="flex gap-2 items-center bottom-0">
                     <input
                         name="response"
                         placeholder="Write your reply..."
@@ -132,12 +134,14 @@ export default async function InquiryPage({
                         className="flex-1 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
 
                     />
-                    <button
+                    <Button
                         type="submit"
-                        className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm"
+                        className="px-4 py-5 bg-primary text-primary-foreground rounded-xl text-sm"
                     >
+                        <Send />
                         Send
-                    </button>
+                    </Button>
+                    <Button className="bg-transparent">{"   . ........."}</Button>
                 </div>
             </form>
 
