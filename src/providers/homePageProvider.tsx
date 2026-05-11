@@ -10,16 +10,16 @@ type CartType = {
 
 interface HomeContextType {
   cart: CartType[];
-  addProduct: (productId: string, quantity: number,isFromCart?:boolean) => void;
-  clearCart:()=>void ,
-  removeProduct:(productId: string)=>void,
+  addProduct: (productId: string, quantity: number, isFromCart?: boolean) => void;
+  clearCart: () => void,
+  removeProduct: (productId: string) => void,
   user: {
     id: string;
     email: string;
     name?: string;
     image?: string;
     role: string;
-  }|undefined|null
+  } | undefined | null
 }
 
 const HomeContext = createContext<HomeContextType | undefined>(undefined);
@@ -37,23 +37,24 @@ interface HomeProviderProps {
 
 export const HomeProvider = ({ children, user }: HomeProviderProps) => {
   const { cart, setCart } = useCartStorage();
-  
-  const removeProduct = (productId:string) => {
+
+
+  const removeProduct = (productId: string) => {
     setCart((prev) => prev.filter((p) => p.productId != productId))
   }
-  
-  const addProduct = (productId: string, quantity: number,isFromCart?:boolean) => {
+
+  const addProduct = (productId: string, quantity: number, isFromCart?: boolean) => {
     const product = cart.find((p) => p.productId === productId);
     if (product) {
       const newQuantity = (product?.quantity || 0) + quantity;
-      
+
       if (newQuantity === 0 && !isFromCart) setCart((prev) => prev.filter((p) => p.productId != productId))
       setCart((prev) => prev.map((p) => ({ ...p, quantity: p.productId === productId ? newQuantity : p.quantity })))
     } else {
       setCart(prev => [...prev, { productId, quantity }])
     }
   }
-  const clearCart = ()=>{
+  const clearCart = () => {
     localStorage.removeItem('cart');
     setCart([])
   }

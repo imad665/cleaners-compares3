@@ -209,3 +209,23 @@ export async function addNewProductAction(prev: any, formData: FormData) {
 
 
 }
+
+
+export async function getExisitingProducts(ids: string[]) {
+    const products = await prisma.product.findMany({
+        where: {
+            id: { in: ids }
+        },
+        select: {
+            id: true
+        }
+    });
+
+    const foundIds = products.map(p => p.id);
+
+    const existingProducts = ids.filter(
+        id => foundIds.includes(id)
+    ) || [];
+
+    return existingProducts;
+}

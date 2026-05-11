@@ -151,7 +151,7 @@ export function ProductSearchBar({
   }
 
   return (
-    <div className="w-full relative max-w-3xl mx-auto">
+    <div className="w-full relative max-w-3xl mx-auto" id='searchBar'>
       {isShowSearch && (
         <div className="relative flex items-center">
           <div className="relative flex-1">

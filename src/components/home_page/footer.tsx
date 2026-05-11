@@ -3,6 +3,7 @@ import { ArrowUp } from "lucide-react"
 import Link from "next/link"
 import { Logo } from "../header/header"
 import { ContactDialog } from "./contact"
+import { BackToTop } from "./clientComponents/backToTop"
 
 const data = [
     {
@@ -87,14 +88,7 @@ export default function Footer({
 
     return (
         <footer className="bg-gray-800 text-white">
-            <a href="#searchBar" className="bg-gray-700 hover:bg-gray-600 block transition-colors cursor-pointer">
-
-                <div className="container mx-auto p-3 text-center flex items-center justify-center">
-                    <ArrowUp className="h-4 w-4 mr-2" size={24} />
-                    <span className="text-sm">Back to top</span>
-                </div>
-
-            </a>
+            <BackToTop />
 
 
             <div className="container mx-auto px-4 py-8">

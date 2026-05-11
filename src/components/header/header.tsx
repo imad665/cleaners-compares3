@@ -324,7 +324,7 @@ function NavDesktop({ user, cart, setOpenDialog, recentOrderCount, notificationD
 
     return (
         <div className="hidden md:flex relative lg:justify-between grow-1  md:justify-end gap-2">
-            <div id='searchBar' className='left hidden lg:block grow-1  max-w-[800px]'>
+            <div className='left hidden lg:block grow-1  max-w-[800px]'>
                 <ProductSearchBar />
             </div>
 
@@ -518,6 +518,8 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount, notific
 
 export function Header({ className = '', recentOrderCount, notificationData }: { className?: string, recentOrderCount?: any, notificationData?: any }) {
     const { cart, user } = useHomeContext();
+    console.log(cart, 'ssssssssssssskdkkdkdd');
+
     /* console.log(notificationData, recentOrderCount, ';;;;;;;;;;;;;ddddddddddd;;;;;'); */
     const [openDialog, setOpenDialog] = useState(false);
     return (
