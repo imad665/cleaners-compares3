@@ -499,7 +499,7 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount, notific
                             </Button>
                         )}
 
-                        {user && <Link href="/contact" className="bg-blue-600 rounded-md p-2 text-center text-white hover:bg-blue-500 cursor-pointer">
+                        {user && <Link onClick={() => setOpen(false)} href="/contact" className="bg-blue-600 rounded-md p-2 text-center text-white hover:bg-blue-500 cursor-pointer">
                             Contact Us
                         </Link>}
                         {user && <ButtonSignOut />}
@@ -518,7 +518,7 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount, notific
 
 export function Header({ className = '', recentOrderCount, notificationData }: { className?: string, recentOrderCount?: any, notificationData?: any }) {
     const { cart, user } = useHomeContext();
-    console.log(cart, 'ssssssssssssskdkkdkdd');
+    //console.log(cart, 'ssssssssssssskdkkdkdd');
 
     /* console.log(notificationData, recentOrderCount, ';;;;;;;;;;;;;ddddddddddd;;;;;'); */
     const [openDialog, setOpenDialog] = useState(false);

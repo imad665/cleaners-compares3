@@ -163,7 +163,7 @@ export function ContactUs() {
     );
 }
 
-export function ContactDialog({ textButton }: { textButton?: string }) {
+export function ContactDialog({ textButton, onClick }: { textButton?: string; onClick?: () => void; }) {
     const [openSignUp, setOpenSignUp] = useState(false);
     const [openSignIn, setOpenSignIn] = useState(false);
     const { user } = useHomeContext();
@@ -175,6 +175,7 @@ export function ContactDialog({ textButton }: { textButton?: string }) {
         } else {
             setOpen(true);
         }
+        if (onClick) onClick()
     }
 
     return (
