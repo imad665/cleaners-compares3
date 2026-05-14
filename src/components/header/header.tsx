@@ -20,6 +20,7 @@ import NotificationBadge from './notificationIcon'
 import { NotificationDropdown } from './notificationButton2'
 import AutoSellerFormDialog from '../forms/autoSellerForm'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
+import { signOut } from 'next-auth/react'
 
 // Temporary state values — replace with auth/cart logic
 
@@ -502,7 +503,7 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount, notific
                         {user && <Link onClick={() => setOpen(false)} href="/contact" className="bg-blue-600 rounded-md p-2 text-center text-white hover:bg-blue-500 cursor-pointer">
                             Contact Us
                         </Link>}
-                        {user && <ButtonSignOut />}
+                        {user && <Button className="cursor-pointer " variant="outline" onClick={() => signOut({ callbackUrl: '/' })}>Log Out</Button>}
                     </nav>
                 </SheetContent>
             </Sheet>

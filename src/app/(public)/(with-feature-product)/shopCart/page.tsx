@@ -554,7 +554,7 @@ function SubTotal({ selectedCart, onCheckoutSuccess }: {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full ">
       {/* Summary Card */}
       <div className="p-4 bg-yellow-50 border border-yellow-100 rounded-lg mx-4 shadow-sm">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

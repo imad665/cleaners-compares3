@@ -23,25 +23,25 @@ const NotificationBadge = ({ count }: { count: number }) => (
   </span>
 );
 
-function getUserMenu(user, cart,sellerStats2) {
+function getUserMenu(user, cart, sellerStats2) {
   // Placeholder data - replace with actual data from your backend
   const sellerStats = {
     soldProducts: 0, // Replace with actual count
     pendingOrders: 0, // Replace with actual count
   };
-  
-  if (sellerStats2){
-    sellerStats.pendingOrders=sellerStats2.unreadSellerOrders;
-    sellerStats.soldProducts= sellerStats2.unreadBuyerOrders;
+
+  if (sellerStats2) {
+    sellerStats.pendingOrders = sellerStats2.unreadSellerOrders;
+    sellerStats.soldProducts = sellerStats2.unreadBuyerOrders;
   }
 
   if (user.role === 'ADMIN') {
     return [
       { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
-     /*  { label: "My Products", icon: Box, path: "/admin/allProducts" }, */
+      /*  { label: "My Products", icon: Box, path: "/admin/allProducts" }, */
       /* { label: "My Wanted Items", icon: Heart, path: "/admin/myWantedItems" }, */
       /* { label: "My Engineers", icon: ServerIcon, path: "/admin/myServices" }, */
-     /*  { label: "My Businesses for Sale", icon: ShoppingCart, path: "/admin/myBusinessesForSale" }, */
+      /*  { label: "My Businesses for Sale", icon: ShoppingCart, path: "/admin/myBusinessesForSale" }, */
       { label: "Videos", icon: Video, path: "/admin/myVideos" },
       /* { 
         label: "Orders Placed", 
@@ -60,17 +60,17 @@ function getUserMenu(user, cart,sellerStats2) {
     return [
       { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
       { label: "Add Products", icon: Box, path: "/admin/allProducts" },
-      { 
-        label: "Orders Placed", 
-        icon: CheckCircle, 
+      {
+        label: "Orders Placed",
+        icon: CheckCircle,
         path: "/orders",
-        badge: sellerStats.soldProducts 
+        badge: sellerStats.soldProducts
       },
-      { 
-        label: "Orders Received", 
-        icon: ListOrdered, 
+      {
+        label: "Orders Received",
+        icon: ListOrdered,
         path: "/admin/orders",
-        badge: sellerStats.pendingOrders 
+        badge: sellerStats.pendingOrders
       },
       { label: "Add Wanted Items", icon: Heart, path: "/admin/myWantedItems" },
       { label: "Add Engineers", icon: ServerIcon, path: "/admin/myServices" },
@@ -79,17 +79,17 @@ function getUserMenu(user, cart,sellerStats2) {
   } else {
     const cartCount = cart.reduce((sum, prev) => sum + prev.quantity, 0);
     return [
-      { 
-        label: `Cart`, 
-        icon: ShoppingCart, 
+      {
+        label: `Cart`,
+        icon: ShoppingCart,
         path: '/shopCart',
-        badge: cartCount > 0 ? cartCount : undefined 
+        badge: cartCount > 0 ? cartCount : undefined
       },
-      { 
-        label: "Orders Placed", 
-        icon: CheckCircle, 
+      {
+        label: "Orders Placed",
+        icon: CheckCircle,
         path: "/orders",
-        badge: sellerStats.soldProducts 
+        badge: sellerStats.soldProducts
       },
     ];
   }
@@ -99,7 +99,7 @@ import { signOut } from "next-auth/react";
 import { useHomeContext } from "@/providers/homePageProvider";
 import NotificationBadge2 from "./notificationIcon";
 
-const UserDropdownMenu = ({ user , recentOrderCount}: { user: any, recentOrderCount:any }) => {
+const UserDropdownMenu = ({ user, recentOrderCount }: { user: any, recentOrderCount: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -107,7 +107,7 @@ const UserDropdownMenu = ({ user , recentOrderCount}: { user: any, recentOrderCo
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = () => setIsOpen(false);
   //console.log(recentOrderCount,';..................');
-  const isRecentOrders = recentOrderCount && (recentOrderCount.unreadSellerOrders!=0 || recentOrderCount.unreadBuyerOrders!=0)
+  const isRecentOrders = recentOrderCount && (recentOrderCount.unreadSellerOrders != 0 || recentOrderCount.unreadBuyerOrders != 0)
   const total = recentOrderCount?.unreadBuyerOrders + recentOrderCount?.unreadSellerOrders || 0;
   const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -138,15 +138,15 @@ const UserDropdownMenu = ({ user , recentOrderCount}: { user: any, recentOrderCo
             className="w-8 h-8 rounded-full border-2"
           />
         ) : (
-          
-            <UserCircle className="w-8 h-8 text-gray-600" />
-             
-          
+
+          <UserCircle className="w-8 h-8 text-gray-600" />
+
+
         )}
         {/* Notification dot for sellers */}
         {user?.role === 'SELLER' && isRecentOrders && (
           <div className="absolute top-0 right-0   bg-white rounded-full">
-             <NotificationBadge2 count={total}/>
+            <NotificationBadge2 count={total} />
           </div>
         )}
       </button>
@@ -167,7 +167,7 @@ const UserDropdownMenu = ({ user , recentOrderCount}: { user: any, recentOrderCo
           </div>
 
           <div className="py-1">
-            {getUserMenu(user, cart,recentOrderCount).map((item) => (
+            {getUserMenu(user, cart, recentOrderCount).map((item) => (
               <button
                 key={item.label}
                 onClick={() => navigateTo(item.path)}
@@ -183,7 +183,9 @@ const UserDropdownMenu = ({ user , recentOrderCount}: { user: any, recentOrderCo
 
             <div className="border-t mt-1">
               <button
-                onClick={() => signOut()}
+                onClick={() => {
+                  signOut({ callbackUrl: '/' })
+                }}
                 className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center text-gray-700"
               >
                 <LogOut className="w-4 h-4 mr-2" />
