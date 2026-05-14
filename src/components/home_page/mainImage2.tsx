@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Check, Plus, Youtube } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function BigButton({ text, onClick, disabled }: { text: string, onClick: () => void, disabled?: boolean }) {
   return (
@@ -42,7 +43,7 @@ export function BigButton({ text, onClick, disabled }: { text: string, onClick: 
 
 export function MainImage() {
   const [activeImage, setActiveImage] = useState(0);
-
+  const router = useRouter();
   const slides = [
     { src: '/assets/hero-washer.jpg', title: 'Industrial Washer Extractor', price: '£22,000.00' },
     { src: '/assets/hero-boiler-part.jpg', title: 'Boiler Spare Parts', price: null },
@@ -73,7 +74,7 @@ export function MainImage() {
           </div>
 
           <div className="mt-6 flex flex-col gap-3 md:flex-row">
-            <button className="px-6 py-3 rounded-lg font-medium bg-secondary text-secondary-foreground border hover:bg-secondary/80">
+            <button onClick={() => router.push("/about-platform")} className="px-6 py-3 cursor-pointer rounded-lg font-medium bg-secondary text-secondary-foreground border hover:bg-secondary/80">
               Learn more about our platform
             </button>
             {/* <ButtonNeedSignIn text="Sell Your Products" buttonClassName="w-full md:w-fit" /> */}

@@ -28,9 +28,9 @@ export default async function AboutPlatformPage() {
 
                 {/* Hero Section */}
                 <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-purple-700 text-white">
-                    <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:30px_30px]" />
+                    <div className="absolute inset-0 top-0 bg-grid-white/[0.02] bg-[size:30px_30px]" />
                     <div className="container mx-auto px-4 py-20 relative">
-                        <div className="container mx-auto px-4 pt-4">
+                        <div className="container mx-auto px-4 pt-4 absolute top-0">
                             <Link
                                 href="/"
                                 className="inline-flex items-center gap-2 text-white-600 hover:text-blue-100 font-medium transition-colors duration-300 group"
