@@ -84,7 +84,7 @@ export function MainImage() {
             <Youtube className="h-6 w-6 text-youtube" />
             <span>
               Trusted by professionals, supported by our YouTube channel with{" "}
-              <a href="#" className="text-primary font-semibold underline">1K+ subscribers.</a>
+              <a href="https://www.youtube.com/@amirshahz77" className="text-primary font-semibold underline">1K+ subscribers.</a>
             </span>
           </div>
         </div>
