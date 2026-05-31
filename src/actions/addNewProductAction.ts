@@ -8,7 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { generateSlug, generateUniqueSlug } from "@/lib/products/slugGen";
 import { deleteImageFileAt } from "@/lib/utils/saveImagesLocaly";
 import { getServerSession } from "next-auth";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import slugify from "slugify";
 //import { uploadFileToCloud } from "@/lib/cloudStorage"; // You can implement this based on your file upload logic
 
@@ -228,4 +228,34 @@ export async function getExisitingProducts(ids: string[]) {
     ) || [];
 
     return existingProducts;
+}
+
+
+export async function updateProductStatusAction(productId: string, newStatus: string) {
+    const session = await getServerSession();
+    if (!session?.user) throw new Error('Unauthorized');
+
+    // Verify ownership
+    const product = await prisma.product.findUnique({
+        where: { id: productId },
+        select: { sellerId: true },
+    });
+    /*if (!product || product.sellerId !== session.user.id) {
+        throw new Error('You can only update your own products');
+    }*/
+
+    // Validate against ListingStatus enum values
+    const allowed = ['AVAILABLE', 'UNDER_OFFER', 'SOLD'];
+    if (!allowed.includes(newStatus)) {
+        throw new Error('Invalid status value');
+    }
+
+    // Update the new listingStatus field
+    await prisma.product.update({
+        where: { id: productId },
+        data: { listingStatus: newStatus as any }, // cast if needed
+    });
+
+    revalidatePath('/admin/allProducts');
+    return { success: true, message: `Listing status updated to ${newStatus}` };
 }

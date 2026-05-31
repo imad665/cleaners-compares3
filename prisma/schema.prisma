@@ -182,6 +182,7 @@ model Product {
   featuredEndDate    DateTime?
   featuredStartDate  DateTime?
   status             ProductStatus    @default(HIDDEN)
+  listingStatus      ListingStatus    @default(AVAILABLE) // NEW: for seller to set
   units              Int
   featureDays        String?
   weight             Float? // weight or delivery_charge if product is machine
@@ -508,4 +509,10 @@ enum ServiceCategory {
   LAUNDRY
   DRY_CLEANING
   FINISHING
+}
+
+enum ListingStatus {
+  AVAILABLE
+  UNDER_OFFER
+  SOLD
 }

@@ -1,15 +1,17 @@
-'use client'
+'use client';
+
 import { useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, Eye, Star, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
+
 import Badge from '@/components/adminDashboard/shared/Badge';
 import Button from '@/components/adminDashboard/shared/Button';
 import Table from '@/components/adminDashboard/shared/Table';
 import { AddNewProductForm } from '@/components/forms/addNewProductForm';
-import { toast } from 'sonner';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { updateProductStatusAction } from '@/actions/addNewProductAction';
 
-
-// Define the product type
+// Product type definition
 interface Product {
     id: string;
     name: string;
@@ -24,139 +26,42 @@ interface Product {
     featuredEndDate: string;
     subCategoryId: string;
     isDealActive: boolean;
-    discountPrice: boolean;
+    discountPrice: number | false;
     stockCount: number;
-
+    listingStatus: string; // AVAILABLE | Under Offer | SOLD
+    // additional fields used in edit form
+    description?: string;
+    discountPercentage?: number;
+    imagesUrl?: string[];
+    condition?: string;
+    weight?: string;
+    videoUrl?: string;
+    isIncVAT?: boolean;
+    delivery_charge?: number;
+    featureDays?: number;
+    dealEndDateFormate?: string;
 }
 
 const AllProducts = () => {
-    // Mock products data
-    /* const initProductsData: Product[] = [
-        {
-            id: 1,
-            name: 'Industrial Washing Machine 50kg',
-            category: 'Machines',
-            subcategory: 'Washing Machines',
-            price: '$3,499',
-            status: 'Active',
-            featured: true,
-            date: '2023-05-15',
-            stock: 5
-        },
-        {
-            id: 2,
-            name: 'Dry Cleaning Solvent (20L)',
-            category: 'Sundries',
-            subcategory: 'Chemicals',
-            price: '$89',
-            status: 'Active',
-            featured: false,
-            date: '2023-05-12',
-            stock: 28
-        },
-        {
-            id: 3,
-            name: 'Filter Assembly Kit',
-            category: 'Parts',
-            subcategory: 'Filters',
-            price: '$129',
-            status: 'Pending',
-            featured: false,
-            date: '2023-05-10',
-            stock: 12
-        },
-        {
-            id: 4,
-            name: 'Commercial Dryer',
-            category: 'Machines',
-            subcategory: 'Dryers',
-            price: '$2,199',
-            status: 'Active',
-            featured: true,
-            date: '2023-05-08',
-            stock: 3
-        },
-        {
-            id: 5,
-            name: 'Stain Remover (Bulk 5L)',
-            category: 'Sundries',
-            subcategory: 'Chemicals',
-            price: '$45',
-            status: 'Out of Stock',
-            featured: false,
-            date: '2023-05-05',
-            stock: 0
-        },
-        {
-            id: 6,
-            name: 'Drive Belt - Universal',
-            category: 'Parts',
-            subcategory: 'Belts & Drives',
-            price: '$22',
-            status: 'Active',
-            featured: false,
-            date: '2023-05-03',
-            stock: 45
-        },
-        {
-            id: 7,
-            name: 'Press Machine - Heavy Duty',
-            category: 'Machines',
-            subcategory: 'Pressing Equipment',
-            price: '$1,899',
-            status: 'Active',
-            featured: false,
-            date: '2023-04-28',
-            stock: 2
-        },
-        {
-            id: 8,
-            name: 'Laundry Management Software (License)',
-            category: 'Software',
-            subcategory: 'Management Systems',
-            price: '$499',
-            status: 'Active',
-            featured: true,
-            date: '2023-04-25',
-            stock: 10
-        },
-        {
-            id: 9,
-            name: 'Steam Iron - Professional',
-            category: 'Machines',
-            subcategory: 'Ironing Equipment',
-            price: '$149',
-            status: 'Active',
-            featured: false,
-            date: '2023-04-20',
-            stock: 8
-        },
-        {
-            id: 10,
-            name: 'Spot Cleaning Gun',
-            category: 'Sundries',
-            subcategory: 'Cleaning Tools',
-            price: '$75',
-            status: 'Low Stock',
-            featured: false,
-            date: '2023-04-18',
-            stock: 3
-        },
-    ]; */
+    const router = useRouter();
     const searchParams = useSearchParams();
     const paymentSuccess = searchParams.get('paymentSuccess');
     const days = searchParams.get('days');
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    //const [isDeleting, setIsDeleting] = useState(false);
-    //const [isView, setIsView] = useState(false);
-    const [productsData, setProductsData] = useState<any[]>([]);
+
+    // State
+    const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState([]);
-    const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
-    const router = useRouter();
-    const [toastShown, setToastShown] = useState(false); // prevents duplicate toast
+    const [refresh, setRefresh] = useState(false);
+    const [updatingStatusId, setUpdatingStatusId] = useState<string | null>(null);
+
+    // Edit/Delete modals
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    // Toast for payment success (from URL params)
+    const [toastShown, setToastShown] = useState(false);
     useEffect(() => {
         if (!toastShown && paymentSuccess) {
             if (paymentSuccess === 'true') {
@@ -164,17 +69,15 @@ const AllProducts = () => {
             } else if (paymentSuccess === 'false') {
                 toast.error('❌ Payment failed or was canceled.');
             }
-
-            setToastShown(true); // prevent toast on rerender
-
-            // OPTIONAL: remove params from URL after showing toast
-            const newUrl = window.location.pathname;
-            router.replace(newUrl);
+            setToastShown(true);
+            router.replace('/admin/allProducts'); // clean URL
         }
     }, [paymentSuccess, days, toastShown, router]);
+
+    // Fetch products
     useEffect(() => {
-        setLoading(true);
         const fetchProducts = async () => {
+            setLoading(true);
             try {
                 const res = await fetch('/api/admin/myProducts');
                 if (!res.ok) {
@@ -183,38 +86,58 @@ const AllProducts = () => {
                     return;
                 }
                 const { products, categories } = await res.json();
+                setProducts(products);
                 setCategories(categories);
-                setProductsData(products);
-                //console.log(products, '8888888888888');
             } catch (error) {
-                console.error('failes to fetch all product ', error);
-                toast.error('failed to fetched all products');
+                console.error('Failed to fetch products', error);
+                toast.error('Failed to load products');
             } finally {
                 setLoading(false);
             }
-
-        }
+        };
         fetchProducts();
-    }, [refresh])
+    }, [refresh]);
 
+    // Handle status change
+    const handleStatusChange = async (productId: string, newStatus: string) => {
+        setUpdatingStatusId(productId);
+        try {
+            const result = await updateProductStatusAction(productId, newStatus);
+            if (result.success) {
+                // Optimistic update
+                setProducts(prev =>
+                    prev.map(p => (p.id === productId ? { ...p, listingStatus: newStatus } : p))
+                );
+                toast.success(result.message);
+            } else {
+                toast.error(result.message || 'Failed to update status');
+            }
+        } catch (err: any) {
+            console.error(err);
+            toast.error(err.message || 'Something went wrong');
+        } finally {
+            setUpdatingStatusId(null);
+        }
+    };
 
-    // Table columns configuration
+    // Table columns (including Status)
     const columns = [
         {
             header: 'Product Name',
             accessor: (product: Product) => (
-                <div title={product.name} className='space-y-1 max-w-60 overflow-hidden overflow-ellipsis'>
-                    <p>{product.name}</p>
-                    <div className='flex gap-2 flex-col'>
-                        {product.featured &&
-                            <Badge variant='success' className='text-xs rounded-2xl '>
-                                Featured until <span className='px-2'> {product.featuredEndDate}</span>
-                            </Badge>}
-                        {product.isDealActive &&
-                            <Badge variant='info' className='text-xs rounded-2xl '>
+                <div className="space-y-1 max-w-60 overflow-hidden">
+                    <p className="truncate" title={product.name}>{product.name}</p>
+                    <div className="flex gap-2 flex-col">
+                        {product.featured && (
+                            <Badge variant="success" className="text-xs rounded-2xl">
+                                Featured until {product.featuredEndDate}
+                            </Badge>
+                        )}
+                        {product.isDealActive && (
+                            <Badge variant="info" className="text-xs rounded-2xl">
                                 Deal ends on {product.dealEndDate}
-                            </Badge>}
-
+                            </Badge>
+                        )}
                     </div>
                 </div>
             ),
@@ -232,61 +155,58 @@ const AllProducts = () => {
             header: 'Price',
             accessor: (product: Product) => (
                 <div>
-                    {product.discountPrice ? <p className="text-xs text-muted-foreground mt-2 flex flex-col gap-2">
-                        <span className="line-through mr-2">£{product.price}</span>
-                        <span>✅ New price £{product.discountPrice}</span>
-                    </p> :
-                        <p>£{product.price}</p>
-                    }
+                    {product.discountPrice ? (
+                        <div className="text-xs">
+                            <span className="line-through mr-2">£{product.price}</span>
+                            <span className="font-medium">£{product.discountPrice}</span>
+                        </div>
+                    ) : (
+                        <span>£{product.price}</span>
+                    )}
                 </div>
             ),
         },
         {
             header: 'Units',
             accessor: (product: Product) => {
-                const getStockVariant = () => {
-                    if (product.stock === 0) return 'danger';
-                    if (product.stock <= 5) return 'warning';
-                    return 'success';
-                };
-                return <div className='flex flex-col'>
-                    <Badge variant={getStockVariant()}>{product.stock}</Badge>
-                    <p className='text-xs text-muted-foreground'>stock:{product.stockCount}</p>
-                </div>;
+                const variant = product.stock === 0 ? 'danger' : product.stock <= 5 ? 'warning' : 'success';
+                return (
+                    <div className="flex flex-col">
+                        <Badge variant={variant}>{product.stock}</Badge>
+                        <span className="text-xs text-muted-foreground">stock: {product.stockCount}</span>
+                    </div>
+                );
             },
         },
-
+        // NEW STATUS COLUMN
+        {
+            header: 'Listing Status',
+            accessor: (product: Product) => (
+                <select
+                    value={product.listingStatus}
+                    onChange={(e) => handleStatusChange(product.id, e.target.value)}
+                    disabled={updatingStatusId === product.id}
+                    className="border rounded px-2 py-1 text-sm bg-white disabled:opacity-50 cursor-pointer"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <option value="AVAILABLE">AVAILABLE</option>
+                    <option value="UNDER_OFFER">Under Offer</option>
+                    <option value="SOLD">SOLD</option>
+                </select>
+            ),
+        },
         {
             header: 'Date Added',
             accessor: 'date',
         },
     ];
 
-    // Handle action buttons
-    const handleView = (product: Product) => {
-        //console.log('View product:', product);
-        // Navigate to product detail view
-    };
-
+    // Handlers for edit/delete
     const handleEdit = (product: Product) => {
-        const p = productsData.find((p) => p.id === product.id);
-        //console.log('Edit product:', p);
-        setSelectedProduct(p);
+        const fullProduct = products.find(p => p.id === product.id);
+        setSelectedProduct(fullProduct || null);
         setIsEditing(true);
-        // Navigate to edit product form
     };
-
-    const onSuccessEditing = () => {
-        setRefresh(v => !v)
-        setCategories([]);
-        setProductsData([]);
-        setSelectedProduct(null);
-        setIsEditing(false);
-    }
-    const onFailedEditing = () => {
-        //setSelectedProduct(null);
-        //setIsEditing(false);
-    }
 
     const handleDelete = (product: Product) => {
         setSelectedProduct(product);
@@ -294,42 +214,39 @@ const AllProducts = () => {
     };
 
     const confirmDelete = async () => {
-        if (selectedProduct) {
-            //console.log('Deleting product:', selectedProduct);
-            // Perform delete action
-            try {
-                const res = await fetch('/api/admin/allProducts', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: selectedProduct.id })
-                })
-                if (res.ok) {
-                    const { message } = await res.json();
-                    toast.success(message);
-                } else {
-                    const { error } = await res.json();
-                    toast.error(error);
-                }
-            } catch (error) {
-                toast.error('failed to delete product');
+        if (!selectedProduct) return;
+        try {
+            const res = await fetch('/api/admin/allProducts', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: selectedProduct.id }),
+            });
+            if (res.ok) {
+                const { message } = await res.json();
+                toast.success(message);
+                setRefresh(prev => !prev);
+            } else {
+                const { error } = await res.json();
+                toast.error(error);
             }
-
+        } catch {
+            toast.error('Failed to delete product');
+        } finally {
             setShowDeleteModal(false);
             setSelectedProduct(null);
-            setRefresh(v => !v);
         }
     };
 
-    const handleFeature = (product: Product) => {
-        //console.log('Toggle feature for product:', product);
-        // Update featured status
+    const onSuccessEditing = () => {
+        setRefresh(prev => !prev);
+        setSelectedProduct(null);
+        setIsEditing(false);
     };
 
     return (
-        <div className='w-full relative'>
+        <div className="w-full relative">
             <div className="space-y-6">
+                {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900">All Products</h1>
@@ -347,76 +264,56 @@ const AllProducts = () => {
                         </Button>
                     </div>
                 </div>
-                {loading ? <div className="flex justify-center mt-10">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-                </div> :
+
+                {/* Products Table */}
+                {loading ? (
+                    <div className="flex justify-center mt-10">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+                    </div>
+                ) : (
                     <Table
                         columns={columns}
-                        data={productsData}
+                        data={products}
                         keyField="id"
-                        searchable={true}
-                        filterable={true}
-                        pagination={true}
+                        searchable
+                        filterable
+                        pagination
                         itemsPerPage={7}
                         actions={(product: Product) => (
                             <div className="flex space-x-2 justify-end">
-                                {/* <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleView(product);
-                            }}
-                            className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
-                            title="View Product"
-                        >
-                            <Eye size={18} />
-                        </button> */}
                                 <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleEdit(product);
-                                    }}
+                                    onClick={(e) => { e.stopPropagation(); handleEdit(product); }}
                                     className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
                                     title="Edit Product"
                                 >
                                     <Edit2 size={18} />
                                 </button>
                                 <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDelete(product);
-                                    }}
+                                    onClick={(e) => { e.stopPropagation(); handleDelete(product); }}
                                     className="p-1 text-gray-500 hover:text-red-600 transition-colors"
                                     title="Delete Product"
                                 >
                                     <Trash2 size={18} />
                                 </button>
-
                             </div>
                         )}
-                        onRowClick={handleView}
+                        onRowClick={() => { }} // optional, can be left empty
                     />
-                }
-
+                )}
 
                 {/* Delete Confirmation Modal */}
                 {showDeleteModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-lg p-6 max-w-md mx-4 md:mx-auto">
+                        <div className="bg-white rounded-lg p-6 max-w-md mx-4">
                             <h3 className="text-lg font-medium text-gray-900 mb-4">Confirm Delete</h3>
                             <p className="text-sm text-gray-500 mb-4">
                                 Are you sure you want to delete "{selectedProduct?.name}"? This action cannot be undone.
                             </p>
                             <div className="flex justify-end space-x-3">
-                                <Button
-                                    variant="outline"
-                                    onClick={() => setShowDeleteModal(false)}
-                                >
+                                <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
                                     Cancel
                                 </Button>
-                                <Button
-                                    variant="danger"
-                                    onClick={confirmDelete}
-                                >
+                                <Button variant="danger" onClick={confirmDelete}>
                                     Delete
                                 </Button>
                             </div>
@@ -425,49 +322,50 @@ const AllProducts = () => {
                 )}
             </div>
 
-            {isEditing && <div className='w-full z-10000 absolute top-0 bg-black/10'>
-                <div className='px-6 sticky z-1000 top-0 w-full items-center flex justify-between bg-gray-700 text-white  p-2'>
-                    <h2 className='font-bold  text-xl'>Edit Product</h2>
-                    <button
-                        onClick={() => setIsEditing(false)}
-                        className='p-2 cursor-pointer hover:bg-gray-500'>
-                        <X size={24} />
-                    </button>
+            {/* Edit Product Panel */}
+            {isEditing && selectedProduct && (
+                <div className="fixed inset-0 z-50 bg-black/50 overflow-auto">
+                    <div className="bg-white min-h-screen w-full max-w-4xl mx-auto my-8 rounded-lg shadow-xl">
+                        <div className="sticky top-0 bg-gray-700 text-white px-6 py-3 flex justify-between items-center rounded-t-lg">
+                            <h2 className="text-xl font-bold">Edit Product</h2>
+                            <button onClick={() => setIsEditing(false)} className="p-1 hover:bg-gray-600 rounded">
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <div className="p-6">
+                            <AddNewProductForm
+                                onSuccessEditing={onSuccessEditing}
+                                onFailedEditing={() => setIsEditing(false)}
+                                name={selectedProduct.name}
+                                productId={selectedProduct.id}
+                                isIncVAT={selectedProduct.isIncVAT}
+                                machineDeliveryCharge={selectedProduct.delivery_charge}
+                                description={selectedProduct.description}
+                                discount={selectedProduct.discountPercentage}
+                                discountEnd={selectedProduct.dealEndDate}
+                                imagesUrl={selectedProduct.imagesUrl}
+                                subCategoryId={selectedProduct.subCategoryId}
+                                price={selectedProduct.price}
+                                status={selectedProduct.status}
+                                categories={categories}
+                                productionCondition={selectedProduct.condition}
+                                stockQuantity={selectedProduct.stock}
+                                mainCategory={selectedProduct.category}
+                                subCategory={selectedProduct.subcategory}
+                                featureDays={selectedProduct.featureDays}
+                                weight={selectedProduct.weight}
+                                videoUrl={selectedProduct.videoUrl}
+                                stock={selectedProduct.stockCount}
+                                isFeatured={selectedProduct.featured}
+                                dealeEnd={selectedProduct.dealEndDateFormate}
+                                isEditing={true}
+                            />
+                        </div>
+                    </div>
                 </div>
-                <div className='h-full overflow-auto mb-30 mt-0'>
-
-                    <AddNewProductForm
-                        onSuccessEditing={onSuccessEditing}
-                        onFailedEditing={onFailedEditing}
-                        name={selectedProduct?.name}
-                        productId={selectedProduct?.id}
-                        isIncVAT={selectedProduct?.isIncVAT}
-                        machineDeliveryCharge={selectedProduct?.delivery_charge}
-                        // @ts-ignore
-                        description={selectedProduct?.description}
-                        discount={selectedProduct?.discountPercentage}
-                        discountEnd={selectedProduct?.dealEndDate}
-                        imagesUrl={selectedProduct?.imagesUrl}
-                        subCategoryId={selectedProduct?.subCategoryId}
-                        price={selectedProduct?.price}
-                        status={selectedProduct?.status}
-                        categories={categories}
-                        productionCondition={selectedProduct?.condition}
-                        stockQuantity={selectedProduct?.stock}
-                        mainCategory={selectedProduct?.category}
-                        subCategory={selectedProduct?.subcategory}
-                        featureDays={selectedProduct?.featureDays}
-                        weight={selectedProduct?.weight}
-                        videoUrl={selectedProduct?.videoUrl}
-                        stock={selectedProduct?.stockCount}
-                        isFeatured={selectedProduct?.featured}
-                        dealeEnd={selectedProduct?.dealEndDateFormate}
-                        isEditing={true} />
-                </div>
-            </div>}
+            )}
             <div className='w-[100vw] h-30'> </div>
         </div>
-
     );
 };
 

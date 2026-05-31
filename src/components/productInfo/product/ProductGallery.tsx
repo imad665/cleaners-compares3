@@ -3,15 +3,18 @@ import { ChevronLeft, ChevronRight, Play, X, ZoomIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 interface ProductGalleryProps {
   images: string[];
   videoUrl?: string;
+  listingStatus?: 'SOLD' | 'AVAILABLE' | 'UNDER_OFFER'
 }
 
-export default function ProductGallery({ images, videoUrl }: ProductGalleryProps) {
+export default function ProductGallery({ images, videoUrl, listingStatus = 'AVAILABLE' }: ProductGalleryProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showLightbox, setShowLightbox] = useState(false);
+  console.log(listingStatus, 'cccccccccccccccccccddddffdfd');
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -51,6 +54,8 @@ export default function ProductGallery({ images, videoUrl }: ProductGalleryProps
             </div>
           </DialogContent>
         </Dialog>
+
+
 
         {/* Navigation arrows */}
         {images.length > 1 && (
@@ -178,6 +183,7 @@ export default function ProductGallery({ images, videoUrl }: ProductGalleryProps
           ))}
         </div>
       )}
+
     </div>
   );
 }

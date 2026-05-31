@@ -12,29 +12,29 @@ import { useProductData } from '@/hooks/useProductData';
 import { FeaturedAndProducts } from '../home_page/featured_product';
 
 type ProductDetailType = {
-  categorySlug : string
-  subcategorySlug :string
-  productSlug :string
-  
+  categorySlug: string
+  subcategorySlug: string
+  productSlug: string
+
 }
 
 export default function ProductDetailPage(
   {
     categorySlug,
     subcategorySlug,
-    productSlug 
+    productSlug
   }:
-  {
-    categorySlug:string,
-    subcategorySlug:string,
-    productSlug:string,
- 
-  }
+    {
+      categorySlug: string,
+      subcategorySlug: string,
+      productSlug: string,
+
+    }
 ) {
   const { product, reviews, isLoading, error } = useProductData(categorySlug, subcategorySlug, productSlug);
   //const [selectedVariant, setSelectedVariant] = useState(0);
   //console.log(product,'iiiiiiiiiiiiiiiiidddddddd');
-  
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-16 flex items-center justify-center min-h-[70vh]">
@@ -89,11 +89,12 @@ export default function ProductDetailPage(
         <ProductGallery
           images={product.images}
           videoUrl={product.videoUrl}
+          listingStatus={product.listingStatus}
         />
 
         {/* Product Info */}
         <ProductInfo
-          product={product} 
+          product={product}
         />
       </div>
 
@@ -107,7 +108,7 @@ export default function ProductDetailPage(
 
       {/* Related Products */}
       {/* <RelatedProducts products={relatedProducts} /> */}
-      
+
     </div>
   );
 }

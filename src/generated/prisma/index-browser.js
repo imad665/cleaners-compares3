@@ -264,6 +264,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   featuredEndDate: 'featuredEndDate',
   featuredStartDate: 'featuredStartDate',
   status: 'status',
+  listingStatus: 'listingStatus',
   units: 'units',
   featureDays: 'featureDays',
   weight: 'weight',
@@ -514,6 +515,12 @@ exports.ProductStatus = exports.$Enums.ProductStatus = {
   HIDDEN: 'HIDDEN',
   ACTIVE: 'ACTIVE',
   DELETING: 'DELETING'
+};
+
+exports.ListingStatus = exports.$Enums.ListingStatus = {
+  AVAILABLE: 'AVAILABLE',
+  UNDER_OFFER: 'UNDER_OFFER',
+  SOLD: 'SOLD'
 };
 
 exports.OrderPaymentStatus = exports.$Enums.OrderPaymentStatus = {

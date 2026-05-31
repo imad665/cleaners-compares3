@@ -1,5 +1,5 @@
 'use client'
-import { ChevronLeft, ChevronRight, Clock, LucideIcon, MessageCircle, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, LucideIcon, MessageCircle, Play, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import StarsUi from "../startUi";
 import { AddCartButton } from "../clientComponents/uis";
@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useHomeContext } from "@/providers/homePageProvider";
 import { SignInUpModal } from "@/components/header/header";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 // Helper function to format prices
 const formatPrice = (price: number | string): string => {
@@ -112,6 +113,7 @@ export type ItemProps = {
     isOldProduct: boolean,
     discountPercentage: number,
     isIncVAT: boolean,
+    listingStatus: "SOLD" | "UNDER_OFFER" | "AVAILABLE",
 
 }
 
@@ -119,7 +121,7 @@ export function ItemFeaturedProduct({
     id, title, image, href, stars = 0, starsCount = 0,
     productId, unitPrice, units, priceExcVat, price,
     dealCountdown, stock, className, isOldProduct,
-    isIncVAT, discountPercentage,
+    isIncVAT, discountPercentage, listingStatus
 }: ItemProps) {
     const [openSignIn, setOpenSignIn] = useState(false);
     const [openSignUp, setOpenSignUp] = useState(false);
@@ -131,6 +133,7 @@ export function ItemFeaturedProduct({
     const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";
     const finalImage = image === "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg" ? '/logo-1.png' : image;
 
+    console.log(listingStatus, 'ddddddddmmmmmmmmmmmmmmm');
 
     const handleMessageSeller = () => {
         if (!user) setOpenSignIn(true);
@@ -165,7 +168,7 @@ export function ItemFeaturedProduct({
                     </div>
                 )}
 
-                <Link href={href}>
+                <Link href={href} className="relative block h-full">
                     <Image
                         width={300}
                         height={300}
@@ -173,6 +176,19 @@ export function ItemFeaturedProduct({
                         src={finalImage}
                         className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
                     />
+
+                    {listingStatus != 'AVAILABLE' && <div className={cn(
+                        "absolute rotate-[-0deg] inset-0 z-10 flex items-center justify-center pointer-events-none",
+
+                    )}>
+                        <Image
+                            width={250}
+                            height={250}
+                            alt="SOLD"
+                            src={listingStatus === 'SOLD' ? "/sold.png" : "/under_offer6.png"}
+                            className="object-contain"
+                        />
+                    </div>}
                 </Link>
 
                 {discountPercentage > 0 && (
@@ -209,13 +225,22 @@ export function ItemFeaturedProduct({
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-2 mt-4">
-                    <AddCartButton
+                <div className="flex gap-2 mt-4 justify-between">
+                    {listingStatus == 'AVAILABLE' ? <AddCartButton
                         className="flex-1"
                         stock={stock}
                         isOldProduct={isOldProduct}
                         productId={productId}
-                    />
+                    /> :
+                        <Button
+
+                            className='flex glex-1 items-center cursor-not-allowed bg-red-400/30 text-black rounded-2xl hover:bg-red-500/30 w-fit px-6 text-xs'>
+                            <ShoppingCart className="w-4 h-4 mr-2" />
+                            <span> Add to cart</span>
+                        </Button>
+                    }
+
+
                     <Button
                         variant="outline"
                         size="icon"

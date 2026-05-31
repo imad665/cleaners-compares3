@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
                 seller: {
                     select: {
                         email: true,
-                        name:true,
+                        name: true,
                         id: true,
 
                     }
@@ -76,9 +76,10 @@ export async function GET(req: NextRequest) {
             stock: product.stock,
             dealCountdown: product.isDealActive ? getDealCountdown(product.dealEndDate) : null,
             sellerEmail: product.seller?.email,
-            sellerName:product.seller.name,
+            sellerName: product.seller.name,
             sellerId: product.seller.id,
             isIncVAT: product.isIncVAT,
+            listingStatus: product.listingStatus,
             isOldProduct: false//new Date(product.createdAt)<new Date('2025-07-18')
         };
 

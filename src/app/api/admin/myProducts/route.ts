@@ -59,6 +59,7 @@ export async function GET(req: NextRequest) {
                 isIncVAT: true,
                 featureDays: true,
                 delivery_charge: true,
+                listingStatus: true,
                 stock: true,
                 category: {
                     select: {
@@ -86,6 +87,7 @@ export async function GET(req: NextRequest) {
                 date: p.createdAt.toISOString().split('T')[0],
                 stockCount: p.stock,
                 description: p.description,
+                listingStatus: p.listingStatus,
                 condition: p.condition,
                 imagesUrl: p.imagesUrl,
                 videoUrl: p.videoUrl,

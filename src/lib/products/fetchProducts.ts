@@ -27,7 +27,7 @@ export const fetchProducts = async (
         if (id) {
             // Fetch by product ID
             whereClause = {
-                categoryId:id,
+                categoryId: id,
                 ...excludeSuspendedSeller,
                 condition: { in: inCondition }
             };
@@ -67,9 +67,10 @@ export const fetchProducts = async (
                     discountPrice: true,
                     isDealActive: true,
                     dealEndDate: true,
-                    createdAt:true,
+                    createdAt: true,
                     stock: true,
-                    isIncVAT:true,
+                    isIncVAT: true,
+                    listingStatus: true,
                     ratings: {
                         select: {
                             stars: true,
@@ -104,11 +105,11 @@ export const fetchProducts = async (
                 where: whereClause
             })
         ]);
-       // console.log(page,products.length,'uuuuuuuuuuuuuu');
-        
+        // console.log(page,products.length,'uuuuuuuuuuuuuu');
+
         if (products.length > 0 || page != 1) {
             let categoryP = 'none';
-            if(products.length>0)
+            if (products.length > 0)
                 categoryP = products[0].category || 'none';
             const mappedProducts = products.map(p => {
                 return {
@@ -123,11 +124,12 @@ export const fetchProducts = async (
                     dealEndDate: p.dealEndDate,
                     dealCountdown: p.isDealActive ? getDealCountdown(p.dealEndDate) : null,
                     image: p.imagesUrl[0],
+                    listingStatus: p.listingStatus,
                     stock: p.stock,
                     title: p.title,
                     condition: p.condition,
-                    isIncVAT:p.isIncVAT,
-                    isOldProduct:false//new Date(p.createdAt) < new Date('2025-07-18')
+                    isIncVAT: p.isIncVAT,
+                    isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
                 };
             });
 
@@ -143,7 +145,7 @@ export const fetchProducts = async (
                     pageSize
                 }
             };
-        } 
+        }
         const newSubcategory = await prisma.category.findFirst({
             where: whereClause,
             select: {

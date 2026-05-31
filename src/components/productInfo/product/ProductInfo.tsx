@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Minus, Plus, Check, Shield, Truck, RotateCcw, Clock, MessageCircle } from 'lucide-react';
+import { Minus, Plus, Check, Shield, Truck, RotateCcw, Clock, MessageCircle, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -18,6 +18,7 @@ import { ShowContactInfo } from '@/components/inboxBuyer/orders/OrderItem';
 import { SignInUpModal } from '@/components/header/header';
 import { useHomeContext } from '@/providers/homePageProvider';
 import { MessageSellerDialog } from './MessageSellerDialog';
+import Image from 'next/image';
 
 // Helper function to format prices
 const formatPrice = (price: number | string): string => {
@@ -50,8 +51,8 @@ export default function ProductInfo({
       setOpenMessageDialog(true);
     }
   };
-  console.log(product,'sssssssssssssssssjjdjdjkkfkfkf');
-  
+  const listingStatus = product.listingStatus
+  console.log(listingStatus, 'sssssssssssssssssjjdjdjkkfkfkf');
   return (
     <div className="flex flex-col space-y-6">
       {/* Product badges */}
@@ -70,28 +71,43 @@ export default function ProductInfo({
       </div>
 
       {/* Title and rating */}
-      <div>
-        <h1 className="text-3xl font-medium tracking-tight">{product.name}</h1>
-        <div className="flex items-center mt-2">
-          <div className="flex">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <svg
-                key={star}
-                className={`w-4 h-4 ${star <= Math.round(product.rating)
-                  ? 'text-yellow-400'
-                  : 'text-gray-300 dark:text-gray-600'
-                  }`}
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            ))}
+      <div className='relative'>
+        <div>
+          <h1 className="text-3xl font-medium tracking-tight">{product.name}</h1>
+          <div className="flex items-center mt-2">
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <svg
+                  key={star}
+                  className={`w-4 h-4 ${star <= Math.round(product.rating)
+                    ? 'text-yellow-400'
+                    : 'text-gray-300 dark:text-gray-600'
+                    }`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+            <span className="ml-2 text-sm text-muted-foreground">
+              {product.rating} ({product.reviews} reviews)
+            </span>
           </div>
-          <span className="ml-2 text-sm text-muted-foreground">
-            {product.rating} ({product.reviews} reviews)
-          </span>
         </div>
+
+        {listingStatus != 'AVAILABLE' && <div className={cn(
+          "absolute  right-0  w-full rotate-[-0deg] inset-0 z-10 flex items-center justify-end pointer-events-none",
+
+        )}>
+          <Image
+            width={200}
+            height={200}
+            alt="SOLD"
+            src={listingStatus === 'SOLD' ? "/sold.png" : "/under_offer6.png"}
+            className="object-contain"
+          />
+        </div>}
       </div>
 
 
@@ -101,7 +117,7 @@ export default function ProductInfo({
         {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{formatPrice(product.unitPrice)}</span></p>}
         <div>
           <p className="flex justify-between text-sm">
-            <span className="text-muted-foreground">{isIncVAT?"Price Inc Vat:":"Price Exc Vat:"}</span>
+            <span className="text-muted-foreground">{isIncVAT ? "Price Inc Vat:" : "Price Exc Vat:"}</span>
             <span className='text-lg font-bold'>£{formatPrice(product.priceExcVat)}</span>
           </p>
 
@@ -130,12 +146,21 @@ export default function ProductInfo({
 
 
       <div className="flex flex-col sm:flex-row gap-4">
-        <AddCartButton 
-          isOldProduct={product.isOldProduct}  
-          className="w-fit" 
-          stock={product.stock} 
-          productId={product.id} 
-        />
+        {product.listingStatus === 'AVAILABLE' ?
+          <AddCartButton
+            isOldProduct={product.isOldProduct}
+            className="w-fit"
+            stock={product.stock}
+            productId={product.id}
+          /> :
+          <Button
+
+            className='flex glex-1 items-center cursor-not-allowed bg-red-400/30 text-black rounded-2xl hover:bg-red-500/30 w-fit px-6 text-xs'>
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            <span> Add to cart</span>
+          </Button>
+        }
+
 
         {/* Message Seller Button */}
         <Button
@@ -155,18 +180,18 @@ export default function ProductInfo({
         openSignIn={openSignIn}
         openSignUp={openSignUp}
         setOpenSignIn={setOpenSignIn}
-        setOpenSignUp={setOpenSignUp} 
+        setOpenSignUp={setOpenSignUp}
       />
 
       {/* Message Seller Dialog */}
       <MessageSellerDialog
         product={{
-          id:product.id,
-          image:product.images?.[0],
-          name:product.name,
-          sellerEmail:product.sellerEmail,
-          sellerId:product.sellerId,
-          sellerName:product.sellerName,
+          id: product.id,
+          image: product.images?.[0],
+          name: product.name,
+          sellerEmail: product.sellerEmail,
+          sellerId: product.sellerId,
+          sellerName: product.sellerName,
         }}
         open={openMessageDialog}
         onOpenChange={setOpenMessageDialog}

@@ -286,6 +286,15 @@ export const ServiceCategory: {
 
 export type ServiceCategory = (typeof ServiceCategory)[keyof typeof ServiceCategory]
 
+
+export const ListingStatus: {
+  AVAILABLE: 'AVAILABLE',
+  UNDER_OFFER: 'UNDER_OFFER',
+  SOLD: 'SOLD'
+};
+
+export type ListingStatus = (typeof ListingStatus)[keyof typeof ListingStatus]
+
 }
 
 export type BlogPostCategory = $Enums.BlogPostCategory
@@ -347,6 +356,10 @@ export const CompanyType: typeof $Enums.CompanyType
 export type ServiceCategory = $Enums.ServiceCategory
 
 export const ServiceCategory: typeof $Enums.ServiceCategory
+
+export type ListingStatus = $Enums.ListingStatus
+
+export const ListingStatus: typeof $Enums.ListingStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -14323,6 +14336,7 @@ export namespace Prisma {
     featuredEndDate: Date | null
     featuredStartDate: Date | null
     status: $Enums.ProductStatus | null
+    listingStatus: $Enums.ListingStatus | null
     units: number | null
     featureDays: string | null
     weight: number | null
@@ -14353,6 +14367,7 @@ export namespace Prisma {
     featuredEndDate: Date | null
     featuredStartDate: Date | null
     status: $Enums.ProductStatus | null
+    listingStatus: $Enums.ListingStatus | null
     units: number | null
     featureDays: string | null
     weight: number | null
@@ -14384,6 +14399,7 @@ export namespace Prisma {
     featuredEndDate: number
     featuredStartDate: number
     status: number
+    listingStatus: number
     units: number
     featureDays: number
     weight: number
@@ -14436,6 +14452,7 @@ export namespace Prisma {
     featuredEndDate?: true
     featuredStartDate?: true
     status?: true
+    listingStatus?: true
     units?: true
     featureDays?: true
     weight?: true
@@ -14466,6 +14483,7 @@ export namespace Prisma {
     featuredEndDate?: true
     featuredStartDate?: true
     status?: true
+    listingStatus?: true
     units?: true
     featureDays?: true
     weight?: true
@@ -14497,6 +14515,7 @@ export namespace Prisma {
     featuredEndDate?: true
     featuredStartDate?: true
     status?: true
+    listingStatus?: true
     units?: true
     featureDays?: true
     weight?: true
@@ -14615,6 +14634,7 @@ export namespace Prisma {
     featuredEndDate: Date | null
     featuredStartDate: Date | null
     status: $Enums.ProductStatus
+    listingStatus: $Enums.ListingStatus
     units: number
     featureDays: string | null
     weight: number | null
@@ -14665,6 +14685,7 @@ export namespace Prisma {
     featuredEndDate?: boolean
     featuredStartDate?: boolean
     status?: boolean
+    listingStatus?: boolean
     units?: boolean
     featureDays?: boolean
     weight?: boolean
@@ -14703,6 +14724,7 @@ export namespace Prisma {
     featuredEndDate?: boolean
     featuredStartDate?: boolean
     status?: boolean
+    listingStatus?: boolean
     units?: boolean
     featureDays?: boolean
     weight?: boolean
@@ -14736,6 +14758,7 @@ export namespace Prisma {
     featuredEndDate?: boolean
     featuredStartDate?: boolean
     status?: boolean
+    listingStatus?: boolean
     units?: boolean
     featureDays?: boolean
     weight?: boolean
@@ -14769,6 +14792,7 @@ export namespace Prisma {
     featuredEndDate?: boolean
     featuredStartDate?: boolean
     status?: boolean
+    listingStatus?: boolean
     units?: boolean
     featureDays?: boolean
     weight?: boolean
@@ -14779,7 +14803,7 @@ export namespace Prisma {
     markAsDeleted?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "price" | "discountPercentage" | "discountPrice" | "dealStartDate" | "dealEndDate" | "isDealActive" | "imagesUrl" | "videoUrl" | "isFeatured" | "condition" | "categoryId" | "sellerId" | "socialMediaPosted" | "createdAt" | "featuredEndDate" | "featuredStartDate" | "status" | "units" | "featureDays" | "weight" | "delivery_charge" | "isIncVAT" | "slug" | "stock" | "markAsDeleted", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "price" | "discountPercentage" | "discountPrice" | "dealStartDate" | "dealEndDate" | "isDealActive" | "imagesUrl" | "videoUrl" | "isFeatured" | "condition" | "categoryId" | "sellerId" | "socialMediaPosted" | "createdAt" | "featuredEndDate" | "featuredStartDate" | "status" | "listingStatus" | "units" | "featureDays" | "weight" | "delivery_charge" | "isIncVAT" | "slug" | "stock" | "markAsDeleted", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Inquiry?: boolean | Product$InquiryArgs<ExtArgs>
     orderItem?: boolean | Product$orderItemArgs<ExtArgs>
@@ -14829,6 +14853,7 @@ export namespace Prisma {
       featuredEndDate: Date | null
       featuredStartDate: Date | null
       status: $Enums.ProductStatus
+      listingStatus: $Enums.ListingStatus
       units: number
       featureDays: string | null
       weight: number | null
@@ -15286,6 +15311,7 @@ export namespace Prisma {
     readonly featuredEndDate: FieldRef<"Product", 'DateTime'>
     readonly featuredStartDate: FieldRef<"Product", 'DateTime'>
     readonly status: FieldRef<"Product", 'ProductStatus'>
+    readonly listingStatus: FieldRef<"Product", 'ListingStatus'>
     readonly units: FieldRef<"Product", 'Int'>
     readonly featureDays: FieldRef<"Product", 'String'>
     readonly weight: FieldRef<"Product", 'Float'>
@@ -31886,6 +31912,7 @@ export namespace Prisma {
     featuredEndDate: 'featuredEndDate',
     featuredStartDate: 'featuredStartDate',
     status: 'status',
+    listingStatus: 'listingStatus',
     units: 'units',
     featureDays: 'featureDays',
     weight: 'weight',
@@ -32314,6 +32341,20 @@ export namespace Prisma {
    * Reference to a field of type 'ProductStatus[]'
    */
   export type ListEnumProductStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ListingStatus'
+   */
+  export type EnumListingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ListingStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ListingStatus[]'
+   */
+  export type ListEnumListingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ListingStatus[]'>
     
 
 
@@ -33280,6 +33321,7 @@ export namespace Prisma {
     featuredEndDate?: DateTimeNullableFilter<"Product"> | Date | string | null
     featuredStartDate?: DateTimeNullableFilter<"Product"> | Date | string | null
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFilter<"Product"> | $Enums.ListingStatus
     units?: IntFilter<"Product"> | number
     featureDays?: StringNullableFilter<"Product"> | string | null
     weight?: FloatNullableFilter<"Product"> | number | null
@@ -33317,6 +33359,7 @@ export namespace Prisma {
     featuredEndDate?: SortOrderInput | SortOrder
     featuredStartDate?: SortOrderInput | SortOrder
     status?: SortOrder
+    listingStatus?: SortOrder
     units?: SortOrder
     featureDays?: SortOrderInput | SortOrder
     weight?: SortOrderInput | SortOrder
@@ -33357,6 +33400,7 @@ export namespace Prisma {
     featuredEndDate?: DateTimeNullableFilter<"Product"> | Date | string | null
     featuredStartDate?: DateTimeNullableFilter<"Product"> | Date | string | null
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFilter<"Product"> | $Enums.ListingStatus
     units?: IntFilter<"Product"> | number
     featureDays?: StringNullableFilter<"Product"> | string | null
     weight?: FloatNullableFilter<"Product"> | number | null
@@ -33394,6 +33438,7 @@ export namespace Prisma {
     featuredEndDate?: SortOrderInput | SortOrder
     featuredStartDate?: SortOrderInput | SortOrder
     status?: SortOrder
+    listingStatus?: SortOrder
     units?: SortOrder
     featureDays?: SortOrderInput | SortOrder
     weight?: SortOrderInput | SortOrder
@@ -33433,6 +33478,7 @@ export namespace Prisma {
     featuredEndDate?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
     featuredStartDate?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
     status?: EnumProductStatusWithAggregatesFilter<"Product"> | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusWithAggregatesFilter<"Product"> | $Enums.ListingStatus
     units?: IntWithAggregatesFilter<"Product"> | number
     featureDays?: StringNullableWithAggregatesFilter<"Product"> | string | null
     weight?: FloatNullableWithAggregatesFilter<"Product"> | number | null
@@ -35505,6 +35551,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -35542,6 +35589,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -35575,6 +35623,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -35612,6 +35661,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -35647,6 +35697,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -35676,6 +35727,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -35707,6 +35759,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -37756,6 +37809,13 @@ export namespace Prisma {
     not?: NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
   }
 
+  export type EnumListingStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ListingStatus | EnumListingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ListingStatus[] | ListEnumListingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ListingStatus[] | ListEnumListingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumListingStatusFilter<$PrismaModel> | $Enums.ListingStatus
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -37814,6 +37874,7 @@ export namespace Prisma {
     featuredEndDate?: SortOrder
     featuredStartDate?: SortOrder
     status?: SortOrder
+    listingStatus?: SortOrder
     units?: SortOrder
     featureDays?: SortOrder
     weight?: SortOrder
@@ -37854,6 +37915,7 @@ export namespace Prisma {
     featuredEndDate?: SortOrder
     featuredStartDate?: SortOrder
     status?: SortOrder
+    listingStatus?: SortOrder
     units?: SortOrder
     featureDays?: SortOrder
     weight?: SortOrder
@@ -37884,6 +37946,7 @@ export namespace Prisma {
     featuredEndDate?: SortOrder
     featuredStartDate?: SortOrder
     status?: SortOrder
+    listingStatus?: SortOrder
     units?: SortOrder
     featureDays?: SortOrder
     weight?: SortOrder
@@ -37938,6 +38001,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProductStatusFilter<$PrismaModel>
     _max?: NestedEnumProductStatusFilter<$PrismaModel>
+  }
+
+  export type EnumListingStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ListingStatus | EnumListingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ListingStatus[] | ListEnumListingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ListingStatus[] | ListEnumListingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumListingStatusWithAggregatesFilter<$PrismaModel> | $Enums.ListingStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumListingStatusFilter<$PrismaModel>
+    _max?: NestedEnumListingStatusFilter<$PrismaModel>
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -39906,6 +39979,10 @@ export namespace Prisma {
     set?: $Enums.ProductStatus
   }
 
+  export type EnumListingStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ListingStatus
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -40936,6 +41013,13 @@ export namespace Prisma {
     not?: NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
   }
 
+  export type NestedEnumListingStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ListingStatus | EnumListingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ListingStatus[] | ListEnumListingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ListingStatus[] | ListEnumListingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumListingStatusFilter<$PrismaModel> | $Enums.ListingStatus
+  }
+
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -40970,6 +41054,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProductStatusFilter<$PrismaModel>
     _max?: NestedEnumProductStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumListingStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ListingStatus | EnumListingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ListingStatus[] | ListEnumListingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ListingStatus[] | ListEnumListingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumListingStatusWithAggregatesFilter<$PrismaModel> | $Enums.ListingStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumListingStatusFilter<$PrismaModel>
+    _max?: NestedEnumListingStatusFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -41547,6 +41641,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -41582,6 +41677,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -41825,6 +41921,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -41861,6 +41958,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -42275,6 +42373,7 @@ export namespace Prisma {
     featuredEndDate?: DateTimeNullableFilter<"Product"> | Date | string | null
     featuredStartDate?: DateTimeNullableFilter<"Product"> | Date | string | null
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFilter<"Product"> | $Enums.ListingStatus
     units?: IntFilter<"Product"> | number
     featureDays?: StringNullableFilter<"Product"> | string | null
     weight?: FloatNullableFilter<"Product"> | number | null
@@ -45600,6 +45699,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -45636,6 +45736,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -45808,6 +45909,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -45844,6 +45946,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -46034,6 +46137,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -46069,6 +46173,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -46279,6 +46384,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -46315,6 +46421,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -46523,6 +46630,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -46559,6 +46667,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -46674,6 +46783,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -46710,6 +46820,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -46835,6 +46946,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -46871,6 +46983,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -47603,6 +47716,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -48122,6 +48236,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -48157,6 +48272,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -48191,6 +48307,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -48363,6 +48480,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -48399,6 +48517,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -48433,6 +48552,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -48964,6 +49084,7 @@ export namespace Prisma {
     featuredEndDate?: Date | string | null
     featuredStartDate?: Date | string | null
     status?: $Enums.ProductStatus
+    listingStatus?: $Enums.ListingStatus
     units: number
     featureDays?: string | null
     weight?: number | null
@@ -49036,6 +49157,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -49071,6 +49193,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -49105,6 +49228,7 @@ export namespace Prisma {
     featuredEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featuredStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+    listingStatus?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
     units?: IntFieldUpdateOperationsInput | number
     featureDays?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
