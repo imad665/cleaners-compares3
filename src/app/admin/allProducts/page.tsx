@@ -105,9 +105,10 @@ const AllProducts = () => {
             const result = await updateProductStatusAction(productId, newStatus);
             if (result.success) {
                 // Optimistic update
-                setProducts(prev =>
-                    prev.map(p => (p.id === productId ? { ...p, listingStatus: newStatus } : p))
-                );
+                setProducts(products.map(p => ({
+                    ...p,
+                    listingStatus: p.listingStatus?.toUpperCase().replace(' ', '_')
+                })));
                 toast.success(result.message);
             } else {
                 toast.error(result.message || 'Failed to update status');
@@ -189,9 +190,9 @@ const AllProducts = () => {
                     className="border rounded px-2 py-1 text-sm bg-white disabled:opacity-50 cursor-pointer"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <option value="AVAILABLE">AVAILABLE</option>
+                    <option value="AVAILABLE">Available</option>
                     <option value="UNDER_OFFER">Under Offer</option>
-                    <option value="SOLD">SOLD</option>
+                    <option value="SOLD">Sold</option>
                 </select>
             ),
         },

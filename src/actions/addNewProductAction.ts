@@ -235,19 +235,13 @@ export async function updateProductStatusAction(productId: string, newStatus: st
     const session = await getServerSession();
     if (!session?.user) throw new Error('Unauthorized');
 
-    // Verify ownership
-    // const product = await prisma.product.findUnique({
-    //     where: { id: productId },
-    //     select: { sellerId: true },
-    // });
-    /*if (!product || product.sellerId !== session.user.id) {
-        throw new Error('You can only update your own products');
-    }*/
+
 
     // Validate against ListingStatus enum values
     const allowed = ['AVAILABLE', 'UNDER_OFFER', 'SOLD'];
-    if (!allowed.includes(newStatus)) {
-        throw new Error('Invalid status value');
+    const normalizedStatus = newStatus.trim().toUpperCase();
+    if (!allowed.includes(normalizedStatus as any)) {
+        throw new Error(`Invalid status value: ${newStatus}`);
     }
 
     // Update the new listingStatus field
