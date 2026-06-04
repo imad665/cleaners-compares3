@@ -236,10 +236,10 @@ export async function updateProductStatusAction(productId: string, newStatus: st
     if (!session?.user) throw new Error('Unauthorized');
 
     // Verify ownership
-    const product = await prisma.product.findUnique({
-        where: { id: productId },
-        select: { sellerId: true },
-    });
+    // const product = await prisma.product.findUnique({
+    //     where: { id: productId },
+    //     select: { sellerId: true },
+    // });
     /*if (!product || product.sellerId !== session.user.id) {
         throw new Error('You can only update your own products');
     }*/
