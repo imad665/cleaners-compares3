@@ -54,6 +54,7 @@ const AllProducts = () => {
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const [updatingStatusId, setUpdatingStatusId] = useState<string | null>(null);
+    const [keyStatusUpdate, setKeyStatusUpdate] = useState(Date.now().toString())
 
     // Edit/Delete modals
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -103,12 +104,16 @@ const AllProducts = () => {
         setUpdatingStatusId(productId);
         try {
             const result = await updateProductStatusAction(productId, newStatus);
+            setKeyStatusUpdate(newStatus)
             if (result.success) {
                 // Optimistic update
-                setProducts(products.map(p => ({
-                    ...p,
-                    listingStatus: p.listingStatus?.toUpperCase().replace(' ', '_')
-                })));
+                setProducts(prevProducts =>
+                    prevProducts.map(p =>
+                        p.id === productId
+                            ? { ...p, listingStatus: newStatus } // Update only the matching product
+                            : p // Leave others as they are
+                    )
+                );
                 toast.success(result.message);
             } else {
                 toast.error(result.message || 'Failed to update status');
@@ -243,10 +248,12 @@ const AllProducts = () => {
         setSelectedProduct(null);
         setIsEditing(false);
     };
+    console.log(keyStatusUpdate, 'ccccccccccccccccccc');
 
     return (
         <div className="w-full relative">
-            <div className="space-y-6">
+
+            <div className="space-y-6"  >
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -273,6 +280,7 @@ const AllProducts = () => {
                     </div>
                 ) : (
                     <Table
+
                         columns={columns}
                         data={products}
                         keyField="id"
