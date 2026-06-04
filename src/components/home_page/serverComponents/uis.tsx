@@ -133,7 +133,7 @@ export function ItemFeaturedProduct({
     const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";
     const finalImage = image === "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg" ? '/logo-1.png' : image;
 
-    console.log(listingStatus, 'ddddddddmmmmmmmmmmmmmmm');
+    //console.log(listingStatus, 'ddddddddmmmmmmmmmmmmmmm');
 
     const handleMessageSeller = () => {
         if (!user) setOpenSignIn(true);
