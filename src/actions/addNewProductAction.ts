@@ -232,7 +232,7 @@ export async function getExisitingProducts(ids: string[]) {
 
 
 export async function updateProductStatusAction(productId: string, newStatus: string) {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user) throw new Error('Unauthorized');
 
 
