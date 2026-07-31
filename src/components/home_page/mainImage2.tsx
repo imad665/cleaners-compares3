@@ -45,9 +45,9 @@ export function MainImage() {
   const [activeImage, setActiveImage] = useState(0);
   const router = useRouter();
   const slides = [
-    { src: '/assets/hero-washer.jpg', title: 'Industrial Washer Extractor', price: '£22,000.00' },
+    { src: '/assets/hero-washer.jpg', title: 'Industrial Washer Extractor', price: '' },
     { src: '/assets/hero-boiler-part.jpg', title: 'Boiler Spare Parts', price: null },
-    { src: '/assets/hero-spotting-table.jpg', title: 'Spotting Table with Vacuum', price: '£1,450.00' },
+    { src: '/assets/hero-spotting-table.jpg', title: 'Spotting Table with Vacuum', price: '' },
   ];
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export function MainImage() {
             <div className="absolute top-4 left-0 bg-card border rounded-xl shadow-lg p-3 w-44">
               <p className="text-xs font-semibold leading-tight">Girbau HS-6017 Washer</p>
               <img src='/assets/hero-small-washer.jpg' alt="" className="my-2 rounded-md" />
-              <p className="text-xs font-bold text-primary">£22,000.00</p>
+              {/* <p className="text-xs font-bold text-primary">£22,000.00</p> */}
             </div>
 
             <div className="absolute bottom-16 left-2 bg-card border rounded-xl shadow-lg p-3 w-44">
@@ -137,7 +137,7 @@ export function MainImage() {
             <div className="absolute top-1/4 right-0 bg-card border rounded-xl shadow-lg p-3 w-44">
               <p className="text-xs font-semibold leading-tight">Spotting Table</p>
               <img src='/assets/hero-spotting-table.jpg' alt="" className="my-2 rounded-md" />
-              <p className="text-xs font-bold text-primary">£1,450.00</p>
+              {/* <p className="text-xs font-bold text-primary">£1,450.00</p> */}
             </div>
 
             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-card border rounded-full shadow-md px-4 py-2 text-xs font-medium inline-flex items-center gap-2">
