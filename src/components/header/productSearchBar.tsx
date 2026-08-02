@@ -400,11 +400,15 @@ export function ButtonNeedSignIn({
   text,
   className,
   buttonClassName,
+  body,
+  path,
   variant,
 }: {
   text: string,
   className?: string,
   buttonClassName?: string
+  body?: React.ReactNode;
+  path?: string;
   variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost"
 }) {
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -416,7 +420,7 @@ export function ButtonNeedSignIn({
     if (user) {
       if (user.role.toLocaleLowerCase() === 'seller' || user.role.toLocaleLowerCase() === 'admin') {
         setButtonLoading(true);
-        router.push('/admin/addNewProduct')
+        router.push(path ?? '/admin/addNewProduct')
       } else {
         setOpenSellerDialog(true);
       }
@@ -432,8 +436,13 @@ export function ButtonNeedSignIn({
         variant={variant}
         className={cn("cursor-pointer", buttonClassName)}
       >
-        <Plus size={18} />
-        {text}
+        {!body
+          ?
+          <>
+            <Plus size={18} />
+            {text}
+          </>
+          : body}
       </Button>
       {/* <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text={text} /> */}
 

@@ -8,6 +8,7 @@ import { ArrowRight, Check, Plus, Youtube } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useHomeContext } from "@/providers/homePageProvider";
 
 export function BigButton({ text, onClick, disabled }: { text: string, onClick: () => void, disabled?: boolean }) {
   return (
@@ -43,6 +44,7 @@ export function BigButton({ text, onClick, disabled }: { text: string, onClick: 
 
 export function MainImage() {
   const [activeImage, setActiveImage] = useState(0);
+  const { cart, user } = useHomeContext();
   const router = useRouter();
   const slides = [
     { src: '/assets/hero-washer.jpg', title: 'Industrial Washer Extractor', price: '' },
@@ -72,6 +74,9 @@ export function MainImage() {
             <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-supplier text-supplier-foreground text-[11px]">★</span>
             We can list your products for you — no technical setup required.
           </div>
+          <div className="mt-2 md:hidden ">
+            <ButtonNeedSignIn text="Sell Your Products" buttonClassName="w-full md:w-fit text-xl p-5" />
+          </div>
 
           <div className="mt-6 flex flex-col gap-3 md:flex-row">
             <button onClick={() => router.push("/about-platform")} className="px-6 py-3 cursor-pointer rounded-lg font-medium bg-secondary text-secondary-foreground border hover:bg-secondary/80">
@@ -79,6 +84,7 @@ export function MainImage() {
             </button>
             {/* <ButtonNeedSignIn text="Sell Your Products" buttonClassName="w-full md:w-fit" /> */}
           </div>
+
 
           <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
             <Youtube className="h-6 w-6 text-youtube" />

@@ -131,7 +131,7 @@ export function ItemFeaturedProduct({
     const parsedUnitPrice = Number(unitPrice);
     const isUnits = units > 0;
     const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";
-    const finalImage = image === "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg" ? '/logo-1.png' : image;
+    const finalImage = image === "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg" ? '/uploads/ImageUnavailable.jpg' : image;
 
     //console.log(listingStatus, 'ddddddddmmmmmmmmmmmmmmm');
 
@@ -185,8 +185,8 @@ export function ItemFeaturedProduct({
                             width={250}
                             height={250}
                             alt="SOLD"
-                            src={listingStatus === 'SOLD' ? "/sold.png" : "/under_offer6.png"}
-                            className="object-contain"
+                            src={listingStatus === 'SOLD' ? "/sold.png" : "/under_offer5.png"}
+                            className="object-contain  bottom-[-27px] right-[-5px]"
                         />
                     </div>}
                 </Link>

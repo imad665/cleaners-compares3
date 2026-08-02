@@ -54,7 +54,7 @@ export default function ProductInfo({
   const listingStatus = product.listingStatus
   console.log(listingStatus, 'sssssssssssssssssjjdjdjkkfkfkf');
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="flex flex-col space-y-6 relative">
       {/* Product badges */}
       <div className="flex flex-wrap gap-2">
         {product.isNew && (
@@ -97,15 +97,15 @@ export default function ProductInfo({
         </div>
 
         {listingStatus != 'AVAILABLE' && <div className={cn(
-          "absolute  right-0  w-full rotate-[-0deg] inset-0 z-10 flex items-center justify-end pointer-events-none",
+          "absolute  right-0 top-[-40px] md:top-0  w-full rotate-[-0deg] inset-0 z-10 flex items-center justify-end pointer-events-none",
 
         )}>
           <Image
             width={200}
             height={200}
             alt="SOLD"
-            src={listingStatus === 'SOLD' ? "/sold.png" : "/under_offer6.png"}
-            className="object-contain"
+            src={listingStatus === 'SOLD' ? "/sold.png" : "/under_offer5.png"}
+            className=" absolute bottom-[80px] md:bottom-[-20px] object-contain"
           />
         </div>}
       </div>

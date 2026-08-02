@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { ChevronDown, Home, LayoutDashboard, Loader, Menu, MenuIcon, Plus, ShoppingCart, UserCircle } from 'lucide-react'
+import { ChevronDown, Home, LayoutDashboard, Loader, Menu, MenuIcon, Plus, ShoppingBagIcon, ShoppingCart, UserCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { ButtonNeedSignIn, ProductSearchBar } from './productSearchBar'
@@ -414,6 +414,12 @@ export function NavMobile({ user, cart, setOpenDialog, recentOrderCount, notific
     return (
         <div className="md:hidden flex items-center gap-4">
             {/* User Icon */}
+            {/* <ButtonNeedSignIn variant='outline' text='' body={
+                <div className='flex items-center gap-2'>
+                    <Plus size={18} className='font-extrabold' />
+                    <ShoppingBagIcon />
+                </div>
+            } buttonClassName="w-full md:w-fit text-xl p-5" /> */}
             {user && <UserDropdownMenu user={user} recentOrderCount={recentOrderCount} />}
 
             {/* <Link
