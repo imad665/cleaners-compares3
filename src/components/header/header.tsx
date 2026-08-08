@@ -336,7 +336,7 @@ function NavDesktop({ user, cart, setOpenDialog, recentOrderCount, notificationD
                         Become a Seller
                     </Button>
                 }
-                <ButtonNeedSignIn text="Sell Your Products" buttonClassName="w-full md:w-fit" />
+                {user && user.role === 'SELLER' && <ButtonNeedSignIn text="Sell Your Products" buttonClassName="w-full md:w-fit" />}
                 {/* <ContactDialog textButton={'Report poblem'} /> */}
 
                 {user &&
