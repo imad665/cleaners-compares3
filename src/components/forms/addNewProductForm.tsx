@@ -16,6 +16,9 @@ import { dataFeatureProduct } from "@/lib/payement/data";
 import { Badge } from "../ui/badge";
 import getDelveryChargeFromWight from "@/lib/delivery_charge_from_weight";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { SellerForm } from "./sellerForm";
+import { SellerForm2 } from "./sellerForm2";
+import { useHomeContext } from "@/providers/homePageProvider";
 type ReqInputType = {
   labelText: string
   placeholder: string
@@ -80,10 +83,7 @@ function ReqRadio({ defaultValue = undefined }: { defaultValue?: string }) {
           <Label htmlFor="used" className="pl-1">Used</Label>
         </div>
 
-        {/*  <div className="flex">
-                    <input checked={value === 'like_new'} onChange={() => setValue('like_new')} type="radio" id="like_new" name="product_condition" value="like_new" />
-                    <Label htmlFor="like_new" className="pl-1">Like New</Label>
-                </div> */}
+
       </div>
 
 
@@ -121,26 +121,7 @@ function BasicInfo({ name = '', description = '', productionCondition = '' }: {
     </div>
   )
 }
-{/* <div className="grow space-y-2">
-                    <ReqInput
-                        labelText="Product Weight (kg)"
-                        type="number"
-                        name="weight"
-                        placeholder="e.g. 10 kg"
-                        numberMin={0}
-                        defaultValue={weight}
-                        className="w-full"
-                    />
-                    <div className="text-muted-foreground text-xs">
-                        Delivery Charge Guide:
-                        <ul className="list-disc list-inside mt-1 text-gray-500">
-                            <li>Under 10kg: £5</li>
-                            <li>10kg - 30kg: £10</li>
-                            <li>Over 30kg (pallet): £20</li>
-                            <li>Free delivery on orders over £250</li>
-                        </ul>
-                    </div>
-                </div> */}
+
 
 
 
@@ -175,7 +156,6 @@ function VatSelector({
 
 
 
-// your ReqInput, getDelveryChargeFromWight, dataFeatureProduct should be imported
 
 const VAT_RATE = 0.2 // 20% VAT
 
@@ -456,28 +436,14 @@ function ProductCategory({ id = '', categories, mainCategory = '', subCategory =
               <SelectValue placeholder="Select subcategory" />
             </SelectTrigger>
             <SelectContent className="z-5000000">
-              {/* <SelectItem value="new">Laundry</SelectItem>
-                            <SelectItem value="used">Dry Cleaning</SelectItem>
-                            <SelectItem value="like_new">Finishing Equipement</SelectItem> */}
+
               {subcategories.map((s) => (
                 <SelectItem key={s.name} value={s.name.replace(' ', '_')}>{s.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        {/* <div className="space-y-1 grow">
-                    <Label>Detailed Category <span className="text-sm text-muted-foreground">(Optional)</span></Label>
-                    <Select >
-                        <SelectTrigger className="w-[200px]">
-                            <SelectValue placeholder="Select subcategory" />
-                        </SelectTrigger>
-                        <SelectContent >
-                            <SelectItem value="new">Laundry</SelectItem>
-                            <SelectItem value="used">Dry Cleaning</SelectItem>
-                            <SelectItem value="like-new">Finishing Equipement</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div> */}
+
       </div>
 
 
@@ -541,14 +507,17 @@ export function AddNewProductForm({
   onFailedEditing,
   machineDeliveryCharge,
 }: any) {
-  //alert(subCategoryId)
   const [images, setImages] = useState<{ id: string, url: string, file: File }[]>([]);
   const [video, setVideo] = useState<{ id: string, url: string, file: File } | null>(null);
   const submitTypeRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [state, action, pending] = useActionState(addNewProductAction, undefined);
   const [selectedCategory, setSelectedCategory] = useState('');
-  //console.log(video,videoUrl, 'yyyyyyyyyyyyyyyyyyyyggggggggggg');
+  const { user } = useHomeContext();
+
+  const role: "SELLER" | "BUYER" | undefined = user?.role;
+  console.log(user, 'dddddddddddddddllllllllllllllll');
+
 
   useEffect(() => {
     setImages(imagesUrl?.map((i, index) => ({ id: `id_${index}`, url: i, file: undefined })) || [])
@@ -616,20 +585,19 @@ export function AddNewProductForm({
           discountEndDate={dealeEnd}
           machineDeliveryCharge={machineDeliveryCharge}
         />
+        {user && role == 'BUYER' && <div className="flex flex-col gap-4 border p-3 rounded-md">
+          <h2 className="font-bold text-xl">Become a Seller:</h2>
+          <SellerForm callback="/" redirect={false} onSuccess={() => {
+          }} />
+
+          {/* {!user && <SellerForm2 callback={"admin/addNewProduct"} />} */}
+
+        </div>}
 
 
         <hr className="w-full h-1 my-5" />
         <div className="mb-10 flex gap-5 justify-end">
-          {/* {!isEditing && <Button
-                        disabled={pending}
-                        variant="outline"
-                        type="submit"
-                        onClick={() => {
-                            if (submitTypeRef.current) submitTypeRef.current.value = 'draft';
-                        }}
-                    >
-                        Save as Draft
-                    </Button>} */}
+
           <Button
             disabled={pending}
             type="submit"

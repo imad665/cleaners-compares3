@@ -44,7 +44,7 @@ export function InputPassword({ name, pending, text }: { name: string, pending: 
     )
 }
 
-export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: () => void }) {
+export default function SignUpComp({ onSignInClick = null, callback }: { onSignInClick?: () => void; callback?: string }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -85,7 +85,7 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
                 await signIn('credentials', {
                     email: result.email,
                     password: password,
-                    callbackUrl: '/'
+                    callbackUrl: callback || '/'
                 });
             }
         } catch (err) {
@@ -242,17 +242,18 @@ export default function SignUpComp({ onSignInClick = null }: { onSignInClick?: (
     )
 }
 
-export function SignupModal({ open, setOpen, onSignInClick }:
+export function SignupModal({ open, setOpen, onSignInClick, callback }:
     {
         open: boolean,
         setOpen: (v: boolean) => void
-        onSignInClick: () => void
+        onSignInClick: () => void;
+        callback?: string;
     }) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="   h-auto">
-                <SignUpComp onSignInClick={onSignInClick} />
+                <SignUpComp callback={callback} onSignInClick={onSignInClick} />
             </DialogContent>
         </Dialog>
     )

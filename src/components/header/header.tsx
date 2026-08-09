@@ -230,13 +230,15 @@ export function SignInUpModal(
         openSignUp,
         setOpenSignUp,
         openSignIn,
-        setOpenSignIn
+        setOpenSignIn,
+        callback
     }:
         {
             openSignUp: boolean,
             setOpenSignUp: (v: boolean) => void;
             openSignIn: boolean;
             setOpenSignIn: (v: boolean) => void;
+            callback?: string;
         }
 ) {
 
@@ -250,8 +252,8 @@ export function SignInUpModal(
     }
     return (
         <>
-            <SignupModal onSignInClick={onSignInclick} open={openSignUp} setOpen={setOpenSignUp} />
-            <SignInModal onSignUpClick={onSignUpClick} open={openSignIn} setOpen={setOpenSignIn} />
+            <SignupModal callback={callback} onSignInClick={onSignInclick} open={openSignUp} setOpen={setOpenSignUp} />
+            <SignInModal callback={callback} onSignUpClick={onSignUpClick} open={openSignIn} setOpen={setOpenSignIn} />
         </>
     )
 }
@@ -330,13 +332,13 @@ function NavDesktop({ user, cart, setOpenDialog, recentOrderCount, notificationD
             </div>
 
             <nav className='right hidden md:flex items-center space-x-6' >
-                {user && user.role === 'BUYER' &&
+                {/*  {user && user.role === 'BUYER' &&
                     <Button onClick={() => setOpenDialog(true)} variant="outline"
                         className="cursor-pointer text-blue-600 border-blue-600 hover:bg-blue-50">
                         Become a Seller
                     </Button>
-                }
-                <ButtonNeedSignIn text="Sell Your Products" buttonClassName="w-full md:w-fit" />
+                } */}
+                <ButtonNeedSignIn isEmail={true} text="Sell Your Products" buttonClassName="w-full md:w-fit" />
                 {/* <ContactDialog textButton={'Report poblem'} /> */}
 
                 {user &&

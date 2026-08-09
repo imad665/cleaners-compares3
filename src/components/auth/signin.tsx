@@ -49,8 +49,17 @@ function InputPassword({ pending, password, setPassWord }: { pending: boolean, p
     )
 }
 
-export default function SignInComp({ onSignUpClick, setOpen }:
-    { onSignUpClick?: () => void, setOpen?: () => void }) {
+export default function SignInComp({
+    onSignUpClick,
+    setOpen,
+    callback
+}:
+    {
+        onSignUpClick?: () => void;
+        setOpen?: () => void;
+        callback?: string;
+
+    }) {
     const [pending, setPending] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -72,12 +81,17 @@ export default function SignInComp({ onSignUpClick, setOpen }:
         setPending(true);
         setError("");
 
+
         const res = await signIn("credentials", {
             email,
             password,
-            redirect: pathname.includes('signin') || email==='admin@cleancompare.com',
-            callbackUrl: email==='admin@cleancompare.com'?"/admin":'/'
+            redirect: callback != undefined || pathname.includes('signin') || email === 'admin@cleancompare.com',
+            callbackUrl: email === 'admin@cleancompare.com' ? "/admin" : callback || '/'
         });
+
+        console.log(res, 'ooooooooooooooomccccccccccccccmmmmmmmmmm');
+        if (!res) return
+
 
         if (res?.ok) {
             /* if (setOpen) {
@@ -92,7 +106,7 @@ export default function SignInComp({ onSignUpClick, setOpen }:
             } else if (res?.error === "CredentialsSignin") {
                 setError("Invalid email or password.");
             } else {
-                if(email === 'admin@cleancompare.com') return
+                if (email === 'admin@cleancompare.com') return
                 setError("Something went wrong. Try again.");
             }
             setPending(false);
@@ -236,7 +250,7 @@ export default function SignInComp({ onSignUpClick, setOpen }:
                     ) : (
                         <>
                             <form onSubmit={handleSubmit} className="space-y-4">
-                                <div  className="flex flex-col gap-2">
+                                <div className="flex flex-col gap-2">
                                     <Label htmlFor="email">Email</Label>
                                     <Input
                                         disabled={pending}
@@ -305,17 +319,18 @@ export default function SignInComp({ onSignUpClick, setOpen }:
     )
 }
 
-export function SignInModal({ open, setOpen, onSignUpClick }:
+export function SignInModal({ open, setOpen, onSignUpClick, callback }:
     {
         open: boolean,
         setOpen: (v: boolean) => void
         onSignUpClick: () => void
+        callback?: string
     }) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className=" h-auto">
-                <SignInComp setOpen={setOpen} onSignUpClick={onSignUpClick} />
+                <SignInComp setOpen={setOpen} onSignUpClick={onSignUpClick} callback={callback} />
             </DialogContent>
         </Dialog>
     )

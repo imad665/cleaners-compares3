@@ -44,7 +44,7 @@ export async function formSellerAction(prev: any, formData: FormData) {
 
   if (existing) {
     await prisma.sellerProfile.deleteMany();
-    return { success: false, error: 'You have already submitted a seller profile.' }
+    return { success: false, needToResignin: true, error: 'You have already submitted a seller profile.' }
   }
   let role: 'SELLER' | 'ADMIN' | 'BUYER' = 'SELLER'
   if (session.user.email === 'admin@cleancompare.com')

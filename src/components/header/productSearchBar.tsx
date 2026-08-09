@@ -13,6 +13,7 @@ import { useHomeContext } from "@/providers/homePageProvider"
 import SellerFormDialog from "../forms/sellerForm"
 import SellerFormDialog2 from "../forms/sellerForm2"
 import { cn } from "@/lib/utils"
+import { SignInUpModal } from "./header"
 
 interface SearchResult {
   id: string
@@ -403,20 +404,32 @@ export function ButtonNeedSignIn({
   body,
   path,
   variant,
+  isEmail = false
 }: {
   text: string,
   className?: string,
   buttonClassName?: string
   body?: React.ReactNode;
   path?: string;
-  variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost"
+  variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost";
+  isEmail?: boolean;
 }) {
   const [buttonLoading, setButtonLoading] = useState(false);
   const { user } = useHomeContext();
   const router = useRouter()
   const [openSellerDialog, setOpenSellerDialog] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openSignUp, setOpenSignUp] = useState(false);
+  const [openSignIn, setOpenSignIn] = useState(false);
   function handleClickBigButton() {
+    if (user && text.toLowerCase().includes('sell')) {
+      router.push("/admin/addNewProduct")
+      return
+    }
+    if (isEmail) {
+      setOpenSignIn(true);
+      return
+    }
     if (user) {
       if (user.role.toLocaleLowerCase() === 'seller' || user.role.toLocaleLowerCase() === 'admin') {
         setButtonLoading(true);
@@ -426,6 +439,7 @@ export function ButtonNeedSignIn({
       }
     } else {
       setOpenDialog(true);
+
     }
   }
   return (
@@ -445,7 +459,13 @@ export function ButtonNeedSignIn({
           : body}
       </Button>
       {/* <BigButton disabled={buttonLoading} onClick={handleClickBigButton} text={text} /> */}
-
+      <SignInUpModal
+        openSignIn={openSignIn}
+        openSignUp={openSignUp}
+        setOpenSignIn={setOpenSignIn}
+        setOpenSignUp={setOpenSignUp}
+        callback="/admin/addNewProduct"
+      />
       {openSellerDialog && <SellerFormDialog callback="/admin/addNewProduct" open={openSellerDialog} setOpen={setOpenSellerDialog} />}
       {openDialog && <SellerFormDialog2 callback="/admin/addNewProduct" text="" open={openDialog} setOpen={setOpenDialog} />}
     </div>

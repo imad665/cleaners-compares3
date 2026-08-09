@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
-import { useActionState, useEffect, useState } from 'react'
+import { startTransition, useActionState, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { getSession, signIn, signOut } from 'next-auth/react'
@@ -21,40 +21,147 @@ import { formSellerAction } from '@/actions/actionSellerForm'
 type SellerFormDialogProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  callback?:string;
+  callback?: string;
 }
 
-export default function SellerFormDialog({ open, setOpen,callback='/' }: SellerFormDialogProps) {
-  const [state, action, pending] = useActionState(formSellerAction, undefined);
+export function SellerForm({
+  setOpen,
+  callback,
+  redirect = true,
+  onSuccess = undefined,
+}: {
+  setOpen?: (open: boolean) => void;
+  callback: string;
+  redirect?: boolean;
+  onSuccess?: () => void;
+}) {
+  const [state, action, pending] = useActionState(
+    formSellerAction,
+    undefined
+  );
+
   const router = useRouter();
-  const [businessName, setBusinessName] = useState('');
-  const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const { user } = useHomeContext()
+
+  const [businessName, setBusinessName] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [ktry, setKtry] = useState(0)
+
+  const { user } = useHomeContext();
 
   useEffect(() => {
-    if (!state) return
-    if (state.success) {
-      setOpen(false)
-      toast.success(state.message)
-      const a = async () => {
+    if (!state) return;
+
+    if (state.success || state.needToResignin && ktry <= 2) {
+      setOpen?.(false);
+      if (state.success) {
+        toast.success(state.message);
+      } else {
+        setKtry(ktry + 1)
+      }
+
+      const signInUser = async () => {
         await signIn("credentials", {
           email: user?.email,
           password: "test_password",
-          //redirect: false,
-          callbackUrl:callback
+          redirect,
+          callbackUrl: callback,
         });
-        //await signOut();
-        router.refresh();
-      }
-      a();
 
-    } else if (state.redirect) { router.push(state.redirect) }
+        onSuccess?.();
+
+        router.refresh();
+      };
+
+      signInUser();
+    } else if (state.redirect) {
+      router.push(state.redirect);
+    }
     else {
+
       toast.error(state.error);
     }
   }, [state]);
+
+  const handleSubmit = () => {
+    const formData = new FormData();
+
+    formData.append("businessName", businessName);
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("city", city);
+    formData.append("country", country);
+
+    startTransition(() => {
+      action(formData);
+    });
+
+  };
+
+  return (
+    <div onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="businessName">Business Name</label>
+
+        <Input
+          id="businessName"
+          name="businessName"
+          value={businessName}
+          onChange={(e) => setBusinessName(e.target.value)}
+          required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="phoneNumber">Phone Number</label>
+
+        <Input
+          id="phoneNumber"
+          name="phoneNumber"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="city">Address</label>
+
+        <Input
+          id="city"
+          name="city"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="country">Post Code</label>
+
+        <Input
+          id="country"
+          name="country"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          required
+        />
+      </div>
+
+      <Button
+        disabled={pending}
+        type="button"
+        onClick={handleSubmit}
+        className="w-full"
+      >
+        {pending ? "Submitting..." : "Submit"}
+      </Button>
+    </div>
+  );
+}
+
+export default function SellerFormDialog({ open, setOpen, callback = '/' }: SellerFormDialogProps) {
+
 
 
   return (
@@ -63,50 +170,7 @@ export default function SellerFormDialog({ open, setOpen,callback='/' }: SellerF
         <DialogHeader>
           <DialogTitle>Become a Seller</DialogTitle>
         </DialogHeader>
-        <form action={action} className="space-y-4">
-          <div>
-            <Label htmlFor="businessName">Business Name</Label>
-            <Input
-              id="businessName"
-              name="businessName"
-              onChange={(e) => setBusinessName(e.target.value)}
-              value={businessName}
-              required
-            />
-          </div>
-          <div>
-            <Label htmlFor="phoneNumber">Phone Number</Label>
-            <Input
-              id="phoneNumber"
-              name="phoneNumber"
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              value={phoneNumber}
-              required
-            />
-          </div>
-          <div>
-            <Label htmlFor="city">Address</Label>
-            <Input
-              id="city"
-              name="city"
-              onChange={(e) => setCity(e.target.value)}
-              value={city}
-              required
-            />
-          </div>
-          <div>
-            <Label htmlFor="country">Post Code</Label>
-            <Input
-              id="country"
-              name="country"
-              onChange={(e) => setCountry(e.target.value)}
-              value={country}
-              required
-            />
-          </div>
-
-          <Button disabled={pending} type="submit" className="w-full">Submit</Button>
-        </form>
+        <SellerForm callback={callback} />
       </DialogContent>
     </Dialog>
   )
