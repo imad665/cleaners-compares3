@@ -16,30 +16,16 @@ export function VatSelector({
       <RadioGroup
         value={value}
         onValueChange={(v) => onChange(v as "inc" | "exc")}
-        className="flex items-center gap-1 p-1 bg-gray-100/80 rounded-lg w-fit"
-        name="vat"
+        className="flex items-center gap-6"
+        name="vat-selector"
       >
-        <div 
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-md transition-all cursor-pointer ${
-            value === 'inc' ? 'bg-white shadow-sm' : 'hover:bg-gray-200/50'
-          }`}
-          onClick={() => onChange('inc')}
-        >
-          <RadioGroupItem value="inc" id="inc" className="sr-only" />
-          <Label htmlFor="inc" className="cursor-pointer text-sm font-medium whitespace-nowrap px-1">
-            Inc VAT
-          </Label>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem value="inc" id="inc" />
+          <Label htmlFor="inc" className="cursor-pointer text-sm font-medium">Inc VAT</Label>
         </div>
-        <div 
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-md transition-all cursor-pointer ${
-            value === 'exc' ? 'bg-white shadow-sm' : 'hover:bg-gray-200/50'
-          }`}
-          onClick={() => onChange('exc')}
-        >
-          <RadioGroupItem value="exc" id="exc" className="sr-only" />
-          <Label htmlFor="exc" className="cursor-pointer text-sm font-medium whitespace-nowrap px-1">
-            Exc VAT
-          </Label>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem value="exc" id="exc" />
+          <Label htmlFor="exc" className="cursor-pointer text-sm font-medium">Exc VAT</Label>
         </div>
       </RadioGroup>
     </div>

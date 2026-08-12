@@ -52,14 +52,15 @@ export function PricingInventory({
   // Apply VAT logic
   const basePrice =
     vatType === "inc" ? Number(price2) / (1 + VAT_RATE) : Number(price2) // store exc VAT internally
-  const finalPrice =
-    vatType === "inc" ? basePrice * (1 + VAT_RATE) : basePrice
+  const finalPrice = basePrice * (1 + VAT_RATE)
 
   const discountAmount = finalPrice * (Number(percent) / 100)
   const discountedPrice = finalPrice - discountAmount
 
+  // apply hidden input for vatType for form submission
   return (
     <Card className="border-none shadow-none bg-transparent">
+      <input type="hidden" name="isIncVAT" value={vatType === 'inc' ? 'true' : 'false'} />
       <CardHeader className="px-0 pt-0 pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -89,20 +90,20 @@ export function PricingInventory({
             <div className="space-y-4">
               <div className="flex items-center gap-2 mb-1">
                 <div className="p-1.5 bg-green-50 rounded-md">
-                   <Banknote className="w-4 h-4 text-green-600" />
+                  <Banknote className="w-4 h-4 text-green-600" />
                 </div>
                 <span className="font-semibold text-gray-700">Set Price</span>
               </div>
-              
+
               <div className="space-y-3 p-4 bg-gray-50/50 rounded-lg border border-gray-100">
                 <ReqInput
                   labelText={`Product Price (£) ${vatType === "inc" ? "(Inc VAT)" : "(Exc VAT)"}`}
                   type="number"
                   name="price"
                   placeholder="0.00"
-                  defaultValue={price}
+                  value={price2}
                   onChange={setPrice2}
-                  step="0.01"
+                  step={0.01}
                   numberMin={0.01}
                 />
                 <VatSelector value={vatType} onChange={setVatType} />
@@ -113,11 +114,11 @@ export function PricingInventory({
             <div className="space-y-4">
               <div className="flex items-center gap-2 mb-1">
                 <div className="p-1.5 bg-rose-50 rounded-md">
-                   <TrendingDown className="w-4 h-4 text-rose-600" />
+                  <TrendingDown className="w-4 h-4 text-rose-600" />
                 </div>
                 <span className="font-semibold text-gray-700">Promotions</span>
               </div>
-              
+
               <div className="space-y-4 p-4 bg-gray-50/50 rounded-lg border border-gray-100">
                 <ReqInput
                   labelText="Discount (%)"
@@ -129,7 +130,7 @@ export function PricingInventory({
                   required={false}
                   onChange={setPercent}
                 />
-                
+
                 {percent > 0 && (
                   <div className="flex items-center gap-3 p-2 bg-green-50 rounded border border-green-100 animate-in fade-in slide-in-from-top-1">
                     <div className="flex flex-col">
@@ -158,10 +159,10 @@ export function PricingInventory({
           {/* Inventory & Shipping Section */}
           <div className="border-t border-gray-100 pt-6">
             <div className="flex items-center gap-2 mb-4">
-               <div className="p-1.5 bg-blue-50 rounded-md">
-                  <Package className="w-4 h-4 text-blue-600" />
-               </div>
-               <span className="font-semibold text-gray-700">Inventory & Logistics</span>
+              <div className="p-1.5 bg-blue-50 rounded-md">
+                <Package className="w-4 h-4 text-blue-600" />
+              </div>
+              <span className="font-semibold text-gray-700">Inventory & Logistics</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -220,10 +221,9 @@ export function PricingInventory({
           {/* Featured Upgrade Section */}
           {!featured && (
             <div className="border-t border-gray-100 pt-6 mt-2">
-              <div 
-                className={`p-5 rounded-xl border-2 transition-all duration-300 ${
-                  isFeatured ? 'border-amber-200 bg-amber-50/30' : 'border-gray-100 bg-gray-50/30 hover:border-gray-200'
-                }`}
+              <div
+                className={`p-5 rounded-xl border-2 transition-all duration-300 ${isFeatured ? 'border-amber-200 bg-amber-50/30' : 'border-gray-100 bg-gray-50/30 hover:border-gray-200'
+                  }`}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3">

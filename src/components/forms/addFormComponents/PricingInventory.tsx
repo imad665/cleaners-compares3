@@ -50,8 +50,7 @@ export function PricingInventory({
   // Apply VAT logic
   const basePrice =
     vatType === "inc" ? Number(price2) / (1 + VAT_RATE) : Number(price2) // store exc VAT internally
-  const finalPrice =
-    vatType === "inc" ? basePrice * (1 + VAT_RATE) : basePrice
+  const finalPrice = basePrice * (1 + VAT_RATE)
 
   const discountAmount = finalPrice * (Number(percent) / 100)
   const discountedPrice = finalPrice - discountAmount

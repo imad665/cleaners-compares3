@@ -13,14 +13,18 @@ export type ReqInputType = {
   className?: string
   numberMin?: number
   defaultValue?: any
+  value?: any
   required?: boolean
   onChange?: (v: any) => void
   step?: number;
   info?: string
 }
 
-export function ReqInput({ labelText, className, info, step = null, placeholder, type, name, onChange = null, isTextArea = false, numberMin = -1, defaultValue = '', required = true }: ReqInputType) {
-  const [value, setValue] = useState(defaultValue);
+export function ReqInput({ labelText, className, info, step = null, placeholder, type, name, onChange = null, isTextArea = false, numberMin = -1, defaultValue = '', value: controlledValue, required = true }: ReqInputType) {
+  const [internalValue, setInternalValue] = useState(defaultValue);
+  const isControlled = controlledValue !== undefined;
+  const displayValue = isControlled ? controlledValue : internalValue;
+
   return (
     <div className={`space-y-2 ${className}`}>
       <div className="flex flex-col gap-1">
@@ -39,20 +43,23 @@ export function ReqInput({ labelText, className, info, step = null, placeholder,
           type={type}
           min={type === 'number' ? numberMin : 0}
           name={name}
-          value={value}
+          value={displayValue}
           step={type === 'number' && step ? step : 1}
           required={required}
           className="focus-visible:ring-primary transition-all duration-200"
           onChange={(e) => {
-            setValue(e.target.value)
+            if (!isControlled) setInternalValue(e.target.value)
             if (onChange) onChange(e.target.value)
           }}
           placeholder={placeholder}
         />
       ) : (
         <Textarea 
-          value={value} 
-          onChange={(e) => setValue(e.target.value)} 
+          value={displayValue} 
+          onChange={(e) => {
+            if (!isControlled) setInternalValue(e.target.value)
+            if (onChange) onChange(e.target.value)
+          }} 
           rows={6} 
           name={name} 
           className="focus-visible:ring-primary transition-all duration-200 min-h-[120px] resize-none"
