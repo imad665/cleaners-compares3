@@ -1,0 +1,473 @@
+'use client'
+import { Button } from "../ui/button";
+import { ProducImageAndMedia } from "./clientsUi";
+import React, { useActionState, useEffect, useRef, useState } from "react";
+import { addNewProductAction } from "@/actions/addNewProductAction";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { SellerForm } from "./sellerForm";
+import { useHomeContext } from "@/providers/homePageProvider";
+import { BasicInfo } from "./addItemsComponents/BasicInfo";
+import { PricingInventory } from "./addItemsComponents/PricingInventory";
+import { StepCategory } from "./addItemsComponents/StepCategory";
+import { SubCategorySelector } from "./addItemsComponents/SubCategorySelector";
+import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
+import { AddNewWantedItem } from "./wantedItem";
+import { BusinessListingForm } from "./busnisessForm";
+import ServiceForm, { ServiceEngineerForm, ServiceFormDialog } from "../adminDashboard/serviceEngineer";
+
+export function AddNewItemForm({
+  name,
+  description,
+  productionCondition,
+  imagesUrl,
+  videoUrl,
+  price,
+  isIncVAT,
+  discount,
+  discountEnd,
+  stockQuantity,
+  isEditing,
+  categories,
+  mainCategory: initialMainCategory,
+  subCategory,
+  subCategoryId: initialSubCategoryId,
+  productId,
+  weight,
+  featureDays,
+  isFeatured,
+  stock,
+  dealeEnd,
+  onSuccessEditing,
+  onFailedEditing,
+  machineDeliveryCharge,
+}: any) {
+  const [images, setImages] = useState<{ id: string, url: string, file: File }[]>([]);
+  const [video, setVideo] = useState<{ id: string, url: string, file: File } | null>(null);
+  const submitTypeRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const [state, action, pending] = useActionState(addNewProductAction, undefined);
+
+  const [currentStep, setCurrentStep] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState(initialMainCategory || '');
+  const [subCategoryId, setSubCategoryId] = useState(initialSubCategoryId || '');
+  const formRef = useRef<HTMLFormElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { user } = useHomeContext();
+  const role: "SELLER" | "BUYER" | undefined = user?.role;
+
+  useEffect(() => {
+    if (currentStep > 0 || selectedCategory) {
+      containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [currentStep]);
+
+  useEffect(() => {
+    setImages(imagesUrl?.map((i: string, index: number) => ({ id: `id_${index}`, url: i, file: undefined })) || [])
+    setVideo(videoUrl ? { id: 'video', url: videoUrl || '', file: undefined } : null);
+    if (initialMainCategory) {
+      setCurrentStep(1);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!state) return;
+    if (state.success) {
+      toast.success(state.message);
+      const url = state.url;
+      if (url) router.push(url)
+      else if (onSuccessEditing) onSuccessEditing();
+
+    } else {
+      toast.error(state.error);
+      if (onFailedEditing) onFailedEditing();
+    }
+  }, [state]);
+
+  const validateStep = (step: number) => {
+    if (hasOwnSubmit) return true; // Handled by their respective forms
+
+    if (step === 0) {
+      if (!selectedCategory) {
+        toast.error("Please select a category");
+        return false;
+      }
+    }
+
+    if (step === 1) {
+      if (showSubCategory && !subCategoryId) {
+        toast.error("Please select a subcategory");
+        return false;
+      }
+
+      if (formRef.current) {
+        const formData = new FormData(formRef.current);
+        const title = formData.get('title');
+        const description = formData.get('description');
+        const condition = formData.get('product_condition');
+
+        if (!title || title.toString().trim() === "") {
+          toast.error("Product title is required");
+          return false;
+        }
+        if (!description || description.toString().trim() === "") {
+          toast.error("Product description is required");
+          return false;
+        }
+        if (!condition) {
+          toast.error("Please select product condition");
+          return false;
+        }
+      }
+    }
+
+    if (step === 2) {
+      if (images.length === 0) {
+        toast.error("Please upload at least one image");
+        return false;
+      }
+    }
+
+    if (step === 3) {
+      if (formRef.current) {
+        const formData = new FormData(formRef.current);
+        const price = formData.get('price');
+        const stock = formData.get('stock');
+
+        if (!price || Number(price) <= 0) {
+          toast.error("Price must be greater than 0");
+          return false;
+        }
+        if (!stock || Number(stock) < 0) {
+          toast.error("Stock cannot be negative");
+          return false;
+        }
+      }
+    }
+
+    if (step === 4 && user && role === 'BUYER') {
+      // Step 4 is for SellerForm, which has its own validation/submit
+      return true;
+    }
+
+    return true;
+  };
+
+  const handleAction = (formData: FormData) => {
+    // If we have a step 4 (BUYER becoming SELLER), validate up to step 3 then step 4 is separate?
+    // Actually handleAction is for the main form submit.
+    if (!validateStep(3)) return;
+
+    images.forEach((img) => {
+      formData.append(img.file ? 'imagesFile' : 'imageUrls', img.file ? (img.file as any) : img.url);
+    });
+    if (video) {
+      formData.append(video.file ? 'videoFile' : 'videoUrl', video.file ? (video.file as any) : video.url)
+    }
+
+    if (!formData.has('category') && selectedCategory) {
+      formData.append('category', selectedCategory.replace(' ', '_'));
+    }
+    if (!formData.has('subcategoryId') && subCategoryId) {
+      formData.append('subcategoryId', subCategoryId);
+    }
+
+    action(formData)
+  }
+
+  const steps = [
+    { title: "Category", description: "Choose what you're selling" },
+    { title: "Details", description: "Basic item information" },
+    { title: "Media", description: "Photos and videos" },
+    { title: "Pricing", description: "Set your price and stock" }
+  ];
+
+  if (user && role === 'BUYER') {
+    steps.push({ title: "Account", description: "Become a seller" });
+  }
+
+
+
+  const categoriesWithSubmit = ["Engineers & Services", "Wanted Items", "Businesses for Sale"];
+  const hasOwnSubmit = categoriesWithSubmit.includes(selectedCategory);
+
+  const displaySteps = hasOwnSubmit ? steps.slice(0, 2) : steps;
+
+  const handleNext = () => {
+    if (!validateStep(currentStep)) return;
+    if (currentStep < displaySteps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleCategoryPick = (c: string) => {
+    setSelectedCategory(c);
+    // Move to next step directly as picking a category is the action for step 0
+    setCurrentStep(1);
+  };
+
+  const showSubCategory = ["Machines", "Parts & Components", "Sundries & Supplies"].includes(selectedCategory);
+  let secondStep
+  const mapedCategory = selectedCategory === 'Sundries & Supplies'
+    ? 'sundries'
+    : selectedCategory === 'Parts & Components'
+      ? "parts"
+      : 'machines'
+  const navigationParams = {
+    handleBack: handleBack,
+    currentStep: currentStep,
+    pending: pending,
+    steps: displaySteps,
+    handleNext: handleNext,
+    selectedCategory: selectedCategory,
+    submitTypeRef: submitTypeRef,
+    isEditing: isEditing,
+    hasOwnSubmit: hasOwnSubmit,
+    user: user,
+    role: role
+  }
+
+  if (selectedCategory === "Engineers & Services" && currentStep == 1) {
+    secondStep = (
+      <div>
+        <div  >
+          {/*  <h2 className="font-bold text-xl pb-1 flex items-center justify-center">Add New Engineer</h2>
+          <p className="text-muted-foreground text-center pb-5">Register as a service engineer to offer your technical expertise and support to the community.</p> */}
+          <div className={"hidden"}>
+            <StepCategory
+              onPick={handleCategoryPick}
+              selectedCategory={selectedCategory}
+            />
+          </div>
+          <ServiceForm key={new Date().getMilliseconds().toString()} onSubmitSuccess={() => {
+            router.replace("/admin/myServices")
+          }} />
+        </div>
+
+
+        {/* Navigation Buttons */}
+        <Navigation
+          {...navigationParams}
+        />
+      </div>
+
+    )
+  } else if (selectedCategory == "Wanted Items" && currentStep == 1) {
+    secondStep = (
+      <div>
+        <div className="rounded-md bg-white shadow-sm m-2 p-6 space-y-3 px-5 border">
+          <h2 className="font-bold text-xl pb-1 flex items-center justify-center">Add New Wanted Item</h2>
+          <p className="text-muted-foreground text-center pb-5">Looking for something specific? Post a request and let sellers or providers find you.</p>
+          <div className={"hidden"}>
+            <StepCategory
+              onPick={handleCategoryPick}
+              selectedCategory={selectedCategory}
+            />
+          </div>
+          <AddNewWantedItem key={new Date().getMilliseconds().toString()} onSubmitSuccess={() => {
+            router.replace("/admin/myWantedItems")
+          }} />
+        </div>
+
+
+        {/* Navigation Buttons */}
+        <Navigation
+          {...navigationParams}
+        />
+      </div>
+    )
+  } else if (selectedCategory === "Businesses for Sale" && currentStep == 1) {
+    secondStep = (
+      <div>
+        <div className="rounded-md bg-white shadow-sm m-2 p-6 space-y-3 px-5 border">
+          <h2 className="font-bold text-xl pb-1 flex items-center justify-center">Sell Your Business</h2>
+          <p className="text-muted-foreground text-center pb-5">List your business for sale to reach potential buyers and investors in the industry.</p>
+          <div className={"hidden"}>
+            <StepCategory
+              onPick={handleCategoryPick}
+              selectedCategory={selectedCategory}
+            />
+          </div>
+          <BusinessListingForm key={new Date().getMilliseconds().toString()} onSubmitSuccess={() => {
+            router.replace("/admin/myBusinessesForSale")
+          }} />
+        </div>
+
+
+        {/* Navigation Buttons */}
+        <Navigation
+          {...navigationParams}
+        />
+      </div>
+    )
+  }
+
+  else {
+    secondStep = (
+      <form ref={formRef} action={handleAction} className="space-y-6 relative">
+        <input type="hidden" name="submitType" ref={submitTypeRef} />
+        {isEditing && <input type="hidden" name="productId" value={productId} />}
+
+        {/* Step 0: Category Selection */}
+        <div className={currentStep === 0 ? "block" : "hidden"}>
+          <StepCategory
+            onPick={handleCategoryPick}
+            selectedCategory={selectedCategory}
+          />
+        </div>
+
+        {/* Step 1: Details (Subcategory & Basic Info) */}
+        <div className={currentStep === 1 ? "block" : "hidden"}>
+          {showSubCategory && <div>
+            <SubCategorySelector
+              categories={categories}
+              mainCategory={mapedCategory}
+              subCategory={subCategory}
+              id={subCategoryId}
+              onSubCategoryChange={(id) => setSubCategoryId(id)}
+            />
+            <BasicInfo
+              name={name}
+              description={description}
+              productionCondition={productionCondition}
+            />
+          </div>}
+
+          {!showSubCategory && selectedCategory && (
+            <input type="hidden" name="category" value={selectedCategory.replace(' ', '_')} />
+          )}
+
+        </div>
+
+        {/* Step 2: Media */}
+        <div className={currentStep === 2 ? "block" : "hidden"}>
+          <ProducImageAndMedia
+            images={images} video={video}
+            setImages={setImages} setVideo={setVideo}
+          />
+        </div>
+
+        {/* Step 3: Pricing & Finalize */}
+        <div className={currentStep === 3 ? "block" : "hidden"}>
+          <PricingInventory
+            discount={discount}
+            price={price}
+            isIncVAT={isIncVAT}
+            units={stockQuantity}
+            weight={weight}
+            featureDays={featureDays}
+            selectedCategory={selectedCategory}
+            stock={stock}
+            featured={isFeatured}
+            discountEndDate={dealeEnd}
+            machineDeliveryCharge={machineDeliveryCharge}
+          />
+        </div>
+
+        {/* Step 4: Become a Seller (Conditional) */}
+        {user && role === 'BUYER' && (
+          <div className={currentStep === 4 ? "block" : "hidden"}>
+            <div className="flex flex-col gap-4 border p-6 rounded-md bg-white shadow-sm m-2 mt-6">
+              <h2 className="font-bold text-xl">Become a Seller:</h2>
+              <SellerForm
+                callback="/"
+                redirect={false}
+                onSuccess={() => {
+                  if (formRef.current) {
+                    if (submitTypeRef.current) submitTypeRef.current.value = 'post';
+                    formRef.current.requestSubmit();
+                  }
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Navigation Buttons */}
+        <Navigation
+          {...navigationParams}
+        />
+      </form>
+    )
+  }
+
+
+  return (
+    <div ref={containerRef} className="w-full pb-32">
+      <div className="container max-w-[900px] m-auto mt-20">
+        {secondStep}
+      </div>
+    </div>
+  );
+}
+
+function Navigation({ handleBack, currentStep, pending, steps, handleNext, selectedCategory, submitTypeRef, isEditing, hasOwnSubmit, user, role }: any) {
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-[100] bg-white/80 backdrop-blur-md border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] py-4">
+      <div className="container max-w-[900px] m-auto flex justify-between items-center px-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleBack}
+          disabled={currentStep === 0 || pending}
+          className="flex items-center gap-2 h-11 px-6 font-semibold"
+        >
+          <ArrowLeft size={18} /> Back
+        </Button>
+
+        <div className="flex items-center gap-2">
+          {steps.map((_: any, idx: number) => (
+            <div
+              key={idx}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${idx === currentStep
+                ? "bg-blue-700 w-6"
+                : idx < currentStep
+                  ? "bg-blue-400"
+                  : "bg-gray-200"
+                }`}
+            />
+          ))}
+        </div>
+
+        {currentStep < steps.length - 1 ? (
+          <Button
+            type="button"
+            onClick={handleNext}
+            disabled={currentStep === 0 && !selectedCategory}
+            className="bg-blue-700 hover:bg-blue-600 flex items-center gap-2 text-white h-11 px-8 font-semibold shadow-md"
+          >
+            Continue <ArrowRight size={18} />
+          </Button>
+        ) : hasOwnSubmit || (user && role === 'BUYER' && currentStep === 4) ? (
+          <div className="text-muted-foreground text-xs italic sm:text-sm">
+            Submit using the form above
+          </div>
+        ) : (
+          <Button
+            disabled={pending}
+            type="submit"
+            className="bg-blue-700 hover:bg-blue-600 text-white min-w-[150px] h-11 px-8 font-bold shadow-md shadow-blue-200"
+            onClick={() => {
+              if (submitTypeRef.current) submitTypeRef.current.value = 'post';
+            }}
+          >
+            {pending ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Processing...
+              </div>
+            ) : isEditing ? 'Save Changes' : 'Post Item'}
+          </Button>
+        )}
+      </div>
+    </div>
+  )
+}

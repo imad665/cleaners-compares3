@@ -372,7 +372,7 @@ const MyBusinesses = () => {
 
                 </div>
             </div>}
-            <div className='w-[100vw] h-30'> </div>
+            <div className='w-full h-30'> </div>
         </div>
 
     );

@@ -22,25 +22,17 @@ export default async function Layout(
     //await deleteUserTested()
     //console.log(user,'ooooooooooooooo')
     return (
-        <div className="flex w-full h-[100vh] overflow-hidden">
-            {/*  <NavMobile />
-            <NavDesktop /> */}
-
-            <div className="h-[100vh] w-[100vw]">
-
-                <HeaderAdmin notificationData={[
-                    ...(messages || []),
-                    ...sellerInquiries,
-                    ...buyerInquiries
-                ]} />
-                <div className="flex h-[100vh] ">
-                    <SideBarDesktop />
-
-                    <div className="h-full overflow-auto p-2">
-                        {children}
-                    </div>
-                </div>
-
+        <div className="flex flex-col w-full h-screen overflow-hidden">
+            <HeaderAdmin notificationData={[
+                ...(messages || []),
+                ...sellerInquiries,
+                ...buyerInquiries
+            ]} />
+            <div className="flex flex-1 overflow-hidden">
+                <SideBarDesktop />
+                <main className="flex-1 overflow-y-auto p-2">
+                    {children}
+                </main>
             </div>
         </div>
     )

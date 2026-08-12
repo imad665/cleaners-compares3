@@ -131,9 +131,8 @@ export function ItemFeaturedProduct({
     const parsedUnitPrice = Number(unitPrice);
     const isUnits = units > 0;
     const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";
-    const finalImage = image === "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg" ? '/uploads/ImageUnavailable.jpg' : image;
+    const finalImage = image === "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg" || image.includes("/uploads/logo") ? '/uploads/ImageUnavailable.jpg' : image;
 
-    //console.log(listingStatus, 'ddddddddmmmmmmmmmmmmmmm');
 
     const handleMessageSeller = () => {
         if (!user) setOpenSignIn(true);

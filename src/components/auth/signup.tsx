@@ -1,50 +1,85 @@
 'use client'
 
 import { registerAction } from "@/actions/registerAction"
-import { useActionState, useEffect, useState } from "react"
-import { Eye, EyeClosed } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Eye, EyeOff, Loader2, User, Mail, Lock, ArrowRight } from "lucide-react"
 import { signIn } from "next-auth/react"
-import BeatLoader from "react-spinners/BeatLoader"
 import {
     Card,
     CardContent,
     CardFooter,
     CardHeader,
     CardTitle,
+    CardDescription,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import { Dialog, DialogContent } from "../ui/dialog"
-import { useRouter } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
+function InputPassword({ 
+    label, 
+    id, 
+    name, 
+    value, 
+    onChange, 
+    disabled, 
+    placeholder, 
+    autoComplete 
+}: { 
+    label: string, 
+    id: string, 
+    name: string, 
+    value: string, 
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, 
+    disabled: boolean, 
+    placeholder?: string,
+    autoComplete?: string
+}) {
+    const [showPassword, setShowPassword] = useState(false);
 
-export function InputPassword({ name, pending, text }: { name: string, pending: boolean, text: string }) {
-    const [isCloseEye, setIsCloseEye] = useState(false);
-    const [password, setPassWord] = useState('');
     return (
-        <div className="relative">
-            <Label htmlFor="password">{text}</Label>
-            <Input
-                disabled={pending}
-                autoComplete={!isCloseEye ? "new-password" : 'off'}
-                value={password}
-                onChange={(e) => setPassWord(e.target.value)}
-                id={name}
-                type={!isCloseEye ? "password" : 'text'}
-                name={name}
-                required />
-            <button type="button" onClick={() => setIsCloseEye(!isCloseEye)} className="absolute cursor-pointer right-2 top-1/2 text-muted-foreground" >
-                {!isCloseEye ?
-                    <Eye size={16} /> :
-                    <EyeClosed size={16} />}
-            </button>
+        <div className="space-y-2">
+            <Label htmlFor={id}>{label}</Label>
+            <div className="relative group">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors z-10">
+                    <Lock size={18} />
+                </div>
+                <Input
+                    id={id}
+                    name={name}
+                    type={showPassword ? "text" : "password"}
+                    disabled={disabled}
+                    autoComplete={autoComplete || (showPassword ? "off" : "new-password")}
+                    value={value}
+                    onChange={onChange}
+                    required
+                    className="pl-10 pr-10 h-11 transition-all shadow-sm"
+                    placeholder={placeholder || "••••••••"}
+                />
+                <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors outline-none z-10"
+                    tabIndex={-1}
+                >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+            </div>
         </div>
     )
 }
 
-export default function SignUpComp({ onSignInClick = null, callback }: { onSignInClick?: () => void; callback?: string }) {
+export default function SignUpComp({ 
+    onSignInClick = null, 
+    callback 
+}: { 
+    onSignInClick?: () => void; 
+    callback?: string 
+}) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -52,12 +87,12 @@ export default function SignUpComp({ onSignInClick = null, callback }: { onSignI
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [pending, setPending] = useState(false);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError('');
 
-        // Client-side validation
         if (password.length < 8) {
             setError('Password must be at least 8 characters long');
             setIsLoading(false);
@@ -81,6 +116,7 @@ export default function SignUpComp({ onSignInClick = null, callback }: { onSignI
 
             if (result?.error) {
                 setError(result.error);
+                setIsLoading(false);
             } else if (result?.success) {
                 await signIn('credentials', {
                     email: result.email,
@@ -90,10 +126,7 @@ export default function SignUpComp({ onSignInClick = null, callback }: { onSignI
             }
         } catch (err) {
             setError('An unexpected error occurred');
-        } finally {
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 4000);
+            setIsLoading(false);
         }
     };
 
@@ -108,7 +141,6 @@ export default function SignUpComp({ onSignInClick = null, callback }: { onSignI
             });
 
             if (result?.error) {
-                // Handle specific Google errors
                 if (result.error.includes('access_denied')) {
                     setError("Google sign-in was cancelled.");
                 } else if (result.error.includes('OAuthAccountNotLinked')) {
@@ -116,143 +148,191 @@ export default function SignUpComp({ onSignInClick = null, callback }: { onSignI
                 } else {
                     setError("Google sign-in failed. Please try again.");
                 }
-                console.error("Google sign-in error:", result.error);
             } else if (result?.ok) {
-                // Successful sign-in - reload the page
                 window.location.href = result.url || "/";
             }
         } catch (err) {
             setError("An unexpected error occurred during sign-in.");
-            console.error("Google sign-in exception:", err);
         } finally {
             setPending(false);
         }
     };
 
     return (
-        <div className="w-full bg-white flex items-center justify-center px-4 relative">
-            {isLoading && <div className="w-full h-full bg-[rgba(0,0,0,0.5)] absolute z-1000 flex items-center justify-center"><BeatLoader /></div>}
-            <Card className="w-full max-w-md">
-                <CardHeader>
-                    <CardTitle className="text-center text-2xl">Create an Account</CardTitle>
+        <div className="w-full bg-transparent flex items-center justify-center">
+            <Card className="w-full max-w-md border-none shadow-none sm:border sm:shadow-sm overflow-hidden bg-white">
+                <CardHeader className="space-y-1 pb-6">
+                    <CardTitle className="text-2xl font-bold tracking-tight text-center text-navy">
+                        Create an account
+                    </CardTitle>
+                    <CardDescription className="text-center">
+                        Enter your information to get started
+                    </CardDescription>
                 </CardHeader>
 
-                <CardContent>
-                    {error && (
-                        <div className="mb-4 text-sm text-red-500 text-center">{error}</div>
-                    )}
+                <CardContent className="grid gap-4">
+                    <AnimatePresence mode="wait">
+                        {error && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                key="error"
+                            >
+                                <Alert variant="destructive" className="py-2.5">
+                                    <AlertDescription className="flex items-center gap-2">
+                                        {error}
+                                    </AlertDescription>
+                                </Alert>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor="name">Name</Label>
-                            <Input
-                                disabled={isLoading}
-                                id="name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                name="name"
-                                required
-                            />
+                        <div className="space-y-2">
+                            <Label htmlFor="name">Full Name</Label>
+                            <div className="relative group">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors z-10">
+                                    <User size={18} />
+                                </div>
+                                <Input
+                                    id="name"
+                                    name="name"
+                                    disabled={isLoading}
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    required
+                                    className="pl-10 h-11 transition-all shadow-sm"
+                                    placeholder="John Doe"
+                                />
+                            </div>
                         </div>
 
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                disabled={isLoading}
-                                autoComplete="off"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                id="email"
-                                type="email"
-                                name="email"
-                                required
-                            />
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email Address</Label>
+                            <div className="relative group">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors z-10">
+                                    <Mail size={18} />
+                                </div>
+                                <Input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    disabled={isLoading}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    className="pl-10 h-11 transition-all shadow-sm"
+                                    placeholder="name@example.com"
+                                />
+                            </div>
                         </div>
 
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                disabled={isLoading}
+                        <div className="grid gap-4 sm:grid-cols-1">
+                            <InputPassword
+                                label="Password"
                                 id="password"
-                                type="password"
                                 name="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                            <p className="text-xs text-muted-foreground mt-1">
-                                Password must be at least 8 characters
-                            </p>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor="confirmPassword">Confirm Password</Label>
-                            <Input
                                 disabled={isLoading}
+                                placeholder="Create a password"
+                            />
+                            <InputPassword
+                                label="Confirm Password"
                                 id="confirmPassword"
-                                type="password"
                                 name="confirmPassword"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
+                                disabled={isLoading}
+                                placeholder="Repeat your password"
+                                autoComplete="new-password"
                             />
                         </div>
+                        
+                        <p className="text-[11px] text-muted-foreground mt-1 px-1">
+                            Password must be at least 8 characters long
+                        </p>
 
-                        <Button type="submit" className="w-full" disabled={isLoading}>
-                            {isLoading ? "Creating..." : "Sign Up"}
+                        <Button type="submit" className="w-full h-11 font-semibold transition-all active:scale-[0.98] mt-2" disabled={isLoading}>
+                            {isLoading ? (
+                                <div className="flex items-center gap-2">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    Creating account...
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    Sign Up
+                                    <ArrowRight size={16} />
+                                </div>
+                            )}
                         </Button>
                     </form>
 
-                    <div className="my-4 flex items-center justify-between">
-                        <hr className="w-full border-gray-300" />
-                        <span className="px-2 text-gray-500 text-sm">or</span>
-                        <hr className="w-full border-gray-300" />
+                    <div className="relative my-2">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-white px-2 text-muted-foreground font-medium">
+                                Or continue with
+                            </span>
+                        </div>
                     </div>
 
                     <Button
-                        type="button"
                         variant="outline"
-                        className="w-full flex items-center justify-center gap-2"
+                        type="button"
+                        className="w-full h-11 font-medium transition-all active:scale-[0.98] border-muted-foreground/20 hover:bg-muted/50"
                         onClick={handleGoogleSignUP}
-                        disabled={isLoading}
+                        disabled={isLoading || pending}
                     >
-                        <Image src="/google_logo.svg" width={50} height={50} alt="Google" className="w-5 h-5" />
-                        Sign up with Google
+                        <div className="flex items-center justify-center gap-3">
+                            <Image src="/google_logo.svg" width={20} height={20} alt="Google" className="w-5 h-5" />
+                            <span>Sign up with Google</span>
+                        </div>
                     </Button>
                 </CardContent>
 
-                <CardFooter className="justify-center text-sm text-muted-foreground">
+                <CardFooter className="flex flex-wrap justify-center gap-1 py-4 text-sm text-muted-foreground border-t bg-muted/20">
                     Already have an account?{" "}
-                    {onSignInClick && <button
-                        onClick={onSignInClick}
-                        className="text-blue-600 ml-1 border-none bg-none hover:underline"
-                        disabled={isLoading}
-                    >
-                        Sign in
-                    </button>}
-                    {!onSignInClick && <a
-                        href="/auth/signin"
-                        className="text-blue-600 ml-1 hover:underline"
-                    >
-                        Sign in
-                    </a>}
+                    {onSignInClick ? (
+                        <button
+                            onClick={onSignInClick}
+                            className="font-semibold text-primary hover:underline underline-offset-4 cursor-pointer bg-transparent border-none p-0"
+                            disabled={isLoading}
+                        >
+                            Sign in
+                        </button>
+                    ) : (
+                        <a 
+                            href="/auth/signin" 
+                            className="font-semibold text-primary hover:underline underline-offset-4"
+                        >
+                            Sign in
+                        </a>
+                    )}
                 </CardFooter>
             </Card>
         </div>
     )
 }
 
-export function SignupModal({ open, setOpen, onSignInClick, callback }:
-    {
-        open: boolean,
-        setOpen: (v: boolean) => void
-        onSignInClick: () => void;
-        callback?: string;
-    }) {
-
+export function SignupModal({ 
+    open, 
+    setOpen, 
+    onSignInClick, 
+    callback 
+}: {
+    open: boolean,
+    setOpen: (v: boolean) => void,
+    onSignInClick: () => void;
+    callback?: string;
+}) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="   h-auto">
+            <DialogContent className="sm:max-w-[440px] p-0 overflow-hidden border-none shadow-2xl bg-white">
                 <SignUpComp callback={callback} onSignInClick={onSignInClick} />
             </DialogContent>
         </Dialog>

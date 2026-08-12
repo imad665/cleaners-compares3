@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHomeContext } from "@/providers/homePageProvider";
+import { ButtonSellAnItem } from "../header/ButtonSellItem";
 
 export function BigButton({ text, onClick, disabled }: { text: string, onClick: () => void, disabled?: boolean }) {
   return (
@@ -75,7 +76,8 @@ export function MainImage() {
             We can list your products for you — no technical setup required.
           </div>
           <div className="mt-2 md:hidden ">
-            <ButtonNeedSignIn text="Sell Your Products" buttonClassName="w-full md:w-fit text-xl p-5" />
+            <ButtonSellAnItem isEmail={true} buttonClassName="w-full md:w-fit font-bold !text-2xl" />
+            {/* <ButtonNeedSignIn text="Sell Your Products" buttonClassName="w-full md:w-fit text-xl p-5" /> */}
           </div>
 
           <div className="mt-6 flex flex-col gap-3 md:flex-row">

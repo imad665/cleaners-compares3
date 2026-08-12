@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import { generateUniqueSlug } from "@/lib/products/slugGen";
 import { deleteCloudinaryFileByUrl, uploadFileToCloud } from "@/lib/cloudStorage";
+import { compressToWebP } from "@/lib/utils/image-compression";
 
 async function deleteSubCategories() {
     try {
@@ -154,9 +155,11 @@ export async function POST(req: NextRequest) {
         // ✅ Upload image to Cloudinary
         let imageUrl: string | null = null;
         if (imageFile && imageFile.size > 0) {
-            const { url } = await uploadFileToCloud(imageFile, {
+            const compressedBuffer = await compressToWebP(imageFile);
+            const { url } = await uploadFileToCloud(compressedBuffer, {
                 folder: "subCategory",
                 publicId: `${uuidv4()}-${imageFile.name}`,
+                contentType: 'image/webp'
             });
             imageUrl = url;
         }
@@ -297,9 +300,11 @@ export async function PATCH(req: NextRequest) {
             }
 
             // upload new file to cloudinary
-            const { url } = await uploadFileToCloud(file, {
+            const compressedBuffer = await compressToWebP(file);
+            const { url } = await uploadFileToCloud(compressedBuffer, {
                 folder: "subCategory",
                 publicId: `${uuidv4()}-${file.name}`,
+                contentType: 'image/webp'
             });
             imageUrl = url;
         }

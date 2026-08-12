@@ -92,24 +92,26 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ videoUrl, onChange }) => 
 
         <TabsContent value="upload" className="space-y-4">
           {videoPreview ? (
-            <div className="relative rounded-md overflow-hidden">
+            <div className="relative rounded-xl overflow-hidden border shadow-sm group">
               <video
                 src={videoPreview}
                 controls
-                className="w-full h-auto max-h-[300px]"
+                className="w-full h-auto max-h-[300px] bg-black"
               />
-              <Button
-                type="button"
-                size="icon"
-                variant="destructive"
-                className="absolute top-2 right-2 h-8 w-8"
-                onClick={clearVideo}
-              >
-                <X className="h-4 w-4" />
-              </Button>
+              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="destructive"
+                  className="h-8 w-8 rounded-full shadow-lg"
+                  onClick={clearVideo}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           ) : (
-            <label className="border-2 border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center cursor-pointer py-8 px-4 hover:bg-gray-50 transition-colors">
+            <label className="border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center cursor-pointer py-10 px-4 hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group">
               <input
                 type="file"
                 className="sr-only"
@@ -117,13 +119,15 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ videoUrl, onChange }) => 
                 onChange={handleFileChange}
               />
               <div className="flex flex-col items-center text-center">
-                <Video className="h-10 w-10 text-gray-400 mb-2" />
-                <span className="text-sm text-gray-500">
+                <div className="p-4 bg-gray-50 rounded-full group-hover:bg-primary/10 transition-colors mb-4">
+                  <Video className="h-8 w-8 text-gray-400 group-hover:text-primary" />
+                </div>
+                <span className="text-sm font-semibold text-gray-700 group-hover:text-primary">
                   Click to upload product video
                 </span>
-                <span className="text-xs text-gray-400 mt-1">
-                  MP4, WebM or OGG (Max 50MB)
-                </span>
+                <p className="text-xs text-muted-foreground mt-2 max-w-[200px]">
+                  MP4, WebM or OGG <br/>(Max 9MB & 10 seconds)
+                </p>
               </div>
             </label>
           )}

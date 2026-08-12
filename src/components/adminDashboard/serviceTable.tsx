@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Button } from "@/components/ui/button";
 import { Trash2, Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import ServiceForm from "./serviceEngineer";
+import { ServiceEngineerForm } from "./serviceEngineer";
 import { toast } from "sonner";
 
 
@@ -238,11 +238,18 @@ export default function ServiceTable({ newService = null }: { newService?: Servi
         <DialogTrigger asChild>
 
         </DialogTrigger>
-        <DialogContent className=" min-w-fit">
-          <DialogHeader>
+        <DialogContent className=" min-w-fit  h-[85vh] overflow-hidden p-0">
+          <DialogHeader className="bg-navy p-6 text-white relative overflow-hidden">
             <DialogTitle>Edit Service</DialogTitle>
           </DialogHeader>
-          <ServiceForm onSubmitSuccess={onSubmitSuccess} editItem={editItem} />
+          <div className="overflow-auto min-h-full h-full p-5">
+            <ServiceEngineerForm
+              onSubmitSuccess={onSubmitSuccess}
+              editItem={editItem}
+              onCancel={() => setIsEdit(false)}
+            />
+          </div>
+
         </DialogContent>
       </Dialog>
 

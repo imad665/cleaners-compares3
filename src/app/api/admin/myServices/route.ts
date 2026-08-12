@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { deleteCloudinaryFileByUrl, uploadFileToCloud } from "@/lib/cloudStorage";
+import { compressToWebP } from "@/lib/utils/image-compression";
 import { embedEngineersToNeon } from "@/lib/langchain/embeding/embed_enginner";
 import { reembedByRefId, removeEmbeddingByRefId } from "@/lib/langchain/embeding/utils/embed-handler";
 import { processPayement } from "@/lib/payement/servicePayement";
@@ -126,9 +127,11 @@ export async function POST(req: NextRequest) {
 
         // ✅ Upload service picture to Cloudinary instead of local fs
         if (file && file.size > 0) {
-            const { url, public_id } = await uploadFileToCloud(file, {
+            const compressedBuffer = await compressToWebP(file);
+            const { url, public_id } = await uploadFileToCloud(compressedBuffer, {
                 folder: "services",
                 publicId: `${uuidv4()}-${file.name}`,
+                contentType: 'image/webp'
             });
             pictureUrl = url;
         }
@@ -153,13 +156,17 @@ export async function POST(req: NextRequest) {
                 contactNumber: formData.get("contactNumber") as string,
                 companyType: formData.get("companyType") as any,
                 address: formData.get("address") as string,
-                description: formData.get("description") as string,
+                description: formData.get("description") as string || '',
                 isFeatured: false,
                 isEnabled: formData.get("enabled") === "true",
                 category: formData.get("category") as any,
                 featureDays: featureDays,
                 pictureUrl: pictureUrl,
-                userId: userId,
+                user: {
+                    connect: {
+                        id: userId
+                    }
+                }
             },
         });
         try {
@@ -215,9 +222,11 @@ export async function PATCH(req: NextRequest) {
             }
 
             // upload new file
-            const { url } = await uploadFileToCloud(file, {
+            const compressedBuffer = await compressToWebP(file);
+            const { url } = await uploadFileToCloud(compressedBuffer, {
                 folder: "services",
                 publicId: `${uuidv4()}-${file.name}`,
+                contentType: 'image/webp'
             });
             pictureUrl = url;
         }

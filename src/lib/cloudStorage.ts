@@ -40,24 +40,34 @@ cloudinary.config({
   });
 } */
 export async function uploadFileToCloud(
-  file: File,
-  options: { folder?: string; publicId?: string } = {}
+  file: File | Buffer,
+  options: { folder?: string; publicId?: string; filename?: string; contentType?: string } = {}
 ): Promise<{ url: string; public_id: string }> {
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
+  let buffer: Buffer;
+  let contentType: string;
+
+  if (file instanceof Buffer) {
+    buffer = file;
+    contentType = options.contentType || 'image/webp';
+  } else {
+    const arrayBuffer = await file.arrayBuffer();
+    buffer = Buffer.from(arrayBuffer);
+    contentType = file.type;
+  }
+
   const stream = Readable.from(buffer);
 
   // Dynamically determine resource_type (image or video)
-  const mime = file.type;
-  const isVideo = mime.startsWith("video/");
+  const isVideo = contentType.startsWith("video/");
   const resourceType = isVideo ? "video" : "image";
 
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: options.folder || "products", // 👈 default to products
+        folder: options.folder || "products",
         public_id: options.publicId,
         resource_type: resourceType,
+        format: contentType === 'image/webp' ? 'webp' : undefined,
       },
       (error, result) => {
         if (error || !result) return reject(error);

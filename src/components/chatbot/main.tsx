@@ -189,7 +189,7 @@ export default function ChatWidget() {
             )}
 
             {/* Floating Chat Button with Wave Effect */}
-            <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
+            <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[300]">
                 {!isOpen && (
                     <div className="absolute inset-0 -m-3">
                         <div className="absolute inset-0 rounded-full bg-indigo-400/40 animate-ping-slow"></div>
@@ -240,8 +240,8 @@ export default function ChatWidget() {
                         flex items-center justify-center 
                         w-12 h-12 sm:w-14 sm:h-14 
                         rounded-full shadow-lg bg-green-500 hover:bg-green-600 
-                        text-white transition-all duration-300 z-50
-                        transform hover:scale-105
+                        text-white transition-all duration-300 
+                        transform hover:scale-105 z-[300]
                     "
                     aria-label="Contact us on WhatsApp"
                 >
@@ -276,7 +276,7 @@ export default function ChatWidget() {
                     <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 text-white flex justify-between items-center">
                         <div className="flex items-center space-x-3">
                             <div className="p-1 rounded-full bg-indigo-700">
-                                <img src="logo-1.png" className="w-7 h-7 rounded-2xl" />
+                                <img src="/logo-1.png" className="w-7 h-7 rounded-2xl" />
                                 {/* <Bot className="h-5 w-5" /> */}
                             </div>
                             <div>
@@ -311,7 +311,7 @@ export default function ChatWidget() {
                     >
                         {messages.length === 0 && false ? (
                             <div className="flex flex-col items-center justify-center h-full text-gray-400 p-4 text-center">
-                                <img src="logo-1.png" className="w-7 h-7 rounded-2xl" />
+                                <img src="/logo-1.png" className="w-7 h-7 rounded-2xl" />
                                 <h3 className="font-medium text-lg mb-1">Welcome to CleanersCompare</h3>
                                 <p className="text-sm max-w-xs mb-4">I can help you find equipment or connect you with expert engineers!</p>
 
@@ -395,7 +395,7 @@ export default function ChatWidget() {
                                     <div className="flex justify-start">
                                         <div className="flex items-end gap-2 max-w-[90%]">
                                             <div className="flex-shrink-0 rounded-full p-1 bg-purple-100 text-purple-600">
-                                                <img src="logo-1.png" className="w-7 h-7 rounded-2xl" />
+                                                <img src="/logo-1.png" className="w-7 h-7 rounded-2xl" />
                                             </div>
                                             <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
                                                 <p className="text-sm text-gray-700">
@@ -411,7 +411,7 @@ export default function ChatWidget() {
                                     <div className="flex justify-start">
                                         <div className="flex items-end gap-2 max-w-[90%]">
                                             <div className="flex-shrink-0 rounded-full p-1 bg-purple-100 text-purple-600">
-                                                <img src="logo-1.png" className="w-7 h-7 rounded-2xl" />
+                                                <img src="/logo-1.png" className="w-7 h-7 rounded-2xl" />
                                             </div>
                                             <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
                                                 <div className="flex space-x-2">

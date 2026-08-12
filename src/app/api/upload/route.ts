@@ -1,6 +1,7 @@
 // app/api/upload/route.ts
 import { authOptions } from '@/lib/auth';
 import { uploadFileToCloud } from '@/lib/cloudStorage';
+import { compressToWebP } from '@/lib/utils/image-compression';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
  
@@ -34,8 +35,14 @@ export async function POST(request: Request) {
       size: buffer.length,
     } as unknown as File;
 
+    // Compress to WebP
+    const compressedBuffer = await compressToWebP(fakeFile);
+
     // Upload to Cloudinary
-    const uploadResult = await uploadFileToCloud(fakeFile, publicId);
+    const uploadResult = await uploadFileToCloud(compressedBuffer, { 
+      publicId,
+      contentType: 'image/webp'
+    });
 
     return NextResponse.json({ url: uploadResult.url, public_id: uploadResult.public_id });
   } catch (error) {

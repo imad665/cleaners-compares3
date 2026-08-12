@@ -1,11 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, Eye, Star, X } from 'lucide-react';
-import Badge from '@/components/adminDashboard/shared/Badge';
+import { Plus, Edit2, Trash2 } from 'lucide-react';
 import Button from '@/components/adminDashboard/shared/Button';
 import Table from '@/components/adminDashboard/shared/Table';
-import { HeaderAdmin, NavDesktop, NavMobile } from '@/components/adminDashboard/menu/menu';
-import { AddNewProductForm } from '@/components/forms/addNewProductForm';
 import { toast } from 'sonner';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import AddWantedItemDialog from '@/components/forms/wantedItem';
@@ -370,7 +367,7 @@ const AllProducts = () => {
 
                 </div>
             </div>}
-            <div className='w-[100vw] h-30'> </div>
+            <div className='w-full h-30'> </div>
         </div>
 
     );

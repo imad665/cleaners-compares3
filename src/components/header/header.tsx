@@ -21,6 +21,7 @@ import { NotificationDropdown } from './notificationButton2'
 import AutoSellerFormDialog from '../forms/autoSellerForm'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
 import { signOut } from 'next-auth/react'
+import { ButtonSellAnItem } from './ButtonSellItem'
 
 // Temporary state values — replace with auth/cart logic
 
@@ -338,7 +339,7 @@ function NavDesktop({ user, cart, setOpenDialog, recentOrderCount, notificationD
                         Become a Seller
                     </Button>
                 } */}
-                <ButtonNeedSignIn isEmail={true} text="Sell Your Products" buttonClassName="w-full md:w-fit" />
+                <ButtonSellAnItem isEmail={true} buttonClassName="w-full md:w-fit font-bold" />
                 {/* <ContactDialog textButton={'Report poblem'} /> */}
 
                 {user &&

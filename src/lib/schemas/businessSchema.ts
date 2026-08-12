@@ -43,18 +43,15 @@ export const businessSchema = z.object({
   turnoverRange: turnoverRangeEnum,
   email:z.string().email(),
   phone:z.string(), 
-  imageUrl:z.string().url(),
-  datePosted:z.string(), 
-  description:z.string(), 
-  id:z.string(),
+  imageUrl:z.string().optional(),
+  datePosted:z.string().optional(), 
+  description:z.string().min(1, "Description is required"), 
+  id:z.string().optional(),
+  fullName: z.string().min(1, "Full Name is required"),
   specificAmount: z
     .number()
     .min(0, { message: "Amount must be positive" })
-    .optional()
-    .refine(
-      (val) => val === undefined || val > 0, 
-      { message: "Amount must be greater than 0" }
-    ),
+    .optional(),
   reasonForSelling: sellingReasonEnum,
 });
 

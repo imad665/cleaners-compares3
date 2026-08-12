@@ -267,9 +267,11 @@ export default async function RootLayout({
   //await deleteUserByEmail("maz@exclusivecleaners.co.uk")
   //await deleteUserByEmail("maz@exclusivecleaners.co.uk")
 
-  /* await deleteUserTested(['amirshahz77@gmail.com','simo@email.com','amirshahz777@yahoo.co.uk',
-    'asasa@gmail.com','amirshahz77@gmail.com','Amir@tlc.com','programmingi77i@gmail.com','med.hasnaoui92@gmail.com',
-    'ddqdeqd@gmail.com','seller1@gmail.com','vic1dayinsh7777@gmail.com','srtechsolutions03@gmail.com'
+  /* await deleteUserTested(['simo555@email.com', 'simo333@email.com', 'simo554@email.com',
+    'simo322@email.com', 'simo321@gmail.com', 'simo008@email.com', 'simo007@email.com', 'simo006@email.com',
+    'simo005@email.com', 'simo004@email.com', 'simo003@email.com', 'simo002@email.com',
+    "simo001@email.com", "simo323@email.com", "simo321@gmail.com", 'simo322@email.com', 'romithkrishnadfgfdf@gmail.com',
+    "romithkrishnafddd@gmail.com", "kim@gmail.com"
   ]) */
   //await deleteUserTested()
 
@@ -300,7 +302,7 @@ export default async function RootLayout({
         {/* </HomeProductsProvider> */}
         <Toaster />
         <PWAInstallButton />
-        {/* <MotivationToast /> */}
+        <MotivationToast />
       </body>
     </html>
   );

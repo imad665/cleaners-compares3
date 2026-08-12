@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { deleteCloudinaryFileByUrl, uploadFileToCloud } from "@/lib/cloudStorage";
+import { compressToWebP } from "@/lib/utils/image-compression";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { revalidateTag } from "next/cache";
@@ -81,9 +82,11 @@ export async function POST(req: NextRequest) {
 
 
         if (imageFile && imageFile.size > 0) {
-            const { url, public_id } = await uploadFileToCloud(imageFile);
+            const compressedBuffer = await compressToWebP(imageFile);
+            const { url, public_id } = await uploadFileToCloud(compressedBuffer, {
+                contentType: 'image/webp'
+            });
             imageUrl = url;
-
         }
 
         const newBusiness = await prisma.businessForSale.create({
@@ -141,7 +144,10 @@ export async function PATCH(req: NextRequest) {
         let imageUrl = formData.get('imageUrl')?.toString() || "";
 
         if (imageFile && imageFile.size > 0) {
-            const { url, public_id } = await uploadFileToCloud(imageFile);
+            const compressedBuffer = await compressToWebP(imageFile);
+            const { url, public_id } = await uploadFileToCloud(compressedBuffer, {
+                contentType: 'image/webp'
+            });
             imageUrl = url;
 
             const business = await prisma.businessForSale.findFirst({

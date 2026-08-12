@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { deleteCloudinaryFileByUrl, uploadFileToCloud } from "@/lib/cloudStorage";
+import { compressToWebP } from "@/lib/utils/image-compression";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { revalidateTag } from "next/cache";
@@ -64,12 +65,15 @@ export async function POST(req: NextRequest) {
         const fullName = formData.get('fullName') as string;
         let imageUrl = formData.get('imageUrl') as string;
 
-        if (!title || !location || !description || !phone || !email) {
+        if (!title || !location /* || !description */ || !phone || !email) {
             return NextResponse.json({ error: "Missing fields" }, { status: 400 });
         }
 
         if (imageFile && imageFile.size > 0) {
-            const { url, public_id } = await uploadFileToCloud(imageFile);
+            const compressedBuffer = await compressToWebP(imageFile);
+            const { url, public_id } = await uploadFileToCloud(compressedBuffer, {
+                contentType: 'image/webp'
+            });
             imageUrl = url;
         }
         if (!imageUrl) {
@@ -85,8 +89,8 @@ export async function POST(req: NextRequest) {
             data: {
                 title,
                 location,
-                description,
-                imageUrl,
+                description: description || '',
+                imageUrl: imageUrl || '',
                 userId: user.id, // you must provide a real userId based on your auth
                 contactInfo: {
                     create: {
@@ -125,14 +129,16 @@ export async function PATCH(req: NextRequest) {
         const fullName = formData.get('fullName') as string;
         const imageFile = formData.get('imageFile') as File || null;
         let imageUrl = formData.get('imageUrl') as string;
-        console.log(imageFile);
 
-        if (!title || !location || !description || !imageFile || !phone || !email) {
+
+        if (!title || !location /* || !description || !imageFile */ || !phone || !email) {
             return NextResponse.json({ error: "Missing fields" }, { status: 400 });
         }
-
         if (imageFile && imageFile.size > 0) {
-            const { url, public_id } = await uploadFileToCloud(imageFile);
+            const compressedBuffer = await compressToWebP(imageFile);
+            const { url, public_id } = await uploadFileToCloud(compressedBuffer, {
+                contentType: 'image/webp'
+            });
             imageUrl = url;
 
             const wanted = await prisma.wantedItem.findFirst({
@@ -149,8 +155,8 @@ export async function PATCH(req: NextRequest) {
             data: {
                 title,
                 location,
-                description,
-                imageUrl,
+                description: description || '',
+                imageUrl: imageUrl || '',
                 contactInfo: {
                     update: {
                         phone,

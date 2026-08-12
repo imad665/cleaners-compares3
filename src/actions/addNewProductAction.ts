@@ -7,6 +7,7 @@ import { processPayement } from "@/lib/payement/product-feature";
 import { prisma } from "@/lib/prisma";
 import { generateSlug, generateUniqueSlug } from "@/lib/products/slugGen";
 import { deleteImageFileAt } from "@/lib/utils/saveImagesLocaly";
+import { compressToWebP } from "@/lib/utils/image-compression";
 import { getServerSession } from "next-auth";
 import { revalidatePath, revalidateTag } from "next/cache";
 import slugify from "slugify";
@@ -53,10 +54,23 @@ export async function addNewProductAction(prev: any, formData: FormData) {
     /* console.log(submitType,productName,description,product_condition);
     console.log(price,discount,discountEnd,category,subCategory);
     console.log(imagesFile.length,imageUrls.length ,subcategoryId); */
+    console.log({
+        submitType,
+        productName,
+        description,
+        product_condition,
+        price,
+        category,
+        subCategory,
+        imagesFile,
+        imageUrls,
+        subcategoryId
+
+    });
 
     if (!submitType || !productName || !description || !product_condition ||
         !price ||
-        !category || !subCategory ||
+        !category /* || !subCategory  */ ||
         (imagesFile.length === 0 && imageUrls.length === 0) ||
         !subcategoryId
     ) {
@@ -77,7 +91,11 @@ export async function addNewProductAction(prev: any, formData: FormData) {
     // Upload images to cloud storage (you should implement this method in your cloudStorage helper)
 
     for (const image of imagesFile) {
-        const { url, public_id } = await uploadFileToCloud(image); // Upload each image and get the URL
+        const compressedBuffer = await compressToWebP(image);
+        const { url, public_id } = await uploadFileToCloud(compressedBuffer, { 
+            contentType: 'image/webp',
+            folder: 'products' 
+        }); // Upload each image and get the URL
         //console.log(url,public_id);
         imageUrls.push(url);
     }
