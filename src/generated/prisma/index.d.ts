@@ -14342,6 +14342,9 @@ export namespace Prisma {
     weight: number | null
     delivery_charge: number | null
     isIncVAT: boolean | null
+    vatType: string | null
+    freeLocalDelivery: boolean | null
+    customerCollects: boolean | null
     slug: string | null
     stock: number | null
     markAsDeleted: boolean | null
@@ -14373,6 +14376,9 @@ export namespace Prisma {
     weight: number | null
     delivery_charge: number | null
     isIncVAT: boolean | null
+    vatType: string | null
+    freeLocalDelivery: boolean | null
+    customerCollects: boolean | null
     slug: string | null
     stock: number | null
     markAsDeleted: boolean | null
@@ -14405,6 +14411,9 @@ export namespace Prisma {
     weight: number
     delivery_charge: number
     isIncVAT: number
+    vatType: number
+    freeLocalDelivery: number
+    customerCollects: number
     slug: number
     stock: number
     markAsDeleted: number
@@ -14458,6 +14467,9 @@ export namespace Prisma {
     weight?: true
     delivery_charge?: true
     isIncVAT?: true
+    vatType?: true
+    freeLocalDelivery?: true
+    customerCollects?: true
     slug?: true
     stock?: true
     markAsDeleted?: true
@@ -14489,6 +14501,9 @@ export namespace Prisma {
     weight?: true
     delivery_charge?: true
     isIncVAT?: true
+    vatType?: true
+    freeLocalDelivery?: true
+    customerCollects?: true
     slug?: true
     stock?: true
     markAsDeleted?: true
@@ -14521,6 +14536,9 @@ export namespace Prisma {
     weight?: true
     delivery_charge?: true
     isIncVAT?: true
+    vatType?: true
+    freeLocalDelivery?: true
+    customerCollects?: true
     slug?: true
     stock?: true
     markAsDeleted?: true
@@ -14640,6 +14658,9 @@ export namespace Prisma {
     weight: number | null
     delivery_charge: number | null
     isIncVAT: boolean | null
+    vatType: string
+    freeLocalDelivery: boolean
+    customerCollects: boolean
     slug: string | null
     stock: number | null
     markAsDeleted: boolean
@@ -14691,6 +14712,9 @@ export namespace Prisma {
     weight?: boolean
     delivery_charge?: boolean
     isIncVAT?: boolean
+    vatType?: boolean
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: boolean
     stock?: boolean
     markAsDeleted?: boolean
@@ -14730,6 +14754,9 @@ export namespace Prisma {
     weight?: boolean
     delivery_charge?: boolean
     isIncVAT?: boolean
+    vatType?: boolean
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: boolean
     stock?: boolean
     markAsDeleted?: boolean
@@ -14764,6 +14791,9 @@ export namespace Prisma {
     weight?: boolean
     delivery_charge?: boolean
     isIncVAT?: boolean
+    vatType?: boolean
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: boolean
     stock?: boolean
     markAsDeleted?: boolean
@@ -14798,12 +14828,15 @@ export namespace Prisma {
     weight?: boolean
     delivery_charge?: boolean
     isIncVAT?: boolean
+    vatType?: boolean
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: boolean
     stock?: boolean
     markAsDeleted?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "price" | "discountPercentage" | "discountPrice" | "dealStartDate" | "dealEndDate" | "isDealActive" | "imagesUrl" | "videoUrl" | "isFeatured" | "condition" | "categoryId" | "sellerId" | "socialMediaPosted" | "createdAt" | "featuredEndDate" | "featuredStartDate" | "status" | "listingStatus" | "units" | "featureDays" | "weight" | "delivery_charge" | "isIncVAT" | "slug" | "stock" | "markAsDeleted", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "price" | "discountPercentage" | "discountPrice" | "dealStartDate" | "dealEndDate" | "isDealActive" | "imagesUrl" | "videoUrl" | "isFeatured" | "condition" | "categoryId" | "sellerId" | "socialMediaPosted" | "createdAt" | "featuredEndDate" | "featuredStartDate" | "status" | "listingStatus" | "units" | "featureDays" | "weight" | "delivery_charge" | "isIncVAT" | "vatType" | "freeLocalDelivery" | "customerCollects" | "slug" | "stock" | "markAsDeleted", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Inquiry?: boolean | Product$InquiryArgs<ExtArgs>
     orderItem?: boolean | Product$orderItemArgs<ExtArgs>
@@ -14859,6 +14892,9 @@ export namespace Prisma {
       weight: number | null
       delivery_charge: number | null
       isIncVAT: boolean | null
+      vatType: string
+      freeLocalDelivery: boolean
+      customerCollects: boolean
       slug: string | null
       stock: number | null
       markAsDeleted: boolean
@@ -15317,6 +15353,9 @@ export namespace Prisma {
     readonly weight: FieldRef<"Product", 'Float'>
     readonly delivery_charge: FieldRef<"Product", 'Float'>
     readonly isIncVAT: FieldRef<"Product", 'Boolean'>
+    readonly vatType: FieldRef<"Product", 'String'>
+    readonly freeLocalDelivery: FieldRef<"Product", 'Boolean'>
+    readonly customerCollects: FieldRef<"Product", 'Boolean'>
     readonly slug: FieldRef<"Product", 'String'>
     readonly stock: FieldRef<"Product", 'Int'>
     readonly markAsDeleted: FieldRef<"Product", 'Boolean'>
@@ -31918,6 +31957,9 @@ export namespace Prisma {
     weight: 'weight',
     delivery_charge: 'delivery_charge',
     isIncVAT: 'isIncVAT',
+    vatType: 'vatType',
+    freeLocalDelivery: 'freeLocalDelivery',
+    customerCollects: 'customerCollects',
     slug: 'slug',
     stock: 'stock',
     markAsDeleted: 'markAsDeleted'
@@ -33327,6 +33369,9 @@ export namespace Prisma {
     weight?: FloatNullableFilter<"Product"> | number | null
     delivery_charge?: FloatNullableFilter<"Product"> | number | null
     isIncVAT?: BoolNullableFilter<"Product"> | boolean | null
+    vatType?: StringFilter<"Product"> | string
+    freeLocalDelivery?: BoolFilter<"Product"> | boolean
+    customerCollects?: BoolFilter<"Product"> | boolean
     slug?: StringNullableFilter<"Product"> | string | null
     stock?: IntNullableFilter<"Product"> | number | null
     markAsDeleted?: BoolFilter<"Product"> | boolean
@@ -33365,6 +33410,9 @@ export namespace Prisma {
     weight?: SortOrderInput | SortOrder
     delivery_charge?: SortOrderInput | SortOrder
     isIncVAT?: SortOrderInput | SortOrder
+    vatType?: SortOrder
+    freeLocalDelivery?: SortOrder
+    customerCollects?: SortOrder
     slug?: SortOrderInput | SortOrder
     stock?: SortOrderInput | SortOrder
     markAsDeleted?: SortOrder
@@ -33406,6 +33454,9 @@ export namespace Prisma {
     weight?: FloatNullableFilter<"Product"> | number | null
     delivery_charge?: FloatNullableFilter<"Product"> | number | null
     isIncVAT?: BoolNullableFilter<"Product"> | boolean | null
+    vatType?: StringFilter<"Product"> | string
+    freeLocalDelivery?: BoolFilter<"Product"> | boolean
+    customerCollects?: BoolFilter<"Product"> | boolean
     slug?: StringNullableFilter<"Product"> | string | null
     stock?: IntNullableFilter<"Product"> | number | null
     markAsDeleted?: BoolFilter<"Product"> | boolean
@@ -33444,6 +33495,9 @@ export namespace Prisma {
     weight?: SortOrderInput | SortOrder
     delivery_charge?: SortOrderInput | SortOrder
     isIncVAT?: SortOrderInput | SortOrder
+    vatType?: SortOrder
+    freeLocalDelivery?: SortOrder
+    customerCollects?: SortOrder
     slug?: SortOrderInput | SortOrder
     stock?: SortOrderInput | SortOrder
     markAsDeleted?: SortOrder
@@ -33484,6 +33538,9 @@ export namespace Prisma {
     weight?: FloatNullableWithAggregatesFilter<"Product"> | number | null
     delivery_charge?: FloatNullableWithAggregatesFilter<"Product"> | number | null
     isIncVAT?: BoolNullableWithAggregatesFilter<"Product"> | boolean | null
+    vatType?: StringWithAggregatesFilter<"Product"> | string
+    freeLocalDelivery?: BoolWithAggregatesFilter<"Product"> | boolean
+    customerCollects?: BoolWithAggregatesFilter<"Product"> | boolean
     slug?: StringNullableWithAggregatesFilter<"Product"> | string | null
     stock?: IntNullableWithAggregatesFilter<"Product"> | number | null
     markAsDeleted?: BoolWithAggregatesFilter<"Product"> | boolean
@@ -35557,6 +35614,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -35595,6 +35655,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -35629,6 +35692,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -35667,6 +35733,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -35703,6 +35772,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -35733,6 +35805,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -35765,6 +35840,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -37880,6 +37958,9 @@ export namespace Prisma {
     weight?: SortOrder
     delivery_charge?: SortOrder
     isIncVAT?: SortOrder
+    vatType?: SortOrder
+    freeLocalDelivery?: SortOrder
+    customerCollects?: SortOrder
     slug?: SortOrder
     stock?: SortOrder
     markAsDeleted?: SortOrder
@@ -37921,6 +38002,9 @@ export namespace Prisma {
     weight?: SortOrder
     delivery_charge?: SortOrder
     isIncVAT?: SortOrder
+    vatType?: SortOrder
+    freeLocalDelivery?: SortOrder
+    customerCollects?: SortOrder
     slug?: SortOrder
     stock?: SortOrder
     markAsDeleted?: SortOrder
@@ -37952,6 +38036,9 @@ export namespace Prisma {
     weight?: SortOrder
     delivery_charge?: SortOrder
     isIncVAT?: SortOrder
+    vatType?: SortOrder
+    freeLocalDelivery?: SortOrder
+    customerCollects?: SortOrder
     slug?: SortOrder
     stock?: SortOrder
     markAsDeleted?: SortOrder
@@ -41647,6 +41734,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -41683,6 +41773,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -41927,6 +42020,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -41964,6 +42060,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -42379,6 +42478,9 @@ export namespace Prisma {
     weight?: FloatNullableFilter<"Product"> | number | null
     delivery_charge?: FloatNullableFilter<"Product"> | number | null
     isIncVAT?: BoolNullableFilter<"Product"> | boolean | null
+    vatType?: StringFilter<"Product"> | string
+    freeLocalDelivery?: BoolFilter<"Product"> | boolean
+    customerCollects?: BoolFilter<"Product"> | boolean
     slug?: StringNullableFilter<"Product"> | string | null
     stock?: IntNullableFilter<"Product"> | number | null
     markAsDeleted?: BoolFilter<"Product"> | boolean
@@ -45705,6 +45807,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -45742,6 +45847,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -45915,6 +46023,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -45952,6 +46063,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -46143,6 +46257,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -46179,6 +46296,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -46390,6 +46510,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -46427,6 +46550,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -46636,6 +46762,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -46673,6 +46802,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -46789,6 +46921,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -46826,6 +46961,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -46952,6 +47090,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -46989,6 +47130,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -47722,6 +47866,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -48242,6 +48389,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -48278,6 +48428,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -48313,6 +48466,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -48486,6 +48642,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -48523,6 +48682,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -48558,6 +48720,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -49090,6 +49255,9 @@ export namespace Prisma {
     weight?: number | null
     delivery_charge?: number | null
     isIncVAT?: boolean | null
+    vatType?: string
+    freeLocalDelivery?: boolean
+    customerCollects?: boolean
     slug?: string | null
     stock?: number | null
     markAsDeleted?: boolean
@@ -49163,6 +49331,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -49199,6 +49370,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -49234,6 +49408,9 @@ export namespace Prisma {
     weight?: NullableFloatFieldUpdateOperationsInput | number | null
     delivery_charge?: NullableFloatFieldUpdateOperationsInput | number | null
     isIncVAT?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    vatType?: StringFieldUpdateOperationsInput | string
+    freeLocalDelivery?: BoolFieldUpdateOperationsInput | boolean
+    customerCollects?: BoolFieldUpdateOperationsInput | boolean
     slug?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: NullableIntFieldUpdateOperationsInput | number | null
     markAsDeleted?: BoolFieldUpdateOperationsInput | boolean

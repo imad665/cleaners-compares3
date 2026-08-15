@@ -20,7 +20,13 @@ async function getSellerId() {
 
 
 
+
 export async function addNewProductAction(prev: any, formData: FormData) {
+
+    const isTrue = (value: string) => {
+        return value.trim().toLowerCase() == 'true'
+    }
+
     const sellerId = await getSellerId();
     if (!sellerId) return { success: false, redirect: '/login' };
     const productId = formData.get('productId')?.toString().trim();
@@ -44,9 +50,18 @@ export async function addNewProductAction(prev: any, formData: FormData) {
     const featuredDuration = formData.get('featuredDuration');
     const productWeight = formData.get('weight')?.toString().trim() || null;
     const machineDeliveryCharge = formData.get("delivery_charge")?.toString().trim() || null;
-    const vat = formData.get('vat') // inc or exc
     const stock = parseFloat(formData.get('stock')?.toString().trim() || "0");
+    // ======== NEW =======
+    const vat = formData.get('vat-selector')?.toString() || 'exc' // inc or exc or no-vat
+    const freeLocalDelivery = isTrue(formData.get('freeLocalDelivery')?.toString() || 'false')
+    const customerCollects = isTrue(formData.get('customerCollects')?.toString() || 'false')
+
+
+
     const isIncVAT = vat === 'inc';
+
+    console.log(formData, { vat, freeLocalDelivery, customerCollects }, 'llllllllllllllll');
+    //return { success: false, error: 'All fields are required.---' };
 
     //console.log(machineDeliveryCharge,productWeight,isIncVAT,'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 
@@ -92,9 +107,9 @@ export async function addNewProductAction(prev: any, formData: FormData) {
 
     for (const image of imagesFile) {
         const compressedBuffer = await compressToWebP(image);
-        const { url, public_id } = await uploadFileToCloud(compressedBuffer, { 
+        const { url, public_id } = await uploadFileToCloud(compressedBuffer, {
             contentType: 'image/webp',
-            folder: 'products' 
+            folder: 'products'
         }); // Upload each image and get the URL
         //console.log(url,public_id);
         imageUrls.push(url);
@@ -165,6 +180,9 @@ export async function addNewProductAction(prev: any, formData: FormData) {
                 delivery_charge: parseFloat(machineDeliveryCharge),
                 weight: parseFloat(productWeight!),
                 isIncVAT: isIncVAT,
+                freeLocalDelivery,
+                customerCollects,
+                vatType: vat,
                 condition: (product_condition as 'USED' | 'NEW'),
                 imagesUrl: imageUrls,
                 videoUrl: videoUrl?.toString() || null, // Optional, it can be null
@@ -205,6 +223,9 @@ export async function addNewProductAction(prev: any, formData: FormData) {
                 condition: (product_condition as 'USED' | 'NEW'),
                 imagesUrl: imageUrls,
                 isIncVAT: isIncVAT,
+                freeLocalDelivery,
+                customerCollects,
+                vatType: vat,
                 videoUrl: videoUrl?.toString() || null, // Optional, it can be null
                 categoryId: subcategory.id,
                 slug,

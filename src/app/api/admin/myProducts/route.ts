@@ -60,6 +60,9 @@ export async function GET(req: NextRequest) {
                 featureDays: true,
                 delivery_charge: true,
                 listingStatus: true,
+                customerCollects: true,
+                freeLocalDelivery: true,
+                vatType: true,
                 stock: true,
                 category: {
                     select: {
@@ -97,6 +100,9 @@ export async function GET(req: NextRequest) {
                 discountPrice: p.discountPrice,
                 delivery_charge: p.delivery_charge,
                 dealEndDateFormate: p.dealEndDate?.toISOString().split('T')[0],
+                customerCollects: p.customerCollects,
+                freeLocalDelivery: p.freeLocalDelivery,
+                vatType: p.vatType,
                 dealEndDate: p.dealEndDate
                     ? new Date(p.dealEndDate).toLocaleString('en-GB', {
                         day: '2-digit',

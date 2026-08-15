@@ -288,7 +288,7 @@ export default async function RootLayout({
         {/* <HomeProductsProvider> */}
         <HomeProvider user={session?.user}>
           {children}
-          <ChatPage className='fixed bottom-2 right-2' />
+
           {/* <ChatPage className='fixed bottom-2 left-2' /> */}
 
           <ReturnToAdminButton />

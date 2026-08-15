@@ -5,6 +5,8 @@ import { getGeneralInquiries } from "@/lib/products/homeCategories";
 import { getFooterData, getRecentOrdersCount } from "@/lib/products/homeProducts";
 import { getServerSession } from "next-auth";
 import Footer from "@/components/home_page/footer";
+import ChatPage from "@/components/chatbot/main";
+
 export default async function RootLayout({
     children,
 }: Readonly<{
@@ -16,7 +18,6 @@ export default async function RootLayout({
     const user = session?.user;
     const { buyerInquiries, sellerInquiries } = await getGeneralInquiries(user);
     const footerData = await getFooterData()
-    console.log('refreshed,');
 
     return (
         <div>
@@ -27,6 +28,8 @@ export default async function RootLayout({
             ]} />
             {children}
             <Footer footerData={footerData} />
+            <ChatPage className='fixed bottom-2 right-2' />
+
         </div>
     )
 }

@@ -60,8 +60,10 @@ export async function POST(req: NextRequest) {
             description: p.description,
             sellerEmail: p.seller?.email,
             isIncVAT: p.isIncVAT,
-            delivery_charge: p.delivery_charge ? p.delivery_charge : getDelveryChargeFromWight(p.weight || 0),
-
+            vatType: p.vatType,
+            freeLocalDelivery: p.freeLocalDelivery,
+            customerCollects: p.customerCollects,
+            delivery_charge: p.delivery_charge != null ? p.delivery_charge : getDelveryChargeFromWight(p.weight || 0),
             isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')    
 
         }));

@@ -367,6 +367,9 @@ const AllProducts = () => {
                                 stock={selectedProduct.stockCount}
                                 isFeatured={selectedProduct.featured}
                                 dealeEnd={selectedProduct.dealEndDateFormate}
+                                customerCollects={selectedProduct.customerCollects}
+                                freeLocalDelivery={selectedProduct.freeLocalDelivery}
+                                vatType={selectedProduct.vatType}
                                 isEditing={true}
                             />
                         </div>

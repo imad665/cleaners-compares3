@@ -188,6 +188,9 @@ model Product {
   weight             Float? // weight or delivery_charge if product is machine
   delivery_charge    Float?
   isIncVAT           Boolean?         @default(false)
+  vatType            String           @default("exc") // inc or exc or no-vat
+  freeLocalDelivery  Boolean          @default(false)
+  customerCollects   Boolean          @default(false)
   slug               String?
   stock              Int?
   markAsDeleted      Boolean          @default(false)

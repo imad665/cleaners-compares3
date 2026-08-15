@@ -36,6 +36,9 @@ export function AddNewProductForm({
   onSuccessEditing,
   onFailedEditing,
   machineDeliveryCharge,
+  customerCollects,
+  freeLocalDelivery,
+  vatType,
 }: any) {
   const [images, setImages] = useState<{ id: string, url: string, file: File }[]>([]);
   const [video, setVideo] = useState<{ id: string, url: string, file: File } | null>(null);
@@ -46,7 +49,7 @@ export function AddNewProductForm({
   const { user } = useHomeContext();
 
   const role: "SELLER" | "BUYER" | undefined = user?.role;
-  console.log(user, 'dddddddddddddddllllllllllllllll');
+  console.log({ customerCollects, freeLocalDelivery, vatType }, 'dddddddddddddddllllllllllllllll');
 
 
   useEffect(() => {
@@ -113,6 +116,9 @@ export function AddNewProductForm({
           featured={isFeatured}
           discountEndDate={dealeEnd}
           machineDeliveryCharge={machineDeliveryCharge}
+          customerCollects={customerCollects}
+          freeLocalDelivery={freeLocalDelivery}
+          vatType0={vatType}
         />
         {user && role == 'BUYER' && <div className="flex flex-col gap-4 border p-3 rounded-md">
           <h2 className="font-bold text-xl">Become a Seller:</h2>

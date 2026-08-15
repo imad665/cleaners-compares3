@@ -7,15 +7,15 @@ export function VatSelector({
   value,
   onChange,
 }: {
-  value: "inc" | "exc"
-  onChange: (v: "inc" | "exc") => void
+  value: "inc" | "exc" | "no-vat"
+  onChange: (v: "inc" | "exc" | "no-vat") => void
 }) {
   return (
     <RadioGroup
       value={value}
-      onValueChange={(v) => onChange(v as "inc" | "exc")}
+      onValueChange={(v) => onChange(v as "inc" | "exc" | "no-vat")}
       className="flex items-center gap-6"
-      name="vat"
+      name="vat-selector"
     >
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="inc" id="inc" />
@@ -24,6 +24,10 @@ export function VatSelector({
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="exc" id="exc" />
         <Label htmlFor="exc">Exc VAT</Label>
+      </div>
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="no-vat" id="no-vat" />
+        <Label htmlFor="no-vat">No VAT</Label>
       </div>
     </RadioGroup>
   )

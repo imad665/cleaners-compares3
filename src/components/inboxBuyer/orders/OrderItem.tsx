@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageCircle, ExternalLink, Star, Clock, ChevronUp, ChevronDown } from 'lucide-react';
+import { MessageCircle, ExternalLink, Star, Clock, ChevronUp, ChevronDown, Truck } from 'lucide-react';
 import { Order } from '../utils/types';
 import StatusBadge from './StatusBadge';
 import { AddCartButton } from '@/components/home_page/clientComponents/uis';
@@ -60,11 +60,15 @@ const OrderItem: React.FC<OrderItemProps> = ({
   const [openSignUp, setOpenSignUp] = useState(false);
   const [openSignIn, setOpenSignIn] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  
+
+  const customerCollects: boolean = order.customerCollects; // true or false
+  const freeLocalDelivery: boolean = order.freeLocalDelivery; // true or false
+  const vatType: 'exc' | 'inc' | 'no-vat' = order.vatType; // exc | inc | no-vat
+
   const isUnits = order.units > 0;
   const hasLongDescription = order.description && order.description.length > 150;
-  const displayDescription = hasLongDescription && !isExpanded 
-    ? `${order.description.substring(0, 150)}...` 
+  const displayDescription = hasLongDescription && !isExpanded
+    ? `${order.description.substring(0, 150)}...`
     : order.description;
 
   return (
@@ -88,7 +92,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
                 <h3 className="text-lg font-medium text-gray-900 break-words">
                   {order.title}
                 </h3>
-                
+
                 <div className="mt-2 flex items-center">
                   <img
                     src={order.sellerAvatar || '/logo-1.png'}
@@ -145,14 +149,24 @@ const OrderItem: React.FC<OrderItemProps> = ({
                       </div>
                     </>
                   )}
-                  
-                  <div className="border-t pt-2">
+
+                  <div className="border-t pt-2 space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">
-                        {order.isIncVAT ? "Inc VAT:" : "Exc VAT:"}
+                        {vatType === "inc" ? "Inc VAT:" : vatType === "no-vat" ? "No VAT:" : "Exc VAT:"}
                       </span>
                       <span className="text-lg font-bold text-gray-900">
                         £{order.priceExcVat}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center text-xs text-gray-500 border-t border-gray-100 pt-2">
+                      <span className="flex items-center gap-1">
+                        <Truck size={12} className="text-blue-500" />
+                        Delivery:
+                      </span>
+                      <span className="font-medium text-gray-700">
+                        {freeLocalDelivery ? "Free Local" : customerCollects ? "Collection" : "Standard"}
                       </span>
                     </div>
 
@@ -203,12 +217,12 @@ const OrderItem: React.FC<OrderItemProps> = ({
               </div>
             ) : (
               <div className="mt-4 flex flex-col sm:flex-row sm:justify-end gap-2">
-                <AddCartButton 
-                  isFromCart={true} 
-                  stock={order.stock} 
-                  isOldProduct={order.isOldProduct} 
-                  className="relative top-0 w-fit" 
-                  productId={order.productId} 
+                <AddCartButton
+                  isFromCart={true}
+                  stock={order.stock}
+                  isOldProduct={order.isOldProduct}
+                  className="relative top-0 w-fit"
+                  productId={order.productId}
                 />
               </div>
             )}
@@ -219,7 +233,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
         openSignIn={openSignIn}
         openSignUp={openSignUp}
         setOpenSignIn={setOpenSignIn}
-        setOpenSignUp={setOpenSignUp} 
+        setOpenSignUp={setOpenSignUp}
       />
     </div>
   );

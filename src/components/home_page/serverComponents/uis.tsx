@@ -97,23 +97,26 @@ export function ItemShopByCategory({ Icon, text }: { Icon: LucideIcon, text: str
 
 export type ItemProps = {
     id: string;
-    title: string
-    units: number
-    unitPrice: number
-    priceExcVat: number
-    image: string
-    href: string
-    stars?: number
-    starsCount?: number,
-    productId: string,
-    price?: number,
-    dealCountdown?: string,
-    stock?: number,
-    className?: string,
-    isOldProduct: boolean,
-    discountPercentage: number,
-    isIncVAT: boolean,
-    listingStatus: "SOLD" | "UNDER_OFFER" | "AVAILABLE",
+    title: string;
+    units: number;
+    unitPrice: number;
+    priceExcVat: number;
+    image: string;
+    href: string;
+    stars?: number;
+    starsCount?: number;
+    productId: string;
+    price?: number;
+    dealCountdown?: string;
+    stock?: number;
+    className?: string;
+    isOldProduct: boolean;
+    discountPercentage: number;
+    isIncVAT: boolean;
+    listingStatus: "SOLD" | "UNDER_OFFER" | "AVAILABLE";
+    vatType: 'exc' | 'inc' | 'no-vat';
+    freeLocalDelivery: boolean;
+    customerCollects: boolean;
 
 }
 
@@ -121,7 +124,8 @@ export function ItemFeaturedProduct({
     id, title, image, href, stars = 0, starsCount = 0,
     productId, unitPrice, units, priceExcVat, price,
     dealCountdown, stock, className, isOldProduct,
-    isIncVAT, discountPercentage, listingStatus
+    isIncVAT, discountPercentage, listingStatus,
+    vatType, customerCollects, freeLocalDelivery,
 }: ItemProps) {
     const [openSignIn, setOpenSignIn] = useState(false);
     const [openSignUp, setOpenSignUp] = useState(false);
@@ -130,7 +134,8 @@ export function ItemFeaturedProduct({
 
     const parsedUnitPrice = Number(unitPrice);
     const isUnits = units > 0;
-    const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";
+    //const vatLabel = isIncVAT ? "Inc. VAT" : "Exc. VAT";
+    const vatLabel = vatType === "inc" ? "Inc. VAT" : vatType === "no-vat" ? "No VAT" : "Exc. VAT";
     const finalImage = image === "https://res.cloudinary.com/dmtscpgrm/image/upload/v1759257209/products/mnlz2luiljqdcvornlut.jpg" || image.includes("/uploads/logo") ? '/uploads/ImageUnavailable.jpg' : image;
 
 

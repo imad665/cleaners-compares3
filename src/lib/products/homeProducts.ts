@@ -78,6 +78,9 @@ function getFeaturedProductsChunk(where: any, skip: number, pageSize: number) {
             stock: true,
             listingStatus: true,
             isIncVAT: true,
+            vatType: true,
+            customerCollects: true,
+            freeLocalDelivery: true,
             ratings: {
                 select: {
                     stars: true,
@@ -171,6 +174,9 @@ export async function getFeaturedProducts({ page = 1, pageSize = 10, isFeatured 
                 stock: p.stock,
                 title: p.title,
                 isIncVAT: p.isIncVAT,
+                vatType: p.vatType,
+                freeLocalDelivery: p.freeLocalDelivery,
+                customerCollects: p.customerCollects,
                 isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
             }
         })
@@ -314,6 +320,9 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
                 stock: true,
                 createdAt: true,
                 isIncVAT: true,
+                vatType: true,
+                freeLocalDelivery: true,
+                customerCollects: true,
                 ratings: {
                     select: {
                         stars: true,
@@ -390,6 +399,9 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
             stock: p.stock,
             discountPercentage: p.discountPercentage,
             isIncVAT: p.isIncVAT,
+            vatType: p.vatType,
+            customerCollects: p.customerCollects,
+            freeLocalDelivery: p.freeLocalDelivery,
             isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
         }
     }
@@ -482,6 +494,9 @@ export async function getPartsAndAccessoirsProducts({ page = 1, pageSize = 10, i
                 listingStatus: true,
                 stock: true,
                 createdAt: true,
+                vatType: true,
+                freeLocalDelivery: true,
+                customerCollects: true,
                 ratings: {
                     select: {
                         stars: true,
@@ -547,6 +562,9 @@ export async function getPartsAndAccessoirsProducts({ page = 1, pageSize = 10, i
             image: p.imagesUrl[0],
             title: p.title,
             stock: p.stock,
+            vatType: p.vatType,
+            customerCollects: p.customerCollects,
+            freeLocalDelivery: p.freeLocalDelivery,
             isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
         }
     }

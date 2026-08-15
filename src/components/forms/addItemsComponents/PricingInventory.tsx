@@ -4,6 +4,7 @@ import { ReqInput } from "./ReqInput";
 import { VatSelector } from "./VatSelector";
 import { Checkbox } from "../../ui/checkbox";
 import { Label } from "../../ui/label";
+import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "../../ui/select";
 import { dataFeatureProduct } from "@/lib/payement/data";
 import { Badge } from "../../ui/badge";
@@ -14,7 +15,7 @@ import { Banknote, Package, Weight, Calendar, Zap, Info, TrendingDown, Truck } f
 const VAT_RATE = 0.2 // 20% VAT
 
 export function PricingInventory({
-  price = 1,
+  price,
   discount = 0,
   discountEndDate = undefined,
   units = 1,
@@ -25,6 +26,8 @@ export function PricingInventory({
   selectedCategory,
   stock,
   machineDeliveryCharge,
+  freeLocalDelivery = false,
+  customerCollects = false,
 }: {
   price?: number
   discount?: number
@@ -37,6 +40,8 @@ export function PricingInventory({
   featured?: boolean,
   isIncVAT?: boolean,
   machineDeliveryCharge?: number
+  freeLocalDelivery?: boolean
+  customerCollects?: boolean
 }) {
   const [isFeatured, setIsFeatured] = useState(featureDays != null)
   const [featuredDuration, setFeaturedDuration] = useState(
@@ -46,13 +51,17 @@ export function PricingInventory({
   const [price2, setPrice2] = useState(price || 0)
   const [w, setw] = useState(weight)
 
+  const [deliveryType, setDeliveryType] = useState<"standard" | "free" | "collection">(
+    freeLocalDelivery ? "free" : customerCollects ? "collection" : "standard"
+  )
+
   // New: track VAT type
-  const [vatType, setVatType] = useState<"inc" | "exc">(isIncVAT ? "inc" : 'exc')
+  const [vatType, setVatType] = useState<"inc" | "exc" | "no-vat">(isIncVAT ? "inc" : 'exc')
 
   // Apply VAT logic
   const basePrice =
     vatType === "inc" ? Number(price2) / (1 + VAT_RATE) : Number(price2) // store exc VAT internally
-  const finalPrice = basePrice * (1 + VAT_RATE)
+  const finalPrice = vatType === "no-vat" ? basePrice : basePrice * (1 + VAT_RATE)
 
   const discountAmount = finalPrice * (Number(percent) / 100)
   const discountedPrice = finalPrice - discountAmount
@@ -61,6 +70,8 @@ export function PricingInventory({
   return (
     <Card className="border-none shadow-none bg-transparent">
       <input type="hidden" name="isIncVAT" value={vatType === 'inc' ? 'true' : 'false'} />
+      <input type="hidden" name="freeLocalDelivery" value={String(deliveryType === 'free')} />
+      <input type="hidden" name="customerCollects" value={String(deliveryType === 'collection')} />
       <CardHeader className="px-0 pt-0 pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -97,7 +108,7 @@ export function PricingInventory({
 
               <div className="space-y-3 p-4 bg-gray-50/50 rounded-lg border border-gray-100">
                 <ReqInput
-                  labelText={`Product Price (£) ${vatType === "inc" ? "(Inc VAT)" : "(Exc VAT)"}`}
+                  labelText={`Product Price (£) ${vatType === "inc" ? "(Inc VAT)" : vatType === "no-vat" ? "(No VAT)" : "(Exc VAT)"}`}
                   type="number"
                   name="price"
                   placeholder="0.00"
@@ -165,6 +176,32 @@ export function PricingInventory({
               <span className="font-semibold text-gray-700">Inventory & Logistics</span>
             </div>
 
+            <div className="mb-8 p-5 bg-gray-50/50 rounded-xl border border-gray-100 space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <Truck className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-bold text-gray-700 uppercase tracking-wider">Delivery Method</span>
+              </div>
+              <RadioGroup
+                value={deliveryType}
+
+                onValueChange={(v: any) => setDeliveryType(v)}
+                className="flex flex-wrap gap-x-8 gap-y-4"
+              >
+                <div className="flex items-center space-x-2.5 cursor-pointer">
+                  <RadioGroupItem value="standard" id="standard" />
+                  <Label htmlFor="standard" className="cursor-pointer font-medium text-gray-700">Standard Delivery</Label>
+                </div>
+                <div className="flex items-center space-x-2.5 cursor-pointer">
+                  <RadioGroupItem value="free" id="free" />
+                  <Label htmlFor="free" className="cursor-pointer font-medium text-gray-700">Free Local Delivery</Label>
+                </div>
+                <div className="flex items-center space-x-2.5 cursor-pointer">
+                  <RadioGroupItem value="collection" id="collection" />
+                  <Label htmlFor="collection" className="cursor-pointer font-medium text-gray-700">Customer Collects</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               <ReqInput
                 labelText="Inventory Stock"
@@ -176,17 +213,20 @@ export function PricingInventory({
                 info="Total quantity available for sale"
               />
 
-              {selectedCategory !== "Machines" ? (
-                <>
-                  <ReqInput
-                    labelText="Units per Pack"
-                    type="number"
-                    name="units"
-                    placeholder="1"
-                    defaultValue={units}
-                    numberMin={1}
-                    info="Number of items in one package"
-                  />
+              {selectedCategory !== "Machines" && (
+                <ReqInput
+                  labelText="Units per Pack"
+                  type="number"
+                  name="units"
+                  placeholder="1"
+                  defaultValue={units}
+                  numberMin={1}
+                  info="Number of items in one package"
+                />
+              )}
+
+              {deliveryType === 'standard' ? (
+                selectedCategory !== "Machines" ? (
                   <div className="space-y-2">
                     <ReqInput
                       labelText="Package Weight (kg)"
@@ -203,17 +243,29 @@ export function PricingInventory({
                       <span>Delivery: <strong>£{getDelveryChargeFromWight(w)}</strong></span>
                     </div>
                   </div>
-                </>
+                ) : (
+                  <ReqInput
+                    labelText="Machine Delivery Charge (£)"
+                    type="number"
+                    name="delivery_charge"
+                    placeholder="0"
+                    numberMin={0}
+                    defaultValue={machineDeliveryCharge}
+                    info="Fixed delivery fee per machine"
+                  />
+                )
               ) : (
-                <ReqInput
-                  labelText="Machine Delivery Charge (£)"
-                  type="number"
-                  name="delivery_charge"
-                  placeholder="0"
-                  numberMin={0}
-                  defaultValue={machineDeliveryCharge}
-                  info="Fixed delivery fee per machine"
-                />
+                <div className="flex items-end pb-2">
+                  <div className="w-full flex items-center gap-2 p-4 bg-green-50 rounded-lg border border-green-100 text-green-700">
+                    <Truck className="w-5 h-5" />
+                    <div className="flex flex-col">
+                      <span className="text-xs font-bold uppercase tracking-wider">Delivery Option</span>
+                      <span className="font-bold text-sm">{deliveryType === 'free' ? 'Free Local Delivery' : 'Customer Collects'}</span>
+                    </div>
+                  </div>
+                  <input type="hidden" name="delivery_charge" value="0" />
+                  <input type="hidden" name="weight" value="0" />
+                </div>
               )}
             </div>
           </div>

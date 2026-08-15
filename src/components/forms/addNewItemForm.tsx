@@ -358,7 +358,7 @@ export function AddNewItemForm({
         <div className={currentStep === 3 ? "block" : "hidden"}>
           <PricingInventory
             discount={discount}
-            price={price}
+            price={undefined}
             isIncVAT={isIncVAT}
             units={stockQuantity}
             weight={weight}
@@ -401,7 +401,7 @@ export function AddNewItemForm({
 
   return (
     <div ref={containerRef} className="w-full pb-32">
-      <div className="container max-w-[900px] m-auto mt-20">
+      <div className="container max-w-[900px] m-auto mt-0">
         {secondStep}
       </div>
     </div>

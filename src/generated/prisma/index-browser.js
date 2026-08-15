@@ -270,6 +270,9 @@ exports.Prisma.ProductScalarFieldEnum = {
   weight: 'weight',
   delivery_charge: 'delivery_charge',
   isIncVAT: 'isIncVAT',
+  vatType: 'vatType',
+  freeLocalDelivery: 'freeLocalDelivery',
+  customerCollects: 'customerCollects',
   slug: 'slug',
   stock: 'stock',
   markAsDeleted: 'markAsDeleted'
