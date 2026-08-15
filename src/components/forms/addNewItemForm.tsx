@@ -5,7 +5,7 @@ import React, { useActionState, useEffect, useRef, useState } from "react";
 import { addNewProductAction } from "@/actions/addNewProductAction";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { SellerForm } from "./sellerForm";
+import SellerFormDialog, { SellerForm } from "./sellerForm";
 import { useHomeContext } from "@/providers/homePageProvider";
 import { BasicInfo } from "./addItemsComponents/BasicInfo";
 import { PricingInventory } from "./addItemsComponents/PricingInventory";
@@ -47,6 +47,9 @@ export function AddNewItemForm({
   const submitTypeRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [state, action, pending] = useActionState(addNewProductAction, undefined);
+  const [showSellerForm, setShowSellerForm] = useState(false);
+  const [isSuccessfullySubmitted, setIsSuccessfullySubmitted] = useState(false);
+  const skipBuyerCheckRef = useRef(false);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(initialMainCategory || '');
@@ -74,12 +77,14 @@ export function AddNewItemForm({
   useEffect(() => {
     if (!state) return;
     if (state.success) {
+      setIsSuccessfullySubmitted(true);
       toast.success(state.message);
       const url = state.url;
       if (url) router.push(url)
       else if (onSuccessEditing) onSuccessEditing();
 
     } else {
+      setIsSuccessfullySubmitted(false);
       toast.error(state.error);
       if (onFailedEditing) onFailedEditing();
     }
@@ -146,18 +151,18 @@ export function AddNewItemForm({
       }
     }
 
-    if (step === 4 && user && role === 'BUYER') {
-      // Step 4 is for SellerForm, which has its own validation/submit
-      return true;
-    }
-
     return true;
   };
 
   const handleAction = (formData: FormData) => {
-    // If we have a step 4 (BUYER becoming SELLER), validate up to step 3 then step 4 is separate?
-    // Actually handleAction is for the main form submit.
+    // Main form submit.
     if (!validateStep(3)) return;
+
+    if (user && role === 'BUYER' && !skipBuyerCheckRef.current) {
+      setShowSellerForm(true);
+      return;
+    }
+    skipBuyerCheckRef.current = false;
 
     images.forEach((img) => {
       formData.append(img.file ? 'imagesFile' : 'imageUrls', img.file ? (img.file as any) : img.url);
@@ -182,12 +187,6 @@ export function AddNewItemForm({
     { title: "Media", description: "Photos and videos" },
     { title: "Pricing", description: "Set your price and stock" }
   ];
-
-  if (user && role === 'BUYER') {
-    steps.push({ title: "Account", description: "Become a seller" });
-  }
-
-
 
   const categoriesWithSubmit = ["Engineers & Services", "Wanted Items", "Businesses for Sale"];
   const hasOwnSubmit = categoriesWithSubmit.includes(selectedCategory);
@@ -223,7 +222,7 @@ export function AddNewItemForm({
   const navigationParams = {
     handleBack: handleBack,
     currentStep: currentStep,
-    pending: pending,
+    pending: pending || isSuccessfullySubmitted,
     steps: displaySteps,
     handleNext: handleNext,
     selectedCategory: selectedCategory,
@@ -371,25 +370,6 @@ export function AddNewItemForm({
           />
         </div>
 
-        {/* Step 4: Become a Seller (Conditional) */}
-        {user && role === 'BUYER' && (
-          <div className={currentStep === 4 ? "block" : "hidden"}>
-            <div className="flex flex-col gap-4 border p-6 rounded-md bg-white shadow-sm m-2 mt-6">
-              <h2 className="font-bold text-xl">Become a Seller:</h2>
-              <SellerForm
-                callback="/"
-                redirect={false}
-                onSuccess={() => {
-                  if (formRef.current) {
-                    if (submitTypeRef.current) submitTypeRef.current.value = 'post';
-                    formRef.current.requestSubmit();
-                  }
-                }}
-              />
-            </div>
-          </div>
-        )}
-
         {/* Navigation Buttons */}
         <Navigation
           {...navigationParams}
@@ -401,6 +381,22 @@ export function AddNewItemForm({
 
   return (
     <div ref={containerRef} className="w-full pb-32">
+      <SellerFormDialog
+        open={showSellerForm}
+        setOpen={setShowSellerForm}
+        callback="/admin/allProducts"
+        redirect={true}
+        title="Complete Your Seller Profile"
+        description="To post an item, you first need to provide your business details."
+        onSuccess={() => {
+          setShowSellerForm(false);
+          skipBuyerCheckRef.current = true;
+          if (formRef.current) {
+            if (submitTypeRef.current) submitTypeRef.current.value = 'post';
+            formRef.current.requestSubmit();
+          }
+        }}
+      />
       <div className="container max-w-[900px] m-auto mt-0">
         {secondStep}
       </div>
@@ -446,7 +442,7 @@ function Navigation({ handleBack, currentStep, pending, steps, handleNext, selec
           >
             Continue <ArrowRight size={18} />
           </Button>
-        ) : hasOwnSubmit || (user && role === 'BUYER' && currentStep === 4) ? (
+        ) : hasOwnSubmit ? (
           <div className="text-muted-foreground text-xs italic sm:text-sm">
             Submit using the form above
           </div>
