@@ -31,7 +31,7 @@ export function ButtonSellAnItem({
     const [openDialog, setOpenDialog] = useState(false);
     const [openSignUp, setOpenSignUp] = useState(false);
     const [openSignIn, setOpenSignIn] = useState(false);
-    
+
     function handleClickBigButton() {
         if (user) {
             router.push("/admin/addNewProduct")
@@ -76,14 +76,14 @@ export function ButtonSellAnItem({
                 >
                     {/* Animated Shine Effect */}
                     <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-transform" />
-                    
+
                     <div className="flex items-center gap-2 relative z-10">
                         {!body ? (
                             <>
                                 <div className="bg-white/20 p-0.5 rounded transition-transform duration-300 group-hover:rotate-90">
                                     <Plus className="w-4 h-4" />
                                 </div>
-                                <span className="uppercase tracking-wide text-xs">Sell an Item</span>
+                                <span className="uppercase tracking-wide text-md font-extrabold px-2" >SELL</span>
                             </>
                         ) : body}
                     </div>
