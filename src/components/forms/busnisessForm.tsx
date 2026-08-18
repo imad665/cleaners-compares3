@@ -65,6 +65,7 @@ export function BusinessListingForm({
 }: BusinessType) {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccessfullySubmitted, setIsSuccessfullySubmitted] = useState(false);
     const [previewUrl, setPreviewUrl] = useState<any>(imageUrl);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [showSellerForm, setShowSellerForm] = useState(false);
@@ -182,11 +183,14 @@ export function BusinessListingForm({
             });
             if (!res.ok) {
                 toast.error(`failed to ${id && id.trim() != '' ? 'update' : 'add'} Data`);
+                setIsSuccessfullySubmitted(false);
                 return
             }
+            setIsSuccessfullySubmitted(true);
             if (onSubmitSuccess) onSubmitSuccess();
             toast.success(`Success!`);
         } catch (error) {
+            setIsSuccessfullySubmitted(false);
             toast.error('Something went wrong!');
         } finally {
             setIsSubmitting(false);
@@ -226,7 +230,7 @@ export function BusinessListingForm({
                                 placeholder="e.g. Well-established Laundrette for Sale"
                                 className="pl-10 h-11 transition-all shadow-sm"
                                 {...form.register("title")}
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || isSuccessfullySubmitted}
                             />
                         </div>
                     </div>
@@ -237,7 +241,7 @@ export function BusinessListingForm({
                             <Select
                                 defaultValue={form.getValues("businessType")}
                                 onValueChange={(value) => form.setValue("businessType", value)}
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || isSuccessfullySubmitted}
                             >
                                 <SelectTrigger className="h-11 shadow-sm">
                                     <div className="flex items-center gap-2">
@@ -264,7 +268,7 @@ export function BusinessListingForm({
                                     placeholder="e.g. London, UK"
                                     className="pl-10 h-11 transition-all shadow-sm"
                                     {...form.register("location")}
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || isSuccessfullySubmitted}
                                 />
                             </div>
                         </div>
@@ -283,7 +287,7 @@ export function BusinessListingForm({
                             value={form.getValues("turnoverRange")}
                             onValueChange={(value) => form.setValue("turnoverRange", value)}
                             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || isSuccessfullySubmitted}
                         >
                             {[
                                 "0 - 25k", "25k - 50k", "50k - 100k", "100k - 250k",
@@ -318,7 +322,7 @@ export function BusinessListingForm({
                                             placeholder="Enter exact amount ($)"
                                             className="pl-10 h-11 transition-all shadow-sm"
                                             {...form.register("specificAmount", { valueAsNumber: true })}
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || isSuccessfullySubmitted}
                                         />
                                     </div>
                                 </motion.div>
@@ -331,7 +335,7 @@ export function BusinessListingForm({
                         <Select
                             defaultValue={form.getValues("reasonForSelling")}
                             onValueChange={(value) => form.setValue("reasonForSelling", value)}
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || isSuccessfullySubmitted}
                         >
                             <SelectTrigger className="h-11 shadow-sm">
                                 <div className="flex items-center gap-2">
@@ -360,7 +364,7 @@ export function BusinessListingForm({
                                     type="file"
                                     accept="image/*"
                                     className="absolute inset-0 opacity-0 cursor-pointer z-20"
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || isSuccessfullySubmitted}
                                     onChange={(e) => {
                                         const file = e.target.files?.[0];
                                         if (file) {
@@ -387,17 +391,18 @@ export function BusinessListingForm({
                                     className="w-full h-full object-cover"
                                 />
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                    <Button size="sm" variant="destructive" className="h-8 gap-2" onClick={clearImage} type="button">
+                                    <Button size="sm" variant="destructive" className="h-8 gap-2" onClick={clearImage} type="button" disabled={isSubmitting || isSuccessfullySubmitted}>
                                         <X size={14} /> Remove
                                     </Button>
                                     <div className="relative">
-                                        <Button size="sm" variant="secondary" className="h-8 gap-2">
+                                        <Button size="sm" variant="secondary" className="h-8 gap-2" disabled={isSubmitting || isSuccessfullySubmitted}>
                                             <Upload size={14} /> Change
                                         </Button>
                                         <input
                                             type="file"
                                             accept="image/*"
                                             className="absolute inset-0 opacity-0 cursor-pointer"
+                                            disabled={isSubmitting || isSuccessfullySubmitted}
                                             onChange={(e) => {
                                                 const file = e.target.files?.[0];
                                                 if (file) {
@@ -431,7 +436,7 @@ export function BusinessListingForm({
                                 placeholder="John Doe"
                                 className="pl-10 h-11 transition-all shadow-sm"
                                 {...form.register("fullName")}
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || isSuccessfullySubmitted}
                             />
                         </div>
                     </div>
@@ -448,7 +453,7 @@ export function BusinessListingForm({
                                     placeholder="john@example.com"
                                     className="pl-10 h-11 transition-all shadow-sm"
                                     {...form.register("email")}
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || isSuccessfullySubmitted}
                                 />
                             </div>
                         </div>
@@ -462,7 +467,7 @@ export function BusinessListingForm({
                                     placeholder="+44 123 456 789"
                                     className="pl-10 h-11 transition-all shadow-sm"
                                     {...form.register("phone")}
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || isSuccessfullySubmitted}
                                 />
                             </div>
                         </div>
@@ -478,7 +483,7 @@ export function BusinessListingForm({
                                 placeholder="Tell prospective buyers about your business, its history, equipment included, and potential for growth..."
                                 className="pl-10 min-h-[140px] transition-all shadow-sm resize-none"
                                 {...form.register("description")}
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || isSuccessfullySubmitted}
                             />
                         </div>
                     </div>
@@ -487,14 +492,14 @@ export function BusinessListingForm({
 
             <div className="flex justify-end items-center gap-3 mt-8 pt-6 border-t border-slate-100">
                 <Button
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isSuccessfullySubmitted}
                     type="submit"
                     className="h-11 px-8 font-bold transition-all active:scale-[0.98] shadow-md shadow-primary/20"
                 >
-                    {isSubmitting ? (
+                    {isSubmitting || isSuccessfullySubmitted ? (
                         <div className="flex items-center gap-2">
                             <Loader2 className="h-4 w-4 animate-spin" />
-                            Submitting...
+                            {isSuccessfullySubmitted ? "Success! Redirecting..." : "Submitting..."}
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">

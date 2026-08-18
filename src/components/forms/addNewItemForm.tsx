@@ -245,7 +245,7 @@ export function AddNewItemForm({
               selectedCategory={selectedCategory}
             />
           </div>
-          <ServiceForm key={new Date().getMilliseconds().toString()} onSubmitSuccess={() => {
+          <ServiceForm key="service-form" onSubmitSuccess={() => {
             router.replace("/admin/myServices")
           }} />
         </div>
@@ -270,7 +270,7 @@ export function AddNewItemForm({
               selectedCategory={selectedCategory}
             />
           </div>
-          <AddNewWantedItem key={new Date().getMilliseconds().toString()} onSubmitSuccess={() => {
+          <AddNewWantedItem key="wanted-item-form" onSubmitSuccess={() => {
             router.replace("/admin/myWantedItems")
           }} />
         </div>
@@ -294,7 +294,7 @@ export function AddNewItemForm({
               selectedCategory={selectedCategory}
             />
           </div>
-          <BusinessListingForm key={new Date().getMilliseconds().toString()} onSubmitSuccess={() => {
+          <BusinessListingForm key="business-form" onSubmitSuccess={() => {
             router.replace("/admin/myBusinessesForSale")
           }} />
         </div>

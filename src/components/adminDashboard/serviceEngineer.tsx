@@ -72,6 +72,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
     const [isFeatured, setIsFeatured] = useState(formData.featured);
     const [featuredDuration, setFeaturedDuration] = useState(editItem?.featureDays?.toString());
     const [loading, setLoading] = useState(false);
+    const [isSuccessfullySubmitted, setIsSuccessfullySubmitted] = useState(false);
     const [showSellerForm, setShowSellerForm] = useState(false);
     const router = useRouter();
     const { user } = useHomeContext();
@@ -175,12 +176,15 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
             });
             const { service, url } = await res.json();
             if (url) {
+                setIsSuccessfullySubmitted(true);
                 router.push(url);
             } else {
+                setIsSuccessfullySubmitted(true);
                 toast.success(`Service ${!isUpdate ? 'added' : 'updated'} successfully!`);
                 if (onSubmitSuccess) onSubmitSuccess(service);
             }
         } catch (error) {
+            setIsSuccessfullySubmitted(false);
             toast.error('Failed to save service');
         } finally {
             setLoading(false);
@@ -214,7 +218,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors z-10">
                                     <Wrench size={18} />
                                 </div>
-                                <Input name="title" placeholder="Professional Laundry Repair" value={formData.title} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading} />
+                                <Input name="title" placeholder="Professional Laundry Repair" value={formData.title} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading || isSuccessfullySubmitted} />
                             </div>
                         </div>
                         <div className="space-y-2">
@@ -223,7 +227,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors z-10">
                                     <GraduationCap size={18} />
                                 </div>
-                                <Input name="experience" placeholder="e.g: 5 Years" value={formData.experience} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading} />
+                                <Input name="experience" placeholder="e.g: 5 Years" value={formData.experience} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading || isSuccessfullySubmitted} />
                             </div>
                         </div>
                     </div>
@@ -231,7 +235,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label className="text-sm font-semibold">Category <span className="text-rose-500">*</span></Label>
-                            <Select value={formData.category} onValueChange={(val) => handleSelectChange('category', val)} disabled={loading}>
+                            <Select value={formData.category} onValueChange={(val) => handleSelectChange('category', val)} disabled={loading || isSuccessfullySubmitted}>
                                 <SelectTrigger className="h-11 shadow-sm">
                                     <div className="flex items-center gap-2">
                                         <Layers size={18} className="text-slate-400" />
@@ -247,7 +251,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                         </div>
                         <div className="space-y-2">
                             <Label className="text-sm font-semibold">Company Type <span className="text-rose-500">*</span></Label>
-                            <Select value={formData.companyType} onValueChange={(val) => handleSelectChange('companyType', val)} disabled={loading}>
+                            <Select value={formData.companyType} onValueChange={(val) => handleSelectChange('companyType', val)} disabled={loading || isSuccessfullySubmitted}>
                                 <SelectTrigger className="h-11 shadow-sm">
                                     <div className="flex items-center gap-2">
                                         <Building2 size={18} className="text-slate-400" />
@@ -275,7 +279,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors z-10">
                                     <PoundSterling size={18} />
                                 </div>
-                                <Input name="callOutCharge" type="number" placeholder="0.00" value={formData.callOutCharge} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading} />
+                                <Input name="callOutCharge" type="number" placeholder="0.00" value={formData.callOutCharge} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading || isSuccessfullySubmitted} />
                             </div>
                         </div>
                         <div className="space-y-2">
@@ -284,7 +288,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors z-10">
                                     <Clock size={18} />
                                 </div>
-                                <Input name="hourlyRate" type="number" placeholder="0.00" value={formData.hourlyRate} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading} />
+                                <Input name="hourlyRate" type="number" placeholder="0.00" value={formData.hourlyRate} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading || isSuccessfullySubmitted} />
                             </div>
                         </div>
                     </div>
@@ -294,7 +298,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors z-10">
                                 <MapPin size={18} />
                             </div>
-                            <Input name="areaOfService" placeholder="e.g: Greater London, Kent, Essex" value={formData.areaOfService} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading} />
+                            <Input name="areaOfService" placeholder="e.g: Greater London, Kent, Essex" value={formData.areaOfService} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading || isSuccessfullySubmitted} />
                         </div>
                     </div>
                 </div>
@@ -311,7 +315,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors z-10">
                                     <Mail size={18} />
                                 </div>
-                                <Input name="email" type="email" placeholder="contact@engineer.com" value={formData.email} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading} />
+                                <Input name="email" type="email" placeholder="contact@engineer.com" value={formData.email} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading || isSuccessfullySubmitted} />
                             </div>
                         </div>
                         <div className="space-y-2">
@@ -320,7 +324,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors z-10">
                                     <Phone size={18} />
                                 </div>
-                                <Input name="contactNumber" placeholder="+44 123 456 789" value={formData.contactNumber} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading} />
+                                <Input name="contactNumber" placeholder="+44 123 456 789" value={formData.contactNumber} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading || isSuccessfullySubmitted} />
                             </div>
                         </div>
                     </div>
@@ -330,7 +334,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors z-10">
                                 <MapPin size={18} />
                             </div>
-                            <Input name="address" placeholder="Full business address" value={formData.address} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading} />
+                            <Input name="address" placeholder="Full business address" value={formData.address} onChange={handleChange} className="pl-10 h-11 transition-all shadow-sm" disabled={loading || isSuccessfullySubmitted} />
                         </div>
                     </div>
                 </div>
@@ -348,7 +352,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                                     accept="image/*"
                                     className="sr-only"
                                     onChange={handleImageChange}
-                                    disabled={loading}
+                                    disabled={loading || isSuccessfullySubmitted}
                                 />
                                 <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                                     <Upload size={24} />
@@ -366,14 +370,14 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                                     className="w-full h-full object-cover"
                                 />
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                    <Button size="sm" variant="destructive" className="h-8 gap-2" onClick={clearImage} type="button">
+                                    <Button size="sm" variant="destructive" className="h-8 gap-2" onClick={clearImage} type="button" disabled={loading || isSuccessfullySubmitted}>
                                         <X size={14} /> Remove
                                     </Button>
                                     <div className="relative">
-                                        <Button size="sm" variant="secondary" className="h-8 gap-2" asChild>
+                                        <Button size="sm" variant="secondary" className="h-8 gap-2" asChild disabled={loading || isSuccessfullySubmitted}>
                                             <label className="cursor-pointer">
                                                 <Upload size={14} /> Change
-                                                <input type="file" accept="image/*" className="sr-only" onChange={handleImageChange} />
+                                                <input type="file" accept="image/*" className="sr-only" onChange={handleImageChange} disabled={loading || isSuccessfullySubmitted} />
                                             </label>
                                         </Button>
                                     </div>
@@ -401,6 +405,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                                     id="featured"
                                     className="border-amber-400 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
                                     checked={isFeatured}
+                                    disabled={loading || isSuccessfullySubmitted}
                                     onCheckedChange={(checked) => {
                                         setIsFeatured(Boolean(checked));
                                         if (!checked) setFeaturedDuration(undefined);
@@ -422,6 +427,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                                         <Select
                                             name="featureDays"
                                             value={featuredDuration}
+                                            disabled={loading || isSuccessfullySubmitted}
                                             onValueChange={(v) => setFeaturedDuration(v)}
                                         >
                                             <SelectTrigger className="w-full bg-white border-amber-200">
@@ -457,19 +463,19 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
 
             <div className="flex justify-end items-center gap-3 mt-8 pt-6 border-t border-slate-100">
                 {onCancel && (
-                    <Button variant="ghost" type="button" onClick={onCancel} disabled={loading} className="font-semibold text-slate-500 hover:text-slate-900">
+                    <Button variant="ghost" type="button" onClick={onCancel} disabled={loading || isSuccessfullySubmitted} className="font-semibold text-slate-500 hover:text-slate-900">
                         Cancel
                     </Button>
                 )}
                 <Button
-                    disabled={loading}
+                    disabled={loading || isSuccessfullySubmitted}
                     type="submit"
                     className="h-11 px-8 font-bold transition-all active:scale-[0.98] shadow-md shadow-primary/20"
                 >
-                    {loading ? (
+                    {loading || isSuccessfullySubmitted ? (
                         <div className="flex items-center gap-2">
                             <Loader2 className="h-4 w-4 animate-spin" />
-                            Saving...
+                            {isSuccessfullySubmitted ? "Success! Redirecting..." : "Saving..."}
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">

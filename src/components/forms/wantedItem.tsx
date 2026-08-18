@@ -65,6 +65,7 @@ export const AddNewWantedItem = ({
   const [previewUrl, setPreviewUrl] = useState<any>(imageUrl);
   const [fullName, setFullName] = useState(fullName0 || '');
   const [pending, setPending] = useState(false);
+  const [isSuccessfullySubmitted, setIsSuccessfullySubmitted] = useState(false);
   const [showSellerForm, setShowSellerForm] = useState(false);
 
   const { user } = useHomeContext();
@@ -138,12 +139,15 @@ export const AddNewWantedItem = ({
 
       if (!response.ok) {
         toast.error('Failed to submit');
+        setIsSuccessfullySubmitted(false);
         throw new Error('Failed to submit');
       }
 
+      setIsSuccessfullySubmitted(true);
       toast.success('Successfully submitted');
       if (onSubmitSuccess) onSubmitSuccess();
     } catch (error) {
+      setIsSuccessfullySubmitted(false);
       toast.error('Error submitting wanted item');
     } finally {
       setPending(false);
@@ -183,7 +187,7 @@ export const AddNewWantedItem = ({
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g., Industrial Cleaning Machine"
                   className="pl-10 h-11 transition-all shadow-sm"
-                  disabled={pending}
+                  disabled={pending || isSuccessfullySubmitted}
                 />
               </div>
             </div>
@@ -200,7 +204,7 @@ export const AddNewWantedItem = ({
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="e.g., London, UK"
                   className="pl-10 h-11 transition-all shadow-sm"
-                  disabled={pending}
+                  disabled={pending || isSuccessfullySubmitted}
                 />
               </div>
             </div>
@@ -217,7 +221,7 @@ export const AddNewWantedItem = ({
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe what you're looking for (condition, brand, size...)"
                   className="pl-10 min-h-[120px] transition-all shadow-sm resize-none"
-                  disabled={pending}
+                  disabled={pending || isSuccessfullySubmitted}
                 />
               </div>
             </div>
@@ -242,7 +246,7 @@ export const AddNewWantedItem = ({
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="John Doe"
                   className="pl-10 h-11 transition-all shadow-sm"
-                  disabled={pending}
+                  disabled={pending || isSuccessfullySubmitted}
                 />
               </div>
             </div>
@@ -261,7 +265,7 @@ export const AddNewWantedItem = ({
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+44..."
                     className="pl-10 h-11 transition-all shadow-sm"
-                    disabled={pending}
+                    disabled={pending || isSuccessfullySubmitted}
                   />
                 </div>
               </div>
@@ -278,7 +282,7 @@ export const AddNewWantedItem = ({
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
                     className="pl-10 h-11 transition-all shadow-sm"
-                    disabled={pending}
+                    disabled={pending || isSuccessfullySubmitted}
                   />
                 </div>
               </div>
@@ -299,7 +303,7 @@ export const AddNewWantedItem = ({
                     accept="image/*"
                     className="sr-only"
                     onChange={handleImageChange}
-                    disabled={pending}
+                    disabled={pending || isSuccessfullySubmitted}
                   />
                   <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                     <Upload size={24} />
@@ -323,11 +327,12 @@ export const AddNewWantedItem = ({
                       className="h-8 gap-2"
                       onClick={clearImage}
                       type="button"
+                      disabled={pending || isSuccessfullySubmitted}
                     >
                       <X size={14} /> Remove
                     </Button>
                     <div className="relative">
-                      <Button size="sm" variant="secondary" className="h-8 gap-2" asChild>
+                      <Button size="sm" variant="secondary" className="h-8 gap-2" asChild disabled={pending || isSuccessfullySubmitted}>
                         <label className="cursor-pointer">
                           <Upload size={14} /> Change
                           <input
@@ -335,6 +340,7 @@ export const AddNewWantedItem = ({
                             accept="image/*"
                             className="sr-only"
                             onChange={handleImageChange}
+                            disabled={pending || isSuccessfullySubmitted}
                           />
                         </label>
                       </Button>
@@ -352,21 +358,21 @@ export const AddNewWantedItem = ({
           <Button 
             variant="ghost" 
             onClick={onCancel}
-            disabled={pending}
+            disabled={pending || isSuccessfullySubmitted}
             className="font-semibold text-slate-500 hover:text-slate-900"
           >
             Cancel
           </Button>
         )}
         <Button 
-          disabled={pending} 
+          disabled={pending || isSuccessfullySubmitted} 
           onClick={handleSubmit}
           className="h-11 px-8 font-bold transition-all active:scale-[0.98] shadow-md shadow-primary/20"
         >
-          {pending ? (
+          {pending || isSuccessfullySubmitted ? (
             <div className="flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Submitting...
+              {isSuccessfullySubmitted ? 'Success! Redirecting...' : 'Submitting...'}
             </div>
           ) : (
             <div className="flex items-center gap-2">
