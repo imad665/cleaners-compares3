@@ -35,6 +35,7 @@ const pwaConfig = withPWA({
   register: true,
   skipWaiting: true,
   disable:  process.env.NODE_ENV === "development", // Temporarily set to false for testing PWA in development
+  buildExcludes: [/middleware-manifest\.json$/],
 });
 
 export default pwaConfig(nextConfig);
