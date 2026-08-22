@@ -27,7 +27,7 @@ export default async function RootLayout({
                 ...sellerInquiries,
                 ...buyerInquiries
             ]} />
-            <GoogleOneTap />
+            {/* <GoogleOneTap /> */}
             {children}
             <Footer footerData={footerData} />
             <ChatPage className='fixed bottom-2 right-2' />

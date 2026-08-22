@@ -51,14 +51,6 @@ export default function GoogleOneTap() {
                 onLoad={() => setScriptLoaded(true)}
                 strategy="afterInteractive"
             />
-            {/* Google One Tap doesn't require a visible element, but you can add a container if needed */}
-            <div id="g_id_onload"
-                data-client_id={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-                data-auto_prompt="true"
-                data-callback="onGoogleLibraryLoad"
-                style={{ position: 'fixed', top: 0, right: 0, zIndex: 9999 }}
-            >
-            </div>
         </>
     );
 }
