@@ -10,38 +10,46 @@ import { Trash2, Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { ServiceEngineerForm } from "./serviceEngineer";
 import { toast } from "sonner";
+import { AlertDialog } from "../ui/alert-dialog";
+import {
 
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
-function DeleteModal({ setShowDeleteModal, confirmDelete, selectedItem }:
+function DeleteModal({ setShowDeleteModal, confirmDelete, showDeleteModal, selectedItem }:
   {
     setShowDeleteModal: (v: boolean) => void,
     confirmDelete: () => void,
-    selectedItem: any
+    selectedItem: any,
+    showDeleteModal: boolean
   }
 ) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md mx-4 md:mx-auto">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Confirm Delete</h3>
-        <p className="text-sm text-gray-500 mb-4">
-          Are you sure you want to delete "{selectedItem?.title}"? This action cannot be undone.
-        </p>
-        <div className="flex justify-end space-x-3">
-          <Button
-            variant="outline"
-            onClick={() => setShowDeleteModal(false)}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="destructive"
+    <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete <span className="font-semibold text-foreground">"{selectedItem?.title}"</span>? This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
             onClick={confirmDelete}
+            variant={'destructive'}
           >
             Delete
-          </Button>
-        </div>
-      </div>
-    </div>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
 
@@ -256,6 +264,7 @@ export default function ServiceTable({ newService = null }: { newService?: Servi
 
       {showDeleteModal &&
         <DeleteModal
+          showDeleteModal={showDeleteModal}
           setShowDeleteModal={setShowDeleteModal}
           confirmDelete={confirmDelete}
           selectedItem={selectedItem}

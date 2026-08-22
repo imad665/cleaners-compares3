@@ -23,6 +23,14 @@ export default async function Layout(
     //console.log(user,'ooooooooooooooo')
     return (
         <div className="flex flex-col w-full h-screen overflow-hidden">
+            <style dangerouslySetInnerHTML={{ __html: `
+                html, body { 
+                    overflow: hidden !important; 
+                    height: 100% !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+            `}} />
             <HeaderAdmin notificationData={[
                 ...(messages || []),
                 ...sellerInquiries,
@@ -30,7 +38,7 @@ export default async function Layout(
             ]} />
             <div className="flex flex-1 overflow-hidden">
                 <SideBarDesktop />
-                <main className="flex-1 overflow-y-auto p-2">
+                <main className="flex-1 overflow-y-auto overflow-x-hidden p-2">
                     {children}
                 </main>
             </div>

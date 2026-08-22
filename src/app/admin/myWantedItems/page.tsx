@@ -6,6 +6,8 @@ import Table from '@/components/adminDashboard/shared/Table';
 import { toast } from 'sonner';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import AddWantedItemDialog from '@/components/forms/wantedItem';
+import { buttonVariants } from '@/components/ui/button';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 
 // Define the product type
@@ -299,28 +301,25 @@ const AllProducts = () => {
 
                 {/* Delete Confirmation Modal */}
                 {showDeleteModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-lg p-6 max-w-md mx-4 md:mx-auto">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">Confirm Delete</h3>
-                            <p className="text-sm text-gray-500 mb-4">
-                                Are you sure you want to delete "{selectedProduct?.name}"? This action cannot be undone.
-                            </p>
-                            <div className="flex justify-end space-x-3">
-                                <Button
-                                    variant="outline"
-                                    onClick={() => setShowDeleteModal(false)}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    variant="danger"
+                    <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Are you sure you want to delete <span className="font-semibold text-foreground">"{selectedProduct?.title}"</span>? This action cannot be undone.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
                                     onClick={confirmDelete}
+                                    variant={'destructive'}
                                 >
                                     Delete
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 )}
             </div>
             {addWanted && <AddWantedItemDialog
@@ -367,7 +366,7 @@ const AllProducts = () => {
 
                 </div>
             </div>}
-            <div className='w-full h-30'> </div>
+            <div className='w-full h-32'> </div>
         </div>
 
     );

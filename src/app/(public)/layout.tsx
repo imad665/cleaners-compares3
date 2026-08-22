@@ -6,6 +6,7 @@ import { getFooterData, getRecentOrdersCount } from "@/lib/products/homeProducts
 import { getServerSession } from "next-auth";
 import Footer from "@/components/home_page/footer";
 import ChatPage from "@/components/chatbot/main";
+import GoogleOneTap from "@/components/auth/GoogleOneTap";
 
 export default async function RootLayout({
     children,
@@ -26,6 +27,7 @@ export default async function RootLayout({
                 ...sellerInquiries,
                 ...buyerInquiries
             ]} />
+            <GoogleOneTap />
             {children}
             <Footer footerData={footerData} />
             <ChatPage className='fixed bottom-2 right-2' />

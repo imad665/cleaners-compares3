@@ -7,7 +7,7 @@ export default function MyBusinessFormPage(){
         <div>
             {/* <BusinessListingForm/> */}
             <MyBusinesses/>
-            <div className='w-[100vw] h-30'> </div>
+            <div className='w-full h-32'> </div>
         </div>
     )
 }

@@ -205,7 +205,7 @@ export const ServiceEngineerForm = ({ onSubmitSuccess, onCancel, editItem, class
                 }}
             />
 
-            <div className=' p-3 w-full overflow-y-auto overflow-x-hidden pr-2 custom-scrollbar space-y-8'>
+            <div className='p-1 w-full space-y-8'>
                 {/* Section 1: Basic Information */}
                 <div className="space-y-4">
                     <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">

@@ -796,11 +796,11 @@ const ManageSubcategories = () => {
               })}
             </tbody>
           </table>
-          <div className='w-[100vw] h-30'> </div>
+          <div className='w-full h-32'> </div>
 
         </div>
       )}
-      <div className='w-[100vw] h-30'> </div>
+      <div className='w-full h-32'> </div>
     </div>
   );
 };

@@ -349,7 +349,7 @@ export default function EditBlogPostPage() {
           </div>
         </div>
       </form>
-      <div className='w-[100vw] h-30'></div>
+      <div className='w-full h-32'></div>
     </div>
   );
 }

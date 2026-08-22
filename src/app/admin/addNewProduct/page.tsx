@@ -9,7 +9,7 @@ export default async function Page() {
         <div className="lg:mr-20">
             {/* <AddNewProductForm isEditing={false} categories={categories} /> */}
             <AddNewItemForm isEditing={false} categories={categories} />
-            <div className="w-full h-30"></div>
+            <div className="w-full h-32"></div>
         </div>
     )
 }

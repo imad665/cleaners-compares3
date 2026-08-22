@@ -339,7 +339,7 @@ const Dashboard = () => {
       </>
       }
 
-      <div className='w-[100vw] h-30'></div>
+      <div className='w-full h-32'></div>
     </div>
   );
 };

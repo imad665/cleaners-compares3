@@ -57,7 +57,9 @@ export default function ServicesPage() {
                             />
                         </DialogContent>
                     </Dialog> */}
-                    <ServiceFormDialog />
+                    <ServiceFormDialog onSubmitSuccess={() => {
+                        window.location.reload();
+                    }} />
                 </div>
 
                 <ServiceTable newService={newService} />

@@ -376,7 +376,7 @@ const AllProducts = () => {
                     </div>
                 </div>
             )}
-            <div className='w-full h-30'> </div>
+            <div className='w-full h-32'> </div>
         </div>
     );
 };

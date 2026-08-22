@@ -162,7 +162,7 @@ export default function BlogManagementPage() {
 
       {/* Blog Table */}
       <BlogTable posts={posts} onPostUpdate={fetchPosts} />
-      <div className='w-[100vw] h-30'></div>
+      <div className='w-full h-32'></div>
     </div>
   );
 }

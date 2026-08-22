@@ -23,7 +23,7 @@ export default async function Page() {
             password={user!.password}
             sellerProfile={sellerProfile?.sellerProfile}
             />
-            <div className="w-[100vw] h-30"></div>
+            <div className="w-full h-32"></div>
         </div>
     )
 }

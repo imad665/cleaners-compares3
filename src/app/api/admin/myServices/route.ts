@@ -7,7 +7,7 @@ import { processPayement } from "@/lib/payement/servicePayement";
 import { prisma } from "@/lib/prisma";
 import { deleteImageFileAt, saveImageFileAt } from "@/lib/utils/saveImagesLocaly";
 import { getServerSession } from "next-auth";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 

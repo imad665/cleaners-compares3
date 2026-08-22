@@ -62,7 +62,14 @@ export function AddNewItemForm({
 
   useEffect(() => {
     if (currentStep > 0 || selectedCategory) {
-      containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Find the scrollable main container in admin layout
+      const mainElement = document.querySelector('main.flex-1.overflow-y-auto');
+      if (mainElement) {
+        mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // Fallback for non-admin layouts
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   }, [currentStep]);
 
@@ -235,82 +242,57 @@ export function AddNewItemForm({
 
   if (selectedCategory === "Engineers & Services" && currentStep == 1) {
     secondStep = (
-      <div>
-        <div  >
-          {/*  <h2 className="font-bold text-xl pb-1 flex items-center justify-center">Add New Engineer</h2>
-          <p className="text-muted-foreground text-center pb-5">Register as a service engineer to offer your technical expertise and support to the community.</p> */}
-          <div className={"hidden"}>
-            <StepCategory
-              onPick={handleCategoryPick}
-              selectedCategory={selectedCategory}
-            />
-          </div>
-          <ServiceForm key="service-form" onSubmitSuccess={() => {
-            router.replace("/admin/myServices")
-          }} />
+      <div className="rounded-md bg-white shadow-sm m-2 p-6 space-y-3 px-5 border">
+        <h2 className="font-bold text-xl pb-1 flex items-center justify-center">Add New Engineer</h2>
+        <p className="text-muted-foreground text-center pb-5">Register as a service engineer to offer your technical expertise and support to the community.</p>
+        <div className={"hidden"}>
+          <StepCategory
+            onPick={handleCategoryPick}
+            selectedCategory={selectedCategory}
+          />
         </div>
-
-
-        {/* Navigation Buttons */}
-        <Navigation
-          {...navigationParams}
-        />
+        <ServiceEngineerForm key="service-form" onSubmitSuccess={() => {
+          router.replace("/admin/myServices")
+        }} />
       </div>
-
     )
   } else if (selectedCategory == "Wanted Items" && currentStep == 1) {
     secondStep = (
-      <div>
-        <div className="rounded-md bg-white shadow-sm m-2 p-6 space-y-3 px-5 border">
-          <h2 className="font-bold text-xl pb-1 flex items-center justify-center">Add New Wanted Item</h2>
-          <p className="text-muted-foreground text-center pb-5">Looking for something specific? Post a request and let sellers or providers find you.</p>
-          <div className={"hidden"}>
-            <StepCategory
-              onPick={handleCategoryPick}
-              selectedCategory={selectedCategory}
-            />
-          </div>
-          <AddNewWantedItem key="wanted-item-form" onSubmitSuccess={() => {
-            router.replace("/admin/myWantedItems")
-          }} />
+      <div className="rounded-md bg-white shadow-sm m-2 p-6 space-y-3 px-5 border">
+        <h2 className="font-bold text-xl pb-1 flex items-center justify-center">Add New Wanted Item</h2>
+        <p className="text-muted-foreground text-center pb-5">Looking for something specific? Post a request and let sellers or providers find you.</p>
+        <div className={"hidden"}>
+          <StepCategory
+            onPick={handleCategoryPick}
+            selectedCategory={selectedCategory}
+          />
         </div>
-
-
-        {/* Navigation Buttons */}
-        <Navigation
-          {...navigationParams}
-        />
+        <AddNewWantedItem key="wanted-item-form" onSubmitSuccess={() => {
+          router.replace("/admin/myWantedItems")
+        }} />
       </div>
     )
   } else if (selectedCategory === "Businesses for Sale" && currentStep == 1) {
     secondStep = (
-      <div>
-        <div className="rounded-md bg-white shadow-sm m-2 p-6 space-y-3 px-5 border">
-          <h2 className="font-bold text-xl pb-1 flex items-center justify-center">Sell Your Business</h2>
-          <p className="text-muted-foreground text-center pb-5">List your business for sale to reach potential buyers and investors in the industry.</p>
-          <div className={"hidden"}>
-            <StepCategory
-              onPick={handleCategoryPick}
-              selectedCategory={selectedCategory}
-            />
-          </div>
-          <BusinessListingForm key="business-form" onSubmitSuccess={() => {
-            router.replace("/admin/myBusinessesForSale")
-          }} />
+      <div className="rounded-md bg-white shadow-sm m-2 p-6 space-y-3 px-5 border">
+        <h2 className="font-bold text-xl pb-1 flex items-center justify-center">Sell Your Business</h2>
+        <p className="text-muted-foreground text-center pb-5">List your business for sale to reach potential buyers and investors in the industry.</p>
+        <div className={"hidden"}>
+          <StepCategory
+            onPick={handleCategoryPick}
+            selectedCategory={selectedCategory}
+          />
         </div>
-
-
-        {/* Navigation Buttons */}
-        <Navigation
-          {...navigationParams}
-        />
+        <BusinessListingForm key="business-form" onSubmitSuccess={() => {
+          router.replace("/admin/myBusinessesForSale")
+        }} />
       </div>
     )
   }
 
   else {
     secondStep = (
-      <form ref={formRef} action={handleAction} className="space-y-6 relative">
+      <form id="add-item-form" ref={formRef} action={handleAction} className="space-y-6 relative">
         <input type="hidden" name="submitType" ref={submitTypeRef} />
         {isEditing && <input type="hidden" name="productId" value={productId} />}
 
@@ -369,18 +351,13 @@ export function AddNewItemForm({
             machineDeliveryCharge={machineDeliveryCharge}
           />
         </div>
-
-        {/* Navigation Buttons */}
-        <Navigation
-          {...navigationParams}
-        />
       </form>
     )
   }
 
 
   return (
-    <div ref={containerRef} className="w-full pb-32">
+    <div className="w-full">
       <SellerFormDialog
         open={showSellerForm}
         setOpen={setShowSellerForm}
@@ -397,9 +374,12 @@ export function AddNewItemForm({
           }
         }}
       />
-      <div className="container max-w-[900px] m-auto mt-0">
+      <div className="w-full max-w-[900px] mx-auto mt-0 pb-32">
         {secondStep}
       </div>
+      <Navigation
+        {...navigationParams}
+      />
     </div>
   );
 }
@@ -407,8 +387,8 @@ export function AddNewItemForm({
 function Navigation({ handleBack, currentStep, pending, steps, handleNext, selectedCategory, submitTypeRef, isEditing, hasOwnSubmit, user, role }: any) {
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[100] bg-white/80 backdrop-blur-md border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] py-4">
-      <div className="container max-w-[900px] m-auto flex justify-between items-center px-4">
+    <div className="fixed bottom-0 left-0 right-0 lg:left-64 z-[100] bg-white/80 backdrop-blur-md border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] py-4">
+      <div className="w-full max-w-[900px] mx-auto flex justify-between items-center px-4">
         <Button
           type="button"
           variant="outline"
@@ -450,6 +430,7 @@ function Navigation({ handleBack, currentStep, pending, steps, handleNext, selec
           <Button
             disabled={pending}
             type="submit"
+            form="add-item-form"
             className="bg-blue-700 hover:bg-blue-600 text-white min-w-[150px] h-11 px-8 font-bold shadow-md shadow-blue-200"
             onClick={() => {
               if (submitTypeRef.current) submitTypeRef.current.value = 'post';

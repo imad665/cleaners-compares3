@@ -211,7 +211,7 @@ export function BusinessListingForm({
                 }}
             />
 
-            <div className="  overflow-y-auto overflow-x-hidden pr-2 custom-scrollbar space-y-8 p-1">
+            <div className="w-full space-y-8 p-1">
                 {/* Section 1: Business Overview */}
                 <div className="space-y-4">
                     <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">

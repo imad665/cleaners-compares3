@@ -139,7 +139,7 @@ export default function VideoTable() {
           </div>
         </DialogContent>
       </Dialog>
-      <div className="w-[100vw] h-30"></div>
+      <div className="w-full h-32"></div>
     </div>
   );
 }
