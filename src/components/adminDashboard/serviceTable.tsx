@@ -1,14 +1,16 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "@/components/ui/button";
+import ButtonDashboard from '@/components/adminDashboard/shared/Button';
 import { Trash2, Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { ServiceEngineerForm } from "./serviceEngineer";
+import { useAdminServices, Service } from "@/hooks/useAdminServices";
 import { toast } from "sonner";
 import { AlertDialog } from "../ui/alert-dialog";
 import {
@@ -22,16 +24,21 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-function DeleteModal({ setShowDeleteModal, confirmDelete, showDeleteModal, selectedItem }:
+function DeleteModal({ setShowDeleteModal, confirmDelete, showDeleteModal, selectedItem, isDeleting }:
   {
     setShowDeleteModal: (v: boolean) => void,
     confirmDelete: () => void,
     selectedItem: any,
-    showDeleteModal: boolean
+    showDeleteModal: boolean,
+    isDeleting: boolean
   }
 ) {
   return (
-    <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+    <AlertDialog open={showDeleteModal} onOpenChange={(open) => {
+      if (!isDeleting) {
+        setShowDeleteModal(open);
+      }
+    }}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
@@ -40,13 +47,14 @@ function DeleteModal({ setShowDeleteModal, confirmDelete, showDeleteModal, selec
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
+          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <ButtonDashboard
             onClick={confirmDelete}
-            variant={'destructive'}
+            variant='danger'
+            loading={isDeleting}
           >
             Delete
-          </AlertDialogAction>
+          </ButtonDashboard>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -54,40 +62,17 @@ function DeleteModal({ setShowDeleteModal, confirmDelete, showDeleteModal, selec
 }
 
 
-interface Service {
-  id: string;
-  title: string;
-  category: {
-    name: string;
-  };
-  ratePerHour: number;
-  callOutCharges: number;
-  areaOfService: string;
-  email: string;
-  isFeatured: boolean;
-  isEnabled: boolean;
-  pictureUrl?: string;
-  contactNumber: string;
-  address: string;
-  companyType: string;
-  experience: string;
-}
-
-export default function ServiceTable({ newService = null }: { newService?: Service }) {
-  const [services, setServices] = useState<Service[]>([]);
+export default function ServiceTable() {
+  const { services, isLoading: loading, mutate } = useAdminServices();
 
   const [editItem, setEditItem] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (newService) setServices((prev) => [...prev, newService]);
-  }, [newService])
-
 
   const confirmDelete = async () => {
+    setIsDeleting(true);
     try {
       const id = selectedItem?.id;
       const res = await fetch('/api/admin/myServices', {
@@ -100,16 +85,17 @@ export default function ServiceTable({ newService = null }: { newService?: Servi
       if (!res.ok) {
         const { error } = await res.json();
         toast.error(error || 'failed to delete service');
+      } else {
+        mutate(); // Revalidate
+        const { message } = await res.json();
+        toast.success(message || 'the service deleted successfuly');
+        setShowDeleteModal(false);
+        setSelectedItem(null);
       }
-      setServices((prev) => prev.filter((s) => s.id !== id));
-      const { message } = await res.json();
-      toast.success(message || 'the service deleted successfuly');
     } catch (error) {
       toast.error('somthing went wrong');
     } finally {
-      setSelectedItem(null);
-      setShowDeleteModal(false);
-
+      setIsDeleting(false);
     }
   }
 
@@ -120,31 +106,14 @@ export default function ServiceTable({ newService = null }: { newService?: Servi
   const onSubmitSuccess = (v: any) => {
     setIsEdit(false);
     setEditItem(null);
-    const n = [...services.filter((s) => s.id != v.id), v];
-    setServices(n)
+    mutate(); // Revalidate
   }
 
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const res = await fetch("/api/admin/myServices");
-        const data = await res.json();
-        //console.log(data, ';;;;;;;;;;;;;;;');
-        setServices(data.services);
-      } catch (error) {
-        console.error("Failed to fetch services:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchServices();
-  }, []);
 
   const handleDelete = async (selectItem: Service) => {
     setSelectedItem(selectItem);
     setShowDeleteModal(true);
+    setIsDeleting(false);
   };
 
   return (
@@ -268,6 +237,7 @@ export default function ServiceTable({ newService = null }: { newService?: Servi
           setShowDeleteModal={setShowDeleteModal}
           confirmDelete={confirmDelete}
           selectedItem={selectedItem}
+          isDeleting={isDeleting}
         />}
     </div>
   );

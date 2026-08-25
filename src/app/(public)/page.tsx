@@ -17,7 +17,7 @@ import { BrandingSlider } from "@/components/home_page/brandingSlider";
 import { HomeProductsProvider } from "@/providers/homeProductsProvider";
 import { getCategoriesHome, getGeneralInquiries, getServices } from "@/lib/products/homeCategories";
 import { Button } from "@/components/ui/button";
-import { getAllHomeProducts, getRecentOrdersCount } from "@/lib/products/homeProducts";
+import { getAllHomeProducts, getJustAddedProducts, getRecentOrdersCount } from "@/lib/products/homeProducts";
 import { FormProvider } from "react-hook-form";
 import AddressSearchUK from "@/components/address-search";
 import { getNotifications } from "@/lib/payement/get-notification-for-icon";
@@ -31,6 +31,7 @@ import { cn } from "@/lib/utils";
 import { BuyerSellerBlock } from "@/components/home_page/BuyerSellerBlock";
 import { CategoryGrid } from "@/components/home_page/CategoryGrid";
 import { FeaturedEngineers } from "@/components/home_page/FeaturedEngineers";
+import { JustAddedProducts } from "@/components/home_page/just_added_product";
 
 const getHomePageCachedData = unstable_cache(
   async () => {
@@ -78,6 +79,16 @@ export default async function Home() {
           tags: ['home-cache']
         }
       })).json()
+  const { success: success2, justAddedProducts } = await (await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/need-cache/homePage?justAdded=true`,
+    {
+      next: {
+        revalidate: 60 * 3,
+        tags: ['home-cache-3min']
+      }
+    })).json()
+  /* const justAddedProducts = await getJustAddedProducts({ page: 1, pageSize: 10 }) */
+
+  //console.log(justAddedProducts, 'slllllllllllllllllllllllllllllllkkk');
 
 
 
@@ -93,14 +104,18 @@ export default async function Home() {
 
       <main className="">
         <MainImage />
+        <FeaturedAndProducts
+          initFeaturedProducts={featuredProducts.editProducts} />
+        {justAddedProducts.editProducts.length > 0 && < JustAddedProducts
+          initialProducts={justAddedProducts.editProducts} />}
+
         <BuyerSellerBlock />
         <CategoryGrid />
         {services.length > 0 && <FeaturedEnginners services={services} />}
         <LimitedTimeDeals
           initDealsProducts={dealsProducts.editProducts}
           className={services.length > 0 ? 'bg-blue-50' : 'bg-white'} />
-        <FeaturedAndProducts
-          initFeaturedProducts={featuredProducts.editProducts} />
+
         <WantedItemAndBusiness
           wantedItems={wantedItems.editedWantedItem}
           businessesForSale={businessesForSale.editedBusinessForSale}

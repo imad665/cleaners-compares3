@@ -14,7 +14,7 @@ interface ProductGalleryProps {
 export default function ProductGallery({ images, videoUrl, listingStatus = 'AVAILABLE' }: ProductGalleryProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showLightbox, setShowLightbox] = useState(false);
-  console.log(listingStatus, 'cccccccccccccccccccddddffdfd');
+  //console.log(listingStatus, 'cccccccccccccccccccddddffdfd');
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));

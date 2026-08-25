@@ -49,6 +49,7 @@ export function BuyerSellerBlock() {
           <ButtonNeedSignIn
             text="Sell Your Products"
             className="mt-4"
+            isEmail={true}
             buttonClassName="bg-supplier hover:bg-supplier/90"
           />
           {/* <SupplierCtaButton className="mt-5 bg-supplier hover:bg-supplier/90 text-supplier-foreground">

@@ -30,6 +30,7 @@ type SellerFormDialogProps = {
 export function SellerForm({
   setOpen,
   callback,
+  onPending,
   redirect = true,
   onSuccess = undefined,
 }: {
@@ -37,6 +38,7 @@ export function SellerForm({
   callback: string;
   redirect?: boolean;
   onSuccess?: () => void;
+  onPending: () => void;
 }) {
   const [state, action, pending] = useActionState(
     formSellerAction,
@@ -55,6 +57,9 @@ export function SellerForm({
 
   useEffect(() => {
     if (!state) return;
+    if (pending) {
+      onPending()
+    }
 
     if (state.success || (state.needToResignin && ktry <= 2)) {
       if (state.success) {
@@ -208,11 +213,13 @@ export default function SellerFormDialog({
   onSuccess,
   title,
   description,
-  redirect = true
+  redirect = true,
+  onPending
 }: SellerFormDialogProps & {
   title?: string,
   description?: string;
-  redirect?: boolean
+  redirect?: boolean;
+  onPending: () => void;
 }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -226,7 +233,7 @@ export default function SellerFormDialog({
               {description || "Join our community and start growing your cleaning business today."}
             </DialogDescription>
           </DialogHeader>
-          <SellerForm callback={callback} redirect={redirect} setOpen={setOpen} onSuccess={onSuccess} />
+          <SellerForm onPending={onPending} callback={callback} redirect={redirect} setOpen={setOpen} onSuccess={onSuccess} />
         </div>
       </DialogContent>
     </Dialog>

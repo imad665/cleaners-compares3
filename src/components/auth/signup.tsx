@@ -20,22 +20,22 @@ import { Dialog, DialogContent } from "../ui/dialog"
 import { motion, AnimatePresence } from "framer-motion"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
-function InputPassword({ 
-    label, 
-    id, 
-    name, 
-    value, 
-    onChange, 
-    disabled, 
-    placeholder, 
-    autoComplete 
-}: { 
-    label: string, 
-    id: string, 
-    name: string, 
-    value: string, 
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, 
-    disabled: boolean, 
+function InputPassword({
+    label,
+    id,
+    name,
+    value,
+    onChange,
+    disabled,
+    placeholder,
+    autoComplete
+}: {
+    label: string,
+    id: string,
+    name: string,
+    value: string,
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    disabled: boolean,
     placeholder?: string,
     autoComplete?: string
 }) {
@@ -73,12 +73,12 @@ function InputPassword({
     )
 }
 
-export default function SignUpComp({ 
-    onSignInClick = null, 
-    callback 
-}: { 
-    onSignInClick?: () => void; 
-    callback?: string 
+export default function SignUpComp({
+    onSignInClick = null,
+    callback
+}: {
+    onSignInClick?: () => void;
+    callback?: string
 }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -87,6 +87,7 @@ export default function SignUpComp({
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [pending, setPending] = useState(false);
+    //console.log(name, email, password, confirmPassword, 'ssssssssssssssssssssssssssfc');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -115,6 +116,7 @@ export default function SignUpComp({
             const result = await registerAction(null, formData);
 
             if (result?.error) {
+                alert(result.error)
                 setError(result.error);
                 setIsLoading(false);
             } else if (result?.success) {
@@ -250,7 +252,7 @@ export default function SignUpComp({
                                 autoComplete="new-password"
                             />
                         </div>
-                        
+
                         <p className="text-[11px] text-muted-foreground mt-1 px-1">
                             Password must be at least 8 characters long
                         </p>
@@ -295,7 +297,7 @@ export default function SignUpComp({
                     </Button>
                 </CardContent>
 
-                <CardFooter className="flex flex-wrap justify-center gap-1 py-4 text-sm text-muted-foreground border-t bg-muted/20">
+                {!isLoading && <CardFooter className="flex flex-wrap justify-center gap-1 py-4 text-sm text-muted-foreground border-t bg-muted/20">
                     Already have an account?{" "}
                     {onSignInClick ? (
                         <button
@@ -306,24 +308,24 @@ export default function SignUpComp({
                             Sign in
                         </button>
                     ) : (
-                        <a 
-                            href="/auth/signin" 
+                        <a
+                            href="/auth/signin"
                             className="font-semibold text-primary hover:underline underline-offset-4"
                         >
                             Sign in
                         </a>
                     )}
-                </CardFooter>
+                </CardFooter>}
             </Card>
         </div>
     )
 }
 
-export function SignupModal({ 
-    open, 
-    setOpen, 
-    onSignInClick, 
-    callback 
+export function SignupModal({
+    open,
+    setOpen,
+    onSignInClick,
+    callback
 }: {
     open: boolean,
     setOpen: (v: boolean) => void,

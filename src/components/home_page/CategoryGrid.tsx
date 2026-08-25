@@ -38,6 +38,7 @@ export function CategoryGrid() {
         <div className="flex gap-2 items-center">
           <ButtonNeedSignIn
             variant="link"
+            isEmail={true}
             buttonClassName="font-bold"
             text="Sell Your Products" />
           <ArrowRight color="blue" className="h-3.5 w-3.5" />

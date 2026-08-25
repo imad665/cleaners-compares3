@@ -32,10 +32,10 @@ const iconColors: Record<string, string> = {
     'Settings': 'text-slate-500',
     'Profile': 'text-amber-500',
     'Orders': 'text-blue-600',
-    'Add Products': 'text-emerald-600',
-    'Add Wanted Items': 'text-orange-600',
-    'Add Enginners': 'text-indigo-600',
-    'Add Businesses for Sale': 'text-rose-600',
+    'Products': 'text-emerald-600',
+    'Wanted Items': 'text-orange-600',
+    'Enginners': 'text-indigo-600',
+    'Businesses for Sale': 'text-rose-600',
     'Cart': 'text-primary'
 };
 
@@ -57,10 +57,10 @@ function getUserMenu(user: any, cart: any[]) {
         return [
             { Icon: LayoutDashboard, title: 'Dashboard', href: '/admin' },
             { Icon: ListOrdered, title: 'Orders', href: '/admin/orders' },
-            { Icon: ShoppingCart, title: 'Add Products', href: '/admin/allProducts' },
-            { Icon: Box, title: 'Add Wanted Items', href: '/admin/myWantedItems' },
-            { Icon: UserCog, title: 'Add Enginners', href: '/admin/myServices' },
-            { Icon: Store, title: 'Add Businesses for Sale', href: '/admin/myBusinessesForSale' },
+            { Icon: ShoppingCart, title: 'Products', href: '/admin/allProducts' },
+            { Icon: Box, title: 'Wanted Items', href: '/admin/myWantedItems' },
+            { Icon: UserCog, title: 'Enginners', href: '/admin/myServices' },
+            { Icon: Store, title: 'Businesses for Sale', href: '/admin/myBusinessesForSale' },
             { Icon: MessageSquare, title: 'Messages', href: '/admin/myMessages/seller' },
             { Icon: User, title: 'Profile', href: '/admin/profile' },
         ]

@@ -22,7 +22,7 @@ import { toast } from "sonner"
 import { motion, AnimatePresence } from "framer-motion"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
-function InputPassword({ pending, password, setPassWord }: { pending: boolean, password: string, setPassWord: (v: string) => void }) {
+export function InputPassword({ pending, password, setPassWord }: { pending: boolean, password: string, setPassWord: (v: string) => void }) {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
@@ -94,7 +94,7 @@ export default function SignInComp({
         });
 
         if (!res) {
-            setPending(false);
+            //setPending(false);
             return;
         }
 
@@ -166,8 +166,8 @@ export default function SignInComp({
                         {showForgotPassword ? "Reset password" : "Welcome back"}
                     </CardTitle>
                     <CardDescription className="text-center">
-                        {showForgotPassword 
-                            ? "Enter your email to receive a reset link" 
+                        {showForgotPassword
+                            ? "Enter your email to receive a reset link"
                             : "Enter your credentials to access your account"}
                     </CardDescription>
                 </CardHeader>
@@ -192,7 +192,7 @@ export default function SignInComp({
 
                     <AnimatePresence mode="wait">
                         {resetSent ? (
-                            <motion.div 
+                            <motion.div
                                 key="reset-sent"
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -208,9 +208,9 @@ export default function SignInComp({
                                         We've sent a password reset link to <span className="font-medium text-foreground">{email}</span>
                                     </p>
                                 </div>
-                                <Button 
-                                    variant="outline" 
-                                    className="w-full" 
+                                <Button
+                                    variant="outline"
+                                    className="w-full"
                                     onClick={() => {
                                         setResetSent(false);
                                         setShowForgotPassword(false);
@@ -357,7 +357,7 @@ export default function SignInComp({
                     </AnimatePresence>
                 </CardContent>
 
-                {!showForgotPassword && !resetSent && (
+                {(!showForgotPassword && !resetSent && !pending) && (
                     <CardFooter className="flex flex-wrap justify-center gap-1 py-4 text-sm text-muted-foreground border-t bg-muted/20">
                         Don't have an account?
                         {!onSignUpClick ? (
@@ -365,8 +365,8 @@ export default function SignInComp({
                                 Sign up
                             </a>
                         ) : (
-                            <button 
-                                onClick={onSignUpClick} 
+                            <button
+                                onClick={onSignUpClick}
                                 className="font-semibold text-primary hover:underline underline-offset-4 cursor-pointer bg-transparent border-none p-0"
                             >
                                 Sign up

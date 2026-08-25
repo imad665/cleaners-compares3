@@ -357,15 +357,141 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
         })
     ]);
 
-    `title: 'Speed Queen Commercial Washer Speed Queen Commercial Washer Speed Queen Commercial Washer',
-        discountPrice: 1599.99,
-        price: 1999.99,
-        endDeal: '2d 10h 35m',
-        image: 'https://www.cleanerscompare.com/pics/1/80154_C_BLD12H_(01)_CleanersCompare.png',
-        discountPercentage: 20,
-        productId:'7777',
-        slug:'/'`
 
+    let editProducts = products.map((p) => {
+        const dealCountdown = getDealCountdown(p.dealEndDate);
+        let isDealActive = dealCountdown != null;
+        if (dealCountdown === null) {
+            prisma.product.update({
+                where: { id: p.id },
+                data: {
+                    isDealActive: false,
+                }
+            })
+
+        }
+        return {
+            productId: p.id,
+            href: `/products/${p.category?.parent?.slug}/${p.category?.slug}/${p.slug}`,
+            stars: p.ratings?.reduce((sum, item) => (sum + item.stars), 0) / p.ratings.length,
+            starsCount: p.ratings?.length,
+            units: p.units,
+            unitPrice: ((!p.isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1)),
+            priceExcVat: !isDealActive ? p.price : p.discountPrice,
+            discountPrice: p.discountPrice,
+            price: p.price,
+            image: p.imagesUrl[0],
+            listingStatus: p.listingStatus,
+            title: p.title,
+            endDeal: getDealCountdown(p.dealEndDate),
+            dealEndDate: getDealCountdown(p.dealEndDate),
+            dealCountdown: isDealActive ? getDealCountdown(p.dealEndDate) : null,
+            stock: p.stock,
+            discountPercentage: p.discountPercentage,
+            isIncVAT: p.isIncVAT,
+            vatType: p.vatType,
+            customerCollects: p.customerCollects,
+            freeLocalDelivery: p.freeLocalDelivery,
+            isOldProduct: false//new Date(p.createdAt) < new Date('2025-07-18')
+        }
+    }
+    )
+
+
+    if (products.length > 0) {
+        if (products.length < 5) {
+            const placeholders = await mockDeals();
+            editProducts = editProducts.concat(placeholders)
+            total = 20
+        }
+        return {
+            editProducts,
+            total,
+            currentPage: page,
+            totalPage: Math.ceil(total / pageSize)
+        }
+    } else {
+        const editProducts = await mockDeals();
+        //const total = editProducts.length;
+        return {
+            editProducts,
+            total: 20,
+            currentPage: page,
+            totalPage: 1
+        }
+    }
+}
+
+export async function getJustAddedProducts({ page = 1, pageSize = 10 }: any) {
+
+    const now = new Date();
+    let skip = (page - 1) * pageSize
+
+    const take = pageSize;
+    const threeMinutesAgo = new Date(now.getTime() - 3 * 60 * 1000);
+
+    let [products, total] = await Promise.all([
+        prisma.product.findMany({
+            where: {
+                createdAt: {
+                    gte: threeMinutesAgo,
+                    lte: now,
+                },
+                ...excludeSuspendedSeller,
+            },
+            select: {
+                id: true,
+                condition: true,
+                description: true,
+                units: true,
+                title: true,
+                imagesUrl: true,
+                listingStatus: true,
+                slug: true,
+                price: true,
+                discountPercentage: true,
+                discountPrice: true,
+                isDealActive: true,
+                dealEndDate: true,
+                stock: true,
+                createdAt: true,
+                isIncVAT: true,
+                vatType: true,
+                freeLocalDelivery: true,
+                customerCollects: true,
+                ratings: {
+                    select: {
+                        stars: true,
+                    }
+                },
+                category: {
+                    select: {
+                        slug: true,
+                        parent: {
+                            select: {
+                                slug: true,
+                            }
+                        }
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+            skip,
+            take,
+
+        }),
+        prisma.product.count({
+            where: {
+                ...excludeSuspendedSeller,
+                isDealActive: true,
+                dealStartDate: { lte: now },
+                dealEndDate: { gte: now },
+
+            }
+        })
+    ]);
 
 
     let editProducts = products.map((p) => {
@@ -406,43 +532,12 @@ export async function getDealsProducts({ page = 1, pageSize = 10, isRandom = fal
         }
     }
     )
-    /* productId: p.id,
-    href: `/products/${p.category?.parent?.slug}/${p.category?.slug}/${p.slug}`,
-    stars: p.ratings.reduce((sum, item) => (sum + item.stars), 0) / p.ratings.length,
-    starsCount: p.ratings.length,
-    units: p.units,
-    unitPrice: ((!isDealActive ? p.price : (p.discountPrice || p.price)) / (p.units || 1)),
-    priceExcVat: !isDealActive ? p.price : p.discountPrice,
-    price: p.price,
-    dealEndDate: p.dealEndDate,
-    dealCountdown: isDealActive ? getDealCountdown(p.dealEndDate) : null,
-    image: p.imagesUrl[0],
-    stock: p.stock,
-    title: p.title,
-    isOldProduct: new Date(p.createdAt) < new Date('2025-07-18') */
-    //console.log(editProducts, 'ooooooooo');
 
-    if (products.length > 0) {
-        if (products.length < 5) {
-            const placeholders = await mockDeals();
-            editProducts = editProducts.concat(placeholders)
-            total = 20
-        }
-        return {
-            editProducts,
-            total,
-            currentPage: page,
-            totalPage: Math.ceil(total / pageSize)
-        }
-    } else {
-        const editProducts = await mockDeals();
-        //const total = editProducts.length;
-        return {
-            editProducts,
-            total: 20,
-            currentPage: page,
-            totalPage: 1
-        }
+    return {
+        editProducts,
+        total: 20,
+        currentPage: page,
+        totalPage: 1
     }
 }
 

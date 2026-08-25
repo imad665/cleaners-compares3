@@ -18,6 +18,11 @@ export function SubCategorySelector({
 }) {
   const [subcategories, setSubcategories] = useState<{ name: string, id?: string }[]>([]);
   const [subcategoryId, setSubCategoryId] = useState(id);
+  useEffect(() => {
+    if (!id.trim()) {
+      setSubCategoryId('')
+    }
+  }, [id])
 
   useEffect(() => {
     const category = categories.find((c) => c.name.toLowerCase() === mainCategory.toLowerCase().replace('_', ' '));
@@ -38,10 +43,10 @@ export function SubCategorySelector({
         <h3 className="tracking-tight text-xl font-bold text-gray-800 ">Select Subcategory</h3>
         <p className="text-sm text-muted-foreground">Pick the most relevant subcategory for your {mainCategory}.</p>
       </div>
-      
+
       <input type="hidden" name="subcategoryId" value={subcategoryId} />
       <input type="hidden" name="category" value={mainCategory.replace(' ', '_')} />
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {subcategories.map((s) => {
           const isSelected = subcategoryId === s.id;
@@ -52,8 +57,8 @@ export function SubCategorySelector({
               onClick={() => handleSubCategoryClick(s)}
               className={cn(
                 "flex items-center justify-between px-4 py-3 rounded-xl border transition-all text-left group",
-                isSelected 
-                  ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600" 
+                isSelected
+                  ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600"
                   : "border-gray-200 bg-white hover:border-blue-400 hover:bg-gray-50"
               )}
             >

@@ -53,7 +53,7 @@ function App() {
     // Scroll to top when changing categories
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-  console.log(categories, 'sdddddddddddddddkfkfkfdlfkdfk');
+  //console.log(categories, 'sdddddddddddddddkfkfkfdlfkdfk');
 
   return (
     <div className='flex items-start min-h-screen relative border-b'>

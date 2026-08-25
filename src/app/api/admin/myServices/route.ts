@@ -248,7 +248,7 @@ export async function PATCH(req: NextRequest) {
                 contactNumber: formData.get("contactNumber") as string,
                 companyType: formData.get("companyType") as any,
                 address: formData.get("address") as string,
-                description: formData.get("description") as string,
+                description: (formData.get("description") || '') as string,
                 isEnabled: formData.get("enabled") === "true",
                 category: formData.get("category") as any,
                 featureDays: featureDays,

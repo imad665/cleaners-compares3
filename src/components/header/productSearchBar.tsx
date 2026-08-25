@@ -466,8 +466,8 @@ export function ButtonNeedSignIn({
         setOpenSignUp={setOpenSignUp}
         callback="/admin/addNewProduct"
       />
-      {openSellerDialog && <SellerFormDialog callback="/admin/addNewProduct" open={openSellerDialog} setOpen={setOpenSellerDialog} />}
-      {openDialog && <SellerFormDialog2 callback="/admin/addNewProduct" text="" open={openDialog} setOpen={setOpenDialog} />}
+      {/* {openSellerDialog && <SellerFormDialog callback="/admin/addNewProduct" open={openSellerDialog} setOpen={setOpenSellerDialog} />}
+      {openDialog && <SellerFormDialog callback="/admin/addNewProduct" text="" open={openDialog} setOpen={setOpenDialog} />} */}
     </div>
   )
 }

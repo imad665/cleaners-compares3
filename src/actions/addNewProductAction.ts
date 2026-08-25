@@ -69,7 +69,7 @@ export async function addNewProductAction(prev: any, formData: FormData) {
     /* console.log(submitType,productName,description,product_condition);
     console.log(price,discount,discountEnd,category,subCategory);
     console.log(imagesFile.length,imageUrls.length ,subcategoryId); */
-    console.log({
+    /* console.log({
         submitType,
         productName,
         description,
@@ -81,7 +81,7 @@ export async function addNewProductAction(prev: any, formData: FormData) {
         imageUrls,
         subcategoryId
 
-    });
+    }); */
 
     if (!submitType || !productName || !description || !product_condition ||
         !price ||
@@ -138,12 +138,15 @@ export async function addNewProductAction(prev: any, formData: FormData) {
 
     const discountAmount = price * (discount / 100);
     const discountedPrice = price - discountAmount;
-    try {
-        revalidateTag('home-cache')
-    } catch (e) {
-        console.log(e, 'dddddddddddkkfkfk');
-    }
 
+    const revalidate2 = () => {
+        try {
+            revalidateTag('home-cache')
+            revalidateTag("home-cache-3min")
+        } catch (e) {
+            console.log(e, 'dddddddddddkkfkfk');
+        }
+    }
 
 
     if (productId) {
@@ -194,7 +197,7 @@ export async function addNewProductAction(prev: any, formData: FormData) {
             }
         });
         //console.log(updatedProduct,featuredDuration,';;;;;;;;;;;;');
-
+        revalidate2()
         if (featuredDuration?.toString() && !updatedProduct.isFeatured) {
             const url = await processPayement(featuredDuration.toString(), { productId: updatedProduct.id, type: 'product-feature' });
             await reembedByRefId(productId)
@@ -235,6 +238,7 @@ export async function addNewProductAction(prev: any, formData: FormData) {
                 stock
             }
         });
+        revalidate2()
 
         if (featuredDuration?.toString()) {
             const url = await processPayement(featuredDuration.toString(), { productId: newProduct.id, type: 'product-feature' });

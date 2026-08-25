@@ -1,7 +1,13 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Button } from "@/components/ui/button";
-// Added Info and CheckCircle2 icons for the advice section
-import { Image, Plus, X, ArrowUp, ArrowDown, Info, CheckCircle2, Sparkles } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Image, Plus, X, ArrowUp, ArrowDown, CheckCircle2, Sparkles, Camera, Upload } from "lucide-react";
 import { toast } from 'sonner';
 
 const MAX_FILE_SIZE_MB = 5;
@@ -12,6 +18,7 @@ const ImageUploader2 = ({
   onChange,
   maxImages = 5
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleFileChange = useCallback((e) => {
     const files = e.target.files;
@@ -21,6 +28,7 @@ const ImageUploader2 = ({
       toast.error("Maximum image limit reached", {
         description: `You can upload a maximum of ${maxImages} images`,
       });
+      setIsModalOpen(false);
       return;
     }
 
@@ -29,7 +37,7 @@ const ImageUploader2 = ({
     Array.from(files).forEach(file => {
       if (file.size > MAX_FILE_SIZE_BYTES) {
         toast.error("Image too large", {
-          description: `Image "${file.name}" exceeds the 1MB limit.`,
+          description: `Image "${file.name}" exceeds the limit.`,
         });
         return;
       }
@@ -47,6 +55,7 @@ const ImageUploader2 = ({
     }
 
     e.target.value = '';
+    setIsModalOpen(false);
   }, [images, maxImages, onChange]);
 
   const removeImage = (id) => {
@@ -99,9 +108,8 @@ const ImageUploader2 = ({
         {images.map((image, index) => (
           <div
             key={image.id}
-            className={`relative bg-white border rounded-xl p-1 aspect-square flex items-center justify-center overflow-hidden group shadow-sm transition-all duration-300 ${
-              index === 0 ? 'ring-2 ring-primary ring-offset-2' : ''
-            }`}
+            className={`relative bg-white border rounded-xl p-1 aspect-square flex items-center justify-center overflow-hidden group shadow-sm transition-all duration-300 ${index === 0 ? 'ring-2 ring-primary ring-offset-2' : ''
+              }`}
           >
             <img
               src={image.url}
@@ -154,16 +162,11 @@ const ImageUploader2 = ({
         ))}
 
         {images.length < maxImages && (
-          <label
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
             className="border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center cursor-pointer aspect-square hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group"
           >
-            <input
-              type="file"
-              className="sr-only"
-              accept="image/*"
-              multiple
-              onChange={handleFileChange}
-            />
             <div className="flex flex-col items-center p-4 text-center">
               <div className="p-3 bg-gray-50 rounded-full group-hover:bg-primary/10 transition-colors mb-2">
                 <Plus className="h-6 w-6 text-gray-400 group-hover:text-primary" />
@@ -172,9 +175,55 @@ const ImageUploader2 = ({
                 Add Photo
               </span>
             </div>
-          </label>
+          </button>
         )}
       </div>
+
+      {/* --- ADD PHOTO CHOOSER MODAL --- */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-md z-50">
+          <DialogHeader>
+            <DialogTitle>Add Product Photo</DialogTitle>
+            <DialogDescription>
+              Choose how you would like to upload your photo.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+            {/* Option 1: Camera Capture */}
+            <label className="border-2 border-gray-100 hover:border-primary hover:bg-primary/5 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all text-center group">
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="sr-only"
+                onChange={handleFileChange}
+              />
+              <div className="p-3 bg-primary/10 rounded-full text-primary mb-3 group-hover:scale-110 transition-transform">
+                <Camera className="h-6 w-6" />
+              </div>
+              <span className="text-sm font-semibold text-gray-900 mb-1">Take Photo</span>
+              <span className="text-xs text-gray-500">Use camera now</span>
+            </label>
+            {/* Option 2: Upload from Device */}
+            <label className="border-2 border-gray-100 hover:border-primary hover:bg-primary/5 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all text-center group">
+              <input
+                type="file"
+                className="sr-only"
+                accept="image/*"
+                multiple
+                onChange={handleFileChange}
+              />
+              <div className="p-3 bg-primary/10 rounded-full text-primary mb-3 group-hover:scale-110 transition-transform">
+                <Upload className="h-6 w-6" />
+              </div>
+              <span className="text-sm font-semibold text-gray-900 mb-1">Upload File</span>
+              <span className="text-xs text-gray-500">From gallery or files</span>
+            </label>
+
+
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div className="text-xs text-muted-foreground bg-gray-50 p-2 rounded border-l-4 border-gray-300">
         <strong>Format:</strong> PNG, JPG. <strong>Limit:</strong> {MAX_FILE_SIZE_MB}MB per file.

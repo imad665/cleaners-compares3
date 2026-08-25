@@ -1,91 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-import { Phone, Plus } from "lucide-react";
-import { BusinessFormDialog } from "../forms/busnisessForm";
-
-// Example businesses (you could fetch these from a backend too)
-
-
-const businessesForSale = [
-    {
-        id: '123456789',
-        title: "Dry Cleaning Business - Downtown",
-        location: "Miami, USA",
-        value: "$90,000 USD",
-        reason: "Relocating Abroad",
-        description: "Growing laundry pickup and delivery business with high potential for expansion.",
-        imageUrl: "/test/ai_home.jpeg",
-        contactInfo: "Email: laundrysales@example.com",
-        fullName: 'Mohamed Hasnaoui',
-        email: 'mohamed@email.com',
-        phone: '+212123456789',
-        datePosted: '2025-4-2',
-        turnoverRange: '250k - 500k',
-        reasonForSelling: "Financial reasons",
-    },
-    {
-        id: '1234567899',
-        title: "Laundry Service Company",
-        location: "Miami, USA",
-        value: "$90,000 USD",
-        reason: "Relocating Abroad",
-        description: "Growing laundry pickup and delivery business with high potential for expansion.",
-        imageUrl: "/test/ai_home.jpeg",
-        contactInfo: "Email: laundrysales@example.com",
-        fullName: 'Mohamed Hasnaoui',
-        email: 'mohamed@email.com',
-        phone: '+212123456789',
-        datePosted: '2025-4-2',
-        turnoverRange: "1m - 2m",
-        reasonForSelling: "Relocation",
-    },
-];
-
-
-import { useEffect } from 'react';
-import { Edit2, Trash2 } from 'lucide-react';
-
-
+import { useMyBusinesses, BusinessType } from "@/hooks/useMyBusinesses";
+import { useEffect, useState } from 'react';
+import { Edit2, Trash2, Plus } from 'lucide-react';
 import Table from '@/components/adminDashboard/shared/Table';
-
 import { toast } from 'sonner';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import AddWantedItemDialog from '@/components/forms/wantedItem';
 import { Button } from "../ui/button";
-
-
-// Define the product type
-
-interface BusinessType {
-    id: string
-    description: string
-    email: string
-    phone: string
-    imageUrl: string
-    location: string
-    title: string
-    turnoverRange: string
-    fullName: string
-    businessType: string
-    reasonForSelling: string
-    datePosted: string
-}
+import { BusinessFormDialog } from "../forms/busnisessForm";
 
 const MyBusinesses = () => {
+    const { myBusinesses: productsData, isLoading: loading, mutate } = useMyBusinesses();
+
     const [selectedProduct, setSelectedProduct] = useState<BusinessType | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    //const [isDeleting, setIsDeleting] = useState(false);
-    //const [isView, setIsView] = useState(false);
-    const [productsData, setProductsData] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [refresh, setRefresh] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [openWanted, setOpenWanted] = useState(false);
     const [addWanted, setAddWanted] = useState(false);
-    const [loading, setLoading] = useState(true);
     const searchParams = useSearchParams();
     const pathName = usePathname();
     const router = useRouter()
@@ -97,33 +29,6 @@ const MyBusinesses = () => {
             setAddWanted(true)
         }
     }, [])
-
-    //const router = useRouter();
-    useEffect(() => {
-        setLoading(true);
-        const fetchProducts = async () => {
-            try {
-                const res = await fetch('/api/admin/myBusinesses');
-                if (!res.ok) {
-                    const { error } = await res.json();
-                    toast.error(error);
-                    return;
-                }
-                //setCategories(businessesForSale);
-                const { myBusinesses } = await res.json();
-                //console.log(myBusinesses[0]);
-
-                setProductsData(myBusinesses);
-            } catch (error) {
-                console.error('failes to fetch all product ', error);
-                toast.error('failed to fetched all products');
-            } finally {
-                setLoading(false)
-            }
-
-        }
-        fetchProducts();
-    }, [refresh])
 
     // Table columns configuration
     const columns = [
@@ -193,8 +98,7 @@ const MyBusinesses = () => {
 
     const confirmDelete = async () => {
         if (selectedProduct) {
-            console.log('Deleting product:', selectedProduct);
-            // Perform delete action
+            setIsDeleting(true);
             try {
                 const res = await fetch('/api/admin/myBusinesses', {
                     method: 'DELETE',
@@ -206,17 +110,18 @@ const MyBusinesses = () => {
                 if (res.ok) {
                     const { message } = await res.json();
                     toast.success(message);
+                    mutate();
                 } else {
                     const { error } = await res.json();
                     toast.error(error);
                 }
             } catch (error) {
                 toast.error('failed to delete product');
+            } finally {
+                setIsDeleting(false);
+                setShowDeleteModal(false);
+                setSelectedProduct(null);
             }
-
-            setShowDeleteModal(false);
-            setSelectedProduct(null);
-            setRefresh(v => !v);
         }
     };
 
@@ -303,18 +208,20 @@ const MyBusinesses = () => {
                         <div className="bg-white rounded-lg p-6 max-w-md mx-4 md:mx-auto">
                             <h3 className="text-lg font-medium text-gray-900 mb-4">Confirm Delete</h3>
                             <p className="text-sm text-gray-500 mb-4">
-                                Are you sure you want to delete "{selectedProduct?.name}"? This action cannot be undone.
+                                Are you sure you want to delete "{selectedProduct?.title}"? This action cannot be undone.
                             </p>
                             <div className="flex justify-end space-x-3">
                                 <Button
                                     variant="outline"
                                     onClick={() => setShowDeleteModal(false)}
+                                    disabled={isDeleting}
                                 >
                                     Cancel
                                 </Button>
                                 <Button
                                     variant="danger"
                                     onClick={confirmDelete}
+                                    loading={isDeleting}
                                 >
                                     Delete
                                 </Button>
@@ -328,20 +235,12 @@ const MyBusinesses = () => {
                 setOpen={setAddWanted}
 
                 onSubmitSuccess={() => {
-                    setRefresh(v => !v)
+                    mutate()
                     setAddWanted(false)
                 }}
             />}
 
             {isEditing && <div className='w-full top-0 bg-black/10'>
-                {/* <div className='px-6 sticky z-1000 top-0 w-full items-center flex justify-between bg-gray-700 text-white  p-2'>
-                    <h2 className='font-bold  text-xl'>Edit Product</h2>
-                    <button
-                        onClick={() => setIsEditing(false)}
-                        className='p-2 cursor-pointer hover:bg-gray-500'>
-                        <X size={24} />
-                    </button>
-                </div> */}
                 <div className='h-full overflow-auto mb-30 mt-0'>
 
                     <BusinessFormDialog
@@ -356,7 +255,7 @@ const MyBusinesses = () => {
                         onSubmitSuccess={() => {
                             setOpenWanted(false);
                             setIsEditing(false);
-                            setRefresh(v => !v)
+                            mutate()
                         }}
                         description={selectedProduct?.description}
                         email={selectedProduct?.email}

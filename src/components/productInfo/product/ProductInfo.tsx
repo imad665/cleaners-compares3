@@ -52,7 +52,7 @@ export default function ProductInfo({
     }
   };
   const listingStatus = product.listingStatus
-  console.log(listingStatus, 'sssssssssssssssssjjdjdjkkfkfkf');
+  //console.log(listingStatus, 'sssssssssssssssssjjdjdjkkfkfkf');
   return (
     <div className="flex flex-col space-y-6 relative">
       {/* Product badges */}

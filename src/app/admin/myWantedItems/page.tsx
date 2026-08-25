@@ -4,138 +4,30 @@ import { Plus, Edit2, Trash2 } from 'lucide-react';
 import Button from '@/components/adminDashboard/shared/Button';
 import Table from '@/components/adminDashboard/shared/Table';
 import { toast } from 'sonner';
+import { useWantedItems, WantedItem } from '@/hooks/useWantedItems';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import AddWantedItemDialog from '@/components/forms/wantedItem';
-import { buttonVariants } from '@/components/ui/button';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
-
-// Define the product type
-interface WantedItem {
-    id: string;
-    title: string;
-    location: string;
-    description: string;
-    datePosted: string;
-    email: string;
-    phone: string;
-    imageUrl: string;
-    fullName: string
-
-}
-
 const AllProducts = () => {
-    // Mock products data
-    const initProductsData: WantedItem[] = [
-        {
-            id: '1',
-            title: 'Used Dry Cleaning Machine',
-            location: 'New York, NY',
-            description: 'Looking for a used dry cleaning machine in good condition. Must be able to handle at least 50 lbs of garments.',
-            datePosted: '2024-07-28',
-            email: 'contactInfo@email.com',
-            phone: '124587899',
-            imageUrl: '/test/ai_home.jpeg',
-            fullName: 'Mohamed hasnaoui'
-        },
-        {
-            id: '2',
-            title: 'Commercial Laundry Detergent',
-            location: 'Los Angeles, CA',
-            description: 'Need a bulk supply of high-efficiency laundry detergent for commercial use. Eco-friendly preferred.',
-            datePosted: '2024-07-25',
-            email: 'contactInfo@email.com',
-            phone: '124587899',
-            imageUrl: '/test/ai_home.jpeg',
-            fullName: 'Mohamed hasnaoui'
-        },
-        {
-            id: '3',
-            title: 'Used Pressing Machine',
-            location: 'Chicago, IL',
-            description: 'Seeking a used pressing machine for shirts and pants. Must be in working order.',
-            datePosted: '2024-07-20',
-            email: 'contactInfo@email.com',
-            phone: '124587899',
-            imageUrl: '/test/ai_home.jpeg',
-            fullName: 'Mohamed hasnaoui'
-        },
-        {
-            id: '4',
-            title: 'Laundry Conveyor System',
-            location: 'Houston, TX',
-            description: 'Looking for a conveyor system for my laundry facility. Need a system that can handle high volume.',
-            datePosted: '2024-07-18',
-            email: 'contactInfo@email.com',
-            phone: '124587899',
-            imageUrl: '/test/ai_home.jpeg',
-            fullName: 'Mohamed hasnaoui'
-        },
-        {
-            id: '5',
-            title: 'Used Industrial Washer',
-            location: 'Phoenix, AZ',
-            description: 'Looking for a used industrial washer with a capacity of 75lbs or more.',
-            datePosted: '2024-07-15',
-            email: 'contactInfo@email.com',
-            phone: '124587899',
-            imageUrl: '/test/ai_home.jpeg',
-            fullName: 'Mohamed hasnaoui'
-        },
-    ];
-
+    const { wantedItems: productsData, isLoading: loading, mutate } = useWantedItems();
     const [selectedProduct, setSelectedProduct] = useState<WantedItem | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    //const [isDeleting, setIsDeleting] = useState(false);
-    //const [isView, setIsView] = useState(false);
-    const [productsData, setProductsData] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [refresh, setRefresh] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [openWanted, setOpenWanted] = useState(false);
     const [addWanted, setAddWanted] = useState(false);
-    const [loading, setLoading] = useState(true);
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
 
     useEffect(() => {
         const state = searchParams.get('state');
-        //alert(state)
         if (state === 'add') {
             router.replace(pathname)
             setAddWanted(true);
         }
     }, [])
-
-
-    useEffect(() => {
-        setLoading(true);
-        const fetchProducts = async () => {
-            try {
-                const res = await fetch('/api/admin/myWantedItems');
-                if (!res.ok) {
-                    const { error } = await res.json();
-                    toast.error(error);
-                    return;
-                }
-
-
-                const { wantedItems } = await res.json();
-                //console.log(wantedItems, 'ooooooooooo');
-
-                setProductsData(wantedItems);
-
-            } catch (error) {
-                console.error('failes to fetch Wanted Items ', error);
-                toast.error('failed to fetched Wanted Items');
-            } finally {
-                setLoading(false);
-            }
-
-        }
-        fetchProducts();
-    }, [refresh])
 
 
     // Table columns configuration
@@ -194,12 +86,14 @@ const AllProducts = () => {
     const handleDelete = (product: WantedItem) => {
         setSelectedProduct(product);
         setShowDeleteModal(true);
+        setIsDeleting(false);
     };
     //console.log(selectedProduct,'????????????');
 
     const confirmDelete = async () => {
         if (selectedProduct) {
             console.log('Deleting product:', selectedProduct);
+            setIsDeleting(true);
             // Perform delete action
             try {
                 const res = await fetch('/api/admin/myWantedItems', {
@@ -212,17 +106,18 @@ const AllProducts = () => {
                 if (res.ok) {
                     const { message } = await res.json();
                     toast.success(message);
+                    setShowDeleteModal(false);
+                    setSelectedProduct(null);
+                    mutate();
                 } else {
                     const { error } = await res.json();
                     toast.error(error);
                 }
             } catch (error) {
                 toast.error('failed to delete product');
+            } finally {
+                setIsDeleting(false);
             }
-
-            setShowDeleteModal(false);
-            setSelectedProduct(null);
-            setRefresh(v => !v);
         }
     };
 
@@ -301,7 +196,11 @@ const AllProducts = () => {
 
                 {/* Delete Confirmation Modal */}
                 {showDeleteModal && (
-                    <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+                    <AlertDialog open={showDeleteModal} onOpenChange={(open) => {
+                        if (!isDeleting) {
+                            setShowDeleteModal(open);
+                        }
+                    }}>
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
@@ -310,13 +209,14 @@ const AllProducts = () => {
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
+                                <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+                                <Button
                                     onClick={confirmDelete}
-                                    variant={'destructive'}
+                                    variant='danger'
+                                    loading={isDeleting}
                                 >
                                     Delete
-                                </AlertDialogAction>
+                                </Button>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
@@ -326,7 +226,7 @@ const AllProducts = () => {
                 open={addWanted}
                 setOpen={setAddWanted}
                 onSubmitSuccess={() => {
-                    setRefresh(v => !v)
+                    mutate()
                     setAddWanted(false);
                 }}
             />}
@@ -352,7 +252,7 @@ const AllProducts = () => {
                         }}
                         onSubmitSuccess={() => {
                             setOpenWanted(false);
-                            setRefresh(v => !v)
+                            mutate()
                         }}
                         id={selectedProduct?.id}
                         description0={selectedProduct?.description}

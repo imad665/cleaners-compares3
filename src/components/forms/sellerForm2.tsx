@@ -16,7 +16,8 @@ import { getSession, signIn, signOut } from 'next-auth/react'
 import { useHomeContext } from '@/providers/homePageProvider'
 import { formSellerAction } from '@/actions/actionSellerForm'
 import { registerAction } from '@/actions/registerAction'
-import { InputPassword } from '../auth/signup'
+import { InputPassword } from '../auth/signin'
+
 
 type SellerFormDialogProps = {
     open: boolean;
@@ -110,8 +111,8 @@ export function SellerForm2({ callback, redirect = true, OnSuccess }: { callback
                         />
                     </div>
 
-                    <InputPassword name="password" pending={submit} text="Password" />
-                    <InputPassword name="confirmPassword" pending={submit} text="Confirm Password" />
+                    {/* <InputPassword name="password" pending={submit} text="Password" />
+                    <InputPassword name="confirmPassword" pending={submit} text="Confirm Password" /> */}
                 </div>
 
                 {/* Business Information Section */}

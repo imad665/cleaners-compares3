@@ -1,7 +1,6 @@
 'use client'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import WantedItem from "./serverComponents/wantedItem";
 import BusinessForSale from "./serverComponents/businessForSale";
 import Link from "next/link";
 /* import { useHomeProductContext } from "@/providers/homeProductsProvider"; */
@@ -17,6 +16,7 @@ import MyCarousel from "./clientComponents/myCarousel";
 import { Button } from "../ui/button";
 import { AnimatePresence, motion } from "framer-motion";
 import { ButtonNeedSignIn } from "../header/productSearchBar";
+import { WantedItem } from "./serverComponents/wantedItem";
 /* const wantedItems = [
   {
     title: "Used Dry Cleaning Machine",
@@ -106,7 +106,7 @@ export default function WantedItemAndBusiness({ wantedItems, businessesForSale }
   const router = useRouter();
   const [buttonLoading, setButtonLoading] = useState(false);
   const [callback, setCallback] = useState('/');
-  console.log(wantedItems, 'ssssssssssssssssssjdjdjdkkvvf');
+  //console.log(wantedItems, 'ssssssssssssssssssjdjdjdkkvvf');
 
   // Modal States
   const [openSellerDialog, setOpenSellerDialog] = useState(false);

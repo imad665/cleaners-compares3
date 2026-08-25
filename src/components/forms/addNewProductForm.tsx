@@ -49,7 +49,7 @@ export function AddNewProductForm({
   const { user } = useHomeContext();
 
   const role: "SELLER" | "BUYER" | undefined = user?.role;
-  console.log({ customerCollects, freeLocalDelivery, vatType }, 'dddddddddddddddllllllllllllllll');
+  //console.log({ customerCollects, freeLocalDelivery, vatType }, 'dddddddddddddddllllllllllllllll');
 
 
   useEffect(() => {

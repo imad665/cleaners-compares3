@@ -97,7 +97,7 @@ export default async function Page({ searchParams }) {
     currentPage = result.currentPage;
     totalPage = result.totalPage;
 
-    console.log(total, currentPage, totalPage, ';;;;;;;;;;;;;;;lbbbbbbb');
+    //console.log(total, currentPage, totalPage, ';;;;;;;;;;;;;;;lbbbbbbb');
 
   }
   const [

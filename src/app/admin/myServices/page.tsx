@@ -5,23 +5,19 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ServiceTable from "@/components/adminDashboard/serviceTable";
-import { ServiceEngineerForm, ServiceFormDialog } from "@/components/adminDashboard/serviceEngineer";
+import { ServiceFormDialog } from "@/components/adminDashboard/serviceEngineer";
+import { useAdminServices } from "@/hooks/useAdminServices";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
 export default function ServicesPage() {
-
-    /* const [open, setOpen] = useState(false); */
-    const [newService, setNewService] = useState(null);
+    const { mutate } = useAdminServices();
     const searchParams = useSearchParams();
     const paymentSuccess = searchParams.get('paymentSuccess');
     const days = searchParams.get('days');
     const [toastShown, setToastShown] = useState(false); // prevents duplicate toast
     const router = useRouter();
-    const onSubmitSuccess = (v: any) => {
-        /* setNewService(v)
-        setOpen(false) */
-    }
+
     useEffect(() => {
         if (!toastShown && paymentSuccess) {
             if (paymentSuccess === 'true') {
@@ -43,26 +39,13 @@ export default function ServicesPage() {
             <div className="min-w-full mx-auto overflow-auto">
                 <div className="flex justify-between items-center mb-6 w-full">
                     <h1 className="text-2xl font-semibold">My Enginners</h1>
-                    {/* <Dialog open={open} onOpenChange={setOpen}>
-                        <DialogTrigger asChild>
-                            <Button className="bg-blue-600 hover:bg-blue-500 cursor-pointer text-white ">+ Add New Enginner</Button>
-                        </DialogTrigger>
-                        <DialogContent className=" max-w-full min-w-fit">
-                            <DialogHeader>
-                                <DialogTitle>Add New Enginner</DialogTitle>
-                            </DialogHeader>
-                            <ServiceEngineerForm 
-                                onSubmitSuccess={onSubmitSuccess} 
-                                onCancel={() => setOpen(false)}
-                            />
-                        </DialogContent>
-                    </Dialog> */}
+
                     <ServiceFormDialog onSubmitSuccess={() => {
-                        window.location.reload();
+                        mutate();
                     }} />
                 </div>
 
-                <ServiceTable newService={newService} />
+                <ServiceTable />
             </div>
 
             <div className="w-[100vw] h-30"></div>

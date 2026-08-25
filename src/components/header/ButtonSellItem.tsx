@@ -1,4 +1,4 @@
-import { Plus, Sparkles } from "lucide-react";
+import { Loader2, Plus, Sparkles } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { SignInUpModal } from "./header";
@@ -26,7 +26,7 @@ export function ButtonSellAnItem({
 }) {
     const [buttonLoading, setButtonLoading] = useState(false);
     const { user } = useHomeContext();
-    const router = useRouter()
+    const router = useRouter();
     const [openSellerDialog, setOpenSellerDialog] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const [openSignUp, setOpenSignUp] = useState(false);
@@ -34,17 +34,18 @@ export function ButtonSellAnItem({
 
     function handleClickBigButton() {
         if (user) {
-            router.push("/admin/addNewProduct")
-            return
+            router.push("/admin/addNewProduct");
+            setButtonLoading(true);
+            return;
         }
         if (isEmail) {
             setOpenSignIn(true);
-            return
+            return;
         }
         if (user) {
             if (user.role.toLocaleLowerCase() === 'seller' || user.role.toLocaleLowerCase() === 'admin') {
                 setButtonLoading(true);
-                router.push(path ?? '/admin/addNewProduct')
+                router.push(path ?? '/admin/addNewProduct');
             } else {
                 setOpenSellerDialog(true);
             }
@@ -56,8 +57,8 @@ export function ButtonSellAnItem({
     return (
         <div className={className}>
             <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={buttonLoading ? {} : { scale: 1.05 }} // Disable hover scale while loading
+                whileTap={buttonLoading ? {} : { scale: 0.95 }}   // Disable tap scale while loading
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
                 <Button
@@ -65,27 +66,43 @@ export function ButtonSellAnItem({
                     onClick={handleClickBigButton}
                     variant={variant}
                     className={cn(
-                        "relative cursor-pointer overflow-hidden group",
-                        "h-10 px-4", // Balanced header size
-                        "bg-gradient-to-r from-blue-700 to-indigo-600 hover:from-blue-600 hover:to-indigo-500", // Gradient
+                        "relative overflow-hidden group",
+                        "h-10 px-5", // Slightly wider padding for balance
+                        "bg-gradient-to-r from-blue-700 to-indigo-600",
                         "text-white font-bold text-sm tracking-tight rounded-lg",
-                        "shadow-[0_2px_10px_0_rgba(59,130,246,0.3)] hover:shadow-[0_4px_14px_rgba(59,130,246,0.2)]", // Refined shadow
                         "border-none transition-all duration-300",
+                        // Dynamic styling based on loading state
+                        buttonLoading
+                            ? "cursor-not-allowed opacity-90 shadow-inner"
+                            : "cursor-pointer hover:from-blue-600 hover:to-indigo-500 shadow-[0_2px_10px_0_rgba(59,130,246,0.3)] hover:shadow-[0_4px_14px_rgba(59,130,246,0.4)]",
                         buttonClassName
                     )}
                 >
-                    {/* Animated Shine Effect */}
-                    <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-transform" />
+                    {/* Animated Shine Effect - Only show when NOT loading */}
+                    {!buttonLoading && (
+                        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-transform" />
+                    )}
 
                     <div className="flex items-center gap-2 relative z-10">
-                        {!body ? (
+                        {buttonLoading ? (
                             <>
-                                <div className="bg-white/20 p-0.5 rounded transition-transform duration-300 group-hover:rotate-90">
-                                    <Plus className="w-4 h-4" />
-                                </div>
-                                <span className="uppercase tracking-wide text-md font-extrabold px-2" >SELL</span>
+                                <Loader2 className="w-4 h-4 animate-spin text-white/90" />
+                                <span className="uppercase tracking-widest text-sm font-extrabold px-1 text-white/90">
+                                    SELLING...
+                                </span>
                             </>
-                        ) : body}
+                        ) : !body ? (
+                            <>
+                                <div className="p-0.5 rounded transition-transform duration-300 group-hover:rotate-90">
+                                    <Plus className="w-4 h-4 stroke-[3]" />
+                                </div>
+                                <span className="uppercase tracking-widest text-sm font-extrabold px-1 drop-shadow-sm">
+                                    SELL
+                                </span>
+                            </>
+                        ) : (
+                            body
+                        )}
                     </div>
                 </Button>
             </motion.div>

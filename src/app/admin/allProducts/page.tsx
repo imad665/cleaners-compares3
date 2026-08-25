@@ -9,38 +9,9 @@ import Badge from '@/components/adminDashboard/shared/Badge';
 import Button from '@/components/adminDashboard/shared/Button';
 import Table from '@/components/adminDashboard/shared/Table';
 import { AddNewProductForm } from '@/components/forms/addNewProductForm';
+import { useAdminProducts, Product } from '@/hooks/useAdminProducts';
 import { updateProductStatusAction } from '@/actions/addNewProductAction';
-
-// Product type definition
-interface Product {
-    id: string;
-    name: string;
-    category: string;
-    subcategory: string;
-    price: string;
-    status: string;
-    featured: boolean;
-    date: string;
-    stock: number;
-    dealEndDate: string;
-    featuredEndDate: string;
-    subCategoryId: string;
-    isDealActive: boolean;
-    discountPrice: number | false;
-    stockCount: number;
-    listingStatus: string; // AVAILABLE | Under Offer | SOLD
-    // additional fields used in edit form
-    description?: string;
-    discountPercentage?: number;
-    imagesUrl?: string[];
-    condition?: string;
-    weight?: string;
-    videoUrl?: string;
-    isIncVAT?: boolean;
-    delivery_charge?: number;
-    featureDays?: number;
-    dealEndDateFormate?: string;
-}
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 const AllProducts = () => {
     const router = useRouter();
@@ -48,11 +19,10 @@ const AllProducts = () => {
     const paymentSuccess = searchParams.get('paymentSuccess');
     const days = searchParams.get('days');
 
+    // SWR Hook
+    const { products, categories, isLoading: loading, mutate } = useAdminProducts();
+
     // State
-    const [products, setProducts] = useState<Product[]>([]);
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [refresh, setRefresh] = useState(false);
     const [updatingStatusId, setUpdatingStatusId] = useState<string | null>(null);
     const [keyStatusUpdate, setKeyStatusUpdate] = useState(Date.now().toString())
 
@@ -60,6 +30,8 @@ const AllProducts = () => {
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [isAddingNew, setIsAddingNew] = useState(false);
 
     // Toast for payment success (from URL params)
     const [toastShown, setToastShown] = useState(false);
@@ -75,30 +47,6 @@ const AllProducts = () => {
         }
     }, [paymentSuccess, days, toastShown, router]);
 
-    // Fetch products
-    useEffect(() => {
-        const fetchProducts = async () => {
-            setLoading(true);
-            try {
-                const res = await fetch('/api/admin/myProducts');
-                if (!res.ok) {
-                    const { error } = await res.json();
-                    toast.error(error);
-                    return;
-                }
-                const { products, categories } = await res.json();
-                setProducts(products);
-                setCategories(categories);
-            } catch (error) {
-                console.error('Failed to fetch products', error);
-                toast.error('Failed to load products');
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchProducts();
-    }, [refresh]);
-
     // Handle status change
     const handleStatusChange = async (productId: string, newStatus: string) => {
         setUpdatingStatusId(productId);
@@ -106,14 +54,7 @@ const AllProducts = () => {
             const result = await updateProductStatusAction(productId, newStatus);
             setKeyStatusUpdate(newStatus)
             if (result.success) {
-                // Optimistic update
-                setProducts(prevProducts =>
-                    prevProducts.map(p =>
-                        p.id === productId
-                            ? { ...p, listingStatus: newStatus } // Update only the matching product
-                            : p // Leave others as they are
-                    )
-                );
+                mutate(); // Revalidate
                 toast.success(result.message);
             } else {
                 toast.error(result.message || 'Failed to update status');
@@ -217,10 +158,12 @@ const AllProducts = () => {
     const handleDelete = (product: Product) => {
         setSelectedProduct(product);
         setShowDeleteModal(true);
+        setIsDeleting(false);
     };
 
     const confirmDelete = async () => {
         if (!selectedProduct) return;
+        setIsDeleting(true);
         try {
             const res = await fetch('/api/admin/allProducts', {
                 method: 'DELETE',
@@ -230,7 +173,9 @@ const AllProducts = () => {
             if (res.ok) {
                 const { message } = await res.json();
                 toast.success(message);
-                setRefresh(prev => !prev);
+                mutate();
+                setShowDeleteModal(false);
+                setSelectedProduct(null);
             } else {
                 const { error } = await res.json();
                 toast.error(error);
@@ -238,17 +183,16 @@ const AllProducts = () => {
         } catch {
             toast.error('Failed to delete product');
         } finally {
-            setShowDeleteModal(false);
-            setSelectedProduct(null);
+            setIsDeleting(false);
         }
     };
 
     const onSuccessEditing = () => {
-        setRefresh(prev => !prev);
+        mutate();
         setSelectedProduct(null);
         setIsEditing(false);
     };
-    console.log(keyStatusUpdate, 'ccccccccccccccccccc');
+    //console.log(keyStatusUpdate, 'ccccccccccccccccccc');
 
     return (
         <div className="w-full relative">
@@ -266,7 +210,11 @@ const AllProducts = () => {
                         <Button
                             variant="primary"
                             icon={<Plus size={16} />}
-                            onClick={() => router.push('/admin/addNewProduct')}
+                            loading={isAddingNew}
+                            onClick={() => {
+                                setIsAddingNew(true);
+                                router.push('/admin/addNewProduct');
+                            }}
                         >
                             Add New Product
                         </Button>
@@ -311,24 +259,35 @@ const AllProducts = () => {
                 )}
 
                 {/* Delete Confirmation Modal */}
-                {showDeleteModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-lg p-6 max-w-md mx-4">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">Confirm Delete</h3>
-                            <p className="text-sm text-gray-500 mb-4">
-                                Are you sure you want to delete "{selectedProduct?.name}"? This action cannot be undone.
-                            </p>
-                            <div className="flex justify-end space-x-3">
-                                <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
-                                    Cancel
-                                </Button>
-                                <Button variant="danger" onClick={confirmDelete}>
-                                    Delete
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                <AlertDialog open={showDeleteModal} onOpenChange={(open) => {
+                    if (!isDeleting) {
+                        setShowDeleteModal(open);
+                    }
+                }}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete{" "}
+                                <span className="font-medium text-foreground">
+                                    "{selectedProduct?.name}"
+                                </span>{" "}
+                                and remove it from our servers.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel className='cursor-pointer' disabled={isDeleting}>Cancel</AlertDialogCancel>
+                            <Button
+                                onClick={confirmDelete}
+                                variant='danger'
+                                className='cursor-pointer'
+                                loading={isDeleting}
+                            >
+                                Delete
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
 
             {/* Edit Product Panel */}

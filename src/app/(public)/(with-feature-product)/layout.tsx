@@ -18,7 +18,7 @@ export default async function RootLayout({
         getFeaturedProducts({ page: 1, pageSize: 10 }),
         /*  getFooterData(), */
     ]);
-    console.log('refreshed,');
+    //console.log('refreshed,');
 
     return (
         <div>

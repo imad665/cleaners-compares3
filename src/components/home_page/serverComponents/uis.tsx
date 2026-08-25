@@ -117,6 +117,7 @@ export type ItemProps = {
     vatType: 'exc' | 'inc' | 'no-vat';
     freeLocalDelivery: boolean;
     customerCollects: boolean;
+    isNew?: boolean;
 
 }
 
@@ -124,6 +125,7 @@ export function ItemFeaturedProduct({
     id, title, image, href, stars = 0, starsCount = 0,
     productId, unitPrice, units, priceExcVat, price,
     dealCountdown, stock, className, isOldProduct,
+    isNew,
     isIncVAT, discountPercentage, listingStatus,
     vatType, customerCollects, freeLocalDelivery,
 }: ItemProps) {
@@ -193,6 +195,7 @@ export function ItemFeaturedProduct({
                             className="object-contain  bottom-[-27px] right-[-5px]"
                         />
                     </div>}
+                    {isNew && <Badge variant={'outline'}>New</Badge>}
                 </Link>
 
                 {discountPercentage > 0 && (

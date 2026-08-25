@@ -54,11 +54,13 @@ export function AddNewItemForm({
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(initialMainCategory || '');
   const [subCategoryId, setSubCategoryId] = useState(initialSubCategoryId || '');
+  const [creatingSellerAccount, setCreatingSellerAccount] = useState<'success' | boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { user } = useHomeContext();
   const role: "SELLER" | "BUYER" | undefined = user?.role;
+  //console.log(showSellerForm, 'sssssssssssssssssssllllllld');
 
   useEffect(() => {
     if (currentStep > 0 || selectedCategory) {
@@ -144,9 +146,29 @@ export function AddNewItemForm({
     if (step === 3) {
       if (formRef.current) {
         const formData = new FormData(formRef.current);
+        //console.log(formData, 'dkkkkkkkkkkkkkkkkkkkkkklll');
+
         const price = formData.get('price');
         const stock = formData.get('stock');
-
+        const freeLocalDelivery = formData.get('freeLocalDelivery')?.toString();
+        const customerCollects = formData.get('customerCollects')?.toString();
+        const delivery_charge = formData.get('delivery_charge')?.toString();
+        const units = formData.get("units")?.toString().trim();
+        const weight = formData.get('weight')?.toString().trim()
+        const keys = formData.keys()
+        if (freeLocalDelivery == 'false' && customerCollects == 'false') {
+          if (!delivery_charge?.trim() && formData.has('delivery_charge')) {
+            toast.error("Delivery Charge is Required")
+            return false
+          } else if (!weight && formData.has("weight")) {
+            toast.error("Weight is Required")
+            return false
+          }
+        }
+        if (formData.has("units") && !units?.trim()) {
+          toast.error("units is required")
+          return false
+        }
         if (!price || Number(price) <= 0) {
           toast.error("Price must be greater than 0");
           return false;
@@ -187,6 +209,12 @@ export function AddNewItemForm({
 
     action(formData)
   }
+  const handlePost = () => {
+    if (user && role === 'BUYER' && !skipBuyerCheckRef.current) {
+      setShowSellerForm(true);
+      return;
+    }
+  }
 
   const steps = [
     { title: "Category", description: "Choose what you're selling" },
@@ -204,12 +232,25 @@ export function AddNewItemForm({
     if (!validateStep(currentStep)) return;
     if (currentStep < displaySteps.length - 1) {
       setCurrentStep(currentStep + 1);
+    } else {
+      if (user && role === 'BUYER' && !skipBuyerCheckRef.current) {
+        setShowSellerForm(true);
+        return;
+      } else {
+        if (formRef.current) {
+          if (submitTypeRef.current) submitTypeRef.current.value = 'post';
+          formRef.current.requestSubmit();
+        }
+      }
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
+      if (currentStep - 1 <= 1) {
+        setSubCategoryId('')
+      }
     }
   };
 
@@ -218,6 +259,8 @@ export function AddNewItemForm({
     // Move to next step directly as picking a category is the action for step 0
     setCurrentStep(1);
   };
+
+
 
   const showSubCategory = ["Machines", "Parts & Components", "Sundries & Supplies"].includes(selectedCategory);
   let secondStep
@@ -237,7 +280,9 @@ export function AddNewItemForm({
     isEditing: isEditing,
     hasOwnSubmit: hasOwnSubmit,
     user: user,
-    role: role
+    role: role,
+    handlePost: handlePost,
+    creatingSellerAccount
   }
 
   if (selectedCategory === "Engineers & Services" && currentStep == 1) {
@@ -357,9 +402,12 @@ export function AddNewItemForm({
 
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full  ">
       <SellerFormDialog
         open={showSellerForm}
+        onPending={() => {
+          setCreatingSellerAccount(true)
+        }}
         setOpen={setShowSellerForm}
         callback="/admin/allProducts"
         redirect={true}
@@ -368,13 +416,15 @@ export function AddNewItemForm({
         onSuccess={() => {
           setShowSellerForm(false);
           skipBuyerCheckRef.current = true;
+          //console.log(formRef.current, 'dddddddddddddddddccccccccccccmmmmmmmmmm');
+          setCreatingSellerAccount('success')
           if (formRef.current) {
             if (submitTypeRef.current) submitTypeRef.current.value = 'post';
             formRef.current.requestSubmit();
           }
         }}
       />
-      <div className="w-full max-w-[900px] mx-auto mt-0 pb-32">
+      <div className="w-full max-w-[900px] mx-auto pb-15 ">
         {secondStep}
       </div>
       <Navigation
@@ -384,7 +434,8 @@ export function AddNewItemForm({
   );
 }
 
-function Navigation({ handleBack, currentStep, pending, steps, handleNext, selectedCategory, submitTypeRef, isEditing, hasOwnSubmit, user, role }: any) {
+function Navigation({ handleBack, currentStep, pending, steps, handleNext, selectedCategory, submitTypeRef, isEditing, hasOwnSubmit, user, role, handlePost, creatingSellerAccount }: any) {
+  //console.log(submitTypeRef.current, 'ssssssk++++++++===============');
 
   return (
     <div className="fixed bottom-0 left-0 right-0 lg:left-64 z-[100] bg-white/80 backdrop-blur-md border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] py-4">
@@ -428,15 +479,16 @@ function Navigation({ handleBack, currentStep, pending, steps, handleNext, selec
           </div>
         ) : (
           <Button
-            disabled={pending}
-            type="submit"
+            disabled={pending || creatingSellerAccount === true}
+            type="button"
             form="add-item-form"
             className="bg-blue-700 hover:bg-blue-600 text-white min-w-[150px] h-11 px-8 font-bold shadow-md shadow-blue-200"
-            onClick={() => {
-              if (submitTypeRef.current) submitTypeRef.current.value = 'post';
-            }}
+            onClick={handleNext}
+          /* onClick={() => {
+            //if (submitTypeRef.current) submitTypeRef.current.value = 'post';
+          }} */
           >
-            {pending ? (
+            {(pending || creatingSellerAccount === 'success') ? (
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Processing...
