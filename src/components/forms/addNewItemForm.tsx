@@ -424,7 +424,7 @@ export function AddNewItemForm({
           }
         }}
       />
-      <div className="w-full max-w-[900px] mx-auto pb-30 ">
+      <div className="w-full max-w-[900px] mx-auto pb-40 ">
         {secondStep}
       </div>
       <Navigation

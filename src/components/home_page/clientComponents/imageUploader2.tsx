@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,10 +7,11 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Image, Plus, X, ArrowUp, ArrowDown, CheckCircle2, Sparkles, Camera, Upload } from "lucide-react";
+import { Image, Plus, X, ArrowUp, ArrowDown, CheckCircle2, Sparkles, Camera, Upload, RotateCcw } from "lucide-react";
 import { toast } from 'sonner';
+import Webcam from "react-webcam";
 
-const MAX_FILE_SIZE_MB = 15;
+const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const ImageUploader2 = ({
@@ -19,6 +20,9 @@ const ImageUploader2 = ({
   maxImages = 5
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isWebcamOpen, setIsWebcamOpen] = useState(false);
+  const webcamRef = useRef(null);
+  const [facingMode, setFacingMode] = useState("environment");
 
   const handleFileChange = useCallback((e) => {
     const files = e.target.files;
@@ -57,6 +61,38 @@ const ImageUploader2 = ({
     e.target.value = '';
     setIsModalOpen(false);
   }, [images, maxImages, onChange]);
+
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    if (imageSrc) {
+      // Convert base64 to File object
+      fetch(imageSrc)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], `capture_${Date.now()}.jpg`, { type: "image/jpeg" });
+
+          if (images.length + 1 > maxImages) {
+            toast.error("Maximum image limit reached");
+            setIsWebcamOpen(false);
+            return;
+          }
+
+          const newImage = {
+            id: `img_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+            url: imageSrc,
+            file
+          };
+
+          onChange([...images, newImage]);
+          setIsWebcamOpen(false);
+          setIsModalOpen(false);
+        });
+    }
+  }, [webcamRef, images, maxImages, onChange]);
+
+  const toggleFacingMode = () => {
+    setFacingMode(prev => (prev === "user" ? "environment" : "user"));
+  };
 
   const removeImage = (id) => {
     onChange(images.filter(img => img.id !== id));
@@ -190,20 +226,16 @@ const ImageUploader2 = ({
           </DialogHeader>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
             {/* Option 1: Camera Capture */}
-            <label className="border-2 border-gray-100 hover:border-primary hover:bg-primary/5 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all text-center group">
-              <input
-                type="file"
-                accept="image/*"
-                // REMOVE capture="environment"
-                className="sr-only"
-                onChange={handleFileChange}
-              />
+            <div
+              onClick={() => setIsWebcamOpen(true)}
+              className="border-2 border-gray-100 hover:border-primary hover:bg-primary/5 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all text-center group"
+            >
               <div className="p-3 bg-primary/10 rounded-full text-primary mb-3 group-hover:scale-110 transition-transform">
                 <Camera className="h-6 w-6" />
               </div>
               <span className="text-sm font-semibold text-gray-900 mb-1">Take Photo</span>
               <span className="text-xs text-gray-500">Use camera now</span>
-            </label>
+            </div>
             {/* Option 2: Upload from Device */}
             <label className="border-2 border-gray-100 hover:border-primary hover:bg-primary/5 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all text-center group">
               <input
@@ -221,6 +253,54 @@ const ImageUploader2 = ({
             </label>
 
 
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* --- WEBCAM MODAL --- */}
+      <Dialog open={isWebcamOpen} onOpenChange={setIsWebcamOpen}>
+        <DialogContent className="sm:max-w-xl p-0 overflow-hidden bg-black border-none">
+          <div className="relative aspect-video flex items-center justify-center">
+            <Webcam
+              audio={false}
+              ref={webcamRef}
+              screenshotFormat="image/jpeg"
+              videoConstraints={{
+                facingMode: facingMode
+              }}
+              className="w-full h-full object-cover"
+            />
+
+            {/* Controls Overlay */}
+            <div className="absolute inset-0 flex flex-col justify-between p-4 bg-gradient-to-b from-black/40 via-transparent to-black/40">
+              <div className="flex justify-between items-start">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-white/20 rounded-full"
+                  onClick={() => setIsWebcamOpen(false)}
+                >
+                  <X className="h-6 w-6" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-white/20 rounded-full"
+                  onClick={toggleFacingMode}
+                >
+                  <RotateCcw className="h-6 w-6" />
+                </Button>
+              </div>
+
+              <div className="flex justify-center items-center pb-4">
+                <button
+                  onClick={capture}
+                  className="h-16 w-16 bg-white rounded-full border-4 border-white/30 flex items-center justify-center active:scale-90 transition-transform shadow-xl"
+                >
+                  <div className="h-12 w-12 rounded-full border-2 border-black/10 bg-white" />
+                </button>
+              </div>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
