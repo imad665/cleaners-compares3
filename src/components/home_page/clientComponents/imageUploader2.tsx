@@ -194,7 +194,7 @@ const ImageUploader2 = ({
               <input
                 type="file"
                 accept="image/*"
-                capture="environment"
+                // REMOVE capture="environment"
                 className="sr-only"
                 onChange={handleFileChange}
               />
