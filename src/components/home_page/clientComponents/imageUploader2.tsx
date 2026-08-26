@@ -259,19 +259,32 @@ const ImageUploader2 = ({
 
       {/* --- WEBCAM MODAL --- */}
       <Dialog open={isWebcamOpen} onOpenChange={setIsWebcamOpen}>
-        <DialogContent className="sm:max-w-xl p-0 overflow-hidden bg-black border-none">
-          <div className="relative aspect-video flex items-center justify-center">
+        <DialogContent
+          className="
+      w-screen
+      h-[100dvh]
+      max-w-none
+      p-0
+      overflow-hidden
+      bg-black
+      border-none
+      rounded-none
+    "
+        >
+          <div className="relative w-full h-full overflow-hidden">
             <Webcam
               audio={false}
               ref={webcamRef}
               screenshotFormat="image/jpeg"
               videoConstraints={{
-                facingMode: facingMode
+                facingMode,
+                width: { ideal: 1080 },
+                height: { ideal: 1920 },
               }}
-              className="w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover"
             />
 
-            {/* Controls Overlay */}
+            {/* Controls */}
             <div className="absolute inset-0 flex flex-col justify-between p-4 bg-gradient-to-b from-black/40 via-transparent to-black/40">
               <div className="flex justify-between items-start">
                 <Button
@@ -282,6 +295,7 @@ const ImageUploader2 = ({
                 >
                   <X className="h-6 w-6" />
                 </Button>
+
                 <Button
                   variant="ghost"
                   size="icon"
@@ -292,7 +306,7 @@ const ImageUploader2 = ({
                 </Button>
               </div>
 
-              <div className="flex justify-center items-center pb-4">
+              <div className="flex justify-center items-center pb-30">
                 <button
                   onClick={capture}
                   className="h-16 w-16 bg-white rounded-full border-4 border-white/30 flex items-center justify-center active:scale-90 transition-transform shadow-xl"
