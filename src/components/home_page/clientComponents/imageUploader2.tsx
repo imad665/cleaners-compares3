@@ -261,17 +261,21 @@ const ImageUploader2 = ({
       <Dialog open={isWebcamOpen} onOpenChange={setIsWebcamOpen}>
         <DialogContent
           className="
-      w-screen
+      sm:max-w-xl
+      w-full
       h-[100dvh]
-      max-w-none
+      sm:h-auto
       p-0
       overflow-hidden
       bg-black
       border-none
-      rounded-none
     "
         >
-          <div className="relative w-full h-full overflow-hidden">
+          <div
+            className="
+        relative w-full h-full sm:aspect-video
+      "
+          >
             <Webcam
               audio={false}
               ref={webcamRef}
@@ -281,7 +285,12 @@ const ImageUploader2 = ({
                 width: { ideal: 1080 },
                 height: { ideal: 1920 },
               }}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="
+          w-full
+          h-full
+          object-contain
+          sm:object-cover
+        "
             />
 
             {/* Controls */}
@@ -306,7 +315,7 @@ const ImageUploader2 = ({
                 </Button>
               </div>
 
-              <div className="flex justify-center items-center pb-30">
+              <div className="flex justify-center items-center pb-24">
                 <button
                   onClick={capture}
                   className="h-16 w-16 bg-white rounded-full border-4 border-white/30 flex items-center justify-center active:scale-90 transition-transform shadow-xl"
