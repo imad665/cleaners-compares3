@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth";
 import Footer from "@/components/home_page/footer";
 import ChatPage from "@/components/chatbot/main";
 import GoogleOneTap from "@/components/auth/GoogleOneTap";
+import PWAInstallButton from "@/components/PWAInstallButton";
 
 export default async function RootLayout({
     children,
@@ -31,7 +32,7 @@ export default async function RootLayout({
             {children}
             <Footer footerData={footerData} />
             <ChatPage className='fixed bottom-2 right-2' />
-
+            <PWAInstallButton />
         </div>
     )
 }

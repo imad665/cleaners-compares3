@@ -152,7 +152,7 @@ const ImageUploader2 = ({
               alt={`Product image ${index + 1}`}
               className="max-h-full max-w-full object-cover w-full h-full rounded-lg"
             />
-            <div className="absolute inset-0 bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+            <div className="absolute inset-0 bg-black/40 transition-all flex items-center justify-center   group-hover:opacity-100 sm:opacity-100 md:opacity-0">
               <div className="flex gap-2">
                 <Button
                   type="button"
@@ -259,42 +259,26 @@ const ImageUploader2 = ({
 
       {/* --- WEBCAM MODAL --- */}
       <Dialog open={isWebcamOpen} onOpenChange={setIsWebcamOpen}>
-        <DialogContent
-          className="
-      sm:max-w-xl
-      w-full
-      h-[100dvh]
-      sm:h-auto
-      p-0
-      overflow-hidden
-      bg-black
-      border-none
-    "
-        >
-          <div
-            className="
-        relative w-full h-full sm:aspect-video
-      "
-          >
-            <Webcam
-              audio={false}
-              ref={webcamRef}
-              screenshotFormat="image/jpeg"
-              videoConstraints={{
-                facingMode,
-                width: { ideal: 1080 },
-                height: { ideal: 1920 },
-              }}
-              className="
-          w-full
-          h-full
-          object-contain
-          sm:object-cover
-        "
-            />
+        <DialogContent className="p-0 overflow-hidden bg-black border-none w-screen h-screen max-w-none rounded-none">
+          <div className="relative w-full h-full flex flex-col">
+            <div className="flex-1 flex items-center justify-center overflow-hidden">
+              <div className="relative w-full aspect-[3/4] max-h-full">
+                <Webcam
+                  audio={false}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  videoConstraints={{
+                    facingMode,
+                    aspectRatio: { ideal: 3 / 4 },
+                  }}
+                  /*  onUserMediaError={handleUserMediaError} */
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
 
-            {/* Controls */}
-            <div className="absolute inset-0 flex flex-col justify-between p-4 bg-gradient-to-b from-black/40 via-transparent to-black/40">
+            {/* Controls Overlay */}
+            <div className="absolute inset-0 top-10  flex flex-col justify-between p-4 bg-gradient-to-b from-black/40 via-transparent to-black/40">
               <div className="flex justify-between items-start">
                 <Button
                   variant="ghost"
@@ -304,7 +288,6 @@ const ImageUploader2 = ({
                 >
                   <X className="h-6 w-6" />
                 </Button>
-
                 <Button
                   variant="ghost"
                   size="icon"
@@ -315,7 +298,7 @@ const ImageUploader2 = ({
                 </Button>
               </div>
 
-              <div className="flex justify-center items-center pb-24">
+              <div className="flex justify-center items-center pb-34">
                 <button
                   onClick={capture}
                   className="h-16 w-16 bg-white rounded-full border-4 border-white/30 flex items-center justify-center active:scale-90 transition-transform shadow-xl"

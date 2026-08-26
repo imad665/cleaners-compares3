@@ -6,31 +6,8 @@ import { prisma } from "@/lib/prisma";
 import { HomeProvider } from "@/providers/homePageProvider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { HomeProductsProvider } from "@/providers/homeProductsProvider";
-import { generateSlug } from "@/lib/products/slugGen";
-import SeedData from "@/lib/data-old-website/seed";
-import SeedDataVideo from "@/lib/data-old-website/seedVideos";
-import { deleteAllCloudinaryImages } from "@/lib/cloudStorage";
-import { seedMachinesProducts, seedPartsProducts, seedSundriesProducts, seedUsers } from "@/lib/data-old-website/add-users";
-import { hash, hashSync } from "bcryptjs";
 
-import ChatPage from "@/components/chatbot/main";
-
-import { getRecentOrdersCount } from "@/lib/products/homeProducts";
-import { clearOrders, deleteUserByEmail, updatePasswordUsers } from "@/lib/clearTestData";
-import { Button } from "@/components/ui/button";
-import { sendTestMessage } from "@/lib/payement/sendTestMessage";
-import { categories } from "@/components/video_ui/data/videos";
-import { embedProductsToNeon } from "@/lib/langchain/embeding/embed-products";
-import PWAInstallButton from "@/components/PWAInstallButton";
-import { embedEngineersToNeon } from "@/lib/langchain/embeding/embed_enginner";
-import deleteUserTested, { deleteProductWithOrder } from "@/lib/update-db";
-import { clearAllEngineerEmbeddings, reembedAllEngineers, reembedAllProducts } from "@/lib/langchain/embeding/utils/embed-handler";
-import { seedUsers2 } from "@/lib/data-old-website/add-users2";
-import { seedCategories, seedMachines, seedParts, seedSubcategories, seedSundries, updateUserRoles } from "@/lib/data-old-website/seed-categories";
-import { encryptPassword } from "@/lib/crypto";
 import { ReturnToAdminButton } from "@/components/ReturnToAdminButton";
-import { copyProductsToFile, removeNonRealProducts } from "@/lib/productsCache";
 import MotivationToast from "@/components/home_page/clientComponents/MotivationToast";
 
 const geistSans = Geist({
@@ -303,7 +280,7 @@ export default async function RootLayout({
           }}>Send Test Message</Button> */}
         {/* </HomeProductsProvider> */}
         <Toaster />
-        <PWAInstallButton />
+
         <MotivationToast />
       </body>
     </html>
