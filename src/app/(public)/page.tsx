@@ -81,11 +81,12 @@ export default async function Home() {
       })).json()
   const { success: success2, justAddedProducts } = await (await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/need-cache/homePage?justAdded=true`,
     {
-      next: {
-        revalidate: 60 * 3,
+      /* next: {
+        revalidate: 60 * 3,//60 * 3
         tags: ['home-cache-3min']
-      }
+      } */
     })).json()
+
   /* const justAddedProducts = await getJustAddedProducts({ page: 1, pageSize: 10 }) */
 
   //console.log(justAddedProducts, 'slllllllllllllllllllllllllllllllkkk');

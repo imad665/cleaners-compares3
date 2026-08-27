@@ -433,10 +433,10 @@ export async function getJustAddedProducts({ page = 1, pageSize = 10 }: any) {
     let [products, total] = await Promise.all([
         prisma.product.findMany({
             where: {
-                createdAt: {
+                /* createdAt: {
                     gte: threeMinutesAgo,
                     lte: now,
-                },
+                }, */
                 ...excludeSuspendedSeller,
             },
             select: {
