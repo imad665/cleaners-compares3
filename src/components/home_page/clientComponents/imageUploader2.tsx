@@ -10,6 +10,7 @@ import {
 import { Image, Plus, X, ArrowUp, ArrowDown, CheckCircle2, Sparkles, Camera, Upload, RotateCcw } from "lucide-react";
 import { toast } from 'sonner';
 import Webcam from "react-webcam";
+import ImageCropper from './ImageCropper';
 
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -23,6 +24,8 @@ const ImageUploader2 = ({
   const [isWebcamOpen, setIsWebcamOpen] = useState(false);
   const webcamRef = useRef(null);
   const [facingMode, setFacingMode] = useState("environment");
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+  const [isCropOpen, setIsCropOpen] = useState(false);
 
   const handleFileChange = useCallback((e) => {
     const files = e.target.files;
@@ -36,59 +39,46 @@ const ImageUploader2 = ({
       return;
     }
 
-    const newImages = [];
-
-    Array.from(files).forEach(file => {
-      if (file.size > MAX_FILE_SIZE_BYTES) {
-        toast.error("Image too large", {
-          description: `Image "${file.name}" exceeds the limit.`,
-        });
-        return;
-      }
-
-      const imageUrl = URL.createObjectURL(file);
-      newImages.push({
-        id: `img_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-        url: imageUrl,
-        file
+    const file = files[0];
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      toast.error("Image too large", {
+        description: `Image "${file.name}" exceeds the limit.`,
       });
-    });
-
-    if (newImages.length > 0) {
-      onChange([...images, ...newImages]);
+      return;
     }
 
-    e.target.value = '';
+    const imageUrl = URL.createObjectURL(file);
+    setImageToCrop(imageUrl);
+    setIsCropOpen(true);
     setIsModalOpen(false);
-  }, [images, maxImages, onChange]);
+
+    e.target.value = '';
+  }, [images, maxImages]);
 
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc) {
-      // Convert base64 to File object
-      fetch(imageSrc)
-        .then(res => res.blob())
-        .then(blob => {
-          const file = new File([blob], `capture_${Date.now()}.jpg`, { type: "image/jpeg" });
-
-          if (images.length + 1 > maxImages) {
-            toast.error("Maximum image limit reached");
-            setIsWebcamOpen(false);
-            return;
-          }
-
-          const newImage = {
-            id: `img_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-            url: imageSrc,
-            file
-          };
-
-          onChange([...images, newImage]);
-          setIsWebcamOpen(false);
-          setIsModalOpen(false);
-        });
+      setImageToCrop(imageSrc);
+      setIsCropOpen(true);
+      setIsWebcamOpen(false);
+      setIsModalOpen(false);
     }
-  }, [webcamRef, images, maxImages, onChange]);
+  }, [webcamRef]);
+
+  const handleCropComplete = useCallback((croppedBlob: Blob) => {
+    const file = new File([croppedBlob], `image_${Date.now()}.jpg`, { type: "image/jpeg" });
+    const imageUrl = URL.createObjectURL(file);
+
+    const newImage = {
+      id: `img_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      url: imageUrl,
+      file
+    };
+
+    onChange([...images, newImage]);
+    setIsCropOpen(false);
+    setImageToCrop(null);
+  }, [images, onChange]);
 
   const toggleFacingMode = () => {
     setFacingMode(prev => (prev === "user" ? "environment" : "user"));
@@ -315,6 +305,18 @@ const ImageUploader2 = ({
         <strong>Format:</strong> PNG, JPG. <strong>Limit:</strong> {MAX_FILE_SIZE_MB}MB per file.
         The first image will be shown as the primary photo in search results.
       </div>
+
+      {imageToCrop && (
+        <ImageCropper
+          image={imageToCrop}
+          open={isCropOpen}
+          onClose={() => {
+            setIsCropOpen(false);
+            setImageToCrop(null);
+          }}
+          onCropComplete={handleCropComplete}
+        />
+      )}
     </div>
   );
 };

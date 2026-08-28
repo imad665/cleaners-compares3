@@ -1,5 +1,5 @@
 'use client'
-import { ChevronLeft, ChevronRight, Clock, LucideIcon, MessageCircle, Play, ShoppingCart } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, LucideIcon, MessageCircle, MessageCircleIcon, Play, Plus, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import StarsUi from "../startUi";
 import { AddCartButton } from "../clientComponents/uis";
@@ -147,20 +147,20 @@ export function ItemFeaturedProduct({
     };
 
     return (
-        <div className={`group flex flex-col w-full max-w-[280px] min-h-[350px] bg-white border border-slate-200 rounded-md overflow-hidden hover:shadow-md transition-all duration-200 ${className}`}>
+        <div className={`group flex flex-col w-full max-w-[280px]   bg-white border border-slate-200 rounded-md overflow-hidden hover:border-blue-600 hover:shadow-md transition-all duration-200 ${className}`}>
 
             {/* Image Section - Height increased to h-64 */}
-            <div className="relative h-64 w-full bg-slate-50 overflow-hidden  ">
+            <div className="relative h-40 w-full bg-slate-50 overflow-hidden  ">
 
                 {/* Floating Units Info (Absolute) */}
-                {isUnits && false && (
+                {/* {isUnits && false && (
                     <div className="absolute bottom-0 left-0 right-2 z-10 flex gap-1.5 w-full pb-1 pt-5 justify-between bg-gradient-to-t   from-black/90 via-black/40 to-transparent">
-                        {/*  {stock && stock < 5 && stock > 0 && (
+                         {stock && stock < 5 && stock > 0 && (
                             <div className=" ml-1 flex items-center bg-orange-100/90 backdrop-blur-sm text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-orange-200">
                                 Low Stock: {stock}
                             </div>
-                        )} */}
-                        {/*  <div className="flex justify-between items-center gap-1 pr-1">
+                        )}
+                         <div className="flex justify-between items-center gap-1 pr-1">
                             <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded px-1.5 py-0.5 shadow-sm">
                                 <p className="text-slate-400 uppercase text-[8px] font-bold leading-none">Pack Size</p>
                                 <p className="font-bold text-slate-700 text-[10px]">{units} Units</p>
@@ -169,10 +169,10 @@ export function ItemFeaturedProduct({
                                 <p className="text-slate-400 uppercase text-[8px] font-bold leading-none">Per Unit</p>
                                 <p className="font-bold text-slate-700 text-[10px]">£{parsedUnitPrice?.toFixed(2)}</p>
                             </div>
-                        </div> */}
+                        </div>
 
                     </div>
-                )}
+                )} */}
 
                 <Link href={href} className="relative block h-full">
                     <Image
@@ -180,8 +180,10 @@ export function ItemFeaturedProduct({
                         height={300}
                         alt={title}
                         src={finalImage}
-                        className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
+                        className="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
                     />
+                    {isNew && <Badge className="font-bold text-xs z-100 absolute top-2 left-2   ">New</Badge>}
+
 
                     {listingStatus != 'AVAILABLE' && <div className={cn(
                         "absolute rotate-[-0deg] inset-0 z-10 flex items-center justify-center pointer-events-none",
@@ -209,14 +211,14 @@ export function ItemFeaturedProduct({
 
             {/* Content Section */}
             <div className="p-3 flex flex-col grow">
-                <Link href={href} className="text-sm font-semibold text-slate-800 line-clamp-2 hover:text-blue-600 transition-colors leading-tight h-9 mb-4">
+                <Link href={href} className="text-xs  font-semibold text-slate-800 line-clamp-2 hover:text-blue-600 transition-colors leading-tight h-9  ">
                     {title}
                 </Link>
 
                 {/* Pricing Area */}
                 <div className="mt-auto">
                     <div className="flex items-baseline gap-1.5">
-                        <span className="text-xl font-black text-slate-900">£{priceExcVat.toFixed(2)}</span>
+                        <span className="text-md font-black text-slate-900">£{priceExcVat.toFixed(2)}</span>
                         <span className="text-[10px] text-slate-500 font-medium uppercase">{vatLabel}</span>
                     </div>
 
@@ -232,31 +234,32 @@ export function ItemFeaturedProduct({
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-2 mt-4 justify-between">
+                <div className="flex gap-2 mt-1 justify-between">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={handleMessageSeller}
+                        className="shrink-0 h-9 w-9 rounded-sm border-none hover:bg-slate-50 text-slate-600 cursor-pointer"
+                        title="Contact Seller"
+                    >
+
+                        <MessageCircleIcon className="h-4 w-4" />
+                    </Button>
                     {listingStatus == 'AVAILABLE' ? <AddCartButton
-                        className="flex-1"
+                        className=" "
                         stock={stock}
                         isOldProduct={isOldProduct}
                         productId={productId}
                     /> :
                         <Button
 
-                            className='flex glex-1 items-center cursor-not-allowed bg-red-400/30 text-black rounded-2xl hover:bg-red-500/30 w-fit px-6 text-xs'>
+                            className='flex glex-1 items-center cursor-not-allowed bg-red-400/30 text-black rounded-md hover:bg-red-500/30 w-fit px-6 text-xs'>
+                            <span className="font-bold text-xs"> Add </span>
+                            {/* <Plus className="w-4 h-4 mr-1" /> */}
                             <ShoppingCart className="w-4 h-4 mr-2" />
-                            <span> Add to cart</span>
                         </Button>
                     }
 
-
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={handleMessageSeller}
-                        className="shrink-0 h-9 w-9 rounded-full border-slate-200 hover:bg-slate-50 text-slate-600"
-                        title="Contact Seller"
-                    >
-                        <MessageCircle className="h-4 w-4" />
-                    </Button>
                 </div>
             </div>
 

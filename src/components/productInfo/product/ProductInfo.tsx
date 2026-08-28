@@ -117,7 +117,10 @@ export default function ProductInfo({
         {isUnits && <p className="flex justify-between text-sm"><span className="text-muted-foreground">Unit Price:</span><span className='font-bold'>£{formatPrice(product.unitPrice)}</span></p>}
         <div>
           <p className="flex justify-between text-sm">
-            <span className="text-muted-foreground">{isIncVAT ? "Price Inc Vat:" : "Price Exc Vat:"}</span>
+            <div className='flex flex-col gap-3'>
+              <span className="text-muted-foreground">Price <span className='text-xs'>({product.vatType})</span>:{/* {isIncVAT ? "Price Inc Vat:" : "Price Exc Vat:"} */}</span>
+              <Badge variant={'secondary'}>{product.deliveryType}</Badge>
+            </div>
             <span className='text-lg font-bold'>£{formatPrice(product.priceExcVat)}</span>
           </p>
 
@@ -137,9 +140,9 @@ export default function ProductInfo({
       </div>
       <Separator />
       {/* Condition */}
-      <div className='flex justify-between gap-12 w-fit'>
+      <div className='flex justify-between gap-12 w-fit items-center'>
         <span className='font-bold'>Condition:</span>
-        <span>New</span>
+        <span className='text-xs text-muted-foreground'>{product.condition}</span>
       </div>
       {/* Description */}
       <p className="text-muted-foreground">{product.description}</p>

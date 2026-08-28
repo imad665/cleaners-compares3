@@ -56,6 +56,17 @@ export async function GET(req: NextRequest) {
                 ? product.ratings.reduce((sum, r) => sum + r.stars, 0) / product.ratings.length
                 : 0;
 
+        const deliveryType = product.customerCollects
+            ? "Customer Collects"
+            : product.freeLocalDelivery
+                ? "Free Local Delivery"
+                : `Standard Delivery`
+        const vatType = product.vatType == 'exc'
+            ? "Exc Vat"
+            : product.vatType == 'inc'
+                ? "Inc Vat"
+                : 'No Vat'
+
         const transformedProduct = {
             id: product.id,
             name: product.title,
@@ -80,6 +91,9 @@ export async function GET(req: NextRequest) {
             sellerId: product.seller.id,
             isIncVAT: product.isIncVAT,
             listingStatus: product.listingStatus,
+            deliveryType,
+            condition: product.condition,
+            vatType,
             isOldProduct: false//new Date(product.createdAt)<new Date('2025-07-18')
         };
 

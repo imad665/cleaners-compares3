@@ -34,6 +34,7 @@ export default function ProductDetailPage(
   const { product, reviews, isLoading, error } = useProductData(categorySlug, subcategorySlug, productSlug);
   //const [selectedVariant, setSelectedVariant] = useState(0);
   //console.log(product,'iiiiiiiiiiiiiiiiidddddddd');
+  console.log(product, 'ssssssssssssssssskcmcmcmcmkdkdf');
 
   if (isLoading) {
     return (

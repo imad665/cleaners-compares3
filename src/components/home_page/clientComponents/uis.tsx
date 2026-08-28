@@ -37,9 +37,12 @@ export function AddCartButton({ productId, className = '', stock = -1, isOldProd
           <Button
             onClick={() => handleCount(1)}
             disabled={!isTherMore}
-            className='flex items-center cursor-pointer bg-yellow-400 text-black rounded-2xl hover:bg-yellow-500 w-fit px-6 text-xs'>
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            <span> Add to cart</span>
+            className='flex items-center cursor-pointer bg-yellow-400 text-black rounded-sm hover:bg-yellow-500 w-fit px-6 text-xs'>
+            {/* <ShoppingCart className="w-4 h-4 mr-2" /> */}
+            {/* <span> Add to cart</span> */}
+            {/* <Plus className="w-4 h-4 mr-1" /> */}
+            <span className="font-bold text-xs"> Add </span>
+            <ShoppingCart className="w-4 h-4 mr-1" />
           </Button>
 
           {isFromCart && <Button onClick={() => removeProduct(productId)} className="flex items-center cursor-pointer bg-orange-400/50 text-black rounded-2xl hover:bg-red-500/50 w-fit px-5 text-xs">
