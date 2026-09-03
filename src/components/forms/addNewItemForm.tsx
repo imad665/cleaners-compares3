@@ -438,7 +438,7 @@ function Navigation({ handleBack, currentStep, pending, steps, handleNext, selec
   //console.log(submitTypeRef.current, 'ssssssk++++++++===============');
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 lg:left-64 z-[100] bg-white/80 backdrop-blur-md border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] py-4">
+    <div className="fixed bottom-0 left-0 right-0 lg:left-64 z-[6] bg-white/80 backdrop-blur-md border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] py-4">
       <div className="w-full max-w-[900px] mx-auto flex justify-between items-center px-4">
         <Button
           type="button"
