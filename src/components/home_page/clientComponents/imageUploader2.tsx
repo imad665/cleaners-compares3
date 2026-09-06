@@ -252,23 +252,24 @@ const ImageUploader2 = ({
         <DialogContent className="p-0 overflow-hidden bg-black border-none w-screen h-screen max-w-none rounded-none">
           <div className="relative w-full h-full flex flex-col">
             <div className="flex-1 flex items-center justify-center overflow-hidden">
-              <div className="relative w-full aspect-[3/4] max-h-full">
+              {/* Removed the restricted aspect-[3/4] box, let it fill height/width */}
+              <div className="relative w-full h-full">
                 <Webcam
                   audio={false}
                   ref={webcamRef}
                   screenshotFormat="image/jpeg"
                   videoConstraints={{
                     facingMode,
-                    aspectRatio: { ideal: 3 / 4 },
+                    // Removed the forced aspectRatio so the device uses its natural, uncropped view
                   }}
-                  /*  onUserMediaError={handleUserMediaError} */
-                  className="w-full h-full object-cover"
+                  // CHANGED: object-cover is now object-contain
+                  className="w-full h-full object-contain"
                 />
               </div>
             </div>
 
             {/* Controls Overlay */}
-            <div className="absolute inset-0 top-10  flex flex-col justify-between p-4 bg-gradient-to-b from-black/40 via-transparent to-black/40">
+            <div className="absolute inset-0 top-10 flex flex-col justify-between p-4 bg-gradient-to-b from-black/40 via-transparent to-black/40">
               <div className="flex justify-between items-start">
                 <Button
                   variant="ghost"
