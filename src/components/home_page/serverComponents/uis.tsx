@@ -190,11 +190,15 @@ export function ItemFeaturedProduct({
 
                     )}>
                         <Image
-                            width={250}
-                            height={250}
+                            width={listingStatus === 'SOLD' ? 250 : 150}
+                            height={listingStatus === 'SOLD' ? 250 : 150}
                             alt="SOLD"
-                            src={listingStatus === 'SOLD' ? "/sold.png" : "/under_offer5.png"}
-                            className="object-contain  bottom-[-27px] right-[-5px]"
+                            src={listingStatus === 'SOLD' ? "/sold.png" : "/under_offer7.png"}
+                            className={cn(
+                                listingStatus === 'SOLD'
+                                    ? "object-contain  bottom-[-27px] right-[-5px]"
+                                    : "object-contain absolute  top-[-35px] right-[-30px]"
+                            )}
                         />
                     </div>}
                     {isNew && <Badge variant={'outline'}>New</Badge>}

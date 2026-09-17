@@ -285,7 +285,7 @@ export function PricingInventory({
                     <div>
                       <h4 className="font-bold text-gray-900 flex items-center gap-2">
                         Boost Visibility
-                        <Badge variant="secondary" className="text-[10px] uppercase font-bold bg-amber-100 text-amber-700 border-none">Upgrade</Badge>
+                        <Badge variant="secondary" className="text-[10px] uppercase font-bold bg-amber-100 text-amber-700 border-none">Get Featured</Badge>
                       </h4>
                       <p className="text-sm text-gray-600">Get up to 10x more views by featuring your product at the top.</p>
                     </div>

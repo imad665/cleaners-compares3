@@ -45,7 +45,7 @@ export function BigButton({ text, onClick, disabled }: { text: string, onClick: 
 
 export function MainImage() {
   const [activeImage, setActiveImage] = useState(0);
-  const { cart, user } = useHomeContext();
+  //const { cart, user } = useHomeContext();
   const router = useRouter();
   const slides = [
     { src: '/assets/hero-washer.jpg', title: 'Industrial Washer Extractor', price: '' },
