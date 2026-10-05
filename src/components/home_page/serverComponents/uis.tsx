@@ -269,7 +269,7 @@ export function ItemFeaturedProduct({
 
             {/* Modals */}
             {openMessageDialog && <MessageSellerDialog
-                product={{ id: productId, image, name: title, url: href }}
+                product={{ id: productId, image, name: title, url: href, }}
                 open={openMessageDialog}
                 onOpenChange={setOpenMessageDialog}
             />}

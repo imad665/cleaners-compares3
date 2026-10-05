@@ -44,6 +44,7 @@ model User {
 
   secondaryEmails SecondaryEmail[]
   blogPosts       BlogPost[]
+  //userPresence    UserPresence?
 }
 
 model SecondaryEmail {
@@ -261,6 +262,14 @@ model Message {
   senderUser     User     @relation("SentMessages", fields: [senderUserId], references: [id])
   User           User?    @relation(fields: [userId], references: [id])
 }
+
+// model UserPresence {
+//   id               String  @id @default(cuid())
+//   isInMessagesPage Boolean @default(false)
+
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id])
+// }
 
 model OrderItem {
   id               String          @id @default(cuid())

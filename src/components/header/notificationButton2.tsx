@@ -23,8 +23,11 @@ export function NotificationDropdown({ notificationData }: { notificationData: a
   const router = useRouter();
   notificationData = isEmptyObject(notificationData) ? null : notificationData
   // Sample notifications data
+  console.log(notificationData, 'dckndknvkdnvkjnvkjfdbg');
+
   const notifications: Notification[] = [
     /* your notifications data */
+
   ].concat(notificationData || []);
 
   // Initialize audio on component mount
@@ -161,9 +164,14 @@ export function NotificationDropdown({ notificationData }: { notificationData: a
                 No new notifications
               </div>
             )}
-
-            <div className="px-4 py-2 border-t border-gray-100">
-              {/* View all notifications button */}
+            <div className="border-t border-gray-100 bg-gray-50/50">
+              <button
+                onClick={() => handleNotificationClick('/messages/all')}
+                className="w-full cursor-pointer px-4 py-2.5 text-xs font-semibold text-gray-700 hover:text-blue-600 hover:bg-gray-100/80 transition-colors flex items-center justify-center gap-1.5 group"
+              >
+                <span>View All in Inbox</span>
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400 group-hover:text-blue-600 transition-transform group-hover:translate-x-0.5" />
+              </button>
             </div>
           </div>
         </div>

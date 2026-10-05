@@ -46,3 +46,15 @@ export async function registerAction(prev: any, formData: FormData) {
         return { error: 'Something went wrong. Please try again.' }
     }
 }
+
+export async function getSellerInfoAction(userId: string) {
+    return await prisma.sellerProfile.findUnique({
+        where: {
+            userId
+        },
+        select: {
+            phoneNumber: true,
+
+        }
+    })
+}

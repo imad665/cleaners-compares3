@@ -9,63 +9,7 @@ import { ItemFeaturedProduct } from './serverComponents/uis'
 import MyCarousel from './clientComponents/myCarousel';
 import ServiceCard from '../serviceEnginner';
 import { ArrowRight } from 'lucide-react';
-/* import { useEffect, useState } from 'react' */
-/* import { useHomeProductContext } from '@/providers/homeProductsProvider' */
 
-
-/* const Slider = dynamic(()=>import('react-slick'),{ssr:false}); */
-
-/* const slides = [
-    {
-        title: 'Electrolux Professional 65lb Washer Extractor',
-        image: 'https://www.cleanerscompare.com/pics/1/80273_Sankosha%20stores.jpeg',
-        href: '/products/sundries/card-paper-products/tufftape-(200M)-strong-(variou-colours)',
-        stars: 2.5,
-        starsCount: 84,
-        productId: '111',
-        units:1,
-        unitPrice:12.50,
-        priceExcVat:12.50
-    },
-    {
-
-        title: 'Maytag Commercial 20lb Stack Dryer',
-        image: 'https://www.cleanerscompare.com/pics/1/40078_sd%20sapotap%20saposoft.jpg',
-      
-        href: '/products/sundries/card-paper-products/dryer-sheets',
-        stars: 3.5,
-        starsCount: 84,
-        productId: '222',
-        units:50,
-        unitPrice:0.3,
-        priceExcVat:15
-    },
-    {
-
-        title: 'Fabric Softener',
-        image: 'https://www.cleanerscompare.com/pics/1/40078_sd%20sapotap%20sapocolours.jpg',
-        
-        href: '/products/sundries/card-paper-products/fabric-softener',
-        stars: 5,
-        starsCount: 4,
-        productId: '333',
-        units:120,
-        unitPrice:0.34,
-        priceExcVat:80
-    },
-    {
-
-        title: 'Stain Remover',
-        image: 'https://www.cleanerscompare.com/pics/1/40078_sd%20tufftape%20strong.jpg',
-        href: '/products/sundries/card-paper-products/fabric-softener',
-        stars: 4.5,
-        starsCount: 184,
-        productId: '444', 
-        units:10,
-        unitPrice:1.5,
-        priceExcVat:19
-    }
-] */
 
 export function FeaturedAndProducts({ initFeaturedProducts }: { initFeaturedProducts: any }) {
     /* const [isClient, setIsClient] = useState(false) */
@@ -125,13 +69,17 @@ export function FeaturedEnginners({ services }: { services: any }) {
                 </div>
 
 
-                <MyCarousel sliderToShow={6} breackpoints={[
-                    { breakpoint: 1580, slidesToShow: 6 },
-                    { breakpoint: 1280, slidesToShow: 5 },
-                    { breakpoint: 1100, slidesToShow: 4 },
-                    { breakpoint: 1020, slidesToShow: 3 },
-                    { breakpoint: 770, slidesToShow: 1 },
-                ]} >
+                <MyCarousel 
+                    sliderToShow={6} 
+                    className="[&_.slick-track]:ml-0"
+                    breackpoints={[
+                        { breakpoint: 1580, slidesToShow: 6 },
+                        { breakpoint: 1280, slidesToShow: 5 },
+                        { breakpoint: 1100, slidesToShow: 4 },
+                        { breakpoint: 1020, slidesToShow: 3 },
+                        { breakpoint: 770, slidesToShow: 1 },
+                    ]} 
+                >
                     {services.map((service, i) => (
                         <div key={i}  >
                             <ServiceCard

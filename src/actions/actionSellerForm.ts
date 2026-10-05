@@ -5,6 +5,8 @@ import { authOptions } from '@/lib/auth' // adjust path to where your auth confi
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs';
 import { MessageNotificationProps, notifySellerOfCustomerMessage } from '@/lib/payement/notifySellerByEmail';
+import { sendInquiryEmailNotification } from '../app/messages/[inquiryId]/resendMessage';
+import { after } from 'next/server';
 
 export async function formSellerAction(prev: any, formData: FormData) {
   let userId = formData.get('userId') as string | undefined;
@@ -122,7 +124,7 @@ export async function updateFormSellerAction(id: string, sellerForm: {
   productPath?:string; */
 export async function notifySellerOfMessageAction(info: { productId: string, productName: string, productImage: string, productPath: string, sellerName: string; sellerEmail?: string; sellerId: string, customerMessage: string; customerId?: string; }) {
 
-  //console.log(info, 'sssssssssssssnncncnnvmv');
+  console.log(info, 'sssssssssssssnncncnnvmv');
 
   if (!info.sellerName) {
     const d = await prisma.product.findUnique({
@@ -157,9 +159,28 @@ export async function notifySellerOfMessageAction(info: { productId: string, pro
       buyerId: info.customerId!,
       sellerId: info.sellerId!,
       productId: info.productId,
+    },
+    include: {
+      buyer: { select: { name: true } }
     }
   })
   info.productPath = `/messages/${inquiry.id}`
+  after(async () => {
+    try {
+      await sendInquiryEmailNotification({
+        to: info.sellerEmail!,
+        senderName: inquiry.buyer.name,
+        senderRole: 'buyer',
+        recipientRole: 'seller',
+        message: info.customerMessage,
+        inquiryId: inquiry.id
+      });
+    } catch (error) {
+      console.log(error);
+
+    }
+  })
+
 
   //await notifySellerOfCustomerMessage({ ...info, sellerEmail: 'programmingi77i@gmail.com' })
   return { success: true }
@@ -169,15 +190,33 @@ export async function notifySellerOfMessageAction(info: { productId: string, pro
 
 export async function answerBuyerMessageAction(inquiryId: string, response: string) {
 
-  await prisma.inquiry.update({
+  const inquiry = await prisma.inquiry.update({
     where: {
       id: inquiryId,
     },
     data: {
       response
+    },
+    include: {
+      buyer: { select: { email: true, name: true } },
+      seller: { select: { name: true } }
     }
   })
 
-  //await notifySellerOfCustomerMessage({ ...info, sellerEmail: 'programmingi77i@gmail.com' })
+  after(async () => {
+    try {
+      await sendInquiryEmailNotification({
+        to: inquiry.buyer.email,
+        senderName: inquiry.seller.name,
+        senderRole: 'seller',
+        recipientRole: 'buyer',
+        message: response,
+        inquiryId: inquiry.id
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
   return { success: true }
 }

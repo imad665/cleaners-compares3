@@ -1,6 +1,6 @@
 // components/messaging/MessageSellerDialog.tsx
 // components/messaging/MessageSellerDialog.tsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -13,13 +13,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
- 
+
 import { useHomeContext } from '@/providers/homePageProvider';
 import { toast } from '@/hooks/use-toast';
 import { Mail, Phone } from 'lucide-react';
 import { notifySellerOfMessageAction } from '@/actions/actionSellerForm';
 import { usePathname } from 'next/navigation';
 import { ProductMessageType } from '@/lib/types/product';
+import { getSellerInfoAction } from '@/actions/registerAction';
 
 
 
@@ -40,13 +41,22 @@ export function MessageSellerDialog({
     const [phone, setPhone] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const pathname = usePathname();
+
+    useEffect(() => {
+        getSellerInfoAction(user!.id).then((seller) => {
+            setEmail(user?.email)
+            setPhone(seller?.phoneNumber)
+        })
+    }, [])
+
     const [errors, setErrors] = useState<{
         message?: string;
         email?: string;
         phone?: string;
         contact?: string; // General contact error
     }>({});
-    
+    console.log(product, user, 'ssssssssssssssssssssssslddldlcc');
+
     const validateForm = () => {
         const newErrors: typeof errors = {};
 
@@ -57,7 +67,7 @@ export function MessageSellerDialog({
             newErrors.message = 'Message must be less than 200 characters';
         }
 
-         
+
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -69,14 +79,14 @@ export function MessageSellerDialog({
         }
 
         setIsSubmitting(true);
-         
+
         try {
             // Prepare the message data
             const messageData = {
                 productId: product.id,
                 sellerEmail: product.sellerEmail,
-                sellerName: product.sellerName ,
-                sellerId:product.sellerId,
+                sellerName: product.sellerName,
+                sellerId: product.sellerId,
                 buyerId: user?.id || null,
                 buyerName: user?.name || null,
                 message: message.trim(),
@@ -103,9 +113,9 @@ export function MessageSellerDialog({
                 productName: product.name,
                 sellerName: messageData.sellerName,
                 sellerEmail: messageData.sellerEmail,
-                sellerId: messageData.sellerId  ,
+                sellerId: messageData.sellerId,
                 customerMessage: messageData.message,
-                customerId:user?.id,
+                customerId: user?.id,
                 customerName: messageData.buyerName || undefined,
                 productId: product.id,
                 productPath: product.url || pathname,
@@ -198,7 +208,7 @@ export function MessageSellerDialog({
                         </div>
                     </div>
 
-                    
+
 
                     {/* User info hint if not logged in */}
                     {!user && (
@@ -206,6 +216,54 @@ export function MessageSellerDialog({
                             Not logged in? The seller will reply to your provided contact information.
                         </p>
                     )}
+
+                    {/* Direct Contact Options */}
+                    <div className="relative py-2">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-background px-2 text-muted-foreground">
+                                Or contact directly
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Button
+                            variant="outline"
+                            className="w-full flex items-center gap-2"
+                            onClick={() => {
+                                if (product.sellerEmail) {
+                                    window.location.href = `mailto:${product.sellerEmail}?subject=Inquiry about ${product.name}`;
+                                }
+                            }}
+                        >
+                            <Mail className="w-4 h-4" />
+                            Email Seller
+                        </Button>
+                        <Button
+                            variant="outline"
+                            className="w-full flex items-center gap-2"
+                            onClick={() => {
+                                // Assuming product object or getSellerInfoAction provides seller phone
+                                // We use a fallback if not directly available on product
+                                const sellerPhone = (product as any).sellerPhone; 
+                                if (sellerPhone) {
+                                    window.location.href = `tel:${sellerPhone}`;
+                                } else {
+                                    toast({
+                                        title: "Phone not available",
+                                        description: "The seller hasn't provided a public phone number.",
+                                        variant: "destructive"
+                                    });
+                                }
+                            }}
+                        >
+                            <Phone className="w-4 h-4" />
+                            Call Seller
+                        </Button>
+                    </div>
                 </div>
 
                 <DialogFooter>

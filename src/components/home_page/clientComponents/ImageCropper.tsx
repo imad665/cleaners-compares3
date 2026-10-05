@@ -97,7 +97,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] flex flex-col p-0 overflow-hidden bg-white shadow-2xl">
-        <DialogHeader className="p-4 border-b bg-gray-50/50">
+        <DialogHeader className="p-4 border-b bg-gray-50/50 flex-shrink-0">
           <DialogTitle className="flex items-center gap-2 text-lg font-bold">
             <Maximize2 className="h-5 w-5 text-primary" />
             Edit Product Photo
@@ -105,7 +105,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
         </DialogHeader>
 
         {/* --- Cropper Area --- */}
-        <div className="relative flex-1 bg-neutral-900 overflow-hidden flex items-center justify-center p-4 sm:p-8 min-h-[400px]">
+        <div className="relative flex-1 bg-neutral-900 overflow-hidden flex items-center justify-center p-4 sm:p-8">
           <div className="w-full max-h-full flex items-center justify-center">
             <ReactCrop
               crop={crop}
@@ -118,7 +118,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
                 alt="Crop me"
                 src={image}
                 onLoad={onImageLoad}
-                className="max-w-full max-h-[60vh] object-contain shadow-2xl"
+                className="max-w-full max-h-full object-contain shadow-2xl"
               />
             </ReactCrop>
           </div>
@@ -129,7 +129,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
         </div>
 
         {/* --- Footer Controls --- */}
-        <div className="p-6 border-t bg-white">
+        <div className="p-6 border-t bg-white flex-shrink-0">
           <DialogFooter className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-xs text-muted-foreground italic">
               * Drag the corners to select the area you want to keep.

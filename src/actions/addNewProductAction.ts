@@ -11,6 +11,7 @@ import { compressToWebP } from "@/lib/utils/image-compression";
 import { getServerSession } from "next-auth";
 import { revalidatePath, revalidateTag } from "next/cache";
 import slugify from "slugify";
+import { after } from "next/server";
 //import { uploadFileToCloud } from "@/lib/cloudStorage"; // You can implement this based on your file upload logic
 
 async function getSellerId() {
@@ -200,11 +201,26 @@ export async function addNewProductAction(prev: any, formData: FormData) {
         revalidate2()
         if (featuredDuration?.toString() && !updatedProduct.isFeatured) {
             const url = await processPayement(featuredDuration.toString(), { productId: updatedProduct.id, type: 'product-feature' });
-            await reembedByRefId(productId)
+            after(async () => {
+                try {
+                    await reembedByRefId(productId)
+                } catch (error) {
+                    console.log("================== EMBEDDING FAILED =============");
+                    console.log(error)
+                }
+            })
             return { success: true, url, message: 'Product successfully created.' };
 
         }
-        await reembedByRefId(productId)
+        after(async () => {
+            try {
+                await reembedByRefId(productId)
+            } catch (error) {
+                console.log("================== EMBEDDING FAILED =============");
+                console.log(error)
+            }
+        })
+
         return { success: true, message: 'Product updated successfuly!' };
     }
     else {
@@ -242,15 +258,27 @@ export async function addNewProductAction(prev: any, formData: FormData) {
 
         if (featuredDuration?.toString()) {
             const url = await processPayement(featuredDuration.toString(), { productId: newProduct.id, type: 'product-feature' });
-            await embedProductsToNeon();
+            after(async () => {
+                try {
+                    await embedProductsToNeon();
+                } catch (error) {
+                    console.log("================== EMBEDDING FAILED =============");
+                    console.log(error)
+                }
+            })
             return { success: true, url, message: 'Product successfully created.' };
         }
-        await embedProductsToNeon();
+        after(async () => {
+            try {
+                await embedProductsToNeon();
+            } catch (error) {
+                console.log("================== EMBEDDING FAILED =============");
+                console.log(error)
+            }
+        })
+
         return { success: true, url: '/admin/allProducts', message: 'Product successfully created.' };
     }
-
-
-
 }
 
 

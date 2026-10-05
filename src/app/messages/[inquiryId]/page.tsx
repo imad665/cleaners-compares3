@@ -3,8 +3,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { notifySellerOfMessageAction } from "@/actions/actionSellerForm";
-import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
+import ChatWindow from "../_components/ChatWindow";
+import { ImageClient } from "./ImageClient";
+import { MessageSquareDashed, MousePointerClick } from "lucide-react";
+import { sendInquiryEmailNotification } from "./resendMessage";
+import { after } from "next/server";
 
 export default async function InquiryPage({
     params,
@@ -22,58 +25,98 @@ export default async function InquiryPage({
             buyer: true,
             seller: true,
         },
-
     });
-    console.log(inquiryId, 'dddddddddddddddkkfkkfkdfg');
 
+    if (!inquiry) {
+        return (
+            <div className="h-full w-full min-h-[450px] flex flex-col items-center justify-center p-6 text-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+                <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                    <MessageSquareDashed className="w-7 h-7" />
+                </div>
 
-    if (!inquiry) return <div>Not found</div>;
+                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                    No Conversation Selected
+                </h3>
+
+                <p className="text-sm text-gray-500 max-w-sm mb-4">
+                    Select a conversation from the left sidebar to view details and reply.
+                </p>
+
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-xs font-medium text-gray-600 rounded-lg border border-gray-200 shadow-2xs">
+                    <MousePointerClick className="w-3.5 h-3.5 text-blue-500" />
+                    <span>Click any message on the left to start</span>
+                </div>
+            </div>
+        );
+    }
 
     const isSeller = session.user.role === "SELLER";
     const isBuyer = session.user.role === "BUYER";
 
-    // ✅ Fetch all inquiries with same buyerId + productId
     const conversation = await prisma.inquiry.findMany({
         where: {
             buyerId: inquiry.buyerId,
             productId: inquiry.productId,
         },
         include: {
-            buyer: true,
-            seller: true,
+            buyer: { select: { image: true } },
+            seller: { select: { image: true } },
         },
-        orderBy: { createdAt: "asc" }, // oldest first
+        orderBy: { createdAt: "asc" },
     });
+
     for (const c of conversation) {
-        await prisma.inquiry.update({
-            where: { id: c.id },
-            data: {
-                sellerRead: c.sellerRead || isSeller,
-                buyerRead: c.buyerRead || isBuyer
-            }
-        })
+        if ((isSeller && !c.sellerRead) || (isBuyer && !c.buyerRead)) {
+            await prisma.inquiry.update({
+                where: { id: c.id },
+                data: {
+                    sellerRead: c.sellerRead || isSeller,
+                    buyerRead: c.buyerRead || isBuyer
+                }
+            })
+        }
     }
-    //await prisma.inquiry.deleteMany({ where: { id: inquiryId } })
 
-    //console.log(conversation, 'fffffffffffffffffffffkkkgkgkggk');
-
-
-    // ✅ Server Action to send a response
     async function sendResponse(formData: FormData) {
         "use server";
         const response = formData.get("response") as string;
         if (!response?.trim()) return;
 
         if (isSeller) {
-            // Update the current inquiry with seller response
-            await prisma.inquiry.update({
-                where: { id: inquiry.id },
-                data: {
-                    response,
-                    buyerRead: false,
-                    sellerRead: true,
+            // Find the latest inquiry without a response, or just the latest inquiry
+            const latestInquiry = await prisma.inquiry.findFirst({
+                where: {
+                    buyerId: inquiry.buyerId,
+                    productId: inquiry.productId,
                 },
+                orderBy: { createdAt: "desc" },
             });
+
+            if (latestInquiry) {
+                await prisma.inquiry.update({
+                    where: { id: latestInquiry.id },
+                    data: {
+                        response,
+                        buyerRead: false,
+                        sellerRead: true,
+                    },
+                });
+
+                after(async () => {
+                    try {
+                        await sendInquiryEmailNotification({
+                            to: inquiry.buyer.email,
+                            senderName: inquiry.seller.name,
+                            senderRole: 'seller',
+                            recipientRole: 'buyer',
+                            message: response,
+                            inquiryId: inquiry.id
+                        });
+                    } catch (error) {
+                        console.error(error);
+                    }
+                });
+            }
         } else if (isBuyer) {
             await notifySellerOfMessageAction({
                 customerMessage: response,
@@ -88,63 +131,33 @@ export default async function InquiryPage({
             });
         }
 
-        revalidatePath(`/messages/${inquiry.id}`);
+        revalidatePath(`/messages/${inquiryId}`);
     }
 
     return (
-        <div className="flex flex-col h-full p-6">
-            {/* HEADER */}
-            <div className="mb-6">
-                <h2 className="text-lg font-semibold">
-                    {inquiry.product?.title}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                    Buyer: {inquiry.buyer.name}
-                </p>
-            </div>
-
-            {/* MESSAGES */}
-            <div className="flex-1 space-y-4 overflow-y-auto mb-6">
-                {conversation.map((msg) => (
-                    <div key={msg.id} className="space-y-1">
-                        {/* Buyer message */}
-                        {msg.message && (
-                            <div className="max-w-md p-3 rounded-lg bg-muted">
-                                {msg.message}
-                            </div>
-                        )}
-
-                        {/* Seller response */}
-                        {msg.response && (
-                            <div className="max-w-md p-3 rounded-lg bg-primary text-primary-foreground ml-auto">
-                                {msg.response}
-                            </div>
-                        )}
-                    </div>
-                ))}
-            </div>
-
-
-            <form action={sendResponse} className="border-t pt-4 ">
-                <div className="flex gap-2 items-center bottom-0">
-                    <input
-                        name="response"
-                        placeholder="Write your reply..."
-                        type="text"
-                        className="flex-1 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-
-                    />
-                    <Button
-                        type="submit"
-                        className="px-4 py-5 bg-primary text-primary-foreground rounded-xl text-sm"
-                    >
-                        <Send />
-                        Send
-                    </Button>
-                    <Button className="bg-transparent">{"   . ........."}</Button>
+        <div className="flex flex-col h-full overflow-hidden">
+            <div className="flex items-center gap-1 border-b flex-shrink-0">
+                <ImageClient inquiry={inquiry} isSeller={isSeller} />
+                <div className="p-6 ">
+                    <h2 className="text-lg font-semibold">
+                        {inquiry.product?.title}
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                        {isSeller ? `Customer: ${inquiry.buyer.name}` : `Seller: ${inquiry.seller.name}`}
+                    </p>
                 </div>
-            </form>
+            </div>
 
+
+            <ChatWindow
+                initialConversation={conversation}
+                inquiryId={inquiryId}
+                buyerId={inquiry.buyerId}
+                productId={inquiry.productId!}
+                sellerId={inquiry.sellerId}
+                role={session.user.role as any}
+                sendResponseAction={sendResponse}
+            />
         </div>
     );
 }
