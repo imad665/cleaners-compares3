@@ -4,12 +4,12 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendWelcomMessage(to: string) {
-    try {
-        await resend.emails.send({
-            from: 'CleanersCompare <noreply@cleanerscompare.com>',
-            to,
-            subject: 'Welcome to CleanersCompare – The Laundry Marketplace Built for You',
-            html: `
+  try {
+    await resend.emails.send({
+      from: 'CleanersCompare <noreply@cleanerscompare.com>',
+      to,
+      subject: 'Welcome to CleanersCompare – The Laundry Marketplace Built for You',
+      html: `
         <div style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333;">
           <h2 style="color: #004080;">Welcome to CleanersCompare!</h2>
           <p>
@@ -35,38 +35,38 @@ export async function sendWelcomMessage(to: string) {
           <p>Warm regards,<br/>The CleanersCompare Team</p>
         </div>
       `,
-        });
+    });
 
-        console.log('Welcome email sent via Resend!');
-    } catch (error) {
-        console.error('Error sending welcome email:', error);
-    }
+    console.log('Welcome email sent via Resend!');
+  } catch (error) {
+    console.error('Error sending welcome email:', error);
+  }
 }
 
 export async function sendInquiryEmailNotification({
-    to,
-    senderName,
-    senderRole,
-    recipientRole,
-    message,
-    inquiryId
+  to,
+  senderName,
+  senderRole,
+  recipientRole,
+  message,
+  inquiryId
 }: {
-    to: string;
-    senderName: string;
-    senderRole: 'buyer' | 'seller';
-    recipientRole: 'buyer' | 'seller';
-    message: string;
-    inquiryId: string;
+  to: string;
+  senderName: string;
+  senderRole: 'buyer' | 'seller';
+  recipientRole: 'buyer' | 'seller';
+  message: string;
+  inquiryId: string;
 }) {
-    const baseUrl = process.env.NEXTAUTH_URL || 'https://www.cleanerscompare.com';
-    const conversationLink = `${baseUrl}/messages/${inquiryId}`;
+  const baseUrl = /* process.env.NEXTAUTH_URL || */ 'https://www.cleanerscompare.com';
+  const conversationLink = `${baseUrl}/messages/${inquiryId}`;
 
-    try {
-        await resend.emails.send({
-            from: 'CleanersCompare <messages@cleanerscompare.com>',
-            to,
-            subject: `New message from ${senderName}`,
-            html: `
+  try {
+    await resend.emails.send({
+      from: 'CleanersCompare <messages@cleanerscompare.com>',
+      to,
+      subject: `New message from ${senderName}`,
+      html: `
         <div style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #004080;">New Message Received</h2>
           <p>Hello ${recipientRole}, the ${senderRole} <strong>${senderName}</strong> sent you this message:</p>
@@ -80,9 +80,9 @@ export async function sendInquiryEmailNotification({
           <p style="margin-top: 30px;">Warm regards,<br/>The CleanersCompare Team</p>
         </div>
       `,
-        });
-        console.log(`Notification email sent to ${to}`);
-    } catch (error) {
-        console.error('Error sending notification email:', error);
-    }
+    });
+    console.log(`Notification email sent to ${to}`);
+  } catch (error) {
+    console.error('Error sending notification email:', error);
+  }
 }
