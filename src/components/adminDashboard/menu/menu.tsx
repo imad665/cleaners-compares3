@@ -49,7 +49,7 @@ function getUserMenu(user: any, cart: any[]) {
             { Icon: Kanban, title: 'Manage Subcategories', href: '/admin/manageSubcategories' },
             { Icon: Video, title: 'Videos', href: '/admin/myVideos' },
             { Icon: Users2, title: 'User Management', href: '/admin/userManagement' },
-            { Icon: MessageSquare, title: 'Messages', href: '/admin/myMessages' },
+            /* { Icon: MessageSquare, title: 'Messages', href: '/admin/myMessages' }, */
             { Icon: Settings, title: 'Settings', href: '/admin/settings' },
             { Icon: User, title: 'Profile', href: '/admin/profile' },
         ]
@@ -61,7 +61,7 @@ function getUserMenu(user: any, cart: any[]) {
             { Icon: Box, title: 'Wanted Items', href: '/admin/myWantedItems' },
             { Icon: UserCog, title: 'Enginners', href: '/admin/myServices' },
             { Icon: Store, title: 'Businesses for Sale', href: '/admin/myBusinessesForSale' },
-            { Icon: MessageSquare, title: 'Messages', href: '/admin/myMessages/seller' },
+            /* { Icon: MessageSquare, title: 'Messages', href: '/admin/myMessages/seller' }, */
             { Icon: User, title: 'Profile', href: '/admin/profile' },
         ]
     } else {
