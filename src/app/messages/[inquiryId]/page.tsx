@@ -56,25 +56,28 @@ export default async function InquiryPage({
 
     if (!inquiry) {
         return (
-            <div className="h-full w-full min-h-[450px] flex flex-col items-center justify-center p-6 text-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
-                <div className="md:hidden absolute top-4 left-4">
-                     <MobileSidebarSheet inquiries={inquiriesList} userId={userId} role={role as any} />
+            <div className="flex flex-col h-full overflow-hidden relative">
+                <div className="flex items-center border-b p-4 md:hidden">
+                    <MobileSidebarSheet inquiries={inquiriesList} userId={userId} role={role as any} />
+                    <span className="font-semibold ml-2">Select Conversation</span>
                 </div>
-                <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4 shadow-sm">
-                    <MessageSquareDashed className="w-7 h-7" />
-                </div>
+                <div className="flex-1 w-full flex flex-col items-center justify-center p-6 text-center bg-gray-50/50">
+                    <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                        <MessageSquareDashed className="w-7 h-7" />
+                    </div>
 
-                <h3 className="text-base font-semibold text-gray-900 mb-1">
-                    No Conversation Selected
-                </h3>
+                    <h3 className="text-base font-semibold text-gray-900 mb-1">
+                        No Conversation Selected
+                    </h3>
 
-                <p className="text-sm text-gray-500 max-w-sm mb-4">
-                    Select a conversation from the left sidebar to view details and reply.
-                </p>
+                    <p className="text-sm text-gray-500 max-w-sm mb-4">
+                        Select a conversation from the left sidebar to view details and reply.
+                    </p>
 
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-xs font-medium text-gray-600 rounded-lg border border-gray-200 shadow-2xs">
-                    <MousePointerClick className="w-3.5 h-3.5 text-blue-500" />
-                    <span>Click any message on the left to start</span>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-xs font-medium text-gray-600 rounded-lg border border-gray-200 shadow-2xs">
+                        <MousePointerClick className="w-3.5 h-3.5 text-blue-500" />
+                        <span>Click any message on the left to start</span>
+                    </div>
                 </div>
             </div>
         );
@@ -165,8 +168,8 @@ export default async function InquiryPage({
     }
 
     return (
-        <div className="flex flex-col h-full overflow-hidden">
-            <div className="flex items-center gap-1 border-b flex-shrink-0">
+        <div className="flex flex-col h-full overflow-hidden relative">
+            <div className="flex items-center gap-1 border-b flex-shrink-0 bg-background">
                 <MobileSidebarSheet inquiries={inquiriesList} userId={userId} role={role as any} />
                 <ImageClient inquiry={inquiry} isSeller={isSeller} />
                 <div className="p-6 ">

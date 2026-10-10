@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import MessageSidebar from "./_components/MessageSidebar";
+import MobileSidebarSheet from "./_components/MobileSidebarSheet";
 
 export default async function MessagesPage() {
     const session = await getServerSession(authOptions);
@@ -35,8 +36,12 @@ export default async function MessagesPage() {
     const inquiries = Array.from(groupedInquiriesMap.values());
 
     return (
-        <div className="h-full">
-            <div className="md:hidden h-full">
+        <div className="h-full relative overflow-hidden flex flex-col">
+            <div className="md:hidden flex items-center border-b p-2 bg-background">
+                <MobileSidebarSheet inquiries={inquiries as any} userId={userId} role={role as any} />
+                <span className="font-semibold ml-2">Select Conversation</span>
+            </div>
+            <div className="md:hidden flex-1 overflow-y-auto">
                 <MessageSidebar 
                     initialInquiries={inquiries as any} 
                     userId={userId} 

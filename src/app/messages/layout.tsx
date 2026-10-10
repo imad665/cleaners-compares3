@@ -43,7 +43,7 @@ export default async function MessagesLayout({
     return (
         <div>
             <Header recentOrderCount={null} notificationData={[]} />
-            <div className="flex h-[calc(100vh-130px)] border rounded-xl overflow-hidden">
+            <div className="flex h-[calc(100vh-130px)] border rounded-xl overflow-hidden relative">
                 {/* LEFT SIDEBAR - Desktop */}
                 <div className="hidden md:block w-80 border-r bg-muted/30 overflow-y-auto">
                     <MessageSidebar 
