@@ -44,8 +44,8 @@ export default async function MessagesLayout({
         <div>
             <Header recentOrderCount={null} notificationData={[]} />
             <div className="flex h-[calc(100vh-130px)] border rounded-xl overflow-hidden">
-                {/* LEFT SIDEBAR */}
-                <div className="w-80 border-r bg-muted/30 overflow-y-auto">
+                {/* LEFT SIDEBAR - Desktop */}
+                <div className="hidden md:block w-80 border-r bg-muted/30 overflow-y-auto">
                     <MessageSidebar 
                         initialInquiries={inquiries as any} 
                         userId={userId} 
@@ -53,8 +53,11 @@ export default async function MessagesLayout({
                     />
                 </div>
 
+                {/* Mobile Sidebar - Handled inside children or via a floating trigger if needed */}
+                {/* But for now, let's just make the main area take full width on mobile */}
+
                 {/* RIGHT SIDE */}
-                <div className="flex-1 bg-background flex flex-col min-h-0">
+                <div className="flex-1 bg-background flex flex-col min-h-0 w-full">
                     {children}
                 </div>
             </div>

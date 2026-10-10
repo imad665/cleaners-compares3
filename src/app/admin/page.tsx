@@ -177,13 +177,13 @@ const Dashboard = () => {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button
+          {/* <Button
             onClick={handleMessagesClick}
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
           >
             <MessageCircle size={20} />
             Messages
-          </Button>
+          </Button> */}
           {orderStats && (
             <Button
               onClick={handleOrdersClick}

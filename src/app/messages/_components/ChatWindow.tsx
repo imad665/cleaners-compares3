@@ -47,15 +47,19 @@ export default function ChatWindow({
     useEffect(() => {
         const interval = setInterval(async () => {
             try {
-                const res = await fetch(`/api/inquiries?buyerId=${buyerId}&productId=${productId}`);
+                const res = await fetch(`/api/inquiries?buyerId=${buyerId}&productId=${productId}&sellerId=${sellerId}&t=${Date.now()}`, {
+                    cache: 'no-store'
+                });
                 if (res.ok) {
                     const data = await res.json();
-                    setConversation(data);
+                    if (Array.isArray(data)) {
+                        setConversation(data);
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching messages:", error);
             }
-        }, 3000);
+        }, 8000);
 
         return () => clearInterval(interval);
     }, [buyerId, productId]);

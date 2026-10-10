@@ -46,10 +46,14 @@ export default function MessageSidebar({ initialInquiries, userId, role }: Messa
     useEffect(() => {
         const interval = setInterval(async () => {
             try {
-                const res = await fetch("/api/inquiries/list");
+                const res = await fetch(`/api/inquiries/list?t=${Date.now()}`, {
+                    cache: 'no-store'
+                });
                 if (res.ok) {
                     const data = await res.json();
-                    setInquiries(data);
+                    if (Array.isArray(data)) {
+                        setInquiries(data);
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching inquiries list:", error);

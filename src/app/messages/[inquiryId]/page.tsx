@@ -8,6 +8,7 @@ import { ImageClient } from "./ImageClient";
 import { MessageSquareDashed, MousePointerClick } from "lucide-react";
 import { sendInquiryEmailNotification } from "./resendMessage";
 import { after } from "next/server";
+import MobileSidebarSheet from "../_components/MobileSidebarSheet";
 
 export default async function InquiryPage({
     params,
@@ -17,6 +18,8 @@ export default async function InquiryPage({
     const session = await getServerSession(authOptions);
     if (!session?.user) return null;
     const { inquiryId } = await params;
+    const userId = session.user.id;
+    const role = session.user.role;
 
     const inquiry = await prisma.inquiry.findUnique({
         where: { id: inquiryId },
@@ -27,9 +30,36 @@ export default async function InquiryPage({
         },
     });
 
+    const allInquiries = await prisma.inquiry.findMany({
+        where:
+            role === "SELLER"
+                ? { sellerId: userId, sellerDeleted: false }
+                : { buyerId: userId, buyerDeleted: false },
+        include: {
+            product: { select: { id: true, title: true, imagesUrl: true } },
+            buyer: { select: { id: true, name: true, image: true } },
+            seller: { select: { id: true, name: true, image: true } }
+        },
+        orderBy: { createdAt: "desc" },
+    });
+
+    const groupedInquiriesMap = new Map();
+    allInquiries.forEach(item => {
+        const otherPartyId = role === 'SELLER' ? item.buyerId : item.sellerId;
+        const key = `${item.productId}-${otherPartyId}`;
+        if (!groupedInquiriesMap.has(key)) {
+            groupedInquiriesMap.set(key, item);
+        }
+    });
+
+    const inquiriesList = Array.from(groupedInquiriesMap.values());
+
     if (!inquiry) {
         return (
             <div className="h-full w-full min-h-[450px] flex flex-col items-center justify-center p-6 text-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+                <div className="md:hidden absolute top-4 left-4">
+                     <MobileSidebarSheet inquiries={inquiriesList} userId={userId} role={role as any} />
+                </div>
                 <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4 shadow-sm">
                     <MessageSquareDashed className="w-7 h-7" />
                 </div>
@@ -137,6 +167,7 @@ export default async function InquiryPage({
     return (
         <div className="flex flex-col h-full overflow-hidden">
             <div className="flex items-center gap-1 border-b flex-shrink-0">
+                <MobileSidebarSheet inquiries={inquiriesList} userId={userId} role={role as any} />
                 <ImageClient inquiry={inquiry} isSeller={isSeller} />
                 <div className="p-6 ">
                     <h2 className="text-lg font-semibold">

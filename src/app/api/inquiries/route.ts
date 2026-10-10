@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -13,16 +15,23 @@ export async function GET(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const buyerId = searchParams.get("buyerId");
         const productId = searchParams.get("productId");
+        const sellerId = searchParams.get("sellerId");
 
-        if (!buyerId || !productId) {
+        if (!buyerId) {
             return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
         }
 
+        const queryWhere: any = {
+            buyerId: buyerId,
+            productId: (productId === "null" || !productId) ? null : productId,
+        };
+
+        if (sellerId && sellerId !== "null") {
+            queryWhere.sellerId = sellerId;
+        }
+
         const conversation = await prisma.inquiry.findMany({
-            where: {
-                buyerId,
-                productId,
-            },
+            where: queryWhere,
             include: {
                 buyer: { select: { image: true } },
                 seller: { select: { image: true } },
